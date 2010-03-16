@@ -29,13 +29,13 @@ namespace bombherman
 		typedef struct
 		{
 			char grid[SIZE][SIZE];
-		} grid;
+		} Grid;
 		
 		typedef struct
 		{
 			int x;
 			int y;
-		} coords;
+		} Coords;
 		
 		typedef enum
 		{
@@ -43,7 +43,7 @@ namespace bombherman
 			DOWN,
 			LEFT,
 			RIGHT
-		} direction;
+		} Direction;
 
 		typedef enum
 		{
@@ -51,7 +51,7 @@ namespace bombherman
 			BARREL='t',
 			INDESTRUCTIBLE='x',
 			NONE=' '
-		} object;
+		} Element;
 	}
 }
 
