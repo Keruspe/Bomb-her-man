@@ -16,14 +16,8 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _DISPLAY_BACKENDS_SDL_HPP_
-#define _DISPLAY_BACKENDS_SDL_HPP_
-
-#include "backend.hpp"
-
-#include <iostream>
-#include <string>
-#include <SDL.h>
+#ifndef _DISPLAY_BACKENDS_BACKEND_HPP_
+#define _DISPLAY_BACKENDS_BACKEND_HPP_
 
 namespace bombherman
 {
@@ -31,18 +25,14 @@ namespace bombherman
 	{
 		namespace backends
 		{
-			class SDL :
-				public Backend
+			class Backend
 			{
 			public:
-				SDL();
-				virtual ~SDL();
-			
-			private:
-				SDL_Surface *screen;
+				Backend();
+				virtual ~Backend();
 			};
 		}
 	}
 }
 
-#endif // _DISPLAY_BACKENDS_SDL_HPP_ 
+#endif // _DISPLAY_BACKENDS_BACKEND_HPP_ 

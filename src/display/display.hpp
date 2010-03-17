@@ -43,8 +43,8 @@ namespace bombherman
 			virtual ~Display();
 		
 		private:
-			Backend *backend;
-		}
+			backends::Backend *backend;
+		};
 	}
 }
 

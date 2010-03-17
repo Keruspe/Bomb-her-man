@@ -19,18 +19,21 @@
 #ifndef _DISPLAY_BACKENDS_ASCII_HPP_
 #define _DISPLAY_BACKENDS_ASCII_HPP_
 
+#include "backend.hpp"
+
 namespace bombherman
 {
 	namespace display
 	{
 		namespace backends
 		{
-			class ASCII
+			class ASCII :
+				public Backend
 			{
 			public:
 				ASCII();
 				virtual ~ASCII();
-			}
+			};
 		}
 	}
 }

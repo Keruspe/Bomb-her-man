@@ -16,33 +16,16 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _DISPLAY_BACKENDS_SDL_HPP_
-#define _DISPLAY_BACKENDS_SDL_HPP_
+#include "ascii.hpp"
 
-#include "backend.hpp"
+using namespace bombherman;
+using namespace bombherman::display;
+using namespace bombherman::display::backends;
 
-#include <iostream>
-#include <string>
-#include <SDL.h>
-
-namespace bombherman
+Backend::Backend()
 {
-	namespace display
-	{
-		namespace backends
-		{
-			class SDL :
-				public Backend
-			{
-			public:
-				SDL();
-				virtual ~SDL();
-			
-			private:
-				SDL_Surface *screen;
-			};
-		}
-	}
 }
 
-#endif // _DISPLAY_BACKENDS_SDL_HPP_ 
+Backend::~Backend()
+{
+}
