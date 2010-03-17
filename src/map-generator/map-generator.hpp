@@ -23,7 +23,7 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
-#include "../map/map-utils.hpp"
+#include "map/map-utils.hpp"
 
 using namespace bombherman;
 using namespace bombherman::map;
@@ -31,7 +31,7 @@ using namespace bombherman::map;
 class MapGenerator {
 public:
     static void generate(Grid&);
-
+    static void setBonus(Grid&);
 protected:
 
 private:
@@ -39,6 +39,7 @@ private:
     static bool throwDice(float);
     static bool testCellFull(Grid&, Coords);
     static bool testCellLimited(Grid&, Coords);
+    static int horizontalScan(Grid&, Coords);
 };
 
 #endif // _MAP_GENERATOR_HPP_
