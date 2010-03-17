@@ -57,6 +57,15 @@ namespace bombherman
 			INDESTRUCTIBLE='x',
 			NONE=' '
 		} Element;
+
+		typedef enum
+		{
+			BOMBUP,
+			BOMBDOWN,
+			FIREUP,
+			FIREDOWN,
+			FULLFIRE
+		} Bonus;
 	}
 }
 
