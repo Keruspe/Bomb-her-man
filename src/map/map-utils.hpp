@@ -29,11 +29,7 @@ namespace bombherman
 		typedef struct Grid
 		{
 			char grid[SIZE][SIZE];
-			int size;
-			Grid()
-			{
-				size = SIZE;
-			}
+			static const int size = SIZE;
 		} Grid;
 		
 		typedef struct
