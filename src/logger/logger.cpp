@@ -21,7 +21,6 @@
 using namespace bombherman;
 using namespace bombherman::logger;
 
-
 Logger *
 Logger::getLogger(bool error)
 {
