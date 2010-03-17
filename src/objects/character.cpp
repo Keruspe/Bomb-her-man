@@ -17,50 +17,15 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "map.hpp"
+#include "character.hpp"
 
 using namespace bombherman;
-using namespace bombherman::map;
-using namespace bombherman::exceptions;
+using namespace bombherman::objects;
 
-Map::Map(Grid & model)
-{
-	for(int x(0) ; x < map.size ; ++x)
-	{
-		for(int y(0) ; y < map.size ; ++y)
-		{
-			map.grid[y][x] = model.grid[y][x];
-		}
-	}
-}
-
-Map::Map(std::string path)
-{
-	try
-	{
-		MapParser::parse(path, map);
-	}
-	catch(BadElementException & e)
-	{
-		std::cerr << "An error has been detected in " << path
-			<< " : '" + e.message() + "'." << std::endl;
-	}
-}
-
-Map::~Map()
+Character::Character()
 {
 }
 
-bool Map::move(Coords c, Direction d)
+Character::~Character()
 {
-	return false;
-}
-
-void Map::put(Coords c, Element e)
-{
-}
-
-char Map::get(Coords c)
-{
-	return map.grid[c.y][c.x];
 }

@@ -17,50 +17,23 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "map.hpp"
+#ifndef _BARREL_HPP_
+#define _BARREL_HPP_
 
-using namespace bombherman;
-using namespace bombherman::map;
-using namespace bombherman::exceptions;
-
-Map::Map(Grid & model)
+namespace bombherman
 {
-	for(int x(0) ; x < map.size ; ++x)
+	namespace objects
 	{
-		for(int y(0) ; y < map.size ; ++y)
+		namespace elements
 		{
-			map.grid[y][x] = model.grid[y][x];
+			class Barrel
+			{
+			public:
+				Barrel();
+				~Barrel();
+			};
 		}
 	}
 }
 
-Map::Map(std::string path)
-{
-	try
-	{
-		MapParser::parse(path, map);
-	}
-	catch(BadElementException & e)
-	{
-		std::cerr << "An error has been detected in " << path
-			<< " : '" + e.message() + "'." << std::endl;
-	}
-}
-
-Map::~Map()
-{
-}
-
-bool Map::move(Coords c, Direction d)
-{
-	return false;
-}
-
-void Map::put(Coords c, Element e)
-{
-}
-
-char Map::get(Coords c)
-{
-	return map.grid[c.y][c.x];
-}
+#endif // _BARREL_HPP_
