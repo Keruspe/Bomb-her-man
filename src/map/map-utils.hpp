@@ -26,9 +26,14 @@ namespace bombherman
 {
 	namespace map
 	{
-		typedef struct
+		typedef struct Grid
 		{
 			char grid[SIZE][SIZE];
+			int size;
+			Grid()
+			{
+				size = SIZE;
+			}
 		} Grid;
 		
 		typedef struct

@@ -33,9 +33,9 @@ bool MapParser::parse(std::string path, Grid & map)
 	char c;
 	int y(0);
 	
-    while(std::getline(file, line) && y < SIZE)
+    while(std::getline(file, line) && y < map.size)
 	{
-        for(int x(0) ; x < SIZE ; ++x)
+        for(int x(0) ; x < map.size ; ++x)
 			switch(c = line.at(x))
 			{
 				case NONE:
@@ -51,5 +51,5 @@ bool MapParser::parse(std::string path, Grid & map)
 		++y;
     }
 	
-	return (y == SIZE);
+	return (y == map.size);
 }

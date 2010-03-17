@@ -25,9 +25,9 @@ using namespace bombherman::exceptions;
 
 Map::Map(Grid & model)
 {
-	for(int x(0) ; x < SIZE ; ++x)
+	for(int x(0) ; x < map.size ; ++x)
 	{
-		for(int y(0) ; y < SIZE ; ++y)
+		for(int y(0) ; y < map.size ; ++y)
 		{
 			map.grid[y][x] = model.grid[y][x];
 		}
