@@ -29,3 +29,13 @@ ASCII::ASCII()
 ASCII::~ASCII()
 {
 }
+
+bool
+ASCII::displayMenu()
+{
+}
+
+bool
+ASCII::displayMap()
+{
+}

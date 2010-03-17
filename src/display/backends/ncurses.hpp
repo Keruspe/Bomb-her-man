@@ -16,14 +16,10 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _DISPLAY_BACKENDS_SDL_HPP_
-#define _DISPLAY_BACKENDS_SDL_HPP_
+#ifndef _DISPLAY_BACKENDS_NCURSES_HPP_
+#define _DISPLAY_BACKENDS_NCURSES_HPP_
 
 #include "backend.hpp"
-
-#include <iostream>
-#include <string>
-#include <SDL.h>
 
 namespace bombherman
 {
@@ -31,20 +27,17 @@ namespace bombherman
 	{
 		namespace backends
 		{
-			class SDL :
+			class NCurses :
 				public Backend
 			{
 			public:
-				SDL();
-				virtual ~SDL();
+				NCurses();
+				virtual ~NCurses();
 				bool displayMenu();
 				bool displayMap();
-			
-			private:
-				SDL_Surface *screen;
 			};
 		}
 	}
 }
 
-#endif // _DISPLAY_BACKENDS_SDL_HPP_ 
+#endif // _DISPLAY_BACKENDS_NCURSES_HPP_ 

@@ -35,3 +35,13 @@ SDL::SDL()
 SDL::~SDL()
 {
 }
+
+bool
+SDL::displayMenu()
+{
+}
+
+bool
+SDL::displayMap()
+{
+}

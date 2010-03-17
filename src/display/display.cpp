@@ -23,16 +23,34 @@ using namespace bombherman::display;
 
 Display::Display()
 {
+	/* Select the best backend that is
+	 * compile-time available
+	 */
 	#ifdef HAVE_OPENGL
-	backend = new backends::OpenGL();
+	bBackend = new backends::OpenGL();
 	#elifdef HAVE_SDL
-	backend = new backends::SDL();
+	bBackend = new backends::SDL();
+	#elifdef HAVE_NCURSES
+	bBackend = new backends::NCurses();
 	#else
-	backend = new backends::ASCII();
+	bBackend = new backends::ASCII();
 	#endif
 }
 
+bool
+Display::displayMenu()
+{
+	return bBackend->displayMenu();
+}
+
+bool
+Display::displayMap()
+{
+	return bBackend->displayMap();
+}
+
+
 Display::~Display()
 {
-	delete backend;
+	delete bBackend;
 }

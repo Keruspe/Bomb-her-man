@@ -30,6 +30,8 @@ namespace bombherman
 			public:
 				Backend();
 				virtual ~Backend();
+				virtual bool displayMenu() = 0;
+				virtual bool displayMap() = 0;
 			};
 		}
 	}

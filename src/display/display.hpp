@@ -22,12 +22,16 @@
 #include <iostream>
 #include <string>
 
+#ifdef HAVE_OPENGL
+#include "backends/opengl.hpp"
+#endif
+
 #ifdef HAVE_SDL
 #include "backends/sdl.hpp"
 #endif
 
-#ifdef HAVE_OPENGL
-#include "backends/opengl.hpp"
+#ifdef HAVE_NCURSES
+#include "backends/ncurses.hpp"
 #endif
 
 #include "backends/ascii.hpp"
@@ -39,11 +43,33 @@ namespace bombherman
 		class Display
 		{
 		public:
+			
+			/// Constructor
+			/**
+			 * The constructor initialize the video backend
+			 */
 			Display();
+			
+			/// Destructor
 			virtual ~Display();
+			
+			/// Display the menu   
+			/**
+			 * For now, just call the backend
+			 * related function
+			 */
+			bool displayMenu();
+			
+			/// Display the map
+			/**
+			 * For now, just call the backend
+			 * related function
+			 */
+			bool displayMap();
 		
 		private:
-			backends::Backend *backend;
+			/// To store the backend
+			backends::Backend *bBackend;
 		};
 	}
 }

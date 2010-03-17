@@ -33,6 +33,8 @@ namespace bombherman
 			public:
 				ASCII();
 				virtual ~ASCII();
+				bool displayMenu();
+				bool displayMap();
 			};
 		}
 	}
