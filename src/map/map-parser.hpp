@@ -24,7 +24,7 @@
 #include <string>
 
 #include "map-utils.hpp"
-#include "../exceptions/bad-element-exception.hpp"
+#include "exceptions/bad-element-exception.hpp"
 
 namespace bombherman
 {

@@ -42,7 +42,7 @@ bool MapParser::parse(std::string path, Grid & map)
 				case BARREL:
 				case INDESTRUCTIBLE:
 				case BOMB:
-					map.grid[x][y] = c;
+					map.grid[y][x] = c;
 					break;
 				default:
 					char elem[2] = {c, '\0'};
