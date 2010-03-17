@@ -42,7 +42,7 @@ Map::Map(std::string path)
 	}
 	catch(BadElementException & e)
 	{
-		std::cout << "An error has been detected in " << path
+		std::cerr << "An error has been detected in " << path
 			<< " : '" + e.message() + "'." << std::endl;
 	}
 }
