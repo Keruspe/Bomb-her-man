@@ -31,7 +31,6 @@ using namespace bombherman::map;
 class MapGenerator {
 public:
     static void generate(Grid&);
-    static void setBonus(Grid&);
 protected:
 
 private:
