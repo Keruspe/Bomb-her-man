@@ -16,28 +16,10 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _DISPLAY_BACKENDS_ASCII_HPP_
-#define _DISPLAY_BACKENDS_ASCII_HPP_
+#ifndef _BOMBHERMAN_HPP_
+#define _BOMBHERMAN_HPP_
 
-#include "backend.hpp"
+#include "logger/logger.hpp"
+#include "nls.hpp"
 
-namespace bombherman
-{
-	namespace display
-	{
-		namespace backends
-		{
-			class ASCII :
-				public Backend
-			{
-			public:
-				ASCII();
-				~ASCII();
-				bool displayMenu(elements::MenuType type);
-				bool displayMap();
-			};
-		}
-	}
-}
-
-#endif // _DISPLAY_BACKENDS_ASCII_HPP_
+#endif // _BOMBHERMAN_HPP_ 

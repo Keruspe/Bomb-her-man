@@ -16,28 +16,34 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _DISPLAY_BACKENDS_ASCII_HPP_
-#define _DISPLAY_BACKENDS_ASCII_HPP_
+#include "bombherman.hpp"
+#include "menu.hpp"
 
-#include "backend.hpp"
+using namespace bombherman;
+using namespace bombherman::display;
+using namespace bombherman::display::elements;
 
-namespace bombherman
+std::vector<std::string>
+Menu::getMenu(MenuType which)
 {
-	namespace display
+	std::vector<std::string> menu;
+	switch ( which )
 	{
-		namespace backends
-		{
-			class ASCII :
-				public Backend
-			{
-			public:
-				ASCII();
-				~ASCII();
-				bool displayMenu(elements::MenuType type);
-				bool displayMap();
-			};
-		}
+		case MAIN:
+			menu.push_back(_("Main menu"));
+			menu.push_back(_("Play"));
+			menu.push_back(_("Settings"));
+			menu.push_back(_("Quit"));
+		break;
+		case SETTINGS:
+			menu.push_back(_("Settings"));
+			menu.push_back(_("Back"));
+		break;
+		case GAME:
+			menu.push_back(_("Game"));
+			menu.push_back(_("Back"));
+		break;
 	}
+	return menu;
 }
 
-#endif // _DISPLAY_BACKENDS_ASCII_HPP_

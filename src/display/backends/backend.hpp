@@ -19,6 +19,12 @@
 #ifndef _DISPLAY_BACKENDS_BACKEND_HPP_
 #define _DISPLAY_BACKENDS_BACKEND_HPP_
 
+#include "bombherman.hpp"
+#include "display/elements/menu.hpp"
+
+#include <vector>
+#include <string>
+
 namespace bombherman
 {
 	namespace display
@@ -28,13 +34,11 @@ namespace bombherman
 			class Backend
 			{
 			public:
-				Backend();
-				virtual ~Backend();
-				virtual bool displayMenu() = 0;
+				virtual bool displayMenu(elements::MenuType) = 0;
 				virtual bool displayMap() = 0;
 			};
 		}
 	}
 }
 
-#endif // _DISPLAY_BACKENDS_BACKEND_HPP_ 
+#endif // _DISPLAY_BACKENDS_BACKEND_HPP_

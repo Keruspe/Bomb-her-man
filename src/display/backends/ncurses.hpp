@@ -32,7 +32,7 @@ namespace bombherman
 			{
 			public:
 				NCurses();
-				virtual ~NCurses();
+				~NCurses();
 				bool displayMenu();
 				bool displayMap();
 			};
@@ -40,4 +40,4 @@ namespace bombherman
 	}
 }
 
-#endif // _DISPLAY_BACKENDS_NCURSES_HPP_ 
+#endif // _DISPLAY_BACKENDS_NCURSES_HPP_

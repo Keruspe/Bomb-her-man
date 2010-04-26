@@ -16,28 +16,23 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _DISPLAY_BACKENDS_ASCII_HPP_
-#define _DISPLAY_BACKENDS_ASCII_HPP_
+#ifndef _NLS_HPP_
+#define _NLS_HPP_
 
-#include "backend.hpp"
+#ifdef ENABLE_NLS
+	#include <locale.h>
+	#include <libintl.h>
+	#define _(x) dgettext(PACKAGE, x)
+	#ifdef dgettext_noop
+		#define N_(x) dgettext_noop(PACKAGE, x)
+	#else
+		#define N_(x) (x)
+	#endif
+#else
+	#include <locale.h>
+	#define _(x) (x)
+	#define ngettext(Singular, Plural, Number) ((Number == 1) ? (Singular) : (Plural))
+	#define N_(x) (x)
+#endif // ENABLE_NLS
 
-namespace bombherman
-{
-	namespace display
-	{
-		namespace backends
-		{
-			class ASCII :
-				public Backend
-			{
-			public:
-				ASCII();
-				~ASCII();
-				bool displayMenu(elements::MenuType type);
-				bool displayMap();
-			};
-		}
-	}
-}
-
-#endif // _DISPLAY_BACKENDS_ASCII_HPP_
+#endif // _NLS_HPP_
