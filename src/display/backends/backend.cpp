@@ -16,35 +16,16 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _DISPLAY_ELEMENTS_MENU_HPP_
-#define _DISPLAY_ELEMENTS_MENU_HPP_
+#include "ascii.hpp"
 
-#include <string>
-#include <vector>
+using namespace bombherman;
+using namespace bombherman::display;
+using namespace bombherman::display::backends;
 
-namespace bombherman
+Backend::Backend()
 {
-	namespace display
-	{
-		namespace elements
-		{
-			typedef enum
-			{
-				MAIN = 0,
-				SETTINGS,
-				GAME,
-			} MenuType;
-			
-			class Menu
-			{
-			public:
-				/// For the display backend to get the menu
-				static std::vector<std::string> getMenu(MenuType which);
-			};
-		}
-	}
 }
 
-
-
-#endif // _DISPLAY_ELEMENTS_MENU_HPP_
+Backend::~Backend()
+{
+}

@@ -19,9 +19,6 @@
 #ifndef _DISPLAY_HPP_
 #define _DISPLAY_HPP_
 
-
-#include "display/elements/menu.hpp"
-
 #include <iostream>
 #include <string>
 
@@ -29,7 +26,7 @@
 #include "backends/opengl.hpp"
 #endif
 
-#ifdef HAVE_SDLMM
+#ifdef HAVE_SDL
 #include "backends/sdl.hpp"
 #endif
 
@@ -61,7 +58,7 @@ namespace bombherman
 			 * For now, just call the backend
 			 * related function
 			 */
-			bool displayMenu(elements::MenuType type = elements::MAIN);
+			bool displayMenu();
 			
 			/// Display the map
 			/**

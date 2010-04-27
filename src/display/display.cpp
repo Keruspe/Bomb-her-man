@@ -16,7 +16,6 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "bombherman.hpp"
 #include "display.hpp"
 
 using namespace bombherman;
@@ -24,42 +23,29 @@ using namespace bombherman::display;
 
 Display::Display()
 {
-	/*
-	 * Select the best backend that is
+	/* Select the best backend that is
 	 * compile-time available
 	 */
-	Logger::putLine("Create display");
-	
 	#ifdef HAVE_OPENGL
-	Logger::putLine("Init OpenGL");
 	bBackend = new backends::OpenGL();
-	#else
-	#ifdef HAVE_SDLMM
-	Logger::putLine("Init SDL");
+	#elifdef HAVE_SDL
 	bBackend = new backends::SDL();
-	#else
-	#ifdef HAVE_NCURSES
-	Logger::putLine("Init NCurses");
+	#elifdef HAVE_NCURSES
 	bBackend = new backends::NCurses();
 	#else
-	Logger::putLine("Init ASCII");
 	bBackend = new backends::ASCII();
-	#endif
-	#endif
 	#endif
 }
 
 bool
-Display::displayMenu(elements::MenuType type)
+Display::displayMenu()
 {
-	Logger::putLine("Displaying menu");
-	return bBackend->displayMenu(type);
+	return bBackend->displayMenu();
 }
 
 bool
 Display::displayMap()
 {
-	Logger::putLine("Displaying map");
 	return bBackend->displayMap();
 }
 

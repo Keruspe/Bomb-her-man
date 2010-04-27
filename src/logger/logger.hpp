@@ -25,40 +25,23 @@
 
 namespace bombherman
 {
-	class Logger
+	namespace logger
 	{
-	public:
-		/// Log a message
-		/**
-		 * Simply write the message in the log
-		 */
-		static bool putLine(std::string, bool error = true);
-	
-	private:
-		/// Constructor
-		Logger() {}
-		Logger(std::string file);
+		class Logger
+		{
+		public:
+			static Logger *getLogger(bool error = true);
+			virtual ~Logger();
+			bool putLine(std::string);
 		
-		/// Get the correct Logger
-		/**
-		 * This method permit to get the correct
-		 * logger (for normal or error messages)
-		 */
-		static Logger *getLogger(bool error = true);
-		
-		/// Destructor
-		virtual ~Logger();
-		
-		
-		/// Store the normal Logger
-		static Logger *lLogger;
-		/// Store the error logger
-		static Logger *lErrorLogger;
-		/// Store the file stream of the Logger
-		std::fstream fLogFile;
-	};
+		private:
+			Logger(std::string file);
+			
+			static Logger *lLogger;
+			static Logger *lErrorLogger;
+			std::fstream fLogFile;
+		};
+	}
 }
-
-
 
 #endif // _LOGGER_HPP_ 

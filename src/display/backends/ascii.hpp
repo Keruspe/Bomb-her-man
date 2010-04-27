@@ -32,12 +32,12 @@ namespace bombherman
 			{
 			public:
 				ASCII();
-				~ASCII();
-				bool displayMenu(elements::MenuType type);
+				virtual ~ASCII();
+				bool displayMenu();
 				bool displayMap();
 			};
 		}
 	}
 }
 
-#endif // _DISPLAY_BACKENDS_ASCII_HPP_
+#endif // _DISPLAY_BACKENDS_ASCII_HPP_ 

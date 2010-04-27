@@ -22,8 +22,6 @@ using namespace bombherman;
 using namespace bombherman::display;
 using namespace bombherman::display::backends;
 
-#include <iostream>
-
 ASCII::ASCII()
 {
 }
@@ -33,14 +31,8 @@ ASCII::~ASCII()
 }
 
 bool
-ASCII::displayMenu(elements::MenuType type)
+ASCII::displayMenu()
 {
-	Logger::putLine("Displaying SDL menu");
-	std::vector<std::string> menu = elements::Menu::getMenu(type);
-	
-	std::cout << menu[0] << std::endl << std::endl;
-	for ( int i = 1 ; i < menu.size() ; ++i )
-		std::cout << menu[i] << std::endl;
 }
 
 bool

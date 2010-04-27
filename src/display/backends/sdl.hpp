@@ -21,7 +21,9 @@
 
 #include "backend.hpp"
 
-#include <sdlmm.h>
+#include <iostream>
+#include <string>
+#include <SDL.h>
 
 namespace bombherman
 {
@@ -34,15 +36,15 @@ namespace bombherman
 			{
 			public:
 				SDL();
-				~SDL();
-				bool displayMenu(elements::MenuType type);
+				virtual ~SDL();
+				bool displayMenu();
 				bool displayMap();
 			
 			private:
-				SDLmm::Display *sDisplay;
+				SDL_Surface *screen;
 			};
 		}
 	}
 }
 
-#endif // _DISPLAY_BACKENDS_SDL_HPP_
+#endif // _DISPLAY_BACKENDS_SDL_HPP_ 

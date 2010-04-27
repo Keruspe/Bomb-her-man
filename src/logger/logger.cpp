@@ -19,24 +19,22 @@
 #include "logger.hpp"
 
 using namespace bombherman;
-
-Logger *Logger::lLogger = NULL;
-Logger *Logger::lErrorLogger = NULL;
+using namespace bombherman::logger;
 
 Logger *
 Logger::getLogger(bool error)
 {
 	if ( error )
 	{
-		if ( ! Logger::lErrorLogger )
-			Logger::lErrorLogger = new Logger("/tmp/bomb-her-man.log");
-		return Logger::lErrorLogger;
+		if ( ! lErrorLogger )
+			lErrorLogger = new Logger("/tmp/bomb-her-man.log");
+		return lErrorLogger;
 	}
 	else
 	{
-		if ( ! Logger::lLogger )
-			Logger::lLogger = new Logger("/tmp/bomb-her-man.err");
-		return Logger::lLogger;
+		if ( ! lLogger )
+			lLogger = new Logger("/tmp/bomb-her-man.err");
+		return lLogger;
 	}
 }
 
@@ -51,10 +49,8 @@ Logger::~Logger()
 }
 
 bool
-Logger::putLine(std::string message, bool error)
+Logger::putLine(std::string message)
 {
-	Logger *log = getLogger(error);
-	( ( error ) ? ( std::cerr ) : ( std::cout ) ) << "[date]\t" << message << std::endl;
-	( log->fLogFile ) << "[date]\t" << message << std::endl;
+	fLogFile << "[date]\t" << message << std::endl;
 	return true;
 }

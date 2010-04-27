@@ -16,7 +16,6 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "bombherman.hpp"
 #include "sdl.hpp"
 
 using namespace bombherman;
@@ -25,37 +24,21 @@ using namespace bombherman::display::backends;
 
 SDL::SDL()
 {
-	Logger::putLine("Initialize video");
-	sDisplay = &SDLmm::Display::GetDisplay();
-	sDisplay->Init();
-	bool ok = sDisplay->SetVideoMode(640, 480, 16, SDL_SWSURFACE);
-	if ( ! ok )
+	screen = SDL_SetVideoMode(640, 480, 16, SDL_SWSURFACE);
+	if ( screen == NULL )
 	{
-		Logger::putLine("Impossible de passer en 640x480 en 16 bpp:", true);
-		Logger::putLine(SDLmm::GetError(), true);
-	//	throw exceptions::NoSDL;
+		std::cerr << "Impossible de passer en 640x480 en 16 bpp: " << SDL_GetError() << std::endl;
+		exit(1);
 	}
-	sDisplay->SetCaption(_("Bomb-her-man"), "bomb-her-man.svg");
 }
 
 SDL::~SDL()
 {
-	Logger::putLine("Stop video");
-	sDisplay->Quit();
-	Logger::putLine("Video stopped");
 }
 
 bool
-SDL::displayMenu(elements::MenuType type)
+SDL::displayMenu()
 {
-	Logger::putLine("Displaying SDL menu");
-	std::vector<std::string> menu = elements::Menu::getMenu(type);
-	
-	SDLmm::SRect rect(10, 10, 100, 100);
-	
-	sDisplay->FillRect(rect, 0x009090);
-	
-	sDisplay->UpdateRect(rect);
 }
 
 bool
