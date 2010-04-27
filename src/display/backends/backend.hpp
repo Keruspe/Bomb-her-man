@@ -35,4 +35,4 @@ namespace bombherman
 	}
 }
 
-#endif // _DISPLAY_BACKENDS_BACKEND_HPP_ 
+#endif // _DISPLAY_BACKENDS_BACKEND_HPP_

@@ -50,4 +50,4 @@ namespace bombherman
 	}
 }
 
-#endif // _DISPLAY_BACKENDS_SDL_HPP_ 
+#endif // _DISPLAY_BACKENDS_SDL_HPP_

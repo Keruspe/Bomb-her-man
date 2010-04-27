@@ -74,4 +74,4 @@ namespace bombherman
 	}
 }
 
-#endif // _DISPLAY_HPP_ 
+#endif // _DISPLAY_HPP_
