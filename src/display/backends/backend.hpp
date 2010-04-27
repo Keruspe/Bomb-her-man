@@ -28,10 +28,8 @@ namespace bombherman
 			class Backend
 			{
 			public:
-				Backend();
-				virtual ~Backend();
-				virtual bool displayMenu() = 0;
-				virtual bool displayMap() = 0;
+				virtual void displayMenu(elements::Menu::Type) = 0;
+				virtual void displayMap() = 0;
 			};
 		}
 	}

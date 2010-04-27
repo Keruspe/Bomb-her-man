@@ -23,30 +23,41 @@ using namespace bombherman::display;
 
 Display::Display()
 {
-	/* Select the best backend that is
+	/*
+	 * Select the best backend that is
 	 * compile-time available
 	 */
+	bhout << "Create display" << bhendl;
+	
 	#ifdef HAVE_OPENGL
+	bhout << "Init OpenGL" << bhendl;
 	bBackend = new backends::OpenGL();
-	#elifdef HAVE_SDL
+	#else
+	#ifdef HAVE_SDLMM
+	bhout << "Init SDL" << bhendl;
 	bBackend = new backends::SDL();
-	#elifdef HAVE_NCURSES
+	#else
+	#ifdef HAVE_NCURSES
+	bhout << "Init NCurses" << bhendl;
 	bBackend = new backends::NCurses();
 	#else
+	bhout << "Init ASCII" << bhendl;
 	bBackend = new backends::ASCII();
 	#endif
 }
 
-bool
-Display::displayMenu()
+void
+Display::displayMenu(elements::Menu::Type type)
 {
-	return bBackend->displayMenu();
+	bhout << "Displaying menu" << bhendl;
+	bBackend->displayMenu(type);
 }
 
-bool
+void
 Display::displayMap()
 {
-	return bBackend->displayMap();
+	bhout << "Displaying map" << bhendl;
+	bBackend->displayMap();
 }
 
 

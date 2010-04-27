@@ -29,3 +29,13 @@ NCurses::NCurses()
 NCurses::~NCurses()
 {
 }
+
+void
+NCurses::displayMenu()
+{
+}
+
+void
+NCurses::displayMap()
+{
+}

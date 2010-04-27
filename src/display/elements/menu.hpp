@@ -16,32 +16,35 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _LOGGER_HPP_
-#define _LOGGER_HPP_
+#ifndef _DISPLAY_ELEMENTS_MENU_HPP_
+#define _DISPLAY_ELEMENTS_MENU_HPP_
 
 #include <string>
-#include <iostream>
-#include <fstream>
+#include <vector>
 
 namespace bombherman
 {
-	namespace logger
+	namespace display
 	{
-		class Logger
+		namespace elements
 		{
-		public:
-			static Logger *getLogger(bool error = true);
-			virtual ~Logger();
-			bool putLine(std::string);
-		
-		private:
-			Logger(std::string file);
-			
-			static Logger *lLogger;
-			static Logger *lErrorLogger;
-			std::fstream fLogFile;
-		};
+			class Menu
+			{
+			public:
+				typedef enum
+				{
+					MAIN = 0,
+					SETTINGS,
+					GAME,
+				} Type;
+				
+				/// For the display backend to get the menu
+				static std::vector<std::string> getMenu(Type which);
+			};
+		}
 	}
 }
 
-#endif // _LOGGER_HPP_ 
+
+
+#endif // _DISPLAY_ELEMENTS_MENU_HPP_

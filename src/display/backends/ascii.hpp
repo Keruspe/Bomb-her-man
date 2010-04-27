@@ -32,9 +32,9 @@ namespace bombherman
 			{
 			public:
 				ASCII();
-				virtual ~ASCII();
-				bool displayMenu();
-				bool displayMap();
+				~ASCII();
+				void displayMenu(elements::Menu::Type type);
+				void displayMap();
 			};
 		}
 	}

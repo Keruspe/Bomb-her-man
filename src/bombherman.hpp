@@ -16,16 +16,19 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ascii.hpp"
+#ifndef _BOMBHERMAN_HPP_
+#define _BOMBHERMAN_HPP_
 
-using namespace bombherman;
-using namespace bombherman::display;
-using namespace bombherman::display::backends;
+#include <iostream>
 
-Backend::Backend()
+namespace bombherman
 {
+	#define bhout std::cout << "[date]\t"
+	#define bherr std::cerr << "[date]\t"
+	#define bhendl std::endl
 }
 
-Backend::~Backend()
-{
-}
+#include "config/config.hpp"
+#include "nls.hpp"
+
+#endif // _BOMBHERMAN_HPP_

@@ -24,24 +24,128 @@ using namespace bombherman::display::backends;
 
 SDL::SDL()
 {
-	screen = SDL_SetVideoMode(640, 480, 16, SDL_SWSURFACE);
-	if ( screen == NULL )
+	bhout << "Initialize video" << bhendl;
+	
+	sDisplay = &SDLmm::Display::GetDisplay();
+	sDisplay->Init();
+	
+	Uint32 flags = SDL_SWSURFACE;
+	if ( Config::get("fullscreen") == "true" )
+		flags |= SDL_FULLSCREEN;
+	
+	width = Config::getInt("screenWidth");
+	height = Config::getInt("screenHeight");
+	
+	SDL_Rect **modes = SDLmm::Display::ListModes(0, flags|SDL_FULLSCREEN);
+	if ( modes == (SDL_Rect**)0 )
 	{
-		std::cerr << "Impossible de passer en 640x480 en 16 bpp: " << SDL_GetError() << std::endl;
-		exit(1);
+		bherr << "No modes available!" << bhendl;
+	//	throw exceptions::NoSDL;
+	}
+	
+	bool ok;
+	
+	ok = false;
+	if ( modes == (SDL_Rect**)-1 )
+	{
+		bhout << "All resolutions available." << bhendl;
+		if ( ( width == 0 ) || ( height == 0 ) )
+		{
+			bherr << "Can't choice the resolution" << bhendl;
+		//	throw exceptions::NoSDL;
+		}
+	}
+	else
+	{
+		/* Print valid modes */
+		bhout << "Available Modes" << bhendl;
+		for (int i=0; modes[i]; ++i)
+		{
+			bhout << modes[i]->w << 'x' << modes[i]->h << bhendl;
+			if ( ( width == modes[i]->w ) && ( height == modes[i]->h ) )
+				ok = true;
+		}
+	}
+	
+	if ( ! ok )
+	{
+		width = modes[0]->w;
+		height = modes[0]->h;
+		if ( (flags&SDL_FULLSCREEN) == 0 )
+		{
+			bhout << "Not in fullscreen" << bhendl;
+			width *= 0.9;
+			height *= 0.9;
+		}
+	}
+	
+	ok = true;
+	ok = sDisplay->SetVideoMode(width, height, 32, flags);
+	if ( ! ok )
+	{
+		bherr << "Impossible de passer en 640x480 en 16 bpp: " << SDLmm::GetError() << bhendl;
+	//	throw exceptions::NoSDL;
+	}
+	sDisplay->SetCaption(_("Bomb-her-man"), "bomb-her-man.svg");
+	
+	if ( TTF_Init() == -1 )
+	{
+		bherr << "Impossible d'initialiser l'utilisation des polices TrueType: " << TTF_GetError() << bhendl;
+	//	throw exceptions::NoSDL;
+	}
+	else
+	{
+		textColor.r = 255;
+		textColor.g = 255;
+		textColor.b = 255;
+		fontTitle = TTF_OpenFont("biolinum.ttf", 26);
+		fontNormal = TTF_OpenFont("biolinum.ttf", 16);
+		if ( ( ! fontTitle ) || ( ! fontNormal ) )
+		{
+			bherr << "Impossible d'ouvrir la police: " << TTF_GetError() << bhendl;
+		//	throw exceptions::NoSDLFont;
+		}
 	}
 }
 
 SDL::~SDL()
 {
+	TTF_CloseFont(fontTitle);
+	TTF_CloseFont(fontNormal);
+	fontTitle = NULL;
+	fontNormal = NULL;
+	TTF_Quit();
+	bhout << "Stop video" << bhendl;
+	sDisplay->Quit();
+	bhout << "Video stopped" << bhendl;
 }
 
-bool
-SDL::displayMenu()
+void
+SDL::displayMenu(elements::Menu::Type type)
 {
+	bhout << "Displaying SDL menu" << bhendl;
+	std::vector<std::string> menu = elements::Menu::getMenu(type);
+	
+	SDLmm::Surface sMenu = SDLmm::Surface::CreateSurface(*sDisplay);
+	SDLmm::SPoint diff(TTF_FontLineSkip(fontTitle), 0), point(0, sMenu.w()/2);
+	
+	SDLmm::Surface *textSurface;
+	for ( unsigned int i = 0 ; i < menu.size() ; ++i )
+	{
+		if( ! ( textSurface = new SDLmm::Surface(TTF_RenderUTF8_Blended(( i == 0 ) ? ( fontTitle ) : ( fontNormal ), menu[i].c_str(), textColor)) ) )
+			bherr << "Can't display a line" << bhendl;
+		else
+		{
+			sMenu.Blit(*textSurface, point);
+			point += diff;
+			delete textSurface;
+		}
+	}
+	sDisplay->Blit(sMenu);
+	sDisplay->Update();
 }
 
-bool
+void
 SDL::displayMap()
 {
 }

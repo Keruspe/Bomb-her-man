@@ -58,14 +58,14 @@ namespace bombherman
 			 * For now, just call the backend
 			 * related function
 			 */
-			bool displayMenu();
+			void displayMenu(elements::Menu::Type type = elements::Menu::MAIN);
 			
 			/// Display the map
 			/**
 			 * For now, just call the backend
 			 * related function
 			 */
-			bool displayMap();
+			void displayMap();
 		
 		private:
 			/// To store the backend

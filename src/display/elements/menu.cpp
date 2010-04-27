@@ -16,41 +16,34 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "logger.hpp"
+#include "bombherman.hpp"
+#include "menu.hpp"
 
 using namespace bombherman;
-using namespace bombherman::logger;
+using namespace bombherman::display;
+using namespace bombherman::display::elements;
 
-Logger *
-Logger::getLogger(bool error)
+std::vector<std::string>
+Menu::getMenu(Type which)
 {
-	if ( error )
+	std::vector<std::string> menu;
+	switch ( which )
 	{
-		if ( ! lErrorLogger )
-			lErrorLogger = new Logger("/tmp/bomb-her-man.log");
-		return lErrorLogger;
+		case MAIN:
+			menu.push_back(_("Main menu"));
+			menu.push_back(_("Play"));
+			menu.push_back(_("Settings"));
+			menu.push_back(_("Quit"));
+		break;
+		case SETTINGS:
+			menu.push_back(_("Settings"));
+			menu.push_back(_("Back"));
+		break;
+		case GAME:
+			menu.push_back(_("Game"));
+			menu.push_back(_("Back"));
+		break;
 	}
-	else
-	{
-		if ( ! lLogger )
-			lLogger = new Logger("/tmp/bomb-her-man.err");
-		return lLogger;
-	}
+	return menu;
 }
 
-Logger::Logger(std::string file)
-{
-	fLogFile.open(file.c_str());
-}
-
-Logger::~Logger()
-{
-	fLogFile.close();
-}
-
-bool
-Logger::putLine(std::string message)
-{
-	fLogFile << "[date]\t" << message << std::endl;
-	return true;
-}

@@ -30,12 +30,18 @@ ASCII::~ASCII()
 {
 }
 
-bool
-ASCII::displayMenu()
+void
+ASCII::displayMenu(elements::Menu::Type type)
 {
+	bhout << "Displaying SDL menu" << bhendl;
+	std::vector<std::string> menu = elements::Menu::getMenu(type);
+	
+	std::cout << menu[0] << std::endl << std::endl;
+	for ( unsigned int i = 1 ; i < menu.size() ; ++i )
+		std::cout << menu[i] << std::endl;
 }
 
-bool
+void
 ASCII::displayMap()
 {
 }

@@ -32,9 +32,9 @@ namespace bombherman
 			{
 			public:
 				NCurses();
-				virtual ~NCurses();
-				bool displayMenu();
-				bool displayMap();
+				~NCurses();
+				void displayMenu();
+				void displayMap();
 			};
 		}
 	}
