@@ -46,4 +46,3 @@ Menu::getMenu(Type which)
 	}
 	return menu;
 }
-
