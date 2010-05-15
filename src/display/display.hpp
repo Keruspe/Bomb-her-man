@@ -23,18 +23,20 @@
 #include <string>
 
 #ifdef HAVE_OPENGL
-#include "backends/opengl.hpp"
+#include "display/backends/opengl.hpp"
 #endif
 
-#ifdef HAVE_SDL
-#include "backends/sdl.hpp"
+#ifdef HAVE_SDLMM
+#include "display/backends/sdl.hpp"
 #endif
 
 #ifdef HAVE_NCURSES
-#include "backends/ncurses.hpp"
+#include "display/backends/ncurses.hpp"
 #endif
 
-#include "backends/ascii.hpp"
+#include "display/backends/ascii.hpp"
+
+#include "bombherman.hpp"
 
 namespace bombherman
 {
@@ -69,7 +71,7 @@ namespace bombherman
 		
 		private:
 			/// To store the backend
-			backends::Backend *bBackend;
+			DisplayBackend *bBackend;
 		};
 	}
 }

@@ -16,41 +16,26 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _DISPLAY_BACKENDS_SDL_HPP_
-#define _DISPLAY_BACKENDS_SDL_HPP_
+#ifndef _DISPLAY_NOSDL_EXCEPTION_HPP_
+#define _DISPLAY_NOSDL_EXCEPTION_HPP_
 
-#include "display/backends/backend.hpp"
-
-#include "display/backends/backend.hpp"
-#include "exceptions/display/nosdl-exception.hpp"
-
-#include <sdlmm.h>
-#include <SDL_ttf.h>
+#include "exceptions/display/backend-exception.hpp"
 
 namespace bombherman
 {
-	namespace display
+	namespace exceptions
 	{
-		namespace backends
+		namespace display
 		{
-			class SDL :
-				public DisplayBackend
+			class NoSDLException :
+				public BackendException
 			{
 			public:
-				SDL();
-				~SDL();
-				void displayMenu(elements::Menu::Type type);
-				void displayMap();
-			
-			private:
-				SDLmm::Display *sDisplay;
-				SDL_Color textColor;
-				int width, height;
-				TTF_Font *fontTitle;
-				TTF_Font *fontNormal;
+				NoSDLException(const std::string &m) throw() : BackendException("No SDL backend:" + m) {}
+				virtual ~NoSDLException() throw() {}
 			};
 		}
 	}
 }
 
-#endif // _DISPLAY_BACKENDS_SDL_HPP_
+#endif // _DISPLAY_NOSDL_EXCEPTION_HPP_

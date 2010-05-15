@@ -28,7 +28,7 @@ namespace bombherman
 		namespace backends
 		{
 			class NCurses :
-				public Backend
+				public DisplayBackend
 			{
 			public:
 				NCurses();

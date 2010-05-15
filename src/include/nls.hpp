@@ -31,7 +31,7 @@
 #else
 	#include <locale.h>
 	#define _(x) (x)
-	#define ngettext(Singular, Plural, Number) ((Number == 1) ? (Singular) : (Plural))
+	#define ngettext(s, p, n) ((n == 1) ? (s) : (p))
 	#define N_(x) (x)
 #endif // ENABLE_NLS
 

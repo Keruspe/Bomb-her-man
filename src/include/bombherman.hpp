@@ -16,41 +16,21 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _DISPLAY_BACKENDS_SDL_HPP_
-#define _DISPLAY_BACKENDS_SDL_HPP_
+#ifndef _BOMBHERMAN_HPP_
+#define _BOMBHERMAN_HPP_
 
-#include "display/backends/backend.hpp"
-
-#include "display/backends/backend.hpp"
-#include "exceptions/display/nosdl-exception.hpp"
-
-#include <sdlmm.h>
-#include <SDL_ttf.h>
+#include <iostream>
+#include <iomanip>
 
 namespace bombherman
 {
-	namespace display
-	{
-		namespace backends
-		{
-			class SDL :
-				public DisplayBackend
-			{
-			public:
-				SDL();
-				~SDL();
-				void displayMenu(elements::Menu::Type type);
-				void displayMap();
-			
-			private:
-				SDLmm::Display *sDisplay;
-				SDL_Color textColor;
-				int width, height;
-				TTF_Font *fontTitle;
-				TTF_Font *fontNormal;
-			};
-		}
-	}
+	#define bhfile "file " << std::setw(30) << __FILE__ << ", line " << std::setw(8) << __LINE__ << " => "
+	#define bhout std::cout << "In " << bhfile
+	#define bherr std::cerr << "Error in " << bhfile
+	#define bhendl std::endl
 }
 
-#endif // _DISPLAY_BACKENDS_SDL_HPP_
+#include "config/config.hpp"
+#include "nls.hpp"
+
+#endif // _BOMBHERMAN_HPP_

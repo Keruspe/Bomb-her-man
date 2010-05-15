@@ -20,6 +20,7 @@
 
 using namespace bombherman;
 using namespace bombherman::display;
+using namespace bombherman::exceptions::display;
 
 Display::Display()
 {
@@ -28,22 +29,66 @@ Display::Display()
 	 * compile-time available
 	 */
 	bhout << "Create display" << bhendl;
+	bBackend = NULL;
 	
 	#ifdef HAVE_OPENGL
-	bhout << "Init OpenGL" << bhendl;
-	bBackend = new backends::OpenGL();
-	#else
-	#ifdef HAVE_SDLMM
-	bhout << "Init SDL" << bhendl;
-	bBackend = new backends::SDL();
-	#else
-	#ifdef HAVE_NCURSES
-	bhout << "Init NCurses" << bhendl;
-	bBackend = new backends::NCurses();
-	#else
-	bhout << "Init ASCII" << bhendl;
-	bBackend = new backends::ASCII();
+	try
+	{
+		bhout << "Init OpenGL" << bhendl;
+		bBackend = new backends::OpenGL();
+	}
+	catch ( BackendException &e )
+	{
+		bherr << e.message();
+		bBackend = NULL;
+	}
 	#endif
+	
+	#ifdef HAVE_SDLMM
+	try
+	{
+		if ( bBackend == NULL )
+		{
+			bhout << "Init SDL" << bhendl;
+			bBackend = new backends::SDL();
+		}
+	}
+	catch ( BackendException &e )
+	{
+		bherr << e.message();
+		bBackend = NULL;
+	}
+	#endif
+	
+	#ifdef HAVE_NCURSES
+	try
+	{
+		if ( bBackend == NULL )
+		{
+			bhout << "Init NCurses" << bhendl;
+			bBackend = new backends::NCurses();
+		}
+	}
+	catch ( BackendException &e )
+	{
+		bherr << e.message();
+		bBackend = NULL;
+	}
+	#endif
+	
+	try
+	{
+		if ( bBackend == NULL )
+		{
+			bhout << "Init ASCII" << bhendl;
+			bBackend = new backends::ASCII();
+		}
+	}
+	catch ( BackendException &e )
+	{
+		bherr << e.message();
+		bBackend = NULL;
+	}
 }
 
 void

@@ -18,6 +18,8 @@
 
 #include "ascii.hpp"
 
+#include <iostream>
+
 using namespace bombherman;
 using namespace bombherman::display;
 using namespace bombherman::display::backends;

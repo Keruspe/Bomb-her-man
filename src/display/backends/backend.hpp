@@ -19,19 +19,20 @@
 #ifndef _DISPLAY_BACKENDS_BACKEND_HPP_
 #define _DISPLAY_BACKENDS_BACKEND_HPP_
 
+#include "bombherman.hpp"
+
+#include "display/elements/menu.hpp"
+
 namespace bombherman
 {
 	namespace display
 	{
-		namespace backends
+		class DisplayBackend
 		{
-			class Backend
-			{
-			public:
-				virtual void displayMenu(elements::Menu::Type) = 0;
-				virtual void displayMap() = 0;
-			};
-		}
+		public:
+			virtual void displayMenu(elements::Menu::Type) = 0;
+			virtual void displayMap() = 0;
+		};
 	}
 }
 

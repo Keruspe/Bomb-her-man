@@ -38,10 +38,7 @@ SDL::SDL()
 	
 	SDL_Rect **modes = SDLmm::Display::ListModes(0, flags|SDL_FULLSCREEN);
 	if ( modes == (SDL_Rect**)0 )
-	{
-		bherr << "No modes available!" << bhendl;
-	//	throw exceptions::NoSDL;
-	}
+		throw new exceptions::display::NoSDLException("No modes available!");
 	
 	bool ok;
 	
@@ -50,10 +47,7 @@ SDL::SDL()
 	{
 		bhout << "All resolutions available." << bhendl;
 		if ( ( width == 0 ) || ( height == 0 ) )
-		{
-			bherr << "Can't choice the resolution" << bhendl;
-		//	throw exceptions::NoSDL;
-		}
+			throw new exceptions::display::NoSDLException("Can't choice the resolution");
 	}
 	else
 	{
@@ -83,15 +77,15 @@ SDL::SDL()
 	ok = sDisplay->SetVideoMode(width, height, 32, flags);
 	if ( ! ok )
 	{
-		bherr << "Impossible de passer en 640x480 en 16 bpp: " << SDLmm::GetError() << bhendl;
-	//	throw exceptions::NoSDL;
+		bherr << SDLmm::GetError() << bhendl;
+		throw exceptions::display::NoSDLException("Impossible de passer en 640x480 en 16 bpp");
 	}
 	sDisplay->SetCaption(_("Bomb-her-man"), "bomb-her-man.svg");
 	
 	if ( TTF_Init() == -1 )
 	{
-		bherr << "Impossible d'initialiser l'utilisation des polices TrueType: " << TTF_GetError() << bhendl;
-	//	throw exceptions::NoSDL;
+		bherr << TTF_GetError() << bhendl;
+		throw exceptions::display::NoSDLException("Impossible d'initialiser l'utilisation des polices TrueType");
 	}
 	else
 	{
@@ -102,8 +96,8 @@ SDL::SDL()
 		fontNormal = TTF_OpenFont("biolinum.ttf", 16);
 		if ( ( ! fontTitle ) || ( ! fontNormal ) )
 		{
-			bherr << "Impossible d'ouvrir la police: " << TTF_GetError() << bhendl;
-		//	throw exceptions::NoSDLFont;
+			bherr << TTF_GetError() << bhendl;
+			throw exceptions::display::NoSDLException("Impossible d'ouvrir la police");
 		}
 	}
 }
@@ -127,7 +121,7 @@ SDL::displayMenu(elements::Menu::Type type)
 	std::vector<std::string> menu = elements::Menu::getMenu(type);
 	
 	SDLmm::Surface sMenu = SDLmm::Surface::CreateSurface(*sDisplay);
-	SDLmm::SPoint diff(TTF_FontLineSkip(fontTitle), 0), point(0, sMenu.w()/2);
+	SDLmm::SPoint diff(TTF_FontLineSkip(fontTitle), 0), point(0, sDisplay->w()/2);
 	
 	SDLmm::Surface *textSurface;
 	for ( unsigned int i = 0 ; i < menu.size() ; ++i )
@@ -136,7 +130,7 @@ SDL::displayMenu(elements::Menu::Type type)
 			bherr << "Can't display a line" << bhendl;
 		else
 		{
-			sMenu.Blit(*textSurface, point);
+			sDisplay->Blit(*textSurface, point);
 			point += diff;
 			delete textSurface;
 		}

@@ -28,7 +28,7 @@ namespace bombherman
 		namespace backends
 		{
 			class ASCII :
-				public Backend
+				public DisplayBackend
 			{
 			public:
 				ASCII();
