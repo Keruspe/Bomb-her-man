@@ -17,7 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config/config.cpp"
+#include "config/config.hpp"
 
 int main(int argc, char *argv[])
 {
