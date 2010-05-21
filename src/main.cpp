@@ -19,7 +19,10 @@
 
 #include "config/config.hpp"
 
-int main(int argc, char *argv[])
+using namespace bombherman;
+
+int
+main(int argc, char *argv[])
 {
     Config::set("mapSize", 15);
 
