@@ -20,7 +20,9 @@
 #ifndef _MAP_UTILS_HPP_
 #define _MAP_UTILS_HPP_
 
-#define SIZE 15
+#include <vector>
+
+#include "config/config.hpp"
 
 namespace bombherman
 {
@@ -28,8 +30,13 @@ namespace bombherman
 	{
 		typedef struct Grid
 		{
-			char grid[SIZE][SIZE];
-			static const int size = SIZE;
+			int size;
+			std::vector< std::vector< char > > grid;
+
+            Grid()
+            {
+                size = Config::getInt("mapSize");
+            }
 		} Grid;
 		
 		typedef struct
