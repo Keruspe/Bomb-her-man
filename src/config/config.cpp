@@ -16,7 +16,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "bombherman.hpp"
+//#include "bombherman.hpp" file is missing
 #include "config.hpp"
 
 using namespace bombherman;
