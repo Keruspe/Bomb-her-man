@@ -31,10 +31,10 @@ bool MapParser::parse(std::string path, Grid & map)
 	std::fstream file(path.c_str(), std::ios::in);
 	std::string line;
 	char c;
-    std::vector<char> *tmp;
+    std::vector<char> *current_line;
     for(int y(0) ; std::getline(file, line) && y < map.size ; ++y)
 	{
-        tmp = new std::vector<char>();
+        current_line = new std::vector<char>();
         for(int x(0) ; x < map.size ; ++x)
             try
             {
@@ -44,7 +44,7 @@ bool MapParser::parse(std::string path, Grid & map)
 		    		case BARREL:
 	    			case INDESTRUCTIBLE:
     				case BOMB:
-					    tmp->push_back(c);
+					    current_line->push_back(c);
 				    	break;
 			    	default:
 				    	char elem[2] = {c, '\0'};
@@ -55,8 +55,8 @@ bool MapParser::parse(std::string path, Grid & map)
             {
                 return false;
             }
-        map.grid.push_back(*tmp);
-        delete(tmp);
+        map.grid.push_back(*current_line);
+        delete(current_line);
     }
 	
 	return (map.grid.size() == map.size);

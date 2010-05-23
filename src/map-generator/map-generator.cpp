@@ -37,10 +37,10 @@ MapGenerator::generate(Grid& g)
     int currentHorizontalElementSize, currentVerticalElementSize = 0;
     float currentHorizontalInsertionProbability, currentVerticalInsertionProbability = INSERTION_PROBABILITY_BASE_VERTICAL;
     Coords c;
-    std::vector<char> *tmp;
+    std::vector<char> *current_line;
     for (c.x = 0; c.x < g.size; ++c.x)
     {
-        tmp = new std::vector<char>();
+        current_line = new std::vector<char>();
         for (c.y = 0; c.y < g.size; ++c.y)
         {
             currentHorizontalElementSize = horizontalScan(g, c);
@@ -49,34 +49,34 @@ MapGenerator::generate(Grid& g)
             {
                 if (throwDice(currentVerticalInsertionProbability) && currentVerticalElementSize < INSERTION_ELEMENT_SIZE_MAX_VERTICAL && testCellLimited(g, c))
                 {
-                    tmp->push_back(INDESTRUCTIBLE);
+                    current_line->push_back(INDESTRUCTIBLE);
                     currentVerticalElementSize ++;
                     currentVerticalInsertionProbability -= INSERTION_PROBABILITY_REGRESSION_VERTICAL;
                 }
                 else
                 {
-                    tmp->push_back(NONE);
+                    current_line->push_back(NONE);
                     currentVerticalElementSize = 0;
                     currentVerticalInsertionProbability = INSERTION_PROBABILITY_BASE_VERTICAL;
                 }
             }
             else if (currentHorizontalElementSize != 0 && currentHorizontalElementSize < INSERTION_ELEMENT_SIZE_MAX_HORIZONTAL && throwDice(currentHorizontalInsertionProbability) && c.x != 14)
             {
-                    tmp->push_back(INDESTRUCTIBLE);
+                    current_line->push_back(INDESTRUCTIBLE);
             }
             else if (throwDice(INSERTION_PROBABILITY_BASE) && testCellFull(g, c))
             {
-                tmp->push_back(INDESTRUCTIBLE);
+                current_line->push_back(INDESTRUCTIBLE);
                 currentVerticalElementSize ++;
                 currentVerticalInsertionProbability -= INSERTION_PROBABILITY_REGRESSION_VERTICAL;
             }
             else
             {
-                tmp->push_back(NONE);
+                current_line->push_back(NONE);
             }
         }
-        g.grid.push_back(*tmp);
-        delete(tmp);
+        g.grid.push_back(*current_line);
+        delete(current_line);
     }
 }
 
