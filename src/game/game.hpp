@@ -1,7 +1,6 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * Bomb-her-man
- * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
+ * Copyright (C) Sardem FF7 2010 <sardemff7.pub@gmail.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -17,30 +16,35 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _EXCEPTION_HPP_
-#define _EXCEPTION_HPP_
+#ifndef _GAME_HPP_
+#define _GAME_HPP_
 
-#include <exception>
-#include <string>
+#include "bombherman.hpp"
+#include "display/display.hpp"
+#include "events/events.hpp"
 
 namespace bombherman
 {
-	namespace exceptions
+	class Game
 	{
-		class Exception :
-			public std::exception
-		{
-		public:
-			virtual ~Exception() throw();
-			const std::string & message() const throw();
-		
-		protected:
-			Exception(const std::string & message) throw();
-		
-		private:
-			const std::string _message;
-		};
-	}
+	public:
+		/// Contructor
+		/**
+		 * It initializes all the part of the game (display, sound, events)
+		 */
+		Game();
+		/// Main loop
+		/**
+		 * It launches the main loop, create display and other
+		 */
+		void main();
+	
+	private:
+		/// To store the display part
+		display::Display *dDisplay;
+		/// To store the events part
+		events::Events *eEvent;
+	};
 }
 
-#endif // _EXCEPTION_HPP_
+#endif // _BOMBHERMAN_HPP_

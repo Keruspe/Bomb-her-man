@@ -31,7 +31,12 @@ namespace bombherman
 				public Exception
 			{
 			public:
+				/// Constructor
+				/**
+				 * @param m The message
+				 */
 				BackendException(const std::string &m) throw() : Exception(m) {}
+				/// Destructor
 				virtual ~BackendException() throw () {}
 			};
 		}

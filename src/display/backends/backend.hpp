@@ -30,7 +30,12 @@ namespace bombherman
 		class DisplayBackend
 		{
 		public:
-			virtual void displayMenu(elements::Menu::Type) = 0;
+			/// Display the menu
+			/**
+			 * @param type The type of the menu to display
+			 */
+			virtual void displayMenu(elements::Menu::Type type) = 0;
+			/// Display the map
 			virtual void displayMap() = 0;
 		};
 	}

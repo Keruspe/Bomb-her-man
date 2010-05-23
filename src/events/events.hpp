@@ -1,7 +1,6 @@
-/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * Bomb-her-man
- * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
+ * Copyright (C) Sardem FF7 2010 <sardemff7.pub@gmail.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -17,30 +16,49 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _EXCEPTION_HPP_
-#define _EXCEPTION_HPP_
+#ifndef _EVENTS_HPP_
+#define _EVENTS_HPP_
 
-#include <exception>
-#include <string>
+#include "events/backends/backend.hpp"
+
+#ifdef HAVE_SDLMM
+#include "events/backends/sdl.hpp"
+#endif
+
+#ifdef HAVE_NCURSES
+#include "events/backends/ncurses.hpp"
+#endif
+
+#ifdef HAVE_READLINE
+#include "events/backends/readline.hpp"
+#endif
+
+#include "bombherman.hpp"
 
 namespace bombherman
 {
-	namespace exceptions
+	namespace events
 	{
-		class Exception :
-			public std::exception
+		class Events
 		{
 		public:
-			virtual ~Exception() throw();
-			const std::string & message() const throw();
-		
-		protected:
-			Exception(const std::string & message) throw();
+			/// Constructor
+			/**
+			 * The constructor initialize the events backend
+			 */
+			Events();
+			/// Main loop
+			/**
+			 * It waits for events and send it to the concerned part
+			 */
+			void main();
 		
 		private:
-			const std::string _message;
+			/// To store the backend
+			EventsBackend *bBackend;
 		};
 	}
 }
 
-#endif // _EXCEPTION_HPP_
+
+#endif // _EVENTS_HPP_

@@ -31,7 +31,12 @@ namespace bombherman
 				public BackendException
 			{
 			public:
+				/// Constructor
+				/**
+				 * @param m The message
+				 */
 				NoSDLException(const std::string &m) throw() : BackendException("No SDL backend:" + m) {}
+				/// Destructor
 				virtual ~NoSDLException() throw() {}
 			};
 		}
