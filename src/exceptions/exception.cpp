@@ -34,5 +34,5 @@ Exception::~Exception() throw()
 const std::string &
 Exception::message() const throw ()
 {
-    return _message;
+	return _message;
 }

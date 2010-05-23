@@ -38,9 +38,9 @@ MapGenerator::generate(Grid& g)
     float currentHorizontalInsertionProbability, currentVerticalInsertionProbability = INSERTION_PROBABILITY_BASE_VERTICAL;
     Coords c;
 	g.grid.resize(g.size);    
-	for (unsigned i(0) ; i < g.size ; ++i)
+	for (std::vector< std::vector< char > >::iterator i = g.grid.begin(), i_end = g.grid.end() ; i != i_end ; ++i)
 	{
-		g.grid[i].resize(g.size);
+		i->resize(g.size);
 	}
 	for (c.x = 0; c.x < g.size; ++c.x)
     {
