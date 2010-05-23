@@ -24,12 +24,13 @@ using namespace bombherman;
 using namespace bombherman::display;
 using namespace bombherman::display::backends;
 
-SDL::SDL() : sDisplay(&SDLmm::Display::GetDisplay()),
-		textColor(SDL_Color()),
-		width(Config::getInt("screenWidth")),
-		height(Config::getInt("screenHeight")),
-		fontTitle(TTF_OpenFont(DATADIR"/biolinum.ttf", 26)),
-		fontNormal(TTF_OpenFont(DATADIR"/biolinum.ttf", 16))
+SDL::SDL() :
+	sDisplay(&SDLmm::Display::GetDisplay()),
+	textColor(SDL_Color()),
+	width(Config::getInt("screenWidth")),
+	height(Config::getInt("screenHeight")),
+	fontTitle(TTF_OpenFont(DATADIR"/biolinum.ttf", 26)),
+	fontNormal(TTF_OpenFont(DATADIR"/biolinum.ttf", 16))
 {
 	bhout << "Initialize video" << bhendl;
 	

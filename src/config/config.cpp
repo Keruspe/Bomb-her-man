@@ -25,7 +25,9 @@ using namespace bombherman;
  * Instance space
  */
 
-Config::Config() : iValue(0), sValue("")
+Config::Config() :
+	iValue(0),
+	sValue("")
 {
 }
 
