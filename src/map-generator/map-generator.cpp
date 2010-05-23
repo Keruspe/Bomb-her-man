@@ -38,7 +38,7 @@ MapGenerator::generate(Grid& g)
     float currentHorizontalInsertionProbability, currentVerticalInsertionProbability = INSERTION_PROBABILITY_BASE_VERTICAL;
     Coords c;
 	g.grid.resize(g.size);    
-	for (int i(0) ; i < g.size ; ++i)
+	for (unsigned i(0) ; i < g.size ; ++i)
 	{
 		g.grid[i].resize(g.size);
 	}

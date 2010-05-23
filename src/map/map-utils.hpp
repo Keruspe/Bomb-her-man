@@ -41,8 +41,8 @@ namespace bombherman
 		
 		typedef struct
 		{
-			int x;
-			int y;
+			unsigned x;
+			unsigned y;
 		} Coords;
 		
 		typedef enum
