@@ -59,7 +59,7 @@ namespace bombherman
 		static int eventGame(void *);
 		
 		// To store the actual menu
-		static display::elements::Menu *actualMenu;
+		static display::elements::Menu *currentMenu;
 		
 		static std::vector< SDL_Thread * > *threads;
 	};

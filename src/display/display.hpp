@@ -39,6 +39,10 @@ namespace bombherman
 			static void init();
 			/// To stop the video
 			static void quit();
+			/// To make the video fullscreen
+			static void fullscreen();
+			/// To make the video windowed
+			static void windowed();
 			/// Display the menu
 			/**
 			 * @param content The content of the menu to display
@@ -50,15 +54,19 @@ namespace bombherman
 		
 		private:
 			static void updateDisplay(SDL_Surface *);
+			static void newDisplay(Uint32 adds = 0);
 			
 			// To store the init state
 			static bool isInit;
 			// To store the SDL display surface
 			static SDL_Surface *sDisplay;
+			static Uint32 flags;
 			static SDL_mutex *mUpdate;
 			// To store the SDL text color
 			static SDL_Color textColor;
 			static SDL_Color highlightColor;
+			// Max Width and Height of the display
+			static int widthMax, heightMax;
 			// Width and Height of the display
 			static int width, height;
 			// To store the SDL title font

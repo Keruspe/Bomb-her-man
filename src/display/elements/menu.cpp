@@ -38,6 +38,8 @@ Menu::getMenu(Type which)
 		break;
 		case SETTINGS:
 			menu.push_back(_("Settings"));
+			menu.push_back(_("Fullscreen"));
+			menu.push_back(_("Windowed"));
 			menu.push_back(_("Back"));
 		break;
 		case GAME:
@@ -55,7 +57,7 @@ Menu::action()
 	switch ( this->type )
 	{
 		case MAIN:
-			switch ( this->actual )
+			switch ( this->current )
 			{
 				case 1:
 					Game::changeMenu(GAME);
@@ -68,14 +70,24 @@ Menu::action()
 			}
 		break;
 		case SETTINGS:
-			switch ( this->actual )
+			switch ( this->current )
 			{
+				case 1:
+					Config::set("fullscreen", "true");
+					Display::fullscreen();
+					Display::displayMenu(this->content, this->current);
+				break;
+				case 2:
+					Config::set("fullscreen", "false");
+					Display::windowed();
+					Display::displayMenu(this->content, this->current);
+				break;
 				default:
 					Game::changeMenu(MAIN);
 			}
 		break;
 		case GAME:
-			switch ( this->actual )
+			switch ( this->current )
 			{
 				case 1:
 					Game::play();
@@ -90,17 +102,17 @@ Menu::action()
 unsigned int
 Menu::up()
 {
-	if ( --(this->actual) < 1 )
-		this->actual = 1;
+	if ( --(this->current) < 1 )
+		this->current = 1;
 	
-	return this->actual;
+	return this->current;
 }
 
 unsigned int
 Menu::down()
 {
-	if ( ++(this->actual) == content.size() )
-		this->actual = ( content.size() - 1 );
+	if ( ++(this->current) == content.size() )
+		this->current = ( content.size() - 1 );
 	
-	return this->actual;
+	return this->current;
 }

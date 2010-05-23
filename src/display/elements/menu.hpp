@@ -52,11 +52,11 @@ namespace bombherman
 				 * @return The vector of the content of the menu
 				 */
 				std::vector<std::string> getContent() { return this->content; }
-				/// To get the actual item of the menu
+				/// To get the current item of the menu
 				/**
-				 * @return The place of the actual item of the menu
+				 * @return The place of the current item of the menu
 				 */
-				unsigned int getActual() { return this->actual; }
+				unsigned int getCurrent() { return this->current; }
 				
 				/// Up in the menu
 				/**
@@ -75,11 +75,11 @@ namespace bombherman
 				virtual ~Menu() {}
 			
 			private:
-				Menu(Type type, std::vector<std::string> content) : type(type), content(content), actual(1) {}
+				Menu(Type type, std::vector<std::string> content) : type(type), content(content), current(1) {}
 				
 				Type type;
 				std::vector<std::string> content;
-				unsigned int actual;
+				unsigned int current;
 			};
 		}
 	}

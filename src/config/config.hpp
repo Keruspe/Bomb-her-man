@@ -32,6 +32,9 @@ namespace bombherman
 		/// Constructor (for item)
 		Config();
 		
+		/// To write the file
+		static void write();
+		
 		/// To get a parameter
 		/**
 		 * @param key The name of the value you want to get

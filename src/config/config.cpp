@@ -92,6 +92,19 @@ Config::read()
 	file.close();
 }
 
+void
+Config::write()
+{
+	return;
+	std::fstream file("/tmp/config.ini", std::ios::out); //TODO: dynamic file
+	
+	std::map<std::string, Config>::iterator i = Config::config.begin(), e = Config::config.end();
+	for ( ; i != e ; ++i )
+		file << i->first << '=' << (i->second).sValue << std::endl;
+	
+	file.close();
+}
+
 std::string
 Config::get(std::string key)
 {

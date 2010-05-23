@@ -25,9 +25,12 @@ using namespace bombherman::display;
 
 bool Display::isInit = false;
 SDL_Surface *Display::sDisplay = SDL_GetVideoSurface();
+Uint32 Display::flags = SDL_SWSURFACE;
 SDL_mutex *Display::mUpdate = SDL_CreateMutex();
 SDL_Color Display::textColor = SDL_Color();
 SDL_Color Display::highlightColor = SDL_Color();
+int Display::widthMax = 0;
+int Display::heightMax = 0;
 int Display::width = 0;
 int Display::height = 0;
 TTF_Font *Display::fontTitle = NULL;
@@ -52,9 +55,7 @@ Display::init()
 	if ( ! initSuccess )
 		throw new exceptions::display::NoSDLException("Can't init Video subsystem of SDL");
 	
-	Uint32 flags = SDL_SWSURFACE;
-	if ( Config::get("fullscreen") == "true" )
-		flags |= SDL_FULLSCREEN;
+	SDL_WM_SetCaption(_("Bomb-her-man"), DATADIR"/bomb-her-man.svg");
 	
 	SDL_Rect **modes = SDL_ListModes(0, flags|SDL_FULLSCREEN);
 	if ( modes == reinterpret_cast<SDL_Rect**>(0) )
@@ -68,12 +69,14 @@ Display::init()
 		bhout << "All resolutions available." << bhendl;
 		if ( ( width == 0 ) || ( height == 0 ) )
 			throw new exceptions::display::NoSDLException("Can't choice the resolution");
+		else
+			ok = true;
 	}
 	else
 	{
 		/* Print valid modes */
 		bhout << "Available Modes" << bhendl;
-		for (int i=0; modes[i]; ++i)
+		for ( int i = 0 ; modes[i] ; ++i )
 		{
 			bhout << modes[i]->w << 'x' << modes[i]->h << bhendl;
 			if ( ( width == modes[i]->w ) && ( height == modes[i]->h ) )
@@ -81,28 +84,21 @@ Display::init()
 		}
 	}
 	
-	if ( ! ok )
+	if ( ok )
 	{
-		width = modes[0]->w;
-		height = modes[0]->h;
-		if ( ( flags & SDL_FULLSCREEN ) == 0 )
-		{
-			bhout << "Not in fullscreen" << bhendl;
-			width *= 0.9;
-			height *= 0.9;
-		}
-	}
-	
-	SDL_Surface *tmp = SDL_SetVideoMode(width, height, 32, flags);
-	if ( ! tmp )
-	{
-		bherr << SDL_GetError() << bhendl;
-		throw exceptions::display::NoSDLException("Impossible de passer en 640x480 en 16 bpp");
+		heightMax = height;
+		widthMax = width;
 	}
 	else
-		sDisplay = tmp;
+	{
+		widthMax = modes[0]->w;
+		heightMax = modes[0]->h;
+	}
 	
-	SDL_WM_SetCaption(_("Bomb-her-man"), DATADIR"/bomb-her-man.svg");
+	if ( Config::get("fullscreen") == "true" )
+		fullscreen();
+	else
+		windowed();
 	
 	if ( TTF_Init() == -1 )
 	{
@@ -156,6 +152,40 @@ Display::quit()
 }
 
 void
+Display::newDisplay(Uint32 adds)
+{
+	SDL_LockMutex(mUpdate);
+	SDL_Surface *tmp = SDL_SetVideoMode(width, height, 32, flags|adds);
+	if ( ! tmp )
+	{
+		bherr << SDL_GetError() << bhendl;
+		throw exceptions::display::NoSDLException("Impossible de passer en 640x480 en 16 bpp");
+	}
+	else
+	{
+		SDL_FreeSurface(sDisplay);
+		sDisplay = tmp;
+	}
+	SDL_UnlockMutex(mUpdate);
+}
+
+void
+Display::fullscreen()
+{
+	width = widthMax;
+	height = heightMax;
+	newDisplay(SDL_FULLSCREEN);
+}
+
+void
+Display::windowed()
+{
+	width = widthMax * 0.9;
+	height = heightMax * 0.9;
+	newDisplay();
+}
+
+void
 Display::updateDisplay(SDL_Surface *s)
 {
 	SDL_LockMutex(mUpdate);
@@ -172,7 +202,7 @@ Display::displayMenu(std::vector< std::string> content, unsigned int current)
 	
 	bhout << "Displaying menu" << bhendl;
 	
-	SDL_Surface *textSurface, *sMenu = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 32, 0, 0, 0, 0);
+	SDL_Surface *textSurface, *sMenu = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
 	Uint32 dy = ( TTF_FontLineSkip(fontTitle) + ( height / 15 ) ), bx = ( width / 2 );
 	SDL_Rect r;
 	r.x = 0;
