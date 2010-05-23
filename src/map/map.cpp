@@ -77,26 +77,32 @@ Map::move(Coords c, Direction d)
 	}
 }
 
-bool
-Map::put(Coords c, char playerNo)
+Coords &
+Map::newPlayer(int playerNo)
 {
-	if( ! isPlayer(playerNo)
-		|| (isPlayer(map[c.y][c.x]))
-		|| (c.y != 0 && isPlayer(map[c.y - 1][c.x]))
-		|| (c.y != map.size - 1 && isPlayer(map[c.y+1][c.x]))
-		|| (c.x != 0 && isPlayer(map[c.y][c.x - 1]))
-		|| (c.x != map.size - 1 && isPlayer(map[c.y][c.x + 1])))
-			return false;
-	if (c.y != 0)
-		map[c.y - 1][c.x] = NONE;
-	if (c.y != map.size - 1)
-		map[c.y + 1][c.x] = NONE;
-	if (c.x != 0)
-		map[c.y][c.x - 1] = NONE;
-	if (c.x != map.size - 1)
-		map[c.y][c.x + 1] = NONE;
-	map[c.y][c.x] = playerNo;
-	return true;
+	playerNo += '0';
+	Coords *c = new Coords();
+	while (true)
+	{
+		//c = MapGenerator::getRandomCoords(map.size - 1);
+		if( ! isPlayer(playerNo)
+			|| (isPlayer(map[c->y][c->x]))
+			|| (c->y != 0 && isPlayer(map[c->y - 1][c->x]))
+			|| (c->y != map.size - 1 && isPlayer(map[c->y+1][c->x]))
+			|| (c->x != 0 && isPlayer(map[c->y][c->x - 1]))
+			|| (c->x != map.size - 1 && isPlayer(map[c->y][c->x + 1])))
+				continue;
+		if (c->y != 0)
+			map[c->y - 1][c->x] = NONE;
+		if (c->y != map.size - 1)
+			map[c->y + 1][c->x] = NONE;
+		if (c->x != 0)
+			map[c->y][c->x - 1] = NONE;
+		if (c->x != map.size - 1)
+			map[c->y][c->x + 1] = NONE;
+		map[c->y][c->x] = playerNo;
+		return *c;
+	}
 }
 
 bool
