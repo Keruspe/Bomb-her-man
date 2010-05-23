@@ -17,8 +17,8 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _BAD_ELEMENT_EXCEPTION_HPP_
-#define _BAD_ELEMENT_EXCEPTION_HPP_
+#ifndef _MALFORMED_FILE_EXCEPTION_HPP_
+#define _MALFORMED_FILE_EXCEPTION_HPP_
 
 #include "exception.hpp"
 
@@ -36,4 +36,4 @@ namespace bombherman
 	}
 }
 
-#endif // _BAD_ELEMENT_EXCEPTION_HPP_
+#endif // _MALFORMED_FILE_EXCEPTION_HPP_

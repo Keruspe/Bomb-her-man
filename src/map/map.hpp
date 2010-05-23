@@ -21,6 +21,7 @@
 #define _MAP_HPP_
 
 #include "map-parser.hpp"
+#include "exceptions/map/malformed-file-exception.hpp"
 
 namespace bombherman
 {
