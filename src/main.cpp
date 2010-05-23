@@ -42,11 +42,7 @@ main(int argc, char *argv[])
 		std::cout << std::endl;
 	}
 	
-	Game *test = new Game();
-	
-	test->main();
-	
-	delete(test);
+	Game::main();
 	
 	return 0;
 }

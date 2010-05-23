@@ -21,21 +21,137 @@
 
 using namespace bombherman;
 
-Game::Game() :
-	dDisplay(new display::Display()),
-	eEvent(new events::Events())
+display::elements::Menu *Game::actualMenu = NULL;
+std::vector< SDL_Thread * > *Game::threads = new std::vector< SDL_Thread * >();
+bool Game::isInit = false;
+bool Game::playing = true;
+
+void Game::init()
 {
+	display::Display::init();
+	actualMenu = display::elements::Menu::getMenu(display::elements::Menu::MAIN);
+	isInit = true;
 }
 
 void
 Game::main()
 {
-	this->dDisplay->displayMenu(display::elements::Menu::MAIN);
-	this->eEvent->listen();
+	if ( ! isInit ) init();
+	
+	display::Display::displayMenu(actualMenu->getContent(), actualMenu->getActual());
+	
+	SDL_Event event;
+	while ( ( playing ) && ( SDL_WaitEvent(&event) ) )
+	{
+		switch ( event.type )
+		{
+			case SDL_QUIT:
+				playing = false;
+			break;
+			case SDL_KEYDOWN:
+				if ( actualMenu )
+					threads->push_back(SDL_CreateThread(&bombherman::Game::eventMenu, &event.key));
+				else
+					threads->push_back(SDL_CreateThread(&bombherman::Game::eventGame, &event.key));
+			break;
+			default:
+			break;
+		}
+	}
+	quit();
 }
 
-Game::~Game()
+void
+Game::changeMenu(display::elements::Menu::Type type)
 {
-	delete(this->dDisplay);
-	delete(this->eEvent);
+	if ( actualMenu )
+	{
+		delete(actualMenu);
+		actualMenu = NULL;
+	}
+	actualMenu = display::elements::Menu::getMenu(type);
+	display::Display::displayMenu(actualMenu->getContent(), actualMenu->getActual());
+}
+
+void
+Game::play()
+{
+	if ( actualMenu )
+	{
+		delete(actualMenu);
+		actualMenu = NULL;
+	}
+	
+	display::Display::displayMap();
+}
+
+void
+Game::quit()
+{
+	if ( ! isInit ) return;
+	
+	display::Display::quit();
+	
+	if ( actualMenu )
+	{
+		delete(actualMenu);
+		actualMenu = NULL;
+	}
+	
+	std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end();
+	for ( ; i != e ; ++i )
+	{
+		SDL_WaitThread((*i), NULL);
+		threads->erase(i);
+	}
+	delete(threads);
+}
+
+int
+Game::eventMenu(void *event)
+{
+	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
+	{
+		case SDLK_UP:
+			bhout << "UP pressed" << bhendl;
+			display::Display::displayMenu(actualMenu->getContent(), actualMenu->up());
+		break;
+		case SDLK_DOWN:
+			bhout << "DOWN pressed" << bhendl;
+			display::Display::displayMenu(actualMenu->getContent(), actualMenu->down());
+		break;
+		//case SDLK_ENTER:
+		case SDLK_RETURN:
+			bhout << "ENTER pressed" << bhendl;
+			actualMenu->action();
+		break;
+		default:
+		break;
+	}
+	std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end();
+	Uint32 id = SDL_ThreadID();
+	for ( ; i != e ; ++i )
+	{
+		if ( id == SDL_GetThreadID(*i) )
+		{
+			threads->erase(i);
+			break;
+		}
+	}
+	return 0;
+}
+
+int
+Game::eventGame(void *event)
+{
+	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
+	{
+		case SDLK_ESCAPE:
+			bhout << "UP pressed" << bhendl;
+			changeMenu(display::elements::Menu::MAIN);
+		break;
+		default:
+		break;
+	}
+	return 0;
 }

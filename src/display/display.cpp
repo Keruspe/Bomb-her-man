@@ -23,14 +23,23 @@
 using namespace bombherman;
 using namespace bombherman::display;
 
-Display::Display() :
-	sDisplay(SDL_GetVideoSurface()),
-	textColor(SDL_Color()),
-	width(Config::getInt("screenWidth")),
-	height(Config::getInt("screenHeight")),
-	fontTitle(NULL),
-	fontNormal(NULL)
+bool Display::isInit = false;
+SDL_Surface *Display::sDisplay = SDL_GetVideoSurface();
+SDL_mutex *Display::mUpdate = SDL_CreateMutex();
+SDL_Color Display::textColor = SDL_Color();
+SDL_Color Display::highlightColor = SDL_Color();
+int Display::width = 0;
+int Display::height = 0;
+TTF_Font *Display::fontTitle = NULL;
+TTF_Font *Display::fontNormal = NULL;
+
+
+void
+Display::init()
 {
+	width = Config::getInt("screenWidth");
+	height = Config::getInt("screenHeight");
+	
 	bhout << "Initialize video" << bhendl;
 	
 	Uint32 wasinit = SDL_WasInit(SDL_INIT_EVERYTHING);
@@ -43,7 +52,7 @@ Display::Display() :
 	if ( ! initSuccess )
 		throw new exceptions::display::NoSDLException("Can't init Video subsystem of SDL");
 	
-	Uint32 flags = SDL_HWSURFACE;
+	Uint32 flags = SDL_SWSURFACE;
 	if ( Config::get("fullscreen") == "true" )
 		flags |= SDL_FULLSCREEN;
 	
@@ -57,7 +66,7 @@ Display::Display() :
 	if ( modes == reinterpret_cast<SDL_Rect**>(-1) )
 	{
 		bhout << "All resolutions available." << bhendl;
-		if ( ( this->width == 0 ) || ( this->height == 0 ) )
+		if ( ( width == 0 ) || ( height == 0 ) )
 			throw new exceptions::display::NoSDLException("Can't choice the resolution");
 	}
 	else
@@ -67,31 +76,31 @@ Display::Display() :
 		for (int i=0; modes[i]; ++i)
 		{
 			bhout << modes[i]->w << 'x' << modes[i]->h << bhendl;
-			if ( ( this->width == modes[i]->w ) && ( this->height == modes[i]->h ) )
+			if ( ( width == modes[i]->w ) && ( height == modes[i]->h ) )
 				ok = true;
 		}
 	}
 	
 	if ( ! ok )
 	{
-		this->width = modes[0]->w;
-		this->height = modes[0]->h;
+		width = modes[0]->w;
+		height = modes[0]->h;
 		if ( ( flags & SDL_FULLSCREEN ) == 0 )
 		{
 			bhout << "Not in fullscreen" << bhendl;
-			this->width *= 0.9;
-			this->height *= 0.9;
+			width *= 0.9;
+			height *= 0.9;
 		}
 	}
 	
-	SDL_Surface *tmp = SDL_SetVideoMode(this->width, this->height, 32, flags);
+	SDL_Surface *tmp = SDL_SetVideoMode(width, height, 32, flags);
 	if ( ! tmp )
 	{
 		bherr << SDL_GetError() << bhendl;
 		throw exceptions::display::NoSDLException("Impossible de passer en 640x480 en 16 bpp");
 	}
 	else
-		this->sDisplay = tmp;
+		sDisplay = tmp;
 	
 	SDL_WM_SetCaption(_("Bomb-her-man"), DATADIR"/bomb-her-man.svg");
 	
@@ -102,64 +111,98 @@ Display::Display() :
 	}
 	else
 	{
-		fontTitle = TTF_OpenFont(DATADIR"/biolinum.ttf", 26);
-		fontNormal = TTF_OpenFont(DATADIR"/biolinum.ttf", 16);
+		fontTitle = TTF_OpenFont(DATADIR"/biolinum.ttf", (height / 8));
+		fontNormal = TTF_OpenFont(DATADIR"/biolinum.ttf", (height / 15));
 		
-		this->textColor.r = 255;
-		this->textColor.g = 255;
-		this->textColor.b = 255;
-		if ( ( ! this->fontTitle ) || ( ! this->fontNormal ) )
+		textColor.r = 255;
+		textColor.g = 255;
+		textColor.b = 255;
+		
+		highlightColor.r = 255;
+		highlightColor.g = 0;
+		highlightColor.b = 0;
+		if ( ( ! fontTitle ) || ( ! fontNormal ) )
 		{
 			bherr << TTF_GetError() << bhendl;
 			throw exceptions::display::NoSDLException("Impossible d'ouvrir la police");
 		}
 	}
-}
-
-Display::~Display()
-{
-	TTF_CloseFont(this->fontTitle);
-	TTF_CloseFont(this->fontNormal);
-	this->fontTitle = NULL;
-	this->fontNormal = NULL;
-	TTF_Quit();
-	bhout << "Stop video" << bhendl;
-	this->sDisplay = NULL;
-	if ( SDL_WasInit(SDL_INIT_VIDEO) )
-		SDL_QuitSubSystem(SDL_INIT_VIDEO);
-	bhout << "Video stopped" << bhendl;
+	
+	isInit = true;
 }
 
 void
-Display::displayMenu(elements::Menu::Type type)
+Display::quit()
 {
-	bhout << "Displaying SDL menu" << bhendl;
-	std::vector<std::string> menu = elements::Menu::getMenu(type);
+	if ( ! isInit ) return;
 	
-	SDL_Surface *textSurface, *sMenu = SDL_CreateRGBSurface(SDL_HWSURFACE, this->width, this->height, 32, 0, 0, 0, 0);
-	Uint32 dx = TTF_FontLineSkip(fontTitle);
+	//SDL_LockMutex(mUpdate);
+	SDL_DestroyMutex(mUpdate);
+	
+	TTF_CloseFont(fontTitle);
+	TTF_CloseFont(fontNormal);
+	fontTitle = NULL;
+	fontNormal = NULL;
+	TTF_Quit();
+	bhout << "Stop video" << bhendl;
+	sDisplay = NULL;
+	if ( SDL_WasInit(SDL_INIT_VIDEO) )
+	{
+		SDL_QuitSubSystem(SDL_INIT_VIDEO);
+		bhout << "Video stopped" << bhendl;
+	}
+	else
+		bhout << "Video already stopped" << bhendl;
+}
+
+void
+Display::updateDisplay(SDL_Surface *s)
+{
+	SDL_LockMutex(mUpdate);
+	SDL_BlitSurface(s, NULL, sDisplay, NULL);
+	SDL_FreeSurface(s);
+	SDL_UpdateRect(sDisplay, 0, 0, width, height);
+	SDL_UnlockMutex(mUpdate);
+}
+
+void
+Display::displayMenu(std::vector< std::string> content, unsigned int current)
+{
+	if ( ! isInit ) init();
+	
+	bhout << "Displaying menu" << bhendl;
+	
+	SDL_Surface *textSurface, *sMenu = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 32, 0, 0, 0, 0);
+	Uint32 dy = ( TTF_FontLineSkip(fontTitle) + ( height / 15 ) ), bx = ( width / 2 );
 	SDL_Rect r;
 	r.x = 0;
-	r.y = ( this->width / 2 );
-	for ( unsigned int i = 0 ; i < menu.size() ; ++i )
+	r.y = ( ( height - ( dy * content.size() ) ) / 2 );
+	for ( unsigned int i = 0 ; i < content.size() ; ++i )
 	{
-		if ( ! ( textSurface = TTF_RenderUTF8_Blended(( i == 0 ) ? ( fontTitle ) : ( fontNormal ), menu[i].c_str(), this->textColor) ) )
-			bherr << "Can't display a line" << bhendl;
+		TTF_Font *font = ( i == 0 ) ? ( fontTitle ) : ( fontNormal );
+		SDL_Color color = ( i == current ) ? ( highlightColor ) : ( textColor );
+		if ( ! ( textSurface = TTF_RenderUTF8_Blended(font, content[i].c_str(), color) ) )
+			bherr << "Can't display the line" << content[i] << bhendl;
 		else
 		{
-			SDL_BlitSurface(textSurface, NULL, this->sDisplay, &r);
-			r.x += dx;
+			int w, h;
+			TTF_SizeText(font, content[i].c_str(), &w, &h);
+			r.x = bx - ( w / 2 );
+			SDL_BlitSurface(textSurface, NULL, sMenu, &r);
+			r.y += dy;
 			SDL_FreeSurface(textSurface);
 		}
 	}
-	SDL_BlitSurface(sMenu, NULL, this->sDisplay, NULL);
-	SDL_FreeSurface(sMenu);
-	SDL_UpdateRect(this->sDisplay, 0, 0, this->width, this->height);
+	updateDisplay(sMenu);
 }
 
 void
 Display::displayMap()
 {
+	if ( ! isInit ) init();
+	
+	SDL_Surface *sMap = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 32, 0, 0, 0, 0);
+	updateDisplay(sMap);
 }
 
 #endif // HAVE_SDL

@@ -35,29 +35,36 @@ namespace bombherman
 		class Display
 		{
 		public:
-			/// Constructor
-			Display();
-			/// Destructor
-			virtual ~Display();
+			/// To initialize the video
+			static void init();
+			/// To stop the video
+			static void quit();
 			/// Display the menu
 			/**
-			 * @param type The type of the menu to display
+			 * @param content The content of the menu to display
+			 * @param current The current active item of the menu
 			 */
-			void displayMenu(elements::Menu::Type type);
+			static void displayMenu(std::vector< std::string> content, unsigned int current);
 			/// Display the map
-			void displayMap();
+			static void displayMap();
 		
 		private:
-			/// To store the SDL display surface
-			SDL_Surface *sDisplay;
-			/// To store the SDL text color
-			SDL_Color textColor;
-			/// Width and Height of the display
-			int width, height;
-			/// To store the SDL title font
-			TTF_Font *fontTitle;
-			/// To store the SDL normal font
-			TTF_Font *fontNormal;
+			static void updateDisplay(SDL_Surface *);
+			
+			// To store the init state
+			static bool isInit;
+			// To store the SDL display surface
+			static SDL_Surface *sDisplay;
+			static SDL_mutex *mUpdate;
+			// To store the SDL text color
+			static SDL_Color textColor;
+			static SDL_Color highlightColor;
+			// Width and Height of the display
+			static int width, height;
+			// To store the SDL title font
+			static TTF_Font *fontTitle;
+			// To store the SDL normal font
+			static TTF_Font *fontNormal;
 		};
 	}
 }
