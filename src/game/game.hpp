@@ -21,32 +21,47 @@
 
 #include "bombherman.hpp"
 
+#include <vector>
+
 #include "display/display.hpp"
-#include "events/events.hpp"
 
 namespace bombherman
 {
 	class Game
 	{
 	public:
-		/// Contructor
+		/// Init
 		/**
 		 * It initializes all the part of the game (display, sound, events)
 		 */
-		Game();
+		static void init();
 		/// Main loop
 		/**
 		 * It launches the main loop, creating display and other
 		 */
-		void main();
-		/// Destructor
-		virtual ~Game();
+		static void main();
+		/// Change the menu
+		/**
+		 * @param type The new menu type
+		 */
+		static void changeMenu(display::elements::Menu::Type type);
+		/// Play
+		static void play();
+		/// Stop
+		static void stop() { playing = false; }
+		/// Quit
+		static void quit();
 	
 	private:
-		/// To store the display part
-		display::Display *dDisplay;
-		/// To store the events part
-		events::Events *eEvent;
+		static bool isInit, playing;
+		
+		static int eventMenu(void *);
+		static int eventGame(void *);
+		
+		// To store the actual menu
+		static display::elements::Menu *actualMenu;
+		
+		static std::vector< SDL_Thread * > *threads;
 	};
 }
 

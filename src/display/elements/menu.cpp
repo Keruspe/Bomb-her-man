@@ -17,13 +17,14 @@
  */
 
 #include "bombherman.hpp"
+#include "game/game.hpp"
 #include "menu.hpp"
 
 using namespace bombherman;
 using namespace bombherman::display;
 using namespace bombherman::display::elements;
 
-std::vector<std::string>
+Menu *
 Menu::getMenu(Type which)
 {
 	std::vector<std::string> menu;
@@ -41,8 +42,65 @@ Menu::getMenu(Type which)
 		break;
 		case GAME:
 			menu.push_back(_("Game"));
+			menu.push_back(_("Play"));
 			menu.push_back(_("Back"));
 		break;
 	}
-	return menu;
+	return new Menu(which, menu);
+}
+
+void
+Menu::action()
+{
+	switch ( this->type )
+	{
+		case MAIN:
+			switch ( this->actual )
+			{
+				case 1:
+					Game::changeMenu(GAME);
+				break;
+				case 2:
+					Game::changeMenu(SETTINGS);
+				break;
+				default:
+					Game::stop();
+			}
+		break;
+		case SETTINGS:
+			switch ( this->actual )
+			{
+				default:
+					Game::changeMenu(MAIN);
+			}
+		break;
+		case GAME:
+			switch ( this->actual )
+			{
+				case 1:
+					Game::play();
+				break;
+				default:
+					Game::changeMenu(MAIN);
+			}
+		break;
+	}
+}
+
+unsigned int
+Menu::up()
+{
+	if ( --(this->actual) < 1 )
+		this->actual = 1;
+	
+	return this->actual;
+}
+
+unsigned int
+Menu::down()
+{
+	if ( ++(this->actual) == content.size() )
+		this->actual = ( content.size() - 1 );
+	
+	return this->actual;
 }

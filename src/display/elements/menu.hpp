@@ -43,9 +43,43 @@ namespace bombherman
 				/**
 				 * @param type The type of the menu to get
 				 * 
-				 * @return A vector of the content of the menu
+				 * @return A menu
 				 */
-				static std::vector<std::string> getMenu(Type type);
+				static Menu * getMenu(Type type);
+				
+				/// To get the content of the menu
+				/**
+				 * @return The vector of the content of the menu
+				 */
+				std::vector<std::string> getContent() { return this->content; }
+				/// To get the actual item of the menu
+				/**
+				 * @return The place of the actual item of the menu
+				 */
+				unsigned int getActual() { return this->actual; }
+				
+				/// Up in the menu
+				/**
+				 * @return The new place in the menu
+				 */
+				unsigned int up();
+				/// Down in the menu
+				/**
+				 * @return The new place in the menu
+				 */
+				unsigned int down();
+				/// Make the action
+				void action();
+				
+				/// Destructor
+				virtual ~Menu() {}
+			
+			private:
+				Menu(Type type, std::vector<std::string> content) : type(type), content(content), actual(1) {}
+				
+				Type type;
+				std::vector<std::string> content;
+				unsigned int actual;
 			};
 		}
 	}
