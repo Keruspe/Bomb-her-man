@@ -35,7 +35,8 @@ namespace bombherman
 			Map(std::string);
 			virtual ~Map();
 			bool move(Coords, Direction);
-			void put(Coords, Element);
+			bool put(Coords, char);
+			bool isPlayer(char);
 			char get(Coords);
 		private:
 			Grid map;
