@@ -16,16 +16,15 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "sdl.hpp"
+#include "events.hpp"
 
 
 #ifdef HAVE_SDL
 
 using namespace bombherman;
 using namespace bombherman::events;
-using namespace bombherman::events::backends;
 
-SDL::SDL(int players)
+Events::Events(int players)
 {
 	bhout << "Initialize events listenning" << bhendl;
 	
@@ -40,10 +39,15 @@ SDL::SDL(int players)
 		throw exceptions::events::NoSDLException("Impossible d'écouter les événements");
 }
 
-SDL::~SDL()
+Events::~Events()
 {
 	bhout << "Stop video" << bhendl;
 	bhout << "Video stopped" << bhendl;
 }
 
+bombherman_waitquit *
+Events::listen()
+{
+	return NULL;
+}
 #endif // HAVE_SDL
