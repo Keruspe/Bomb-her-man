@@ -29,9 +29,7 @@ int
 main(int argc, char *argv[])
 {
     Config::set("mapSize", 15);
-    Grid grid;
-    MapGenerator::generate(grid);
-    Map map(grid);
+    Map map();
     //Map map("/home/keruspe/map.bm");
     Coords coords;
     for(coords.y = 0 ; coords.y < Config::getInt("mapSize") ; ++coords.y)
