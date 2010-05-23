@@ -32,10 +32,10 @@ bool MapParser::parse(std::string path, Grid & map)
 	std::string line;
 	char c;
     std::vector<char> *current_line;
-    for(int y(0) ; std::getline(file, line) && y < map.size ; ++y)
+    for(unsigned y(0) ; std::getline(file, line) && y < map.size ; ++y)
 	{
         current_line = new std::vector<char>();
-        for(int x(0) ; x < map.size ; ++x)
+        for(unsigned x(0) ; x < map.size ; ++x)
             try
             {
 			    switch(c = line.at(x))
