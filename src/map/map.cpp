@@ -18,10 +18,16 @@
  */
 
 #include "map.hpp"
+#include "map-generator/map-generator.hpp"
 
 using namespace bombherman;
 using namespace bombherman::map;
 using namespace bombherman::exceptions;
+
+Map::Map()
+{
+	MapGenerator::generate(map);
+}
 
 Map::Map(Grid & model)
 {

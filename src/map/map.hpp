@@ -29,6 +29,7 @@ namespace bombherman
 		class Map
 		{
 		public:
+			Map();
 			Map(Grid &);
 			Map(std::string);
 			virtual ~Map();
