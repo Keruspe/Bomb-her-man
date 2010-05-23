@@ -26,7 +26,7 @@
 using namespace bombherman;
 
 int
-main(int argc, char *argv[])
+main()
 {
 	Config::set("mapSize", 15);
 	map::Map map;

@@ -65,7 +65,16 @@ Map::~Map()
 bool
 Map::move(Coords c, Direction d)
 {
-	return false;
+	// temporarily silent gcc warning	
+	switch(c.x)
+	{
+	default:
+		switch(d)
+		{
+		default:
+			return false;
+		}
+	}
 }
 
 bool
