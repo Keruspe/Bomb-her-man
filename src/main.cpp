@@ -18,13 +18,31 @@
  */
 
 #include "config/config.hpp"
+#include "map/map.hpp"
+#include "map/map-utils.hpp"
+#include "map-generator/map-generator.hpp"
 
 using namespace bombherman;
+using namespace bombherman::map;
 
 int
 main(int argc, char *argv[])
 {
     Config::set("mapSize", 15);
+    Grid grid;
+    MapGenerator::generate(grid);
+    Map map(grid);
+    //Map map("/home/keruspe/map.bm");
+    Coords coords;
+    for(coords.y = 0 ; coords.y < Config::getInt("mapSize") ; ++coords.y)
+    {
+        for(coords.x = 0 ; coords.x < Config::getInt("mapSize") ; ++coords.x)
+        {
+            std::cout << map.get(coords);
+        }
+        std::cout << std::endl;
+    }
+
 
     return 0;
 }
