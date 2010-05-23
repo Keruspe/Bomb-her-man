@@ -31,9 +31,9 @@ Map::Map() : map(Grid())
 
 Map::Map(Grid & model) : map(Grid())
 {
-	for(unsigned x(0) ; x < map.size ; ++x)
+	for(int x(0) ; x < map.size ; ++x)
 	{
-		for(unsigned y(0) ; y < map.size ; ++y)
+		for(int y(0) ; y < map.size ; ++y)
 		{
 			map.grid[y][x] = model.grid[y][x];
 		}

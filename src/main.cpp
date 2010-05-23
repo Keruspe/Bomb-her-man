@@ -33,9 +33,9 @@ main(int argc, char *argv[])
     Map map;
     //Map map("/home/keruspe/map.bm");
     Coords coords;
-    for(coords.y = 0 ; coords.y < static_cast<unsigned>(Config::getInt("mapSize")) ; ++coords.y)
+    for(coords.y = 0 ; coords.y < Config::getInt("mapSize") ; ++coords.y)
     {
-        for(coords.x = 0 ; coords.x < static_cast<unsigned>(Config::getInt("mapSize")) ; ++coords.x)
+        for(coords.x = 0 ; coords.x < Config::getInt("mapSize") ; ++coords.x)
         {
             std::cout << map.get(coords);
         }
