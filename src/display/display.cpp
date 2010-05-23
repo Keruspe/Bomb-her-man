@@ -143,7 +143,7 @@ Display::displayMenu(elements::Menu::Type type)
 	r.y = ( this->width / 2 );
 	for ( unsigned int i = 0 ; i < menu.size() ; ++i )
 	{
-		if ( ! ( textSurface = (TTF_RenderUTF8_Blended(( i == 0 ) ? ( fontTitle ) : ( fontNormal ), menu[i].c_str(), textColor)) ) )
+		if ( ! ( textSurface = TTF_RenderUTF8_Blended(( i == 0 ) ? ( fontTitle ) : ( fontNormal ), menu[i].c_str(), this->textColor) ) )
 			bherr << "Can't display a line" << bhendl;
 		else
 		{

@@ -19,6 +19,8 @@
 #ifndef _DISPLAY_HPP_
 #define _DISPLAY_HPP_
 
+#include "bombherman.hpp"
+
 #include "display/elements/menu.hpp"
 
 #include "exceptions/display/nosdl-exception.hpp"

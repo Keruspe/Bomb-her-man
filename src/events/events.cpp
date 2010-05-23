@@ -18,7 +18,6 @@
 
 #include "events.hpp"
 
-
 #ifdef HAVE_SDL
 
 using namespace bombherman;
