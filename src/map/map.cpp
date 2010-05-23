@@ -38,7 +38,13 @@ Map::Map(std::string path)
 {
 	try
 	{
-		MapParser::parse(path, map);
+		if (! MapParser::parse(path, map))
+        {
+            std::cerr << "The file in which the program looked "
+                << "for the map was malformed." << std::endl
+                << path << std::endl;
+            throw;
+        }
 	}
 	catch(BadElementException & e)
 	{
