@@ -81,10 +81,10 @@ Coords &
 Map::newPlayer(int playerNo)
 {
 	playerNo += '0';
-	Coords *c = new Coords();
+	Coords *c;
 	while (true)
 	{
-		//c = MapGenerator::getRandomCoords(map.size - 1);
+		c = MapGenerator::getRandomCoords();
 		if( ! isPlayer(playerNo)
 			|| (isPlayer(map[c->y][c->x]))
 			|| (c->y != 0 && isPlayer(map[c->y - 1][c->x]))

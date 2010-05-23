@@ -1,3 +1,6 @@
 *.o
 main
 biolinum.ttf
+nbproject/
+.dep.inc
+Makefile-src.mk
