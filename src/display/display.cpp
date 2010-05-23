@@ -16,15 +16,14 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "sdl.hpp"
+#include "display.hpp"
 
 #ifdef HAVE_SDL
 
 using namespace bombherman;
 using namespace bombherman::display;
-using namespace bombherman::display::backends;
 
-SDL::SDL() :
+Display::Display() :
 	sDisplay(SDL_GetVideoSurface()),
 	textColor(SDL_Color()),
 	width(Config::getInt("screenWidth")),
@@ -117,7 +116,7 @@ SDL::SDL() :
 	}
 }
 
-SDL::~SDL()
+Display::~Display()
 {
 	TTF_CloseFont(this->fontTitle);
 	TTF_CloseFont(this->fontNormal);
@@ -132,7 +131,7 @@ SDL::~SDL()
 }
 
 void
-SDL::displayMenu(elements::Menu::Type type)
+Display::displayMenu(elements::Menu::Type type)
 {
 	bhout << "Displaying SDL menu" << bhendl;
 	std::vector<std::string> menu = elements::Menu::getMenu(type);
@@ -144,7 +143,7 @@ SDL::displayMenu(elements::Menu::Type type)
 	r.y = ( this->width / 2 );
 	for ( unsigned int i = 0 ; i < menu.size() ; ++i )
 	{
-		if ( ! ( textSurface = (TTF_RenderUTF8_Blended(( i == 0 ) ? ( fontTitle ) : ( fontNormal ), menu[i].c_str(), textColor)) ) )
+		if ( ! ( textSurface = TTF_RenderUTF8_Blended(( i == 0 ) ? ( fontTitle ) : ( fontNormal ), menu[i].c_str(), this->textColor) ) )
 			bherr << "Can't display a line" << bhendl;
 		else
 		{
@@ -159,7 +158,7 @@ SDL::displayMenu(elements::Menu::Type type)
 }
 
 void
-SDL::displayMap()
+Display::displayMap()
 {
 }
 

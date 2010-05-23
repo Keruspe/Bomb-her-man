@@ -16,8 +16,12 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _DISPLAY_BACKENDS_SDL_HPP_
-#define _DISPLAY_BACKENDS_SDL_HPP_
+#ifndef _DISPLAY_HPP_
+#define _DISPLAY_HPP_
+
+#include "bombherman.hpp"
+
+#include "display/elements/menu.hpp"
 
 #include "exceptions/display/nosdl-exception.hpp"
 
@@ -28,38 +32,34 @@ namespace bombherman
 {
 	namespace display
 	{
-		namespace backends
+		class Display
 		{
-			class SDL :
-				public DisplayBackend
-			{
-			public:
-				/// Constructor
-				SDL();
-				/// Destructor
-				virtual ~SDL();
-				/// Display the menu
-				/**
-				 * @param type The type of the menu to display
-				 */
-				void displayMenu(elements::Menu::Type type);
-				/// Display the map
-				void displayMap();
-			
-			private:
-				/// To store the SDL display surface
-				SDL_Surface *sDisplay;
-				/// To store the SDL text color
-				SDL_Color textColor;
-				/// Width and Height of the display
-				int width, height;
-				/// To store the SDL title font
-				TTF_Font *fontTitle;
-				/// To store the SDL normal font
-				TTF_Font *fontNormal;
-			};
-		}
+		public:
+			/// Constructor
+			Display();
+			/// Destructor
+			virtual ~Display();
+			/// Display the menu
+			/**
+			 * @param type The type of the menu to display
+			 */
+			void displayMenu(elements::Menu::Type type);
+			/// Display the map
+			void displayMap();
+		
+		private:
+			/// To store the SDL display surface
+			SDL_Surface *sDisplay;
+			/// To store the SDL text color
+			SDL_Color textColor;
+			/// Width and Height of the display
+			int width, height;
+			/// To store the SDL title font
+			TTF_Font *fontTitle;
+			/// To store the SDL normal font
+			TTF_Font *fontNormal;
+		};
 	}
 }
 
-#endif // _DISPLAY_BACKENDS_SDL_HPP_
+#endif // _DISPLAY_HPP_

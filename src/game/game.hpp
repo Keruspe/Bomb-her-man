@@ -20,6 +20,7 @@
 #define _GAME_HPP_
 
 #include "bombherman.hpp"
+
 #include "display/display.hpp"
 #include "events/events.hpp"
 
@@ -35,9 +36,11 @@ namespace bombherman
 		Game();
 		/// Main loop
 		/**
-		 * It launches the main loop, create display and other
+		 * It launches the main loop, creating display and other
 		 */
 		void main();
+		/// Destructor
+		virtual ~Game();
 	
 	private:
 		/// To store the display part
@@ -47,4 +50,4 @@ namespace bombherman
 	};
 }
 
-#endif // _BOMBHERMAN_HPP_
+#endif // _GAME_HPP_
