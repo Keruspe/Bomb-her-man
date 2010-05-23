@@ -16,97 +16,151 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "display.hpp"
+#include "sdl.hpp"
+
+#ifdef HAVE_SDL
 
 using namespace bombherman;
 using namespace bombherman::display;
-using namespace bombherman::exceptions::display;
+using namespace bombherman::display::backends;
 
-Display::Display() :
-	bBackend(NULL)
+SDL::SDL() :
+	sDisplay(SDL_GetVideoSurface()),
+	textColor(SDL_Color()),
+	width(Config::getInt("screenWidth")),
+	height(Config::getInt("screenHeight")),
+	fontTitle(NULL),
+	fontNormal(NULL)
 {
-	/*
-	 * Select the best backend that is
-	 * runtime available, filter at compile-time
-	 */
-	bhout << "Create display" << bhendl;
+	bhout << "Initialize video" << bhendl;
 	
-	#ifdef HAVE_OPENGL
-	try
-	{
-		bhout << "Init OpenGL" << bhendl;
-		bBackend = new backends::OpenGL();
-	}
-	catch ( BackendException &e )
-	{
-		bherr << e.message();
-		bBackend = NULL;
-	}
-	#endif
+	Uint32 wasinit = SDL_WasInit(SDL_INIT_EVERYTHING);
+	bool initSuccess(true);
+	if ( ! wasinit )
+		initSuccess = SDL_Init(SDL_INIT_VIDEO) == 0;
+	else if ( !( wasinit & SDL_INIT_VIDEO ) )
+		initSuccess = SDL_InitSubSystem(SDL_INIT_VIDEO) == 0;
 	
-	#ifdef HAVE_SDLMM
-	try
+	if ( ! initSuccess )
+		throw new exceptions::display::NoSDLException("Can't init Video subsystem of SDL");
+	
+	Uint32 flags = SDL_HWSURFACE;
+	if ( Config::get("fullscreen") == "true" )
+		flags |= SDL_FULLSCREEN;
+	
+	SDL_Rect **modes = SDL_ListModes(0, flags|SDL_FULLSCREEN);
+	if ( modes == reinterpret_cast<SDL_Rect**>(0) )
+		throw new exceptions::display::NoSDLException("No modes available!");
+	
+	bool ok;
+	
+	ok = false;
+	if ( modes == reinterpret_cast<SDL_Rect**>(-1) )
 	{
-		if ( bBackend == NULL )
+		bhout << "All resolutions available." << bhendl;
+		if ( ( this->width == 0 ) || ( this->height == 0 ) )
+			throw new exceptions::display::NoSDLException("Can't choice the resolution");
+	}
+	else
+	{
+		/* Print valid modes */
+		bhout << "Available Modes" << bhendl;
+		for (int i=0; modes[i]; ++i)
 		{
-			bhout << "Init SDL" << bhendl;
-			bBackend = new backends::SDL();
+			bhout << modes[i]->w << 'x' << modes[i]->h << bhendl;
+			if ( ( this->width == modes[i]->w ) && ( this->height == modes[i]->h ) )
+				ok = true;
 		}
 	}
-	catch ( BackendException &e )
-	{
-		bherr << e.message();
-		bBackend = NULL;
-	}
-	#endif
 	
-	#ifdef HAVE_NCURSES
-	try
+	if ( ! ok )
 	{
-		if ( bBackend == NULL )
+		this->width = modes[0]->w;
+		this->height = modes[0]->h;
+		if ( ( flags & SDL_FULLSCREEN ) == 0 )
 		{
-			bhout << "Init NCurses" << bhendl;
-			bBackend = new backends::NCurses();
+			bhout << "Not in fullscreen" << bhendl;
+			this->width *= 0.9;
+			this->height *= 0.9;
 		}
 	}
-	catch ( BackendException &e )
-	{
-		bherr << e.message();
-		bBackend = NULL;
-	}
-	#endif
 	
-	try
+	SDL_Surface *tmp = SDL_SetVideoMode(this->width, this->height, 32, flags);
+	if ( ! tmp )
 	{
-		if ( bBackend == NULL )
+		bherr << SDL_GetError() << bhendl;
+		throw exceptions::display::NoSDLException("Impossible de passer en 640x480 en 16 bpp");
+	}
+	else
+		this->sDisplay = tmp;
+	
+	SDL_WM_SetCaption(_("Bomb-her-man"), DATADIR"/bomb-her-man.svg");
+	
+	if ( TTF_Init() == -1 )
+	{
+		bherr << TTF_GetError() << bhendl;
+		throw exceptions::display::NoSDLException("Impossible d'initialiser l'utilisation des polices TrueType");
+	}
+	else
+	{
+		fontTitle = TTF_OpenFont(DATADIR"/biolinum.ttf", 26);
+		fontNormal = TTF_OpenFont(DATADIR"/biolinum.ttf", 16);
+		
+		this->textColor.r = 255;
+		this->textColor.g = 255;
+		this->textColor.b = 255;
+		if ( ( ! this->fontTitle ) || ( ! this->fontNormal ) )
 		{
-			bhout << "Init ASCII" << bhendl;
-			bBackend = new backends::ASCII();
+			bherr << TTF_GetError() << bhendl;
+			throw exceptions::display::NoSDLException("Impossible d'ouvrir la police");
 		}
 	}
-	catch ( BackendException &e )
-	{
-		bherr << e.message();
-		bBackend = NULL;
-	}
+}
+
+SDL::~SDL()
+{
+	TTF_CloseFont(this->fontTitle);
+	TTF_CloseFont(this->fontNormal);
+	this->fontTitle = NULL;
+	this->fontNormal = NULL;
+	TTF_Quit();
+	bhout << "Stop video" << bhendl;
+	this->sDisplay = NULL;
+	if ( SDL_WasInit(SDL_INIT_VIDEO) )
+		SDL_QuitSubSystem(SDL_INIT_VIDEO);
+	bhout << "Video stopped" << bhendl;
 }
 
 void
-Display::displayMenu(elements::Menu::Type type)
+SDL::displayMenu(elements::Menu::Type type)
 {
-	bhout << "Displaying menu" << bhendl;
-	bBackend->displayMenu(type);
+	bhout << "Displaying SDL menu" << bhendl;
+	std::vector<std::string> menu = elements::Menu::getMenu(type);
+	
+	SDL_Surface *textSurface, *sMenu = SDL_CreateRGBSurface(SDL_HWSURFACE, this->width, this->height, 32, 0, 0, 0, 0);
+	Uint32 dx = TTF_FontLineSkip(fontTitle);
+	SDL_Rect r;
+	r.x = 0;
+	r.y = ( this->width / 2 );
+	for ( unsigned int i = 0 ; i < menu.size() ; ++i )
+	{
+		if ( ! ( textSurface = (TTF_RenderUTF8_Blended(( i == 0 ) ? ( fontTitle ) : ( fontNormal ), menu[i].c_str(), textColor)) ) )
+			bherr << "Can't display a line" << bhendl;
+		else
+		{
+			SDL_BlitSurface(textSurface, NULL, this->sDisplay, &r);
+			r.x += dx;
+			SDL_FreeSurface(textSurface);
+		}
+	}
+	SDL_BlitSurface(sMenu, NULL, this->sDisplay, NULL);
+	SDL_FreeSurface(sMenu);
+	SDL_UpdateRect(this->sDisplay, 0, 0, this->width, this->height);
 }
 
 void
-Display::displayMap()
+SDL::displayMap()
 {
-	bhout << "Displaying map" << bhendl;
-	bBackend->displayMap();
 }
 
-
-Display::~Display()
-{
-	delete bBackend;
-}
+#endif // HAVE_SDL

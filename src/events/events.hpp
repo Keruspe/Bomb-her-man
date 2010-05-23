@@ -16,49 +16,40 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _EVENTS_HPP_
-#define _EVENTS_HPP_
+#ifndef _EVENTS_BACKENDS_SDL_HPP_
+#define _EVENTS_BACKENDS_SDL_HPP_
 
 #include "events/backends/backend.hpp"
+#include "exceptions/events/nosdl-exception.hpp"
 
-#ifdef HAVE_SDLMM
-#include "events/backends/sdl.hpp"
-#endif
-
-#ifdef HAVE_NCURSES
-#include "events/backends/ncurses.hpp"
-#endif
-
-#ifdef HAVE_READLINE
-#include "events/backends/readline.hpp"
-#endif
-
-#include "bombherman.hpp"
+#include <SDL.h>
 
 namespace bombherman
 {
 	namespace events
 	{
-		class Events
+		namespace backends
 		{
-		public:
-			/// Constructor
-			/**
-			 * The constructor initialize the events backend
-			 */
-			Events();
-			/// Main loop
-			/**
-			 * It waits for events and send it to the concerned part
-			 */
-			void main();
-		
-		private:
-			/// To store the backend
-			EventsBackend *bBackend;
-		};
+			class SDL :
+				public EventsBackend
+			{
+			public:
+				/// Constructor
+				/**
+				 * @param players number of players (to create corresponding threads)
+				 */
+				SDL(int players = 1);
+				
+				/// Listen to events
+				bombherman_waitquit *listen();
+				
+				/// Destructor
+				virtual ~SDL();
+			
+			private:
+			};
+		}
 	}
 }
 
-
-#endif // _EVENTS_HPP_
+#endif // _EVENTS_BACKENDS_SDL_HPP_

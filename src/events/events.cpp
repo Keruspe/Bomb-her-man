@@ -16,74 +16,34 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "events.hpp"
+#include "sdl.hpp"
+
+
+#ifdef HAVE_SDL
 
 using namespace bombherman;
 using namespace bombherman::events;
-using namespace bombherman::exceptions::events;
+using namespace bombherman::events::backends;
 
-Events::Events() :
-	bBackend(NULL)
+SDL::SDL(int players)
 {
-	/*
-	 * Select the best backend that is
-	 * compile-time available, filter at compile-time
-	 */
-	bhout << "Prepare to listen events" << bhendl;
+	bhout << "Initialize events listenning" << bhendl;
 	
-	#ifdef HAVE_SDLMM
-	try
-	{
-		if ( bBackend == NULL )
-		{
-			bhout << "Init SDL" << bhendl;
-			bBackend = new backends::SDL();
-		}
-	}
-	catch ( BackendException &e )
-	{
-		bherr << e.message();
-		bBackend = NULL;
-	}
-	#endif
+	Uint32 wasinit = SDL_WasInit(SDL_INIT_EVERYTHING);
+	bool initSuccess(true);
+	if ( ! wasinit )
+		initSuccess = SDL_Init(SDL_INIT_VIDEO) == 0;
+	else if ( !( wasinit & SDL_INIT_VIDEO ) )
+		initSuccess = SDL_InitSubSystem(SDL_INIT_VIDEO) == 0;
 	
-	#ifdef HAVE_NCURSES
-	try
-	{
-		if ( bBackend == NULL )
-		{
-			bhout << "Init NCurses" << bhendl;
-			bBackend = new backends::NCurses();
-		}
-	}
-	catch ( BackendException &e )
-	{
-		bherr << e.message();
-		bBackend = NULL;
-	}
-	#endif
-	
-	#ifdef HAVE_READLINE
-	try
-	{
-		if ( bBackend == NULL )
-		{
-			bhout << "Init ASCII" << bhendl;
-			bBackend = new backends::ReadLine();
-		}
-	}
-	catch ( BackendException &e )
-	{
-		bherr << e.message();
-		bBackend = NULL;
-	}
-	#endif
+	if ( ! initSuccess )
+		throw exceptions::events::NoSDLException("Impossible d'écouter les événements");
 }
 
-#include <cstdlib>
-
-void
-Events::main()
+SDL::~SDL()
 {
-	sleep(5);
+	bhout << "Stop video" << bhendl;
+	bhout << "Video stopped" << bhendl;
 }
+
+#endif // HAVE_SDL

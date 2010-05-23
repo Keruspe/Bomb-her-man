@@ -19,7 +19,7 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
-#define HAVE_SDLMM
+#define HAVE_SDL
 
 #define DATADIR GIT_ROOT"/data"
 

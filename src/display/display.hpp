@@ -16,67 +16,50 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _DISPLAY_HPP_
-#define _DISPLAY_HPP_
+#ifndef _DISPLAY_BACKENDS_SDL_HPP_
+#define _DISPLAY_BACKENDS_SDL_HPP_
 
-#include <iostream>
-#include <string>
+#include "exceptions/display/nosdl-exception.hpp"
 
-#include "display/backends/backend.hpp"
-
-#ifdef HAVE_OPENGL
-#include "display/backends/opengl.hpp"
-#endif
-
-#ifdef HAVE_SDLMM
-#include "display/backends/sdl.hpp"
-#endif
-
-#ifdef HAVE_NCURSES
-#include "display/backends/ncurses.hpp"
-#endif
-
-#include "display/backends/ascii.hpp"
-
-#include "bombherman.hpp"
+#include <SDL.h>
+#include <SDL_ttf.h>
 
 namespace bombherman
 {
 	namespace display
 	{
-		class Display
+		namespace backends
 		{
-		public:
-			/// Constructor
-			/**
-			 * The constructor initialize the video backend
-			 */
-			Display();
+			class SDL :
+				public DisplayBackend
+			{
+			public:
+				/// Constructor
+				SDL();
+				/// Destructor
+				virtual ~SDL();
+				/// Display the menu
+				/**
+				 * @param type The type of the menu to display
+				 */
+				void displayMenu(elements::Menu::Type type);
+				/// Display the map
+				void displayMap();
 			
-			/// Destructor
-			virtual ~Display();
-			
-			/// Display the menu
-			/**
-			 * For now, just call the backend
-			 * related function
-			 * 
-			 * @param type The type of the menu to display
-			 */
-			void displayMenu(elements::Menu::Type type = elements::Menu::MAIN);
-			
-			/// Display the map
-			/**
-			 * For now, just call the backend
-			 * related function
-			 */
-			void displayMap();
-		
-		private:
-			/// To store the backend
-			DisplayBackend *bBackend;
-		};
+			private:
+				/// To store the SDL display surface
+				SDL_Surface *sDisplay;
+				/// To store the SDL text color
+				SDL_Color textColor;
+				/// Width and Height of the display
+				int width, height;
+				/// To store the SDL title font
+				TTF_Font *fontTitle;
+				/// To store the SDL normal font
+				TTF_Font *fontNormal;
+			};
+		}
 	}
 }
 
-#endif // _DISPLAY_HPP_
+#endif // _DISPLAY_BACKENDS_SDL_HPP_
