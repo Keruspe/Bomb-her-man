@@ -19,6 +19,8 @@
 #ifndef _EVENTS_HPP_
 #define _EVENTS_HPP_
 
+#include "bombherman.hpp"
+
 #include "exceptions/events/nosdl-exception.hpp"
 
 #include <SDL.h>
