@@ -45,11 +45,11 @@ Map::Map(std::string path)
 	try
 	{
 		if (! MapParser::parse(path, map))
-        {
-            std::cerr << "The file in which the program looked "
-                << "for the map was malformed." << std::endl;
-            throw MalformedFileException(path);
-        }
+		{
+			std::cerr << "The file in which the program looked "
+				<< "for the map was malformed." << std::endl;
+			throw MalformedFileException(path);
+		}
 	}
 	catch(BadElementException & e)
 	{
@@ -62,16 +62,19 @@ Map::~Map()
 {
 }
 
-bool Map::move(Coords c, Direction d)
+bool
+Map::move(Coords c, Direction d)
 {
 	return false;
 }
 
-void Map::put(Coords c, Element e)
+void
+Map::put(Coords c, Element e)
 {
 }
 
-char Map::get(Coords c)
+char
+Map::get(Coords c)
 {
 	return map.grid[c.y][c.x];
 }

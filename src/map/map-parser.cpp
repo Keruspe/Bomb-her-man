@@ -26,38 +26,41 @@ using namespace bombherman;
 using namespace bombherman::map;
 using namespace bombherman::exceptions;
 
-bool MapParser::parse(std::string path, Grid & map)
+bool
+MapParser::parse(std::string path, Grid & map)
 {
 	std::fstream file(path.c_str(), std::ios::in);
 	std::string line;
 	char c;
-    std::vector<char> *current_line;
-    for(unsigned y(0) ; std::getline(file, line) && y < map.size ; ++y)
+	std::vector<char> *current_line;
+	for(unsigned y(0) ; std::getline(file, line) && y < map.size ; ++y)
 	{
-        current_line = new std::vector<char>();
-        for(unsigned x(0) ; x < map.size ; ++x)
-            try
-            {
-			    switch(c = line.at(x))
-		    	{
-			    	case NONE:
-		    		case BARREL:
-	    			case INDESTRUCTIBLE:
-    				case BOMB:
-					    current_line->push_back(c);
-				    	break;
-			    	default:
-				    	char elem[2] = {c, '\0'};
-			    		throw BadElementException(elem);
-			    }
-            }
-            catch (std::exception)
-            {
-                return false;
-            }
-        map.grid.push_back(*current_line);
-        delete(current_line);
-    }
-	
+		current_line = new std::vector<char>();
+		for(unsigned x(0) ; x < map.size ; ++x)
+		{
+			try
+			{
+				switch(c = line.at(x))
+				{
+					case NONE:
+					case BARREL:
+					case INDESTRUCTIBLE:
+					case BOMB:
+						current_line->push_back(c);
+						break;
+					default:
+						char elem[2] = {c, '\0'};
+						throw BadElementException(elem);
+				}
+			}
+			catch (std::exception)
+			{
+				return false;
+			}
+		}
+		map.grid.push_back(*current_line);
+		delete(current_line);
+	}
+
 	return (map.grid.size() == map.size);
 }
