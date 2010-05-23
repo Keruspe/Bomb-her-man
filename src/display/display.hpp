@@ -45,7 +45,6 @@ namespace bombherman
 		class Display
 		{
 		public:
-			
 			/// Constructor
 			/**
 			 * The constructor initialize the video backend
