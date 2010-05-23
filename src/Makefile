@@ -15,7 +15,7 @@ all: $(OBJECTS)
 	$(LD) -o main $(OBJECTS) $(LDFLAGS)
 
 clean:
-	-rm $(OBJECTS) 2>/dev/null
+	-rm -f $(OBJECTS) 2>/dev/null
 
 .cpp.o:
 	$(CXX) -c $< -o $@
