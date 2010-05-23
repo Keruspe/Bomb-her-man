@@ -37,10 +37,13 @@ MapGenerator::generate(Grid& g)
     int currentHorizontalElementSize, currentVerticalElementSize = 0;
     float currentHorizontalInsertionProbability, currentVerticalInsertionProbability = INSERTION_PROBABILITY_BASE_VERTICAL;
     Coords c;
-    std::vector<char> *current_line;
-    for (c.x = 0; c.x < g.size; ++c.x)
+	g.grid.resize(g.size);    
+	for (int i(0) ; i < g.size ; ++i)
+	{
+		g.grid[i].resize(g.size);
+	}
+	for (c.x = 0; c.x < g.size; ++c.x)
     {
-        current_line = new std::vector<char>();
         for (c.y = 0; c.y < g.size; ++c.y)
         {
             currentHorizontalElementSize = horizontalScan(g, c);
@@ -49,34 +52,32 @@ MapGenerator::generate(Grid& g)
             {
                 if (throwDice(currentVerticalInsertionProbability) && currentVerticalElementSize < INSERTION_ELEMENT_SIZE_MAX_VERTICAL && testCellLimited(g, c))
                 {
-                    current_line->push_back(INDESTRUCTIBLE);
+                    g.grid[c.y][c.x] = INDESTRUCTIBLE;
                     currentVerticalElementSize ++;
                     currentVerticalInsertionProbability -= INSERTION_PROBABILITY_REGRESSION_VERTICAL;
                 }
                 else
                 {
-                    current_line->push_back(NONE);
+                    g.grid[c.y][c.x] = NONE;
                     currentVerticalElementSize = 0;
                     currentVerticalInsertionProbability = INSERTION_PROBABILITY_BASE_VERTICAL;
                 }
             }
             else if (currentHorizontalElementSize != 0 && currentHorizontalElementSize < INSERTION_ELEMENT_SIZE_MAX_HORIZONTAL && throwDice(currentHorizontalInsertionProbability) && c.x != 14)
             {
-                    current_line->push_back(INDESTRUCTIBLE);
+                    g.grid[c.y][c.x] = INDESTRUCTIBLE;
             }
             else if (throwDice(INSERTION_PROBABILITY_BASE) && testCellFull(g, c))
             {
-                current_line->push_back(INDESTRUCTIBLE);
+                g.grid[c.y][c.x] = INDESTRUCTIBLE;
                 currentVerticalElementSize ++;
                 currentVerticalInsertionProbability -= INSERTION_PROBABILITY_REGRESSION_VERTICAL;
             }
             else
             {
-                current_line->push_back(NONE);
+                g.grid[c.y][c.x] = NONE;
             }
         }
-        g.grid.push_back(*current_line);
-        delete(current_line);
     }
 }
 
