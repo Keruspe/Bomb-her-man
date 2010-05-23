@@ -80,7 +80,8 @@ Map::move(Coords c, Direction d)
 bool
 Map::put(Coords c, char playerNo)
 {
-	if((isPlayer(map[c.y][c.x]))
+	if( ! isPlayer(playerNo)
+		|| (isPlayer(map[c.y][c.x]))
 		|| (c.y != 0 && isPlayer(map[c.y - 1][c.x]))
 		|| (c.y != map.size - 1 && isPlayer(map[c.y+1][c.x]))
 		|| (c.x != 0 && isPlayer(map[c.y][c.x - 1]))
