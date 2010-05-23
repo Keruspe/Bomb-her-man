@@ -31,5 +31,5 @@ void
 Game::main()
 {
 	this->dDisplay->displayMenu(display::elements::Menu::MAIN);
-	this->eEvent->main();
+	this->eEvent->listen();
 }

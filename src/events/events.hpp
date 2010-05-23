@@ -16,40 +16,37 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _EVENTS_BACKENDS_SDL_HPP_
-#define _EVENTS_BACKENDS_SDL_HPP_
+#ifndef _EVENTS_HPP_
+#define _EVENTS_HPP_
 
-#include "events/backends/backend.hpp"
 #include "exceptions/events/nosdl-exception.hpp"
 
 #include <SDL.h>
+
+typedef void (*bombherman_waitquit) ();
 
 namespace bombherman
 {
 	namespace events
 	{
-		namespace backends
+		class Events
 		{
-			class SDL :
-				public EventsBackend
-			{
-			public:
-				/// Constructor
-				/**
-				 * @param players number of players (to create corresponding threads)
-				 */
-				SDL(int players = 1);
-				
-				/// Listen to events
-				bombherman_waitquit *listen();
-				
-				/// Destructor
-				virtual ~SDL();
+		public:
+			/// Constructor
+			/**
+			 * @param players number of players (to create corresponding threads)
+			 */
+			Events(int players = 1);
 			
-			private:
-			};
-		}
+			/// Listen to events
+			bombherman_waitquit *listen();
+			
+			/// Destructor
+			virtual ~Events();
+		
+		private:
+		};
 	}
 }
 
-#endif // _EVENTS_BACKENDS_SDL_HPP_
+#endif // _EVENTS_HPP_
