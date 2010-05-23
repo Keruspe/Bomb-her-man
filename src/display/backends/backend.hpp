@@ -37,6 +37,8 @@ namespace bombherman
 			virtual void displayMenu(elements::Menu::Type type) = 0;
 			/// Display the map
 			virtual void displayMap() = 0;
+			/// Destructor
+			virtual ~DisplayBackend() {}
 		};
 	}
 }

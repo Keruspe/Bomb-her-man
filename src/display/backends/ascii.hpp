@@ -34,7 +34,7 @@ namespace bombherman
 				/// Constructor
 				ASCII();
 				/// Destructor
-				~ASCII();
+				virtual ~ASCII();
 				/// Display the menu
 				void displayMenu(elements::Menu::Type type);
 				/// Display the map

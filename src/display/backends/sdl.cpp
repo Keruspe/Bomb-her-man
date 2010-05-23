@@ -18,6 +18,8 @@
 
 #include "sdl.hpp"
 
+#ifdef HAVE_SDLMM
+
 using namespace bombherman;
 using namespace bombherman::display;
 using namespace bombherman::display::backends;
@@ -143,3 +145,5 @@ void
 SDL::displayMap()
 {
 }
+
+#endif // HAVE_SDLMM

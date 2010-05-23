@@ -18,6 +18,9 @@
 
 #include "sdl.hpp"
 
+
+#ifdef HAVE_SDLMM
+
 using namespace bombherman;
 using namespace bombherman::events;
 using namespace bombherman::events::backends;
@@ -35,3 +38,4 @@ SDL::~SDL()
 	bhout << "Video stopped" << bhendl;
 }
 
+#endif // HAVE_SDLMM

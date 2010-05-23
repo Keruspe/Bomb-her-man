@@ -18,6 +18,7 @@
  */
 
 #include "config/config.hpp"
+#include "game/game.hpp"
 #include "map/map.hpp"
 #include "map/map-utils.hpp"
 #include "map-generator/map-generator.hpp"

@@ -27,7 +27,9 @@ namespace bombherman
 	{
 		class EventsBackend
 		{
-			
+		public:
+			/// Destructor
+			virtual ~EventsBackend() {}
 		};
 	}
 }

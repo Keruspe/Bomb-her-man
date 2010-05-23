@@ -40,7 +40,7 @@ namespace bombherman
 				/// Constructor
 				SDL();
 				/// Destructor
-				~SDL();
+				virtual ~SDL();
 				/// Display the menu
 				/**
 				 * @param type The type of the menu to display

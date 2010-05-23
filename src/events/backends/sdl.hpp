@@ -40,7 +40,7 @@ namespace bombherman
 				 */
 				SDL(int players = 1);
 				/// Destructor
-				~SDL();
+				virtual ~SDL();
 			
 			private:
 			};

@@ -18,6 +18,8 @@
 
 #include "ncurses.hpp"
 
+#ifdef HAVE_NCURSES
+
 using namespace bombherman;
 using namespace bombherman::display;
 using namespace bombherman::display::backends;
@@ -39,3 +41,5 @@ void
 NCurses::displayMap()
 {
 }
+
+#endif // HAVE_NCURSES

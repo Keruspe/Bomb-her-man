@@ -34,7 +34,7 @@ namespace bombherman
 				/// Constructor
 				NCurses();
 				/// Destructor
-				~NCurses();
+				virtual ~NCurses();
 				/// Display the menu
 				void displayMenu();
 				/// Dispaly the map
