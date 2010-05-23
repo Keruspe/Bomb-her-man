@@ -21,6 +21,6 @@
 
 #define HAVE_SDLMM
 
-#define DATADIR "/home/sardemff7/Developpement/Programmes/Bomb-her-man/Git/data"
+#define DATADIR GIT_ROOT"/data"
 
 #endif // _CONFIG_H_

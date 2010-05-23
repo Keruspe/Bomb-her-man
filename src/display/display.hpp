@@ -22,6 +22,8 @@
 #include <iostream>
 #include <string>
 
+#include "display/backends/backend.hpp"
+
 #ifdef HAVE_OPENGL
 #include "display/backends/opengl.hpp"
 #endif

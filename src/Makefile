@@ -5,7 +5,7 @@ OBJECTS=$(SOURCES:.cpp=.o)
 SDL_CXXFLAGS=$(shell sdlmm-config --cflags) $(shell sdl-config --cflags)
 SDL_LDFLAGS=$(shell sdlmm-config --libs) -lSDL_ttf $(shell sdl-config --libs)
 
-CXXFLAGS=-Wall -g -I. -I./include $(SDL_CXXFLAGS)
+CXXFLAGS=-Wall -g -DGIT_ROOT=\"$(shell pwd)/..\" -I. -I./include $(SDL_CXXFLAGS)
 LDFLAGS=$(SDL_LDFLAGS)
 
 CXX=g++ $(CXXFLAGS)
