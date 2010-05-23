@@ -20,7 +20,7 @@
 #ifndef _BAD_ELEMENT_EXCEPTION_HPP_
 #define _BAD_ELEMENT_EXCEPTION_HPP_
 
-#include "exception.hpp"
+#include "exceptions/exception.hpp"
 
 namespace bombherman
 {

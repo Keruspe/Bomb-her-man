@@ -20,7 +20,7 @@
 #ifndef _MALFORMED_FILE_EXCEPTION_HPP_
 #define _MALFORMED_FILE_EXCEPTION_HPP_
 
-#include "exception.hpp"
+#include "exceptions/exception.hpp"
 
 namespace bombherman
 {
