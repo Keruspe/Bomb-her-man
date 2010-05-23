@@ -31,25 +31,33 @@ bool MapParser::parse(std::string path, Grid & map)
 	std::fstream file(path.c_str(), std::ios::in);
 	std::string line;
 	char c;
-	int y(0);
-	
-    while(std::getline(file, line) && y < map.size)
+    std::vector<char> *tmp;
+    for(int y(0) ; std::getline(file, line) && y < map.size ; ++y)
 	{
+        tmp = new std::vector<char>();
         for(int x(0) ; x < map.size ; ++x)
-			switch(c = line.at(x))
-			{
-				case NONE:
-				case BARREL:
-				case INDESTRUCTIBLE:
-				case BOMB:
-					map.grid[y][x] = c;
-					break;
-				default:
-					char elem[2] = {c, '\0'};
-					throw BadElementException(elem);
-			}
-		++y;
+            try
+            {
+			    switch(c = line.at(x))
+		    	{
+			    	case NONE:
+		    		case BARREL:
+	    			case INDESTRUCTIBLE:
+    				case BOMB:
+					    tmp->push_back(c);
+				    	break;
+			    	default:
+				    	char elem[2] = {c, '\0'};
+			    		throw BadElementException(elem);
+			    }
+            }
+            catch (std::exception)
+            {
+                return false;
+            }
+        map.grid.push_back(*tmp);
+        delete(tmp);
     }
 	
-	return (y == map.size);
+	return (map.grid.size() == map.size);
 }
