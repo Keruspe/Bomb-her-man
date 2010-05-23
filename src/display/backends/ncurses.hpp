@@ -31,9 +31,13 @@ namespace bombherman
 				public DisplayBackend
 			{
 			public:
+				/// Constructor
 				NCurses();
+				/// Destructor
 				~NCurses();
+				/// Display the menu
 				void displayMenu();
+				/// Dispaly the map
 				void displayMap();
 			};
 		}

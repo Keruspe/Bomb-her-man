@@ -31,15 +31,21 @@ namespace bombherman
 			class Menu
 			{
 			public:
+				/// Type of the menu
 				typedef enum
 				{
-					MAIN = 0,
-					SETTINGS,
-					GAME,
+					MAIN = 0, /**< main menu */
+					SETTINGS, /**< settings menu */
+					GAME, /**< game menu */
 				} Type;
 				
 				/// For the display backend to get the menu
-				static std::vector<std::string> getMenu(Type which);
+				/**
+				 * @param type The type of the menu to get
+				 * 
+				 * @return A vector of the content of the menu
+				 */
+				static std::vector<std::string> getMenu(Type type);
 			};
 		}
 	}

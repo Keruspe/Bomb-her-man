@@ -31,9 +31,13 @@ namespace bombherman
 				public DisplayBackend
 			{
 			public:
+				/// Constructor
 				ASCII();
+				/// Destructor
 				~ASCII();
+				/// Display the menu
 				void displayMenu(elements::Menu::Type type);
+				/// Display the map
 				void displayMap();
 			};
 		}
