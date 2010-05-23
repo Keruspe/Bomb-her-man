@@ -52,30 +52,30 @@ MapGenerator::generate(Grid& g)
             {
                 if (throwDice(currentVerticalInsertionProbability) && currentVerticalElementSize < INSERTION_ELEMENT_SIZE_MAX_VERTICAL && testCellLimited(g, c))
                 {
-                    g.grid[c.y][c.x] = INDESTRUCTIBLE;
+                    g[c.y][c.x] = INDESTRUCTIBLE;
                     currentVerticalElementSize ++;
                     currentVerticalInsertionProbability -= INSERTION_PROBABILITY_REGRESSION_VERTICAL;
                 }
                 else
                 {
-                    g.grid[c.y][c.x] = NONE;
+                    g[c.y][c.x] = NONE;
                     currentVerticalElementSize = 0;
                     currentVerticalInsertionProbability = INSERTION_PROBABILITY_BASE_VERTICAL;
                 }
             }
             else if (currentHorizontalElementSize != 0 && currentHorizontalElementSize < INSERTION_ELEMENT_SIZE_MAX_HORIZONTAL && throwDice(currentHorizontalInsertionProbability) && c.x != 14)
             {
-                    g.grid[c.y][c.x] = INDESTRUCTIBLE;
+                    g[c.y][c.x] = INDESTRUCTIBLE;
             }
             else if (throwDice(INSERTION_PROBABILITY_BASE) && testCellFull(g, c))
             {
-                g.grid[c.y][c.x] = INDESTRUCTIBLE;
+                g[c.y][c.x] = INDESTRUCTIBLE;
                 currentVerticalElementSize ++;
                 currentVerticalInsertionProbability -= INSERTION_PROBABILITY_REGRESSION_VERTICAL;
             }
             else
             {
-                g.grid[c.y][c.x] = NONE;
+                g[c.y][c.x] = NONE;
             }
         }
     }
@@ -102,13 +102,13 @@ MapGenerator::testCellFull(Grid& grid, Coords coords)
     bool result = true;
     if (coords.y != 0)
         result = result &&
-            grid.grid[coords.y - 1][coords.x - 1] != INDESTRUCTIBLE &&
-            grid.grid[coords.y - 1][coords.x] != INDESTRUCTIBLE;
+            grid[coords.y - 1][coords.x - 1] != INDESTRUCTIBLE &&
+            grid[coords.y - 1][coords.x] != INDESTRUCTIBLE;
     if (coords.x != 0)
     {
         if (coords.y != grid.size - 1)
-            result = result && grid.grid[coords.y + 1][coords.x - 1] != INDESTRUCTIBLE;
-        result = result && grid.grid[coords.y][coords.x - 1] != INDESTRUCTIBLE;
+            result = result && grid[coords.y + 1][coords.x - 1] != INDESTRUCTIBLE;
+        result = result && grid[coords.y][coords.x - 1] != INDESTRUCTIBLE;
     }
     return result;
 }
@@ -118,7 +118,7 @@ MapGenerator::testCellLimited(Grid& grid, Coords coords)
 {
     bool result = true;
     if (coords.y != grid.size - 1)
-        result = result && grid.grid[coords.y + 1][coords.x - 1] != INDESTRUCTIBLE;
+        result = result && grid[coords.y + 1][coords.x - 1] != INDESTRUCTIBLE;
     return result;
 }
 
@@ -128,7 +128,7 @@ MapGenerator::horizontalScan(Grid& grid, Coords coords)
     int i = 0;
     if (coords.x == 0)
         return 0;
-    while(grid.grid[coords.y][coords.x - i - 1] == INDESTRUCTIBLE)
+    while(grid[coords.y][coords.x - i - 1] == INDESTRUCTIBLE)
     {
         i ++;
         if (coords.x - i == 0)

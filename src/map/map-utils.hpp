@@ -37,6 +37,11 @@ namespace bombherman
 				grid(std::vector< std::vector< char > >())
 			{
 			}
+
+			std::vector< char > & operator[] (int y)
+			{
+				return grid[y];
+			}
 		} Grid;
 
 		typedef struct

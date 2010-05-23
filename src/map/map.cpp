@@ -35,7 +35,7 @@ Map::Map(Grid & model) : map(Grid())
 	{
 		for(int y(0) ; y < map.size ; ++y)
 		{
-			map.grid[y][x] = model.grid[y][x];
+			map[y][x] = model[y][x];
 		}
 	}
 }
@@ -76,5 +76,5 @@ Map::put(Coords c, Element e)
 char
 Map::get(Coords c)
 {
-	return map.grid[c.y][c.x];
+	return map[c.y][c.x];
 }
