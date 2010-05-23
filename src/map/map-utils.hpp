@@ -30,7 +30,7 @@ namespace bombherman
 	{
 		typedef struct Grid
 		{
-			int size;
+			unsigned size;
 			std::vector< std::vector< char > > grid;
 
             Grid()
