@@ -26,7 +26,7 @@ Display::Display()
 {
 	/*
 	 * Select the best backend that is
-	 * compile-time available
+	 * runtime available, filter at compile-time
 	 */
 	bhout << "Create display" << bhendl;
 	bBackend = NULL;

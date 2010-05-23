@@ -80,7 +80,7 @@ SDL::SDL()
 		bherr << SDLmm::GetError() << bhendl;
 		throw exceptions::display::NoSDLException("Impossible de passer en 640x480 en 16 bpp");
 	}
-	sDisplay->SetCaption(_("Bomb-her-man"), "bomb-her-man.svg");
+	sDisplay->SetCaption(_("Bomb-her-man"), DATADIR"/bomb-her-man.svg");
 	
 	if ( TTF_Init() == -1 )
 	{
@@ -92,8 +92,8 @@ SDL::SDL()
 		textColor.r = 255;
 		textColor.g = 255;
 		textColor.b = 255;
-		fontTitle = TTF_OpenFont("biolinum.ttf", 26);
-		fontNormal = TTF_OpenFont("biolinum.ttf", 16);
+		fontTitle = TTF_OpenFont(DATADIR"/biolinum.ttf", 26);
+		fontNormal = TTF_OpenFont(DATADIR"/biolinum.ttf", 16);
 		if ( ( ! fontTitle ) || ( ! fontNormal ) )
 		{
 			bherr << TTF_GetError() << bhendl;

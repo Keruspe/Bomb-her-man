@@ -16,22 +16,11 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _BOMBHERMAN_HPP_
-#define _BOMBHERMAN_HPP_
+#ifndef _CONFIG_H_
+#define _CONFIG_H_
 
-#include <iostream>
-#include <iomanip>
+#define HAVE_SDLMM
 
-namespace bombherman
-{
-	#define bhfile "file " << std::setw(30) << __FILE__ << ", line " << std::setw(8) << __LINE__ << " => "
-	#define bhout std::cout << "In " << bhfile
-	#define bherr std::cerr << "Error in " << bhfile
-	#define bhendl std::endl
-}
+#define DATADIR GIT_ROOT"/data"
 
-#include "config/config.hpp"
-#include "config.h"
-#include "nls.hpp"
-
-#endif // _BOMBHERMAN_HPP_
+#endif // _CONFIG_H_
