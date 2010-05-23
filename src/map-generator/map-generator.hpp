@@ -25,20 +25,22 @@
 #include <cstdlib>
 #include "map/map-utils.hpp"
 
-using namespace bombherman;
-using namespace bombherman::map;
-
-class MapGenerator {
-public:
-    static void generate(Grid&);
-protected:
-
-private:
-    static int random(int, int);
-    static bool throwDice(float);
-    static bool testCellFull(Grid&, Coords);
-    static bool testCellLimited(Grid&, Coords);
-    static int horizontalScan(Grid&, Coords);
-};
+namespace bombherman 
+{
+    namespace map
+    {
+        class MapGenerator
+        {
+        public:
+            static void generate(Grid&);
+        private:
+            static int random(int, int);
+            static bool throwDice(float);
+            static bool testCellFull(Grid&, Coords);
+            static bool testCellLimited(Grid&, Coords);
+            static int horizontalScan(Grid&, Coords);
+        };
+    }
+}
 
 #endif // _MAP_GENERATOR_HPP_
