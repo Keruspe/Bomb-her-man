@@ -25,9 +25,8 @@ using namespace bombherman;
  * Instance space
  */
 
-Config::Config()
+Config::Config() : iValue(0), sValue("")
 {
-	iValue = 0;
 }
 
 Config &Config::operator=(std::string value)

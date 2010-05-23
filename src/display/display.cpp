@@ -22,14 +22,13 @@ using namespace bombherman;
 using namespace bombherman::display;
 using namespace bombherman::exceptions::display;
 
-Display::Display()
+Display::Display() : bBackend(NULL)
 {
 	/*
 	 * Select the best backend that is
 	 * runtime available, filter at compile-time
 	 */
 	bhout << "Create display" << bhendl;
-	bBackend = NULL;
 	
 	#ifdef HAVE_OPENGL
 	try

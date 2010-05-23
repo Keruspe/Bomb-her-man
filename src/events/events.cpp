@@ -22,14 +22,13 @@ using namespace bombherman;
 using namespace bombherman::events;
 using namespace bombherman::exceptions::events;
 
-Events::Events()
+Events::Events() : bBackend(NULL)
 {
 	/*
 	 * Select the best backend that is
 	 * compile-time available, filter at compile-time
 	 */
 	bhout << "Prepare to listen events" << bhendl;
-	bBackend = NULL;
 	
 	#ifdef HAVE_SDLMM
 	try

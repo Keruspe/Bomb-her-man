@@ -74,10 +74,10 @@ namespace bombherman
 		 */
 		int intValue();
 		
-		/// The value of a string parameter
-		std::string sValue;
 		/// The value of an int parameter
 		int iValue;
+		/// The value of a string parameter
+		std::string sValue;
 		
 		/// To initialize the map
 		static void init();

@@ -24,28 +24,29 @@ using namespace bombherman;
 using namespace bombherman::display;
 using namespace bombherman::display::backends;
 
-SDL::SDL()
+SDL::SDL() : sDisplay(&SDLmm::Display::GetDisplay()),
+		textColor(SDL_Color()),
+		width(Config::getInt("screenWidth")),
+		height(Config::getInt("screenHeight")),
+		fontTitle(TTF_OpenFont(DATADIR"/biolinum.ttf", 26)),
+		fontNormal(TTF_OpenFont(DATADIR"/biolinum.ttf", 16))
 {
 	bhout << "Initialize video" << bhendl;
 	
-	sDisplay = &SDLmm::Display::GetDisplay();
 	sDisplay->Init();
 	
 	Uint32 flags = SDL_SWSURFACE;
 	if ( Config::get("fullscreen") == "true" )
 		flags |= SDL_FULLSCREEN;
 	
-	width = Config::getInt("screenWidth");
-	height = Config::getInt("screenHeight");
-	
 	SDL_Rect **modes = SDLmm::Display::ListModes(0, flags|SDL_FULLSCREEN);
-	if ( modes == (SDL_Rect**)0 )
+	if ( modes == reinterpret_cast<SDL_Rect**>(0) )
 		throw new exceptions::display::NoSDLException("No modes available!");
 	
 	bool ok;
 	
 	ok = false;
-	if ( modes == (SDL_Rect**)-1 )
+	if ( modes == reinterpret_cast<SDL_Rect**>(-1) )
 	{
 		bhout << "All resolutions available." << bhendl;
 		if ( ( width == 0 ) || ( height == 0 ) )
@@ -94,8 +95,6 @@ SDL::SDL()
 		textColor.r = 255;
 		textColor.g = 255;
 		textColor.b = 255;
-		fontTitle = TTF_OpenFont(DATADIR"/biolinum.ttf", 26);
-		fontNormal = TTF_OpenFont(DATADIR"/biolinum.ttf", 16);
 		if ( ( ! fontTitle ) || ( ! fontNormal ) )
 		{
 			bherr << TTF_GetError() << bhendl;

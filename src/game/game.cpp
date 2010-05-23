@@ -21,10 +21,9 @@
 
 using namespace bombherman;
 
-Game::Game()
+Game::Game() : dDisplay(new display::Display()),
+		eEvent(new events::Events())
 {
-	this->dDisplay = new display::Display();
-	this->eEvent = new events::Events();
 }
 
 void
