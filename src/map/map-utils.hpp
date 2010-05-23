@@ -30,7 +30,7 @@ namespace bombherman
 	{
 		typedef struct Grid
 		{
-			unsigned size;
+			int size;
 			std::vector< std::vector< char > > grid;
 
 			Grid() : size(static_cast<unsigned>(Config::getInt("mapSize"))),
@@ -41,8 +41,8 @@ namespace bombherman
 
 		typedef struct
 		{
-			unsigned x;
-			unsigned y;
+			int x;
+			int y;
 		} Coords;
 
 		typedef enum

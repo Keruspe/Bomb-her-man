@@ -29,21 +29,19 @@ using namespace bombherman::map;
 int
 main(int argc, char *argv[])
 {
-	/*
-	Config::set("mapSize", 15);
-	Map map;
-	//Map map("/tmp/map.bm");
-	Coords coords;
-	unsigned int size = static_cast<unsigned>(Config::getInt("mapSize"));
-	for(coords.y = 0 ; coords.y < size ; ++coords.y)
-	{
-		for(coords.x = 0 ; coords.x < size ; ++coords.x)
-		{
-			std::cout << map.get(coords);
-		}
-		std::cout << std::endl;
-	}
-	*/
+    Config::set("mapSize", 15);
+    Map map;
+    //Map map("/home/keruspe/map.bm");
+    Coords coords;
+    for(coords.y = 0 ; coords.y < Config::getInt("mapSize") ; ++coords.y)
+    {
+        for(coords.x = 0 ; coords.x < Config::getInt("mapSize") ; ++coords.x)
+        {
+            std::cout << map.get(coords);
+        }
+        std::cout << std::endl;
+    }
+
 	Game *test = new Game();
 	
 	test->main();
