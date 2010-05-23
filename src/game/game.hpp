@@ -39,6 +39,8 @@ namespace bombherman
 		 * It launches the main loop, creating display and other
 		 */
 		void main();
+		/// Destructor
+		virtual ~Game();
 	
 	private:
 		/// To store the display part
