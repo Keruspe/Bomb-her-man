@@ -46,7 +46,7 @@ main(int argc, char *argv[])
 	
 	test->main();
 	
-	delete test;
+	delete(test);
 	
 	return 0;
 }
