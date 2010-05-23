@@ -37,16 +37,28 @@ namespace bombherman
 				public DisplayBackend
 			{
 			public:
+				/// Constructor
 				SDL();
+				/// Destructor
 				~SDL();
+				/// Display the menu
+				/**
+				 * @param type The type of the menu to display
+				 */
 				void displayMenu(elements::Menu::Type type);
+				/// Display the map
 				void displayMap();
 			
 			private:
+				/// To store the SDL display surface
 				SDLmm::Display *sDisplay;
+				/// To store the SDL text color
 				SDL_Color textColor;
+				/// Width and Height of the display
 				int width, height;
+				/// To store the SDL title font
 				TTF_Font *fontTitle;
+				/// To store the SDL normal font
 				TTF_Font *fontNormal;
 			};
 		}

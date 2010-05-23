@@ -29,22 +29,54 @@ namespace bombherman
 	class Config
 	{
 	public:
-		///Constructor : item
+		/// Constructor (for item)
 		Config();
 		
 		/// To get a parameter
+		/**
+		 * @param key The name of the value you want to get
+		 * 
+		 * @return The value of the key (a string)
+		 */
 		static std::string get(std::string key);
+		/// To get a parameter
+		/**
+		 * @param key The name of the value you want to get
+		 * 
+		 * @return The value of the key (an int)
+		 */
 		static int getInt(std::string key);
 		/// To set a parameter
+		/**
+		 * @param key The name of the value you want to set
+		 * @param value The value of the key (an int)
+		 */
 		static void set(std::string key, int value);
+		/// To set a parameter
+		/**
+		 * @param key The name of the value you want to set
+		 * @param value The value of the key (a string)
+		 */
 		static void set(std::string key, std::string value);
 	
 	private:
+		/// To set the new value (string)
 		Config &operator=(std::string);
+		/// To set the new value (int)
 		Config &operator=(int);
+		
+		/// Get the int value a of parameter
+		/**
+		 * This function convert the string to an int
+		 * if necessary
+		 * 
+		 * @return The int value
+		 */
 		int intValue();
 		
+		/// The value of a string parameter
 		std::string sValue;
+		/// The value of an int parameter
 		int iValue;
 		
 		/// To initialize the map

@@ -56,10 +56,12 @@ namespace bombherman
 			/// Destructor
 			virtual ~Display();
 			
-			/// Display the menu   
+			/// Display the menu
 			/**
 			 * For now, just call the backend
 			 * related function
+			 * 
+			 * @param type The type of the menu to display
 			 */
 			void displayMenu(elements::Menu::Type type = elements::Menu::MAIN);
 			
