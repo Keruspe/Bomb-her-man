@@ -19,23 +19,24 @@
 
 #include "map-generator.hpp"
 
-#define INSERTION_PROBABILITY_BASE 1
-#define INSERTION_PROBABILITY_BASE_VERTICAL 0.5
-#define INSERTION_PROBABILITY_BASE_HORIZONTAL 0.5
-#define INSERTION_PROBABILITY_REGRESSION_VERTICAL 0.1
-#define INSERTION_PROBABILITY_REGRESSION_HORIZONTAL 0.1
-#define INSERTION_ELEMENT_SIZE_MAX_VERTICAL 3
-#define INSERTION_ELEMENT_SIZE_MAX_HORIZONTAL 3
-
 using namespace bombherman;
 using namespace bombherman::map;
+
+#define INSERTION_PROBABILITY_BASE Config::getInt("mgInsertionProbabilityBaseVertical")
+#define INSERTION_PROBABILITY_BASE_VERTICAL Config::getInt("mgInsertionProbabilityBaseVertical")
+#define INSERTION_PROBABILITY_BASE_HORIZONTAL Config::getInt("mgInsertionProbabilityBaseHorizontal")
+#define INSERTION_PROBABILITY_REGRESSION_VERTICAL Config::getInt("mgInsertionRegressionVertical")
+#define INSERTION_PROBABILITY_REGRESSION_HORIZONTAL Config::getInt("mgInsertionRegressionHorizontal")
+#define INSERTION_PROBABILITY_BARREL Config::getInt("mgInsertionProbabilityBarrel")
+#define INSERTION_ELEMENT_SIZE_MAX_VERTICAL Config::getInt("mgInsertionElementSizeMaxVertical")
+#define INSERTION_ELEMENT_SIZE_MAX_HORIZONTAL Config::getInt("mgInsertionElementSizeMaxHorizontal")
 
 void
 MapGenerator::generate(Grid& g)
 {
     ::srand(time(0));
     int currentHorizontalElementSize, currentVerticalElementSize = 0;
-    float currentHorizontalInsertionProbability, currentVerticalInsertionProbability = INSERTION_PROBABILITY_BASE_VERTICAL;
+    int currentHorizontalInsertionProbability, currentVerticalInsertionProbability = INSERTION_PROBABILITY_BASE_VERTICAL;
     Coords c;
 	g.grid.resize(g.size);    
 	for (std::vector< std::vector< char > >::iterator i = g.grid.begin(), i_end = g.grid.end() ; i != i_end ; ++i)
@@ -74,6 +75,14 @@ MapGenerator::generate(Grid& g)
             }
         }
     }
+	for (c.x = 0; c.x < g.size; ++c.x)
+    {
+        for (c.y = 0; c.y < g.size; ++c.y)
+        {
+			if (g[c.y][c.x] == NONE && throwDice (INSERTION_PROBABILITY_BARREL))
+				g[c.y][c.x] = BARREL;
+		}
+	}
 }
 
 int
@@ -83,10 +92,10 @@ MapGenerator::random(int min, int max)
 }
 
 bool
-MapGenerator::throwDice(float probability)
+MapGenerator::throwDice(float percentage)
 {
-    float random = (rand() % 100) / 100.;
-    if (probability > random)
+    float random = (rand() % 100);
+    if (percentage > random)
         return true;
     return false;
 }

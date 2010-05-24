@@ -1,36 +1,44 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * Bomb-her-man
- * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
- * 
+ * Copyright (C) mogzor 2010 <mogzor@gmail.com>
+ *
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Bomb-her-man is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "bombherman.hpp"
-#include "game/game.hpp"
-#include "atomic-center/atomic-center.hpp"
+
 #include "map/map-utils.hpp"
+#include "game/player.hpp"
+#include <SDL.h>
 
-using namespace bombherman;
 
-int
-main()
+#ifndef _ATOMICCENTER_HPP
+#define	_ATOMICCENTER_HPP
+
+namespace bombherman
 {
-	Game::main();
-	map::Coords c;
-	c.x = 2;
-	c.y= 3;
-	bomb::AtomicCenter::plantBomb (c, 0);
-	return 0;
+    namespace bomb
+    {
+        class AtomicCenter
+        {
+        public:
+            static void plantBomb(map::Coords &, int playerId);
+        private:
+            static void explode ();
+            static std::vector<std::vector<Uint32> > bombList;
+        };
+    }
 }
+
+#endif	/* _ATOMICCENTER_HPP */

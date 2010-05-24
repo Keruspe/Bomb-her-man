@@ -93,7 +93,7 @@ Map::newPlayer()
 bool
 Map::isPlayer(char playerNo)
 {
-	return (playerNo >= '1' && playerNo <= '4');
+	return (playerNo >= '1' && playerNo <= '0' + Config::getInt("maxPlayers"));
 }
 
 char
