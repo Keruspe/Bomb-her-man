@@ -115,8 +115,8 @@ Game::play()
 	}
 	
 	currentMap = new map::Map();
-        currentMap->newPlayer(1);
-        currentMap->newPlayer(2);
+	currentMap->newPlayer(1);
+	currentMap->newPlayer(2);
 	
 	map::Coords coords;
 	int size = Config::getInt("mapSize");
@@ -143,6 +143,12 @@ Game::quit()
 	{
 		delete(currentMenu);
 		currentMenu = NULL;
+	}
+	
+	if ( currentMap )
+	{
+		delete(currentMap);
+		currentMap = NULL;
 	}
 	
 	for ( std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end() ; i != e ; ++i )
