@@ -10,7 +10,7 @@
 using namespace bombherman;
 using namespace bombherman::map;
 
-int Player::maxId = -1;
+int Player::maxId = 0;
 
 Player::Player()
 {
@@ -19,7 +19,7 @@ Player::Player()
 	this->range = Config::getInt("defaultRange");
 	this->plantedBombs = 0;
 	this->score = 0;
-	this->id = ++ Player maxId;
+	this->id = ++ Player::maxId;
 }
 
 int
@@ -61,6 +61,7 @@ Player::setRange(int range)
 void
 Player::go(Direction direction)
 {
+
 }
 
 void
