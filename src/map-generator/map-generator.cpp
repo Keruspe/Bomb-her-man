@@ -95,13 +95,13 @@ bool
 MapGenerator::testCellFull(Grid& grid, Coords coords)
 {
     bool result = true;
-    if (coords.y != 0)
+    if (coords.x > 0 && coords.y > 0)
         result = result &&
             grid[coords.y - 1][coords.x - 1] != INDESTRUCTIBLE &&
             grid[coords.y - 1][coords.x] != INDESTRUCTIBLE;
-    if (coords.x != 0)
+    if (coords.x > 0)
     {
-        if (coords.y != grid.size - 1)
+        if (coords.y < grid.size - 1)
             result = result && grid[coords.y + 1][coords.x - 1] != INDESTRUCTIBLE;
         result = result && grid[coords.y][coords.x - 1] != INDESTRUCTIBLE;
     }
@@ -112,7 +112,7 @@ bool
 MapGenerator::testCellLimited(Grid& grid, Coords coords)
 {
     bool result = true;
-    if (coords.y != grid.size - 1)
+    if (coords.y < grid.size - 1 && coords.x > 0)
         result = result && grid[coords.y + 1][coords.x - 1] != INDESTRUCTIBLE;
     return result;
 }
