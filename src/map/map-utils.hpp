@@ -33,7 +33,7 @@ namespace bombherman
 			int size;
 			std::vector< std::vector< char > > grid;
 
-			Grid() : size(static_cast<unsigned>(Config::getInt("mapSize"))),
+			Grid() : size(Config::getInt("mapSize")),
 				grid(std::vector< std::vector< char > >())
 			{
 			}

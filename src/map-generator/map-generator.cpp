@@ -40,7 +40,7 @@ MapGenerator::generate(Grid& g)
 	g.grid.resize(g.size);    
 	for (std::vector< std::vector< char > >::iterator i = g.grid.begin(), i_end = g.grid.end() ; i != i_end ; ++i)
 	{
-		i->resize(g.size);
+		i->resize(g.size, NONE);
 	}
 	for (c.x = 0; c.x < g.size; ++c.x)
     {
