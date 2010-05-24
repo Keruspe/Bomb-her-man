@@ -80,9 +80,9 @@ Map::move(Coords c, Direction d)
 bool
 Map::newPlayer(int playerNo)
 {
-	playerNo += '0';
-	if (! isPlayer(playerNo))
+	if (! isPlayer(playerNo + '0') || this->getCoords(playerNo).x != -1)
 		return false;
+	playerNo += '0';
 	Coords c;
 	while (true)
 	{
@@ -116,4 +116,21 @@ char
 Map::get(Coords c)
 {
 	return map[c.y][c.x];
+}
+
+Coords &
+Map::getCoords(int playerNo)
+{
+	Coords *coords = new Coords();
+	for(coords->y = 0 ; coords->y < map.size ; ++coords->y)
+	{
+		for(coords->x = 0 ; coords->x < map.size ; ++coords->x)
+		{
+			if (this->get(*coords) == playerNo + '0')
+				return *coords;
+		}
+	}
+	coords->x = -1;
+	coords->y = -1;
+	return *coords;
 }

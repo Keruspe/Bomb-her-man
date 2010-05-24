@@ -38,6 +38,7 @@ namespace bombherman
 			bool newPlayer(int);
 			bool isPlayer(char);
 			char get(Coords);
+			Coords & getCoords(int);
 		private:
 			Grid map;
 		};
