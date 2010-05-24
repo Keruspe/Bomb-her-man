@@ -29,6 +29,8 @@ int
 main()
 {
 	Config::set("mapSize", 15);
+	Config::set("defaultPlantableBombs", 3);
+	Config::set("defaultRange", 5);
 	map::Map map;
 	map.newPlayer(1);
 	map.newPlayer(2);
