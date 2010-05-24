@@ -48,9 +48,15 @@ Game::main()
 			break;
 			case SDL_KEYDOWN:
 				if ( currentMenu )
-					threads->push_back(SDL_CreateThread(&bombherman::Game::eventMenu, &event.key));
+				{
+					//threads->push_back(SDL_CreateThread(&bombherman::Game::eventMenu, &event.key));
+					eventMenu(&event.key);
+				}
 				else
-					threads->push_back(SDL_CreateThread(&bombherman::Game::eventGame, &event.key));
+				{
+					//threads->push_back(SDL_CreateThread(&bombherman::Game::eventGame, &event.key));
+					eventGame(&event.key);
+				}
 			break;
 			default:
 			break;
