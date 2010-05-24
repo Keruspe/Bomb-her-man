@@ -129,7 +129,7 @@ Game::play()
 		std::cout << std::endl;
 	}
 	
-	display::Display::displayMap(currentMap);
+	display::Display::setMap(currentMap);
 }
 
 void

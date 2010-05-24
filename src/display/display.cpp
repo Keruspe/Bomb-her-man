@@ -52,6 +52,7 @@ SDL_Surface *Display::gBack = NULL;
 
 
 Uint32 Display::gSize = 0;
+SDL_Rect Display::gBegin;
 
 void
 Display::init()
@@ -140,27 +141,38 @@ Display::init()
 			throw exceptions::display::NoSDLException("Impossible d'ouvrir la police");
 		}
 	}
-	
-	initSurfaces();
 }
 
 SDL_Surface *
-Display::rsvgToSurface(RsvgHandle *rsvg, double sx = 1, double sy = 0)
+Display::svgToSurface(std::string file)
 {
-	if ( sy == 0 ) sy = sx;
-	Uint32 rmask = 0xff000000;
-	Uint32 gmask = 0x00ff0000;
-	Uint32 bmask = 0x0000ff00;
-	Uint32 amask = 0x000000ff;
+	GError **err = NULL;
+	RsvgHandle *rsvg = rsvg_handle_new_from_file(file.c_str(), err);
+	RsvgDimensionData dims;
+	rsvg_handle_get_dimensions(rsvg, &dims);
+	
 	Uint32 stride = 4 * gSize;
 	void *buffer = calloc(stride * gSize, 1);
 	cairo_surface_t *cSurface = cairo_image_surface_create_for_data(static_cast<unsigned char *>(buffer), CAIRO_FORMAT_ARGB32, gSize, gSize, stride);
 	cairo_t *cObject = cairo_create(cSurface);
-	cairo_scale(cObject, sx, sy);
+	
+	double s = static_cast<double>(Display::gSize) / static_cast<double>(dims.width);
+	cairo_scale(cObject, s, s);
+	bhout << "Scale to " << s << bhendl;
+	
 	rsvg_handle_render_cairo(rsvg, cObject);
+	g_object_unref(rsvg);
+	rsvg = NULL;
+	
 	cairo_surface_finish(cSurface);
+	
+	Uint32 amask = 0xff000000;
+	Uint32 rmask = 0x00ff0000;
+	Uint32 gmask = 0x0000ff00;
+	Uint32 bmask = 0x000000ff;
 	SDL_Surface *ret = SDL_CreateRGBSurfaceFrom(buffer, gSize, gSize, 32, stride, rmask, gmask, bmask, amask);
 	//free(buffer);
+	
 	return ret;
 }
 
@@ -169,61 +181,39 @@ Display::initSurfaces()
 {
 	rsvg_init();
 	
-	RsvgHandle *rsvg = NULL;
-	GError **err = NULL;
-	RsvgDimensionData dims;
-	float s = 0.5;
 	
 	// Logo
 	bhout << "Creating Logo" << bhendl;
-	rsvg = rsvg_handle_new_from_file(DATADIR"/bomb-her-man.svg", err);
-	rsvg_handle_get_dimensions(rsvg, &dims);
-	
-	SDL_Surface *icon = rsvgToSurface(rsvg);
+	SDL_Surface *icon = svgToSurface(DATADIR"/bomb-her-man.svg");
 	//SDL_WM_SetIcon(icon, NULL);
 	SDL_FreeSurface(icon);
 	icon = NULL;
-	g_object_unref(rsvg);
-	rsvg = NULL;
 	bhout << "Logo created" << bhendl;
 	
 	// gBomb
 	bhout << "Creating gBomb" << bhendl;
 	cleanSurface(gBomb);
-	bhout << bhendl;
-	rsvg = rsvg_handle_new_from_file(DATADIR"/bomb.svg", err);
-	bhout << bhendl;
-	rsvg_handle_get_dimensions(rsvg, &dims);
-	bhout << bhendl;
-	//s = dims.width / Display::gSize;
-	bhout << bhendl;
-	gBomb = rsvgToSurface(rsvg, s);
-	bhout << bhendl;
-	g_object_unref(rsvg);
-	bhout << bhendl;
-	rsvg = NULL;
+	gBomb = svgToSurface(DATADIR"/bomb.svg");
 	bhout << "gBomb created" << bhendl;
 	
 	
 	// gWall
 	bhout << "Creating gWall" << bhendl;
 	cleanSurface(gWall);
-	rsvg = rsvg_handle_new_from_file(DATADIR"/wall.svg", err);
-	rsvg_handle_get_dimensions(rsvg, &dims);
-	gWall = rsvgToSurface(rsvg, s);
-	g_object_unref(rsvg);
-	rsvg = NULL;
+	gWall = svgToSurface(DATADIR"/wall.svg");
 	bhout << "gWall created" << bhendl;
 	
 	// gBack
 	bhout << "Creating gBack" << bhendl;
 	cleanSurface(gBack);
-	rsvg = rsvg_handle_new_from_file(DATADIR"/back.svg", err);
-	rsvg_handle_get_dimensions(rsvg, &dims);
-	gBack = rsvgToSurface(rsvg, s);
-	g_object_unref(rsvg);
-	rsvg = NULL;
+	gBack = svgToSurface(DATADIR"/back.svg");
 	bhout << "gBack created" << bhendl;
+	
+	// gBarrel
+	bhout << "Creating gBarrel" << bhendl;
+	cleanSurface(gBarrel);
+	gBarrel = svgToSurface(DATADIR"/barrel.svg");
+	bhout << "gBarrel created" << bhendl;
 	
 	rsvg_term();
 }
@@ -271,8 +261,6 @@ Display::newDisplay(Uint32 adds)
 {
 	SDL_LockMutex(mUpdate);
 	
-	
-	
 	SDL_Surface *tmp = SDL_SetVideoMode(width, height, 32, flags|adds);
 	if ( ! tmp )
 	{
@@ -285,6 +273,20 @@ Display::newDisplay(Uint32 adds)
 		SDL_FreeSurface(sDisplay);
 		sDisplay = tmp;
 	}
+	int size = Config::getInt("mapSize");
+	if ( height < width )
+	{
+		gSize = height / size;
+		gBegin.x = width - height;
+		gBegin.y = 0;
+	}
+	else
+	{
+		gSize = width / size;
+		gBegin.x = 0;
+		gBegin.y = height - width;
+	}
+	initSurfaces();
 	SDL_UnlockMutex(mUpdate);
 }
 
@@ -348,35 +350,48 @@ Display::displayMenu(std::vector< std::string> content, unsigned int current)
 }
 
 void
-Display::displayMap(map::Map *map)
+Display::setMap(map::Map *map)
 {
 	if ( ! sDisplay ) init();
 	
 	SDL_Rect r;
 	int size = Config::getInt("mapSize");
-	Uint32 bx = gSize * size;
-	
 	cleanSurface(gBackground);
 	gBackground = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
+	gBarrelsLayer = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
+	gPlayersLayer = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
 	if ( ! gWall ) initSurfaces();
 	map::Coords coords;
-	r.y = 0;
+	r.y = gBegin.y;
 	for(coords.y = 0 ; coords.y < size ; ++coords.y)
 	{
-		r.x = bx;
+		r.x = gBegin.x;
 		for(coords.x = 0 ; coords.x < size ; ++coords.x)
 		{
-			if ( map->get(coords) == 'x' )
+			char c = map->get(coords);
+			bhout << coords.x << 'x' << coords.y << " = " << c << bhendl;
+			if ( c == 'x' )
 				SDL_BlitSurface(gWall, NULL, gBackground, &r);
 			else
+			{
 				SDL_BlitSurface(gBack, NULL, gBackground, &r);
+				switch ( c )
+				{
+					case 't':
+						SDL_BlitSurface(gBarrel, NULL, gBarrelsLayer, &r);
+					break;
+					case '1':
+					case '2':
+						//SDL_BlitSurface(gPlayers[c-'0'-1][0][0], NULL, gPlayersLayer, &r);
+					break;
+				}
+			}
 			r.x += gSize;
 		}
 		r.y += gSize;
 	}
 	
-	SDL_Surface *test = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
-	SDL_BlitSurface(gBack, NULL, test, NULL);
-	updateDisplay(test);
-	SDL_FreeSurface(test);
+	updateDisplay(gBackground);
+	updateDisplay(gBarrelsLayer);
+	//updateDisplay(gPlayersLayer);
 }

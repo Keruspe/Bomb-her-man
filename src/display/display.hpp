@@ -55,10 +55,10 @@ namespace bombherman
 			/**
 			 * @param map Pointer to the map to display
 			 */
-			static void displayMap(map::Map *map);
+			static void setMap(map::Map *map);
 		
 		private:
-			static SDL_Surface *rsvgToSurface(RsvgHandle *, double, double);
+			static SDL_Surface *svgToSurface(std::string);
 			static void initSurfaces();
 			static void cleanSurface(SDL_Surface *);
 			
@@ -98,6 +98,7 @@ namespace bombherman
 			static SDL_Surface *gBack;
 			
 			static Uint32 gSize;
+			static SDL_Rect gBegin;
 		};
 	}
 }
