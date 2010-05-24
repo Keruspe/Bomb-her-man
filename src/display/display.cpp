@@ -72,6 +72,7 @@ Display::init()
 		throw new exceptions::display::NoSDLException("Can't init Video subsystem of SDL");
 	
 	SDL_WM_SetCaption(_("Bomb-her-man"), "bomb-her-man.svg");
+	SDL_ShowCursor(SDL_DISABLE);
 	
 	SDL_Rect **modes = SDL_ListModes(0, flags|SDL_FULLSCREEN);
 	if ( modes == reinterpret_cast<SDL_Rect**>(0) )

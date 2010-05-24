@@ -89,11 +89,11 @@ Config::init()
 void
 Config::read()
 {
-	std::fstream file("/tmp/config.ini", std::ios::in); //TODO: dynamic file
+	std::ifstream file("/tmp/config.ini", std::ios::in); //TODO: dynamic file
 	std::string line;
 	std::string::size_type separator;
 	
-	do
+	while ( ! file.eof() )
 	{
 		file >> line;
 		std::cout << line << std::endl;
@@ -103,7 +103,7 @@ Config::read()
 			std::cout << line.substr(0, separator) << '=' << line.substr(separator+1) << std::endl;
 			Config::config[line.substr(0, separator)] = line.substr(separator+1);
 		}
-	} while ( ! file.eof() );
+	}
 	
 	file.close();
 }
@@ -111,7 +111,7 @@ Config::read()
 void
 Config::write()
 {
-	std::fstream file("/tmp/config.ini", std::ios::out); //TODO: dynamic file
+	std::ofstream file("/tmp/config.ini", std::ios::out | std::ios::trunc); //TODO: dynamic file
 	
 	for ( std::map<std::string, Config>::iterator i = Config::config.begin(), e = Config::config.end() ; i != e ; ++i )
 	{
