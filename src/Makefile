@@ -14,7 +14,7 @@ LDFLAGS=$(SDL_LDFLAGS) $(SVG_LDFLAGS)
 CXX=g++ $(CXXFLAGS)
 LD=g++
 
-all: $(OBJECTS) /tmp/config.ini
+all: $(OBJECTS)
 	$(LD) -o main $(OBJECTS) $(LDFLAGS)
 
 clean:
@@ -22,6 +22,3 @@ clean:
 
 .cpp.o:
 	$(CXX) -c $< -o $@
-
-/tmp/config.ini:
-	touch /tmp/config.ini
