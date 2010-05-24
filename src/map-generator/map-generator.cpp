@@ -138,10 +138,10 @@ MapGenerator::horizontalScan(Grid& grid, Coords coords)
 }
 
 Coords*
-getRandomCoords(int mapSize)
+MapGenerator::getRandomCoords()
 {
 	Coords *c = new Coords();
-	c->x = MapGenerator::random(0, mapSize);
-	c->y = MapGenerator::random(0, mapSize);
+	c->x = MapGenerator::random(0, c->max);
+	c->y = MapGenerator::random(0, c->max);
 	return c;
 }

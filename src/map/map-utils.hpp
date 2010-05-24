@@ -44,10 +44,15 @@ namespace bombherman
 			}
 		} Grid;
 
-		typedef struct
+		typedef struct Coords
 		{
 			int x;
 			int y;
+                        int max;
+
+                        Coords() : max(static_cast<unsigned>(Config::getInt("mapSize") - 1))
+                        {
+                        }
 		} Coords;
 
 		typedef enum

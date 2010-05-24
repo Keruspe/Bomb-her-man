@@ -73,6 +73,11 @@ namespace bombherman
 			static TTF_Font *fontTitle;
 			// To store the SDL normal font
 			static TTF_Font *fontNormal;
+			
+			
+			static SDL_Surface *gBackground;
+			static SDL_Surface *gBarrels;
+			static SDL_Surface *gPlayers;
 		};
 	}
 }
