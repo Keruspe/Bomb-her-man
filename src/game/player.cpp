@@ -75,19 +75,19 @@ Player::plantBomb()
 void
 Player::addToScore(int score)
 {
-	this->score += int score;
+	this->score += score;
 }
 
 void
 Player::setPlantableBombs(int plantableBombs)
 {
-	this->plantableBombs = int plantableBombs;
+	this->plantableBombs =plantableBombs;
 }
 
 void
 Player::addToPlantableBombs(int plantableBombs)
 {
-	this->plantableBombs += int plantableBombs;
+	this->plantableBombs += plantableBombs;
 }
 
 void
