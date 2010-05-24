@@ -137,11 +137,11 @@ MapGenerator::horizontalScan(Grid& grid, Coords coords)
     return i;
 }
 
-Coords*
+Coords &
 MapGenerator::getRandomCoords()
 {
 	Coords *c = new Coords();
 	c->x = MapGenerator::random(0, c->max);
 	c->y = MapGenerator::random(0, c->max);
-	return c;
+	return *c;
 }
