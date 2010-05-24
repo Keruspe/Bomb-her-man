@@ -239,7 +239,7 @@ Display::initSurfaces()
 	/*
 	 * Players
 	 */
-	char max = Config::getInt("maxPlayers") + '1';
+	unsigned char max = Config::getInt("maxPlayers") + '1';
 	for ( unsigned char p = '1' ; p < max ; ++p )
 	{
 		bhout << "Make Player " << p << bhendl;
@@ -279,10 +279,26 @@ Display::quit()
 {
 	if ( ! sDisplay ) return;
 	
-	cleanSurface(gBomb);
-	cleanSurface(gWall);
-	cleanSurface(gMapLayer);
+	cleanSurface(sBackground);
 	
+	cleanSurface(gMapLayer);
+	cleanSurface(gBarrelsLayer);
+	cleanSurface(gPlayersLayer);
+	
+	cleanSurface(gBomb);
+	cleanSurface(gExplosion);
+	cleanSurface(gBarrel);
+	cleanSurface(gWall);
+	cleanSurface(gBack);
+	unsigned int max = Config::getInt("maxPlayers");
+	for ( unsigned int p = 0 ; p < max ; ++p )
+	{
+		for ( unsigned int i = 0 ; i < 4 ; ++i )
+		{
+			for ( unsigned int j = 0 ; j < 2 ; ++j )
+				cleanSurface(gPlayers[p][i][j]);
+		}
+	}
 	//SDL_LockMutex(mUpdate);
 	SDL_DestroyMutex(mUpdate);
 	

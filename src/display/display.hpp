@@ -52,11 +52,16 @@ namespace bombherman
 			 * @param current The current active item of the menu
 			 */
 			static void displayMenu(std::vector< std::string> content, unsigned int current);
-			/// Display the map
+			/// Set the map
 			/**
-			 * @param map Pointer to the map to display
+			 * @param map Pointer to the map to use
 			 */
 			static void setMap(map::Map *map);
+			
+			/// Update the barrels
+			static void updateBarrels();
+			/// Update the players
+			static void updatePlayers();
 		
 		private:
 			static SDL_Surface *svgToSurface(std::string);
@@ -67,8 +72,6 @@ namespace bombherman
 			static void newDisplay(Uint32 adds = 0);
 			
 			static void updateMap();
-			static void updateBarrels();
-			static void updatePlayers();
 			
 			// To store the SDL display surface
 			static SDL_Surface *sDisplay;
