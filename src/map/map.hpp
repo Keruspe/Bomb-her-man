@@ -20,8 +20,11 @@
 #ifndef _MAP_HPP_
 #define _MAP_HPP_
 
+#include <vector>
+
 #include "map-parser.hpp"
 #include "exceptions/map/malformed-file-exception.hpp"
+#include "game/player.hpp"
 
 namespace bombherman
 {
@@ -34,12 +37,13 @@ namespace bombherman
 			Map(Grid &);
 			Map(std::string);
 			virtual ~Map();
-			bool newPlayer(int);
+			Player & newPlayer();
 			bool isPlayer(char);
 			char get(Coords);
 			Coords & getCoords(int);
 		private:
 			Grid map;
+			std::vector<Player> players;
 		};
 	}
 }

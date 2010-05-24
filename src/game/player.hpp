@@ -16,11 +16,12 @@ namespace bombherman {
     public:
         Player();
         int getRange();
-        map::Coords * getCoords();
+        map::Coords getCoords();
         bool isAbleToPlantBomb();
         int getScore();
         int getId();
-        void setRange(int);
+        void setCoords(map::Coords &);
+	void setRange(int);
         void go(map::Direction);
         void plantBomb();
         void addToScore(int);
@@ -31,7 +32,7 @@ namespace bombherman {
         static int maxId;
         int id;
         int range;
-        map::Coords * coords;
+        map::Coords coords;
         int score;
         int plantableBombs;
         int plantedBombs;

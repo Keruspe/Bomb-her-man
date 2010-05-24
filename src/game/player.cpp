@@ -28,7 +28,7 @@ Player::getRange()
 	return this->range;
 }
 
-Coords *
+Coords
 Player::getCoords()
 {
 	return this->coords;
@@ -50,6 +50,12 @@ int
 Player::getId ()
 {
 	return this->id;
+}
+
+void
+Player::setCoords(Coords & c)
+{
+	this->coords = c;
 }
 
 void

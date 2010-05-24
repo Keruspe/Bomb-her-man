@@ -115,8 +115,8 @@ Game::play()
 	}
 	
 	currentMap = new map::Map();
-        currentMap->newPlayer(1);
-        currentMap->newPlayer(2);
+        currentMap->newPlayer();
+        currentMap->newPlayer();
 	
 	map::Coords coords;
 	int size = Config::getInt("mapSize");
