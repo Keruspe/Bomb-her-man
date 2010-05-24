@@ -58,7 +58,6 @@ MapGenerator::generate(Grid& g)
                 }
                 else
                 {
-                    g[c.y][c.x] = NONE;
                     currentVerticalElementSize = 0;
                     currentVerticalInsertionProbability = INSERTION_PROBABILITY_BASE_VERTICAL;
                 }
@@ -72,10 +71,6 @@ MapGenerator::generate(Grid& g)
                 g[c.y][c.x] = INDESTRUCTIBLE;
                 currentVerticalElementSize ++;
                 currentVerticalInsertionProbability -= INSERTION_PROBABILITY_REGRESSION_VERTICAL;
-            }
-            else
-            {
-                g[c.y][c.x] = NONE;
             }
         }
     }
