@@ -25,6 +25,7 @@
 #include "map/map.hpp"
 
 #include "exceptions/display/nosdl-exception.hpp"
+#include "exceptions/display/nosvg-exception.hpp"
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -65,6 +66,10 @@ namespace bombherman
 			static void updateDisplay(SDL_Surface *);
 			static void newDisplay(Uint32 adds = 0);
 			
+			static void updateMap();
+			static void updateBarrels();
+			static void updatePlayers();
+			
 			// To store the SDL display surface
 			static SDL_Surface *sDisplay;
 			static Uint32 flags;
@@ -85,18 +90,22 @@ namespace bombherman
 			// To store the SDL normal font
 			static TTF_Font *fontNormal;
 			
+			static SDL_Surface *sBackground;
 			
-			static SDL_Surface *gBackground;
+			static map::Map *gMap;
+			
+			static SDL_Surface *gMapLayer;
 			static SDL_Surface *gBarrelsLayer;
 			static SDL_Surface *gPlayersLayer;
 			
-			static SDL_Surface **gPlayers;
+			static SDL_Surface *gPlayers[2][4][2];
 			static SDL_Surface *gBomb;
 			static SDL_Surface *gExplosion;
 			static SDL_Surface *gBarrel;
 			static SDL_Surface *gWall;
 			static SDL_Surface *gBack;
 			
+			static int gMapSize;
 			static Uint32 gSize;
 			static SDL_Rect gBegin;
 		};

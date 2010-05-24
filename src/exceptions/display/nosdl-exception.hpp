@@ -19,7 +19,7 @@
 #ifndef _DISPLAY_NOSDL_EXCEPTION_HPP_
 #define _DISPLAY_NOSDL_EXCEPTION_HPP_
 
-#include "exceptions/display/backend-exception.hpp"
+#include "exceptions/exception.hpp"
 
 namespace bombherman
 {
@@ -28,14 +28,14 @@ namespace bombherman
 		namespace display
 		{
 			class NoSDLException :
-				public BackendException
+				public Exception
 			{
 			public:
 				/// Constructor
 				/**
 				 * @param m The message
 				 */
-				NoSDLException(const std::string &m) throw() : BackendException("No SDL backend:" + m) {}
+				NoSDLException(const std::string &m) throw() : Exception("No SDL:" + m) {}
 				/// Destructor
 				virtual ~NoSDLException() throw() {}
 			};

@@ -208,8 +208,19 @@ Game::eventGame(void *event)
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
 		case SDLK_ESCAPE:
-			bhout << "UP pressed" << bhendl;
 			changeMenu(display::elements::Menu::MAIN);
+		break;
+		// Player 1
+		case SDLK_UP:		// Up
+		case SDLK_DOWN:		// Down
+		case SDLK_RIGHT:	// Right
+		case SDLK_LEFT:		// Left
+		break;
+		// Player 2
+		case SDLK_e:		// Up
+		case SDLK_d:		// Down
+		case SDLK_f:		// Right
+		case SDLK_s:		// Left
 		break;
 		default:
 		break;
