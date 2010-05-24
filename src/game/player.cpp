@@ -10,12 +10,16 @@
 using namespace bombherman;
 using namespace bombherman::map;
 
+int Player::maxId = -1;
+
 Player::Player()
 {
+
 	this->plantableBombs = Config::getInt("defaultPlantableBombs");
 	this->range = Config::getInt("defaultRange");
 	this->plantedBombs = 0;
 	this->score = 0;
+	this->id = ++ Player maxId;
 }
 
 int
@@ -40,6 +44,12 @@ int
 Player::getScore()
 {
 	return this->score;
+}
+
+int
+Player::getId ()
+{
+	return this->id;
 }
 
 void

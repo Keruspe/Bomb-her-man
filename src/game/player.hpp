@@ -10,29 +10,31 @@
 #ifndef _PLAYER_HPP
 #define	_PLAYER_HPP
 
-namespace bombherman
-{
-    class Player
-    {
-        public:
-            Player();
-            int getRange();
-            map::Coords * getCoords();
-            bool isAbleToPlantBomb();
-            int getScore();
-            void setRange(int);
-            void go(map::Direction);
-            void plantBomb();
-            void addToScore(int);
-            void setPlantableBombs(int);
-            void addToPlantableBombs(int);
-            void resetToDefaultStats();
-        private:
-            int range;
-            map::Coords * coords;
-            int score;
-            int plantableBombs;
-            int plantedBombs;
+namespace bombherman {
+
+    class Player {
+    public:
+        Player();
+        int getRange();
+        map::Coords * getCoords();
+        bool isAbleToPlantBomb();
+        int getScore();
+        int getId();
+        void setRange(int);
+        void go(map::Direction);
+        void plantBomb();
+        void addToScore(int);
+        void setPlantableBombs(int);
+        void addToPlantableBombs(int);
+        void resetToDefaultStats();
+    private:
+        static int maxId;
+        int id;
+        int range;
+        map::Coords * coords;
+        int score;
+        int plantableBombs;
+        int plantedBombs;
     };
 };
 
