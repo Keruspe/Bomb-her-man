@@ -22,21 +22,21 @@
 using namespace bombherman;
 using namespace bombherman::map;
 
-const float INSERTION_PROBABILITY_BASE = Config::getInt("mgInsertionProbabilityBase") / 100.;
-const float INSERTION_PROBABILITY_BASE_VERTICAL = Config::getInt("mgInsertionProbabilityBaseVertical") / 100.;
-const float INSERTION_PROBABILITY_BASE_HORIZONTAL = Config::getInt("mgInsertionProbabilityBaseHorizontal") / 100.;
-const float INSERTION_PROBABILITY_REGRESSION_VERTICAL = Config::getInt("mgInsertionRegressionVertical") / 100.;
-const float INSERTION_PROBABILITY_REGRESSION_HORIZONTAL = Config::getInt("mgInsertionRegressionHorizontal") / 100.;
-const float INSERTION_PROBABILITY_BARREL = Config::getInt("mgInsertionProbabilityBarrel") / 100.;
-const int INSERTION_ELEMENT_SIZE_MAX_VERTICAL = Config::getInt("mgInsertionElementSizeMaxVertical");
-const int INSERTION_ELEMENT_SIZE_MAX_HORIZONTAL = Config::getInt("mgInsertionElementSizeMaxHorizontal");
+#define INSERTION_PROBABILITY_BASE Config::getInt("mgInsertionProbabilityBaseVertical")
+#define INSERTION_PROBABILITY_BASE_VERTICAL Config::getInt("mgInsertionProbabilityBaseVertical")
+#define INSERTION_PROBABILITY_BASE_HORIZONTAL Config::getInt("mgInsertionProbabilityBaseHorizontal")
+#define INSERTION_PROBABILITY_REGRESSION_VERTICAL Config::getInt("mgInsertionRegressionVertical")
+#define INSERTION_PROBABILITY_REGRESSION_HORIZONTAL Config::getInt("mgInsertionRegressionHorizontal")
+#define INSERTION_PROBABILITY_BARREL Config::getInt("mgInsertionProbabilityBarrel")
+#define INSERTION_ELEMENT_SIZE_MAX_VERTICAL Config::getInt("mgInsertionElementSizeMaxVertical")
+#define INSERTION_ELEMENT_SIZE_MAX_HORIZONTAL Config::getInt("mgInsertionElementSizeMaxHorizontal")
 
 void
 MapGenerator::generate(Grid& g)
 {
     ::srand(time(0));
     int currentHorizontalElementSize, currentVerticalElementSize = 0;
-    float currentHorizontalInsertionProbability, currentVerticalInsertionProbability = INSERTION_PROBABILITY_BASE_VERTICAL;
+    int currentHorizontalInsertionProbability, currentVerticalInsertionProbability = INSERTION_PROBABILITY_BASE_VERTICAL;
     Coords c;
 	g.grid.resize(g.size);    
 	for (std::vector< std::vector< char > >::iterator i = g.grid.begin(), i_end = g.grid.end() ; i != i_end ; ++i)
@@ -92,10 +92,10 @@ MapGenerator::random(int min, int max)
 }
 
 bool
-MapGenerator::throwDice(float probability)
+MapGenerator::throwDice(float percentage)
 {
-    float random = (rand() % 100) / 100.;
-    if (probability > random)
+    float random = (rand() % 100);
+    if (percentage > random)
         return true;
     return false;
 }
