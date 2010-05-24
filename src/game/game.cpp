@@ -145,6 +145,12 @@ Game::quit()
 		currentMenu = NULL;
 	}
 	
+	if ( currentMap )
+	{
+		delete(currentMap);
+		currentMap = NULL;
+	}
+	
 	for ( std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end() ; i != e ; ++i )
 	{
 		SDL_WaitThread((*i), NULL);
