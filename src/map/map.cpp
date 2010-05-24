@@ -24,12 +24,12 @@ using namespace bombherman;
 using namespace bombherman::map;
 using namespace bombherman::exceptions;
 
-Map::Map() : map(Grid())
+Map::Map() : map(Grid()), players(std::vector< Player >())
 {
 	MapGenerator::generate(map);
 }
 
-Map::Map(Grid & model) : map(Grid())
+Map::Map(Grid & model) : map(Grid()), players(std::vector< Player >())
 {
 	for(int x(0) ; x < map.size ; ++x)
 	{
@@ -40,7 +40,7 @@ Map::Map(Grid & model) : map(Grid())
 	}
 }
 
-Map::Map(std::string path) : map(Grid())
+Map::Map(std::string path) : map(Grid()), players(std::vector< Player >())
 {
 	try
 	{

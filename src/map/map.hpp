@@ -43,7 +43,7 @@ namespace bombherman
 			Coords & getCoords(int);
 		private:
 			Grid map;
-			std::vector<Player> players;
+			std::vector< Player > players;
 		};
 	}
 }

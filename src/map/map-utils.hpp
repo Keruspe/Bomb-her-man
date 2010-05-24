@@ -50,7 +50,7 @@ namespace bombherman
 			int y;
 			int max;
 
-			Coords() : max(Config::getInt("mapSize") - 1)
+			Coords() : x(-1), y(-1), max(Config::getInt("mapSize") - 1)
 			{
 			}
 		} Coords;
