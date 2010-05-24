@@ -2,47 +2,43 @@
 /*
  * Bomb-her-man
  * Copyright (C) mogzor 2010 <mogzor@gmail.com>
- * 
+ *
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Bomb-her-man is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _MAP_GENERATOR_HPP_
-#define _MAP_GENERATOR_HPP_
 
-#include <iostream>
-#include <ctime>
-#include <cstdlib>
 #include "map/map-utils.hpp"
-#include "config/config.hpp"
+#include "game/player.hpp"
+#include <SDL.h>
 
-namespace bombherman 
+
+#ifndef _ATOMICCENTER_HPP
+#define	_ATOMICCENTER_HPP
+
+namespace bombherman
 {
-    namespace map
+    namespace bomb
     {
-        class MapGenerator
+        class AtomicCenter
         {
         public:
-            static void generate(Grid&);
-	    static Coords & getRandomCoords();
+            static void plantBomb(map::Coords &, int playerId);
         private:
-            static int random(int, int);
-            static bool throwDice(float);
-            static bool testCellFull(Grid&, Coords);
-            static bool testCellLimited(Grid&, Coords);
-            static int horizontalScan(Grid&, Coords);
+            static void explode ();
+            static std::vector<std::vector<Uint32> > bombList;
         };
     }
 }
 
-#endif // _MAP_GENERATOR_HPP_
+#endif	/* _ATOMICCENTER_HPP */
