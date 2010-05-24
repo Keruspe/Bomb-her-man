@@ -83,9 +83,9 @@ Game::main()
 }
 
 void
-Game::changeMenu(display::elements::Menu::Type type)
+Game::changeMenu(display::elements::Menu::Type type, bool stopGame)
 {
-	if ( currentMap )
+	if ( ( stopGame ) && ( currentMap ) )
 	{
 		delete(currentMap);
 		currentMap = NULL;
@@ -100,36 +100,40 @@ Game::changeMenu(display::elements::Menu::Type type)
 }
 
 void
-Game::play()
+Game::play(bool newGame)
 {
 	if ( currentMenu )
 	{
 		delete(currentMenu);
 		currentMenu = NULL;
 	}
-	
-	if ( currentMap )
+	if ( newGame )
 	{
-		delete(currentMap);
-		currentMap = NULL;
-	}
-	
-	currentMap = new map::Map();
-        currentMap->newPlayer();
-        currentMap->newPlayer();
-	
-	map::Coords coords;
-	int size = Config::getInt("mapSize");
-	for(coords.y = 0 ; coords.y < size ; ++coords.y)
-	{
-		for(coords.x = 0 ; coords.x < size ; ++coords.x)
+		if ( currentMap )
 		{
-			std::cout << currentMap->get(coords);
+			delete(currentMap);
+			currentMap = NULL;
 		}
-		std::cout << std::endl;
+		
+		currentMap = new map::Map();
+		currentMap->newPlayer();
+		currentMap->newPlayer();
+		
+		map::Coords coords;
+		int size = Config::getInt("mapSize");
+		for(coords.y = 0 ; coords.y < size ; ++coords.y)
+		{
+			for(coords.x = 0 ; coords.x < size ; ++coords.x)
+			{
+				std::cout << currentMap->get(coords);
+			}
+			std::cout << std::endl;
+		}
+		
+		display::Display::setMap(currentMap);
 	}
-	
-	display::Display::setMap(currentMap);
+	else
+		display::Display::updatePlayers();
 }
 
 void
@@ -180,17 +184,14 @@ Game::eventMenu(void *event)
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
 		case SDLK_UP:
-			bhout << "UP pressed" << bhendl;
 			display::Display::displayMenu(currentMenu->getContent(), currentMenu->up());
 		break;
 		case SDLK_DOWN:
-			bhout << "DOWN pressed" << bhendl;
 			display::Display::displayMenu(currentMenu->getContent(), currentMenu->down());
 		break;
 		case SDLK_KP_ENTER:
 		case SDLK_SPACE:
 		case SDLK_RETURN:
-			bhout << "Menu action" << bhendl;
 			currentMenu->action();
 		break;
 		default:
@@ -208,7 +209,7 @@ Game::eventGame(void *event)
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
 		case SDLK_ESCAPE:
-			changeMenu(display::elements::Menu::MAIN);
+			changeMenu(display::elements::Menu::INGAME, false);
 		break;
 		// Player 1
 		case SDLK_UP:		// Up

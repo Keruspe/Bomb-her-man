@@ -332,7 +332,7 @@ Display::newDisplay(Uint32 adds)
 	else
 	{
 		isFullscreen = ( adds & SDL_FULLSCREEN );
-		SDL_FreeSurface(sDisplay);
+		cleanSurface(sDisplay);
 		sDisplay = tmp;
 	}
 	if ( height < width )
@@ -485,18 +485,13 @@ Display::updatePlayers()
 	SDL_BlitSurface(gBarrelsLayer, NULL, gPlayersLayer, NULL);
 	if ( ! gPlayers[0][0][0] ) initSurfaces();
 	map::Coords coords;
-	r.y = gBegin.y;
-	for(coords.y = 0 ; coords.y < gMapSize ; ++coords.y)
+	unsigned int max = Config::getInt("maxPlayers");
+	for ( unsigned int i = 1 ; i <= max ; ++i )
 	{
-		r.x = gBegin.x;
-		for(coords.x = 0 ; coords.x < gMapSize ; ++coords.x)
-		{
-			char c = gMap->get(coords);
-			if ( ( c == '1' ) || ( c == '2' ) )
-				SDL_BlitSurface(gPlayers[c-'0'-1][0][0], NULL, gPlayersLayer, &r);
-			r.x += gSize;
-		}
-		r.y += gSize;
+		map::Coords coords = gMap->getCoords(i);
+		r.x = gBegin.x + ( coords.x * gSize );
+		r.y = gBegin.y + ( coords.y * gSize );
+		SDL_BlitSurface(gPlayers[i-1][0][0], NULL, gPlayersLayer, &r);
 	}
 	
 	updateDisplay(gPlayersLayer);

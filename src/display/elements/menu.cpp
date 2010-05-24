@@ -36,16 +36,21 @@ Menu::getMenu(Type which)
 			menu.push_back(_("Settings"));
 			menu.push_back(_("Quit"));
 		break;
+		case GAME:
+			menu.push_back(_("Game"));
+			menu.push_back(_("Play"));
+			menu.push_back(_("Back"));
+		break;
 		case SETTINGS:
 			menu.push_back(_("Settings"));
 			menu.push_back(_("Fullscreen"));
 			menu.push_back(_("Windowed"));
 			menu.push_back(_("Back"));
 		break;
-		case GAME:
-			menu.push_back(_("Game"));
-			menu.push_back(_("Play"));
-			menu.push_back(_("Back"));
+		case INGAME:
+			menu.push_back(_("Pause"));
+			menu.push_back(_("Back to game"));
+			menu.push_back(_("Back to main menu"));
 		break;
 	}
 	return new Menu(which, menu);
@@ -69,6 +74,16 @@ Menu::action()
 					Game::stop();
 			}
 		break;
+		case GAME:
+			switch ( this->current )
+			{
+				case 1:
+					Game::play();
+				break;
+				default:
+					Game::changeMenu(MAIN);
+			}
+		break;
 		case SETTINGS:
 			switch ( this->current )
 			{
@@ -86,14 +101,14 @@ Menu::action()
 					Game::changeMenu(MAIN);
 			}
 		break;
-		case GAME:
+		case INGAME:
 			switch ( this->current )
 			{
 				case 1:
-					Game::play();
+					Game::play(false);
 				break;
 				default:
-					Game::changeMenu(MAIN);
+					Game::changeMenu(MAIN, false);
 			}
 		break;
 	}
