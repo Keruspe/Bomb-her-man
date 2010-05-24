@@ -66,8 +66,6 @@ Map::~Map()
 Player &
 Map::newPlayer()
 {
-	Player *player = new Player();
-	int playerNo = '0' + player->getId();
 	Coords c;
 	while (true)
 	{
@@ -86,8 +84,8 @@ Map::newPlayer()
 			map[c.y][c.x - 1] = NONE;
 		if (c.x != map.size - 1)
 			map[c.y][c.x + 1] = NONE;
-		map[c.y][c.x] = playerNo;
-		player->setCoords(c);
+		Player *player = new Player(c);
+		map[c.y][c.x] = player->getId() + '0';
 		return *player;
 	}
 }

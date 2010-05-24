@@ -14,13 +14,12 @@ namespace bombherman {
 
     class Player {
     public:
-        Player();
+        Player(map::Coords &);
         int getRange();
         map::Coords getCoords();
         bool isAbleToPlantBomb();
         int getScore();
         int getId();
-        void setCoords(map::Coords &);
 	void setRange(int);
         void go(map::Direction);
         void plantBomb();

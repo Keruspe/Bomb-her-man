@@ -12,7 +12,7 @@ using namespace bombherman::map;
 
 int Player::maxId = 0;
 
-Player::Player()
+Player::Player(Coords & coords)
 {
 
 	this->plantableBombs = Config::getInt("defaultPlantableBombs");
@@ -20,6 +20,7 @@ Player::Player()
 	this->plantedBombs = 0;
 	this->score = 0;
 	this->id = ++ Player::maxId;
+	this->coords = coords;
 }
 
 int
@@ -50,12 +51,6 @@ int
 Player::getId ()
 {
 	return this->id;
-}
-
-void
-Player::setCoords(Coords & c)
-{
-	this->coords = c;
 }
 
 void
