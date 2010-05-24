@@ -36,6 +36,10 @@ int Display::height = 0;
 TTF_Font *Display::fontTitle = NULL;
 TTF_Font *Display::fontNormal = NULL;
 
+SDL_Surface *Display::gBackground = NULL;
+SDL_Surface *Display::gBarrels = NULL;
+SDL_Surface *Display::gPlayers = NULL;
+
 
 void
 Display::init()
