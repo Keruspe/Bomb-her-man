@@ -62,20 +62,6 @@ Map::~Map()
 {
 }
 
-bool
-Map::move(Coords c, Direction d)
-{
-	// temporarily silent gcc warning	
-	switch(c.x)
-	{
-	default:
-		switch(d)
-		{
-		default:
-			return false;
-		}
-	}
-}
 
 bool
 Map::newPlayer(int playerNo)

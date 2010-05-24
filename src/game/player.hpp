@@ -21,10 +21,7 @@ namespace bombherman
             bool isAbleToPlantBomb();
             int getScore();
             void setRange(int);
-            void goLeft();
-            void goRight();
-            void goTop();
-            void goBottom();
+            void go(map::Direction);
             void plantBomb();
             void addToScore(int);
             void setPlantableBombs(int);

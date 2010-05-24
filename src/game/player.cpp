@@ -8,6 +8,7 @@
 #include "player.hpp"
 
 using namespace bombherman;
+using namespace bombherman::map;
 
 Player::Player()
 {
@@ -23,7 +24,7 @@ Player::getRange()
 	return this->range;
 }
 
-map::Coords *
+Coords *
 Player::getCoords()
 {
 	return this->coords;
@@ -32,7 +33,7 @@ Player::getCoords()
 bool
 Player::isAbleToPlantBomb()
 {
-  return (this->plantableBombs < this->plantedBombs);
+  return (this->plantableBombs > this->plantedBombs);
 }
 
 int
@@ -48,27 +49,7 @@ Player::setRange(int range)
 }
 
 void
-Player::goLeft()
-{
-}
-
-void
-Player::goRight()
-{
-}
-
-void
-Player::goTop()
-{
-}
-
-void
-Player::goBottom()
-{
-}
-
-void
-Player::plantBomb()
+Player::go(Direction direction)
 {
 }
 
