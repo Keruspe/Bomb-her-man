@@ -78,6 +78,7 @@ Config::init()
 		Config::config["mapSize"] = 15;
 		Config::config["defaultPlantableBombs"] =3;
 		Config::config["defaultRange"] = 5;
+		Config::config["maxPlayers"] = 2;
 		
 		/*
 		 * Then read the file
