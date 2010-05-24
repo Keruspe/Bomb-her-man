@@ -75,18 +75,18 @@ Config::init()
 		/*
 		 * Initializing defaults values
 		 */
-		Config::config["mapSize"] = 15;
-		Config::config["defaultPlantableBombs"] =3;
-		Config::config["defaultRange"] = 5;
-		Config::config["maxPlayers"] = 2;
-		Config::config["mgInsertionProbabilityBase"] = 1;
-		Config::config["mgInsertionProbabilityBaseHorizontal"] = 50;
-		Config::config["mgInsertionProbabilityBaseVertical"] = 50;
-		Config::config["mgInsertionProbabilityRegressionHorizontal"] = 10;
-		Config::config["mgInsertionProbabilityRegressionVertical"] = 10;
-		Config::config["mgInsertionProbabilityBarrel"] = 42 * 2;
-		Config::config["mgInsertionElementSizeMaxHorizontal"] = 3;
-		Config::config["mgInsertionElementSizeMaxVertical"] = 3;
+		config["mapSize"] = 15;
+		config["defaultPlantableBombs"] =3;
+		config["defaultRange"] = 5;
+		config["maxPlayers"] = 2;
+		config["mgInsertionProbabilityBase"] = 100;
+		config["mgInsertionProbabilityBaseHorizontal"] = 50;
+		config["mgInsertionProbabilityBaseVertical"] = 50;
+		config["mgInsertionProbabilityRegressionHorizontal"] = 10;
+		config["mgInsertionProbabilityRegressionVertical"] = 10;
+		config["mgInsertionProbabilityBarrel"] = 42 * 2;
+		config["mgInsertionElementSizeMaxHorizontal"] = 3;
+		config["mgInsertionElementSizeMaxVertical"] = 3;
 		
 		/*
 		 * Then read the file
@@ -110,7 +110,7 @@ Config::read()
 			separator = line.find_first_of('=');
 			if ( separator != std::string::npos )
 			{
-				Config::config[line.substr(0, separator)] = line.substr(separator+1);
+				config[line.substr(0, separator)] = line.substr(separator+1);
 			}
 		}
 		file.close();
@@ -137,27 +137,27 @@ std::string
 Config::get(std::string key)
 {
 	Config::init();
-	return Config::config[key].sValue;
+	return config[key].sValue;
 }
 
 int
 Config::getInt (std::string key)
 {
 	Config::init();
-	return (Config::config[key]).intValue();
+	return (config[key]).intValue();
 }
 
 void
 Config::set(std::string key, int value)
 {
 	Config::init();
-	Config::config[key] = value;
+	config[key] = value;
 }
 
 void
 Config::set(std::string key, std::string value)
 {
 	Config::init();
-	Config::config[key] = value;
+	config[key] = value;
 }
 
