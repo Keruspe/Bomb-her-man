@@ -30,6 +30,8 @@ main()
 {
 	Config::set("mapSize", 15);
 	map::Map map;
+	map.newPlayer(1);
+	map.newPlayer(2);
 	//map::Map map("/home/keruspe/map.bm");
 	map::Coords coords;
 	int size = Config::getInt("mapSize");
