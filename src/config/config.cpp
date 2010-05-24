@@ -89,36 +89,39 @@ Config::init()
 void
 Config::read()
 {
-	std::fstream file("/tmp/config.ini", std::ios::in); //TODO: dynamic file
+	std::ifstream file("/tmp/config.ini", std::ios::in); //TODO: dynamic file
 	std::string line;
 	std::string::size_type separator;
 	
-	do
+	if ( file.is_open() )
 	{
-		file >> line;
-		std::cout << line << std::endl;
-		separator = line.find_first_of('=');
-		if ( separator != std::string::npos )
+		while ( ! file.eof() )
 		{
-			std::cout << line.substr(0, separator) << '=' << line.substr(separator+1) << std::endl;
-			Config::config[line.substr(0, separator)] = line.substr(separator+1);
+			file >> line;
+			separator = line.find_first_of('=');
+			if ( separator != std::string::npos )
+			{
+				Config::config[line.substr(0, separator)] = line.substr(separator+1);
+			}
 		}
-	} while ( ! file.eof() );
-	
-	file.close();
+		file.close();
+	}
 }
 
 void
 Config::write()
 {
-	std::fstream file("/tmp/config.ini", std::ios::out); //TODO: dynamic file
+	std::ofstream file("/tmp/config.ini", std::ios::out | std::ios::trunc); //TODO: dynamic file
 	
-	for ( std::map<std::string, Config>::iterator i = Config::config.begin(), e = Config::config.end() ; i != e ; ++i )
+	if ( file.is_open() )
 	{
-		if ( ! (i->second).sValue.empty() )
-			file << i->first << '=' << (i->second).sValue << std::endl;
+		for ( std::map<std::string, Config>::iterator i = Config::config.begin(), e = Config::config.end() ; i != e ; ++i )
+		{
+			if ( ! (i->second).sValue.empty() )
+				file << i->first << '=' << (i->second).sValue << std::endl;
+		}
+		file.close();
 	}
-	file.close();
 }
 
 std::string
