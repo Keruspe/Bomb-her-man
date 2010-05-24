@@ -48,11 +48,11 @@ namespace bombherman
 		{
 			int x;
 			int y;
-                        int max;
+			int max;
 
-                        Coords() : max(static_cast<unsigned>(Config::getInt("mapSize") - 1))
-                        {
-                        }
+			Coords() : max(Config::getInt("mapSize") - 1)
+			{
+			}
 		} Coords;
 
 		typedef enum
