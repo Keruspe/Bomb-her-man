@@ -19,19 +19,12 @@
 
 #include "bombherman.hpp"
 #include "game/game.hpp"
-#include "map/map.hpp"
-#include "map/map-utils.hpp"
-#include "map-generator/map-generator.hpp"
 
 using namespace bombherman;
 
 int
 main()
 {
-	Config::set("mapSize", 15);
-	Config::set("defaultPlantableBombs", 3);
-	Config::set("defaultRange", 5);
-	
 	Game::main();
 	
 	return 0;
