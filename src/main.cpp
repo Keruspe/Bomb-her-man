@@ -19,6 +19,8 @@
 
 #include "bombherman.hpp"
 #include "game/game.hpp"
+#include "atomic-center/atomic-center.hpp"
+#include "map/map-utils.hpp"
 
 using namespace bombherman;
 
@@ -26,6 +28,9 @@ int
 main()
 {
 	Game::main();
-	
+	map::Coords c;
+	c.x = 2;
+	c.y= 3;
+	bomb::AtomicCenter::plantBomb (c, 0);
 	return 0;
 }

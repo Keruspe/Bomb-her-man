@@ -24,6 +24,7 @@
 #define INSERTION_PROBABILITY_BASE_HORIZONTAL 0.5
 #define INSERTION_PROBABILITY_REGRESSION_VERTICAL 0.1
 #define INSERTION_PROBABILITY_REGRESSION_HORIZONTAL 0.1
+#define INSERTION_PROBABILITY_BARREL 0.42 * 2
 #define INSERTION_ELEMENT_SIZE_MAX_VERTICAL 3
 #define INSERTION_ELEMENT_SIZE_MAX_HORIZONTAL 3
 
@@ -74,6 +75,14 @@ MapGenerator::generate(Grid& g)
             }
         }
     }
+	for (c.x = 0; c.x < g.size; ++c.x)
+    {
+        for (c.y = 0; c.y < g.size; ++c.y)
+        {
+			if (g[c.y][c.x] == NONE && throwDice (INSERTION_PROBABILITY_BARREL))
+				g[c.y][c.x] = BARREL;
+		}
+	}
 }
 
 int

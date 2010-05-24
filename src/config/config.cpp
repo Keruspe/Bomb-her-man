@@ -79,6 +79,14 @@ Config::init()
 		Config::config["defaultPlantableBombs"] =3;
 		Config::config["defaultRange"] = 5;
 		Config::config["maxPlayers"] = 2;
+		Config::config["mgInsertionProbabilityBase"] = 1;
+		Config::config["mgInsertionProbabilityBaseHorizontal"] = 50;
+		Config::config["mgInsertionProbabilityBaseVertical"] = 50;
+		Config::config["mgInsertionProbabilityRegressionHorizontal"] = 10;
+		Config::config["mgInsertionProbabilityRegressionVertical"] = 10;
+		Config::config["mgInsertionProbabilityBarrel"] = 42 * 2;
+		Config::config["mgInsertionElementSizeMaxHorizontal"] = 3;
+		Config::config["mgInsertionElementSizeMaxVertical"] = 3;
 		
 		/*
 		 * Then read the file
