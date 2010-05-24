@@ -55,11 +55,14 @@ namespace bombherman
 	private:
 		static bool isInit, playing;
 		
+		static void threadClean(Uint32 id);
+		
 		static int eventMenu(void *);
 		static int eventGame(void *);
 		
 		// To store the actual menu
 		static display::elements::Menu *currentMenu;
+		static map::Map *currentMap;
 		
 		static std::vector< SDL_Thread * > *threads;
 	};

@@ -22,6 +22,7 @@
 using namespace bombherman;
 
 display::elements::Menu *Game::currentMenu = NULL;
+map::Map *Game::currentMap = NULL;
 std::vector< SDL_Thread * > *Game::threads = new std::vector< SDL_Thread * >();
 bool Game::isInit = false;
 bool Game::playing = true;
@@ -30,6 +31,22 @@ void Game::init()
 {
 	display::Display::init();
 	changeMenu(display::elements::Menu::MAIN);
+	
+	SDL_EventState(SDL_ACTIVEEVENT, SDL_IGNORE);
+	SDL_EventState(SDL_KEYUP, SDL_IGNORE);
+	SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
+	SDL_EventState(SDL_MOUSEBUTTONDOWN, SDL_IGNORE);
+	SDL_EventState(SDL_MOUSEBUTTONUP, SDL_IGNORE);
+	SDL_EventState(SDL_JOYAXISMOTION, SDL_IGNORE);
+	SDL_EventState(SDL_JOYBALLMOTION, SDL_IGNORE);
+	SDL_EventState(SDL_JOYHATMOTION, SDL_IGNORE);
+	SDL_EventState(SDL_JOYBUTTONDOWN, SDL_IGNORE);
+	SDL_EventState(SDL_JOYBUTTONUP, SDL_IGNORE);
+	SDL_EventState(SDL_VIDEORESIZE, SDL_IGNORE);
+	SDL_EventState(SDL_VIDEOEXPOSE, SDL_IGNORE);
+	SDL_EventState(SDL_USEREVENT, SDL_IGNORE);
+	SDL_EventState(SDL_SYSWMEVENT, SDL_IGNORE);
+	
 	isInit = true;
 }
 
@@ -68,6 +85,11 @@ Game::main()
 void
 Game::changeMenu(display::elements::Menu::Type type)
 {
+	if ( currentMap )
+	{
+		delete(currentMap);
+		currentMap = NULL;
+	}
 	if ( currentMenu )
 	{
 		delete(currentMenu);
@@ -86,7 +108,26 @@ Game::play()
 		currentMenu = NULL;
 	}
 	
-	display::Display::displayMap();
+	if ( currentMap )
+	{
+		delete(currentMap);
+		currentMap = NULL;
+	}
+	
+	currentMap = new map::Map();
+	
+	map::Coords coords;
+	int size = Config::getInt("mapSize");
+	for(coords.y = 0 ; coords.y < size ; ++coords.y)
+	{
+		for(coords.x = 0 ; coords.x < size ; ++coords.x)
+		{
+			std::cout << currentMap->get(coords);
+		}
+		std::cout << std::endl;
+	}
+	
+	display::Display::displayMap(currentMap);
 }
 
 void
@@ -102,14 +143,27 @@ Game::quit()
 		currentMenu = NULL;
 	}
 	
-	std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end();
-	for ( ; i != e ; ++i )
+	for ( std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end() ; i != e ; ++i )
 	{
 		SDL_WaitThread((*i), NULL);
 	}
 	delete(threads);
 	
 	Config::write();
+}
+
+void
+Game::threadClean(Uint32 id)
+{
+	for ( std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end() ; i != e ; ++i )
+	{
+		if ( id == SDL_GetThreadID(*i) )
+		{
+			(*i) = NULL;
+			threads->erase(i);
+			break;
+		}
+	}
 }
 
 int
@@ -125,26 +179,17 @@ Game::eventMenu(void *event)
 			bhout << "DOWN pressed" << bhendl;
 			display::Display::displayMenu(currentMenu->getContent(), currentMenu->down());
 		break;
-		//case SDLK_ENTER:
+		case SDLK_KP_ENTER:
+		case SDLK_SPACE:
 		case SDLK_RETURN:
-			bhout << "ENTER pressed" << bhendl;
+			bhout << "Menu action" << bhendl;
 			currentMenu->action();
 		break;
 		default:
 		break;
 	}
 	
-	std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end();
-	Uint32 id = SDL_ThreadID();
-	for ( ; i != e ; ++i )
-	{
-		if ( id == SDL_GetThreadID(*i) )
-		{
-			(*i) = NULL;
-			threads->erase(i);
-			break;
-		}
-	}
+	Game::threadClean(SDL_ThreadID());
 	
 	return 0;
 }
@@ -162,17 +207,7 @@ Game::eventGame(void *event)
 		break;
 	}
 	
-	std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end();
-	Uint32 id = SDL_ThreadID();
-	for ( ; i != e ; ++i )
-	{
-		if ( id == SDL_GetThreadID(*i) )
-		{
-			(*i) = NULL;
-			threads->erase(i);
-			break;
-		}
-	}
+	Game::threadClean(SDL_ThreadID());
 	
 	return 0;
 }

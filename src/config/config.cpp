@@ -81,13 +81,17 @@ Config::read()
 	std::string line;
 	std::string::size_type separator;
 	
-	while ( getline(file, line) )
+	do
 	{
+		file >> line;
+		std::cout << line << std::endl;
 		separator = line.find_first_of('=');
 		if ( separator != std::string::npos )
+		{
+			std::cout << line.substr(0, separator) << '=' << line.substr(separator+1) << std::endl;
 			Config::config[line.substr(0, separator)] = line.substr(separator+1);
-	}
-	
+		}
+	} while ( ! file.eof() );
 	
 	file.close();
 }
@@ -95,13 +99,13 @@ Config::read()
 void
 Config::write()
 {
-	return;
 	std::fstream file("/tmp/config.ini", std::ios::out); //TODO: dynamic file
 	
-	std::map<std::string, Config>::iterator i = Config::config.begin(), e = Config::config.end();
-	for ( ; i != e ; ++i )
-		file << i->first << '=' << (i->second).sValue << std::endl;
-	
+	for ( std::map<std::string, Config>::iterator i = Config::config.begin(), e = Config::config.end() ; i != e ; ++i )
+	{
+		if ( ! (i->second).sValue.empty() )
+			file << i->first << '=' << (i->second).sValue << std::endl;
+	}
 	file.close();
 }
 

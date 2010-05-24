@@ -29,18 +29,7 @@ int
 main()
 {
 	Config::set("mapSize", 15);
-	map::Map map;
-	//map::Map map("/home/keruspe/map.bm");
-	map::Coords coords;
-	int size = Config::getInt("mapSize");
-	for(coords.y = 0 ; coords.y < size ; ++coords.y)
-	{
-		for(coords.x = 0 ; coords.x < size ; ++coords.x)
-		{
-			std::cout << map.get(coords);
-		}
-		std::cout << std::endl;
-	}
+
 	
 	Game::main();
 	

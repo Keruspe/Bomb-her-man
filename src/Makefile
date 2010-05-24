@@ -5,8 +5,11 @@ OBJECTS=$(SOURCES:.cpp=.o)
 SDL_CXXFLAGS=$(shell sdl-config --cflags)
 SDL_LDFLAGS=-lSDL_ttf $(shell sdl-config --libs)
 
-CXXFLAGS=-Wall -Wextra -Wstrict-null-sentinel -Wno-non-template-friend -Wold-style-cast -Wno-pmf-conversions -Wsign-promo -g -DGIT_ROOT=\"$(shell pwd)/..\" -I. -I./include $(SDL_CXXFLAGS)
-LDFLAGS=$(SDL_LDFLAGS)
+SVG_CFLAGS=$(shell pkg-config --cflags cairo librsvg-2.0)
+SVG_LDFLAGS=$(shell pkg-config --libs cairo librsvg-2.0)
+
+CXXFLAGS=-Wall -Wextra -Wstrict-null-sentinel -Wno-non-template-friend -Wold-style-cast -Wno-pmf-conversions -Wsign-promo -g -DGIT_ROOT=\"$(shell pwd)/..\" -I. -I./include $(SDL_CXXFLAGS) $(SVG_CFLAGS)
+LDFLAGS=$(SDL_LDFLAGS) $(SVG_LDFLAGS)
 
 CXX=g++ $(CXXFLAGS)
 LD=g++

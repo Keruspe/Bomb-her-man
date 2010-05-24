@@ -19,8 +19,6 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
-#define HAVE_SDL
-
 #define DATADIR GIT_ROOT"/data"
 
 #endif // _CONFIG_H_
