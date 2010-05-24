@@ -33,7 +33,7 @@ namespace bombherman
         {
         public:
             static void generate(Grid&);
-	    static Coords* getRandomCoords();
+	    static Coords & getRandomCoords();
         private:
             static int random(int, int);
             static bool throwDice(float);

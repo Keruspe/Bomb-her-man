@@ -40,7 +40,7 @@ MapGenerator::generate(Grid& g)
 	g.grid.resize(g.size);    
 	for (std::vector< std::vector< char > >::iterator i = g.grid.begin(), i_end = g.grid.end() ; i != i_end ; ++i)
 	{
-		i->resize(g.size);
+		i->resize(g.size, NONE);
 	}
 	for (c.x = 0; c.x < g.size; ++c.x)
     {
@@ -58,7 +58,6 @@ MapGenerator::generate(Grid& g)
                 }
                 else
                 {
-                    g[c.y][c.x] = NONE;
                     currentVerticalElementSize = 0;
                     currentVerticalInsertionProbability = INSERTION_PROBABILITY_BASE_VERTICAL;
                 }
@@ -72,10 +71,6 @@ MapGenerator::generate(Grid& g)
                 g[c.y][c.x] = INDESTRUCTIBLE;
                 currentVerticalElementSize ++;
                 currentVerticalInsertionProbability -= INSERTION_PROBABILITY_REGRESSION_VERTICAL;
-            }
-            else
-            {
-                g[c.y][c.x] = NONE;
             }
         }
     }
@@ -137,11 +132,11 @@ MapGenerator::horizontalScan(Grid& grid, Coords coords)
     return i;
 }
 
-Coords*
+Coords &
 MapGenerator::getRandomCoords()
 {
 	Coords *c = new Coords();
 	c->x = MapGenerator::random(0, c->max);
 	c->y = MapGenerator::random(0, c->max);
-	return c;
+	return *c;
 }

@@ -62,46 +62,33 @@ Map::~Map()
 {
 }
 
-bool
-Map::move(Coords c, Direction d)
-{
-	// temporarily silent gcc warning	
-	switch(c.x)
-	{
-	default:
-		switch(d)
-		{
-		default:
-			return false;
-		}
-	}
-}
 
-Coords &
+bool
 Map::newPlayer(int playerNo)
 {
+	if (! isPlayer(playerNo + '0') || this->getCoords(playerNo).x != -1)
+		return false;
 	playerNo += '0';
-	Coords *c;
+	Coords c;
 	while (true)
 	{
 		c = MapGenerator::getRandomCoords();
-		if( ! isPlayer(playerNo)
-			|| (isPlayer(map[c->y][c->x]))
-			|| (c->y != 0 && isPlayer(map[c->y - 1][c->x]))
-			|| (c->y != map.size - 1 && isPlayer(map[c->y+1][c->x]))
-			|| (c->x != 0 && isPlayer(map[c->y][c->x - 1]))
-			|| (c->x != map.size - 1 && isPlayer(map[c->y][c->x + 1])))
+		if(isPlayer(map[c.y][c.x])
+			|| (c.y != 0 && isPlayer(map[c.y - 1][c.x]))
+			|| (c.y != map.size - 1 && isPlayer(map[c.y+1][c.x]))
+			|| (c.x != 0 && isPlayer(map[c.y][c.x - 1]))
+			|| (c.x != map.size - 1 && isPlayer(map[c.y][c.x + 1])))
 				continue;
-		if (c->y != 0)
-			map[c->y - 1][c->x] = NONE;
-		if (c->y != map.size - 1)
-			map[c->y + 1][c->x] = NONE;
-		if (c->x != 0)
-			map[c->y][c->x - 1] = NONE;
-		if (c->x != map.size - 1)
-			map[c->y][c->x + 1] = NONE;
-		map[c->y][c->x] = playerNo;
-		return *c;
+		if (c.y != 0)
+			map[c.y - 1][c.x] = NONE;
+		if (c.y != map.size - 1)
+			map[c.y + 1][c.x] = NONE;
+		if (c.x != 0)
+			map[c.y][c.x - 1] = NONE;
+		if (c.x != map.size - 1)
+			map[c.y][c.x + 1] = NONE;
+		map[c.y][c.x] = playerNo;
+		return true;
 	}
 }
 
@@ -115,4 +102,21 @@ char
 Map::get(Coords c)
 {
 	return map[c.y][c.x];
+}
+
+Coords &
+Map::getCoords(int playerNo)
+{
+	Coords *coords = new Coords();
+	for(coords->y = 0 ; coords->y < map.size ; ++coords->y)
+	{
+		for(coords->x = 0 ; coords->x < map.size ; ++coords->x)
+		{
+			if (this->get(*coords) == playerNo + '0')
+				return *coords;
+		}
+	}
+	coords->x = -1;
+	coords->y = -1;
+	return *coords;
 }

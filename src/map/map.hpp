@@ -34,10 +34,10 @@ namespace bombherman
 			Map(Grid &);
 			Map(std::string);
 			virtual ~Map();
-			bool move(Coords, Direction);
-			Coords & newPlayer(int);
+			bool newPlayer(int);
 			bool isPlayer(char);
 			char get(Coords);
+			Coords & getCoords(int);
 		private:
 			Grid map;
 		};
