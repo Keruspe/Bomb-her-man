@@ -19,17 +19,17 @@
 
 #include "map-generator.hpp"
 
-const float INSERTION_PROBABILITY_BASE = Config::getInt("mgInsertionProbabilityBase") /. 100;
-const float INSERTION_PROBABILITY_BASE_VERTICAL 0.5
-const float INSERTION_PROBABILITY_BASE_HORIZONTAL 0.5
-const float INSERTION_PROBABILITY_REGRESSION_VERTICAL 0.1
-const float INSERTION_PROBABILITY_REGRESSION_HORIZONTAL 0.1
-const float INSERTION_PROBABILITY_BARREL 0.42 * 2
-const INSERTION_ELEMENT_SIZE_MAX_VERTICAL 3
-const INSERTION_ELEMENT_SIZE_MAX_HORIZONTAL 3
-
 using namespace bombherman;
 using namespace bombherman::map;
+
+const float INSERTION_PROBABILITY_BASE = Config::getInt("mgInsertionProbabilityBase") / 100.;
+const float INSERTION_PROBABILITY_BASE_VERTICAL = Config::getInt("mgInsertionProbabilityBaseVertical") / 100.;
+const float INSERTION_PROBABILITY_BASE_HORIZONTAL = Config::getInt("mgInsertionProbabilityBaseHorizontal") / 100.;
+const float INSERTION_PROBABILITY_REGRESSION_VERTICAL = Config::getInt("mgInsertionRegressionVertical") / 100.;
+const float INSERTION_PROBABILITY_REGRESSION_HORIZONTAL = Config::getInt("mgInsertionRegressionHorizontal") / 100.;
+const float INSERTION_PROBABILITY_BARREL = Config::getInt("mgInsertionProbabilityBarrel") / 100.;
+const int INSERTION_ELEMENT_SIZE_MAX_VERTICAL = Config::getInt("mgInsertionElementSizeMaxVertical");
+const int INSERTION_ELEMENT_SIZE_MAX_HORIZONTAL = Config::getInt("mgInsertionElementSizeMaxHorizontal");
 
 void
 MapGenerator::generate(Grid& g)
