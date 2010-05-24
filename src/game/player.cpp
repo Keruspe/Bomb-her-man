@@ -6,21 +6,20 @@
  */
 
 #include "player.hpp"
+#include "game/player.hpp"
 
 using namespace bombherman;
 using namespace bombherman::map;
 
 int Player::maxId = 0;
 
-Player::Player(Coords & coords)
+Player::Player(Coords & coords) : plantableBombs (Config::getInt("defaultPlantableBombs")),
+		range (Config::getInt("defaultRange")),
+		plantedBombs (0),
+		score (0),
+		id (++ Player::maxId),
+		coords (coords)
 {
-
-	this->plantableBombs = Config::getInt("defaultPlantableBombs");
-	this->range = Config::getInt("defaultRange");
-	this->plantedBombs = 0;
-	this->score = 0;
-	this->id = ++ Player::maxId;
-	this->coords = coords;
 }
 
 int

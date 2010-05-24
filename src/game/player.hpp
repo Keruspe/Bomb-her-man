@@ -28,13 +28,13 @@ namespace bombherman {
         void addToPlantableBombs(int);
         void resetToDefaultStats();
     private:
-        static int maxId;
-        int id;
-        int range;
-        map::Coords coords;
-        int score;
         int plantableBombs;
+        int range;
         int plantedBombs;
+        static int maxId;
+        int score;
+        int id;
+        map::Coords coords;
     };
 };
 
