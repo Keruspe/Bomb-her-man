@@ -61,11 +61,11 @@ Display::init()
 	
 	bhout << "Initialize video" << bhendl;
 	
-	Uint32 wasinit = SDL_WasInit(SDL_INIT_EVERYTHING);
+	Uint32 wasInit = SDL_WasInit(SDL_INIT_EVERYTHING);
 	bool initSuccess(true);
-	if ( ! wasinit )
+	if ( ! wasInit )
 		initSuccess = SDL_Init(SDL_INIT_VIDEO) == 0;
-	else if ( !( wasinit & SDL_INIT_VIDEO ) )
+	else if ( !( wasInit & SDL_INIT_VIDEO ) )
 		initSuccess = SDL_InitSubSystem(SDL_INIT_VIDEO) == 0;
 	
 	if ( ! initSuccess )
