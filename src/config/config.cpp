@@ -71,7 +71,19 @@ void
 Config::init()
 {
 	if ( config.empty() )
+	{
+		/*
+		 * Initializing defaults values
+		 */
+		Config::config["mapSize"] = 15;
+		Config::config["defaultPlantableBombs"] =3;
+		Config::config["defaultRange"] = 5;
+		
+		/*
+		 * Then read the file
+		 */
 		read();
+	}
 }
 
 void
@@ -112,24 +124,28 @@ Config::write()
 std::string
 Config::get(std::string key)
 {
+	Config::init();
 	return Config::config[key].sValue;
 }
 
 int
 Config::getInt (std::string key)
 {
+	Config::init();
 	return (Config::config[key]).intValue();
 }
 
 void
 Config::set(std::string key, int value)
 {
+	Config::init();
 	Config::config[key] = value;
 }
 
 void
 Config::set(std::string key, std::string value)
 {
+	Config::init();
 	Config::config[key] = value;
 }
 
