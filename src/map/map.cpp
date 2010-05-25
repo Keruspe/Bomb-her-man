@@ -153,7 +153,7 @@ bool
 Map::moveDown(Player * player)
 {
 	Coords *c = &(player->getCoords());
-	if (c->y >= Map::map.size || Map::map[c->y + 1][c->x] != NONE)
+	if (c->y >= (Map::map.size - 1) || Map::map[c->y + 1][c->x] != NONE)
 		return false;
 	Map::map[c->y][c->x] = NONE;
 	++(c->y);
@@ -179,7 +179,7 @@ bool
 Map::moveRight(Player * player)
 {
 	Coords *c = &(player->getCoords());
-	if (c->x >= Map::map.size || Map::map[c->y][c->x + 1] != NONE)
+	if (c->x >= (Map::map.size - 1) || Map::map[c->y][c->x + 1] != NONE)
 		return false;
 	Map::map[c->y][c->x] = NONE;
 	++(c->x);
