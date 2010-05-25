@@ -70,10 +70,10 @@ Player::getPlayers()
 	return Player::players;
 }
 
-Player &
+Player *
 Player::getPlayer(int playerNo)
 {
-	return *(Player::players[playerNo - 1]);
+	return Player::players[playerNo - 1];
 }
 
 void
