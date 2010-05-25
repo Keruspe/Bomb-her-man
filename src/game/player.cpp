@@ -72,9 +72,10 @@ Player::getPlayer(int playerNo)
 void
 Player::newPlayer()
 {
-	if (Player::players.size() >= static_cast<unsigned>(Config::getInt("maxPlayers")) - 1)
+	std::cout << static_cast<unsigned>(Config::getInt("maxPlayers")) << " : " << Player::players.size() << std::endl;
+	if (Player::players.size() >= static_cast<unsigned>(Config::getInt("maxPlayers")))
 		throw exceptions::TooManyPlayersException();
-	Player::players.push_back(new Player());
+	new Player();
 }
 
 void
