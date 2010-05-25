@@ -45,7 +45,7 @@ namespace bombherman
 		 * @param type The new menu type
 		 * @param stopGame Set it to true (default) to stop the current game (if any)
 		 */
-		static void changeMenu(display::elements::Menu::Type type, bool stopGame = true);
+		static void changeMenu(Menu::Type type, bool stopGame = true);
 		/// Play
 		/**
 		 * @param newGame Set it to true (default) if you want to start a new game
@@ -65,7 +65,7 @@ namespace bombherman
 		static int eventGame(void *);
 		
 		// To store the actual menu
-		static display::elements::Menu *currentMenu;
+		static Menu *currentMenu;
 		static map::Map *currentMap;
 		
 		static std::vector< SDL_Thread * > *threads;

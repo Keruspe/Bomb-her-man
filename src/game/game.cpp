@@ -17,11 +17,11 @@
  */
 
 #include "game.hpp"
-#include "display/elements/menu.hpp"
+#include "menu.hpp"
 
 using namespace bombherman;
 
-display::elements::Menu *Game::currentMenu = NULL;
+Menu *Game::currentMenu = NULL;
 map::Map *Game::currentMap = NULL;
 std::vector< SDL_Thread * > *Game::threads = new std::vector< SDL_Thread * >();
 bool Game::isInit = false;
@@ -29,8 +29,8 @@ bool Game::playing = true;
 
 void Game::init()
 {
-	display::Display::init();
-	changeMenu(display::elements::Menu::MAIN);
+	Display::init();
+	changeMenu(Menu::MAIN);
 	
 	SDL_EventState(SDL_ACTIVEEVENT, SDL_IGNORE);
 	SDL_EventState(SDL_KEYUP, SDL_IGNORE);
@@ -46,6 +46,9 @@ void Game::init()
 	SDL_EventState(SDL_VIDEOEXPOSE, SDL_IGNORE);
 	SDL_EventState(SDL_USEREVENT, SDL_IGNORE);
 	SDL_EventState(SDL_SYSWMEVENT, SDL_IGNORE);
+	
+	if ( Config::getInt("mapSize") < 15 )
+		Config::set("mapSize", 15);
 	
 	isInit = true;
 }
@@ -83,7 +86,7 @@ Game::main()
 }
 
 void
-Game::changeMenu(display::elements::Menu::Type type, bool stopGame)
+Game::changeMenu(Menu::Type type, bool stopGame)
 {
 	if ( ( stopGame ) && ( currentMap ) )
 	{
@@ -95,8 +98,8 @@ Game::changeMenu(display::elements::Menu::Type type, bool stopGame)
 		delete(currentMenu);
 		currentMenu = NULL;
 	}
-	currentMenu = display::elements::Menu::getMenu(type);
-	display::Display::displayMenu(currentMenu->getContent(), currentMenu->getCurrent());
+	currentMenu = Menu::getMenu(type);
+	Display::displayMenu(currentMenu->getContent(), currentMenu->getCurrent());
 }
 
 void
@@ -114,26 +117,10 @@ Game::play(bool newGame)
 			delete(currentMap);
 			currentMap = NULL;
 		}
-		
 		currentMap = new map::Map();
-		currentMap->newPlayer();
-		currentMap->newPlayer();
-		
-		map::Coords coords;
-		int size = Config::getInt("mapSize");
-		for(coords.y = 0 ; coords.y < size ; ++coords.y)
-		{
-			for(coords.x = 0 ; coords.x < size ; ++coords.x)
-			{
-				std::cout << currentMap->get(coords);
-			}
-			std::cout << std::endl;
-		}
-		
-		display::Display::setMap(currentMap);
+		currentMap->placePlayers();
 	}
-	else
-		display::Display::updatePlayers();
+	Display::setMap(currentMap);
 }
 
 void
@@ -141,7 +128,7 @@ Game::quit()
 {
 	if ( ! isInit ) return;
 	
-	display::Display::quit();
+	Display::quit();
 	
 	if ( currentMenu )
 	{
@@ -171,7 +158,6 @@ Game::threadClean(Uint32 id)
 	{
 		if ( id == SDL_GetThreadID(*i) )
 		{
-			(*i) = NULL;
 			threads->erase(i);
 			break;
 		}
@@ -184,10 +170,10 @@ Game::eventMenu(void *event)
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
 		case SDLK_UP:
-			display::Display::displayMenu(currentMenu->getContent(), currentMenu->up());
+			Display::displayMenu(currentMenu->getContent(), currentMenu->up());
 		break;
 		case SDLK_DOWN:
-			display::Display::displayMenu(currentMenu->getContent(), currentMenu->down());
+			Display::displayMenu(currentMenu->getContent(), currentMenu->down());
 		break;
 		case SDLK_KP_ENTER:
 		case SDLK_SPACE:
@@ -209,20 +195,27 @@ Game::eventGame(void *event)
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
 		case SDLK_ESCAPE:
-			changeMenu(display::elements::Menu::INGAME, false);
+			changeMenu(Menu::INGAME, false);
 		break;
+		
 		// Player 1
 		case SDLK_UP:		// Up
 		case SDLK_DOWN:		// Down
 		case SDLK_RIGHT:	// Right
 		case SDLK_LEFT:		// Left
 		break;
+		case SDLK_SPACE:	// Bomb
+		break;
+		
 		// Player 2
 		case SDLK_e:		// Up
 		case SDLK_d:		// Down
 		case SDLK_f:		// Right
 		case SDLK_s:		// Left
 		break;
+		case SDLK_r:		// Bomb
+		break;
+		
 		default:
 		break;
 	}
