@@ -106,6 +106,12 @@ Map::get(Coords c)
 	return Map::map[c.y][c.x];
 }
 
+char
+Map::get(int x, int y)
+{
+	return Map::map[y][x];
+}
+
 Coords &
 Map::getCoords(int playerNo)
 {
