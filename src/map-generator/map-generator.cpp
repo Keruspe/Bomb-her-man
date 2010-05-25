@@ -94,48 +94,36 @@ MapGenerator::random(int min, int max)
 bool
 MapGenerator::throwDice(int percentage)
 {
-	int random = (rand() % 100);
-	return (percentage > random);
+	return (percentage > rand() % 100);
 }
 
 bool
-MapGenerator::testCellFull(Grid& grid, Coords coords)
+MapGenerator::testCellFull(Grid & grid, Coords & coords)
 {
-	bool result = true;
-	if (coords.x > 0 && coords.y > 0)
-		result = result &&
-			grid[coords.y - 1][coords.x - 1] != INDESTRUCTIBLE &&
+	if (coords.x == 0)
+		return true;
+	bool result = grid[coords.y][coords.x - 1] != INDESTRUCTIBLE;
+	if (coords.y > 0)
+		result = result && grid[coords.y - 1][coords.x - 1] != INDESTRUCTIBLE &&
 			grid[coords.y - 1][coords.x] != INDESTRUCTIBLE;
-	if (coords.x > 0)
-	{
-		if (coords.y < grid.size - 1)
-			result = result && grid[coords.y+1][coords.x-1] != INDESTRUCTIBLE;
-		result = result && grid[coords.y][coords.x - 1] != INDESTRUCTIBLE;
-	}
+	if (coords.y < grid.size - 1)
+		result = result && grid[coords.y+1][coords.x-1] != INDESTRUCTIBLE;
 	return result;
 }
 
 bool
-MapGenerator::testCellLimited(Grid& grid, Coords coords)
+MapGenerator::testCellLimited(Grid & grid, Coords & coords)
 {
-	bool result = true;
-	if (coords.y < grid.size - 1 && coords.x > 0)
-		result = result && grid[coords.y + 1][coords.x - 1] != INDESTRUCTIBLE;
-	return result;
+	return (coords.y == grid.size - 1 || coords.x == 0 ||
+		grid[coords.y + 1][coords.x - 1] != INDESTRUCTIBLE);
 }
 
 int
-MapGenerator::horizontalScan(Grid& grid, Coords coords)
+MapGenerator::horizontalScan(Grid & grid, Coords & coords)
 {
-	int i = 0;
-	if (coords.x == 0)
-		return 0;
-	while(grid[coords.y][coords.x - i - 1] == INDESTRUCTIBLE)
-	{
-		++i;
-		if (coords.x - i == 0)
-			return i;
-	}
+	int i;
+	for (i = 0 ; coords.x - i != 0
+		&& grid[coords.y][coords.x - i - 1] == INDESTRUCTIBLE ; ++i);
 	return i;
 }
 
