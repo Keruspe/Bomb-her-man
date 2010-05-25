@@ -75,7 +75,7 @@ Player::getPlayer(int playerNo)
 void
 Player::newPlayer()
 {
-	if (Player::players.size >= Config::getInt("maxPlayers"))
+	if (Player::players.size() >= Config::getInt("maxPlayers"))
 		throw exceptions::TooManyPlayersException;
 	Player::players.push_back(new Player());
 }
