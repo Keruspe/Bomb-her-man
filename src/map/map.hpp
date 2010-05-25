@@ -38,7 +38,6 @@ namespace bombherman
 			Map(std::string);
 			virtual ~Map();
 			bool isPlayer(char);
-			Coords & getCoords(int);
 			void placePlayers();
 			static char get(Coords);
 			static char get(int, int);

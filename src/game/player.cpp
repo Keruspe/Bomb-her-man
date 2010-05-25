@@ -19,9 +19,8 @@ Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
 		score (0),
 		id (Player::players.size() + 1),
 		coords (map::Coords()),
-		orient(map::UP)
+		orient(map::DOWN)
 {
-	Player::players.push_back(this);
 }
 
 Player::~Player()
@@ -73,6 +72,8 @@ Player::getPlayers()
 Player *
 Player::getPlayer(int playerNo)
 {
+	if (Player::players.size() <= static_cast<unsigned>(playerNo) || 0 >= playerNo)
+		return 0;
 	return Player::players[playerNo - 1];
 }
 
@@ -81,7 +82,7 @@ Player::newPlayer()
 {
 	if (Player::players.size() >= static_cast<unsigned>(Config::getInt("maxPlayers")))
 		throw exceptions::TooManyPlayersException();
-	new Player();
+	Player::players.push_back(new Player());
 }
 
 void
