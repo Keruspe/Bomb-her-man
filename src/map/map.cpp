@@ -114,7 +114,7 @@ Map::getCoords(int playerNo)
 	{
 		for(coords->x = 0 ; coords->x < Map::map.size ; ++coords->x)
 		{
-			if (this->get(*coords) == playerNo + '0')
+			if (Map::get(*coords) == playerNo + '0')
 				return *coords;
 		}
 	}
