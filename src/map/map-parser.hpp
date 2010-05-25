@@ -39,3 +39,4 @@ namespace bombherman
 }
 
 #endif // _MAP_PARSER_HPP_
+

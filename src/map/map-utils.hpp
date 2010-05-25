@@ -32,29 +32,29 @@ namespace bombherman
 		{
 			int size;
 			std::vector< std::vector< char > > grid;
-
+			
 			Grid() : size(Config::getInt("mapSize")),
 				grid(std::vector< std::vector< char > >())
 			{
 			}
-
+			
 			std::vector< char > & operator[] (int y)
 			{
 				return grid[y];
 			}
 		} Grid;
-
+		
 		typedef struct Coords
 		{
 			int x;
 			int y;
 			int max;
-
+			
 			Coords() : x(-1), y(-1), max(Config::getInt("mapSize") - 1)
 			{
 			}
 		} Coords;
-
+		
 		typedef enum
 		{
 			UP = 0,
@@ -62,7 +62,7 @@ namespace bombherman
 			LEFT = 2,
 			RIGHT = 3
 		} Direction;
-
+		
 		typedef enum
 		{
 			BOMB = 'b',
@@ -71,7 +71,7 @@ namespace bombherman
 			NONE = ' ',
 			PLAYER = 'p'
 		} Element;
-
+		
 		typedef enum
 		{
 			BOMBUP = '1',

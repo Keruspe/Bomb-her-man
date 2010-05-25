@@ -28,21 +28,22 @@
 
 namespace bombherman 
 {
-    namespace map
-    {
-        class MapGenerator
-        {
-        public:
-            static void generate(Grid&);
-	    static Coords & getRandomCoords();
-            static bool throwDice(int);
-            static int random(int, int);
-        private:
-            static bool testCellFull(Grid&, Coords);
-            static bool testCellLimited(Grid&, Coords);
-            static int horizontalScan(Grid&, Coords);
-        };
-    }
+	namespace map
+	{
+		class MapGenerator
+		{
+		public:
+			static void generate(Grid&);
+			static Coords & getRandomCoords();
+			static bool throwDice(int);
+			static int random(int, int);
+		private:
+			static bool testCellFull(Grid&, Coords);
+			static bool testCellLimited(Grid&, Coords);
+			static int horizontalScan(Grid&, Coords);
+		};
+	}
 }
 
 #endif // _MAP_GENERATOR_HPP_
+

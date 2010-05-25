@@ -61,6 +61,6 @@ MapParser::parse(std::string path, Grid & map)
 		map.grid.push_back(*current_line);
 		delete(current_line);
 	}
-
 	return (map.grid.size() == static_cast<unsigned>(map.size));
 }
+

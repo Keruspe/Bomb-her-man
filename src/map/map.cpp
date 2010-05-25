@@ -55,8 +55,8 @@ Map::Map(std::string path)
 	}
 	catch(BadElementException & e)
 	{
-		std::cerr << "An error has been detected in " << path
-			<< " : '" + e.message() + "'." << std::endl;
+		std::cerr << "An error has been detected in " << path << std::endl;
+		throw e;
 	}
 }
 
@@ -68,7 +68,8 @@ void
 Map::placePlayers()
 {
 	Coords c;
-	for(std::vector< Player * >::iterator i = Player::getPlayers().begin(), i_end = Player::getPlayers().end() ; i != i_end ; ++i)
+	for(std::vector< Player * >::iterator i = Player::getPlayers().begin(),
+		i_end = Player::getPlayers().end() ; i != i_end ; ++i)
 	{
 		while (true)
 		{
@@ -76,8 +77,8 @@ Map::placePlayers()
 			if((Map::map[c.y][c.x] == PLAYER)
 				|| (c.y != 0 && Map::map[c.y - 1][c.x] == PLAYER)
 				|| (c.y != Map::map.size - 1 && Map::map[c.y+1][c.x] == PLAYER)
-				|| (c.x != 0 && Map::map[c.y][c.x - 1] == PLAYER)
-				|| (c.x != Map::map.size - 1 && Map::map[c.y][c.x + 1] == PLAYER))
+				|| (c.x != 0 && Map::map[c.y][c.x-1] == PLAYER)
+				|| (c.x != Map::map.size - 1 && Map::map[c.y][c.x+1] == PLAYER))
 					continue;
 			if (c.y != 0)
 				Map::map[c.y - 1][c.x] = NONE;
@@ -97,11 +98,11 @@ Map::placePlayers()
 bool
 Map::plantBomb(Coords & c)
 {
-	if (0 > c.x || 0 > c.y || Map::map.size <= c.y || Map::map.size <= c.x || Map::get(c) != NONE)
-		return false;
+	if (0 > c.x || 0 > c.y || Map::map.size <= c.y
+		|| Map::map.size <= c.x || Map::get(c) != NONE)
+			return false;
 	Map::map[c.y][c.x] = BOMB;
 	return true;
-	
 }
 
 char
@@ -197,10 +198,11 @@ Map::moveRight(Coords * c)
 void
 Map::destroy(Coords & c)
 {
-	if (0 > c.x || 0 > c.y || Map::map.size <= c.y || Map::map.size <= c.x || Map::get(c) != BARREL)
-		return;
+	if (0 > c.x || 0 > c.y || Map::map.size <= c.y
+		|| Map::map.size <= c.x || Map::get(c) != BARREL)
+			return;
 	if (MapGenerator::throwDice(Config::getInt("bonusApparitionProbability")))
-		Map::map[c.y][c.x] = BOMBUP + MapGenerator::random(0, NULLFIRE - BOMBUP);
+		Map::map[c.y][c.x] = BOMBUP + MapGenerator::random(0, NULLFIRE-BOMBUP);
 	else
 		Map::map[c.y][c.x] = NONE;
 }
