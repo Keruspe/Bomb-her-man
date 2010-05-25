@@ -143,11 +143,13 @@ bool
 Map::moveUp(Player * player)
 {
 	Coords c = player->getCoords();
+	std::cout << "BEGIN : " << c.x << "x" << c.y << std::endl;
 	if (c.y <= 0 || Map::map[c.y - 1][c.x] != NONE)
 		return false;
 	Map::map[c.y][c.x] = NONE;
-	--c.y;
+	--(c.y);
 	player->setCoords(c);
+	std::cout << "END : " << player->getCoords().x << "x" << player->getCoords().y << std::endl;
 	Map::map[c.y][c.x] = '0' + player->getId();
 	return true;
 }
@@ -156,11 +158,13 @@ bool
 Map::moveDown(Player * player)
 {
 	Coords c = player->getCoords();
+	std::cout << "BEGIN : " << c.x << "x" << c.y << std::endl;
 	if (c.y >= Map::map.size || Map::map[c.y + 1][c.x] != NONE)
 		return false;
 	Map::map[c.y][c.x] = NONE;
-	++c.y;
+	++(c.y);
 	player->setCoords(c);
+	std::cout << "END : " << player->getCoords().x << "x" << player->getCoords().y << std::endl;
 	Map::map[c.y][c.x] = '0' + player->getId();
 	return true;
 }
@@ -169,11 +173,13 @@ bool
 Map::moveLeft(Player * player)
 {
 	Coords c = player->getCoords();
+	std::cout << "BEGIN : " << c.x << "x" << c.y << std::endl;
 	if (c.x <= 0 || Map::map[c.y][c.x - 1] != NONE)
 		return false;
 	Map::map[c.y][c.x] = NONE;
-	--c.x;
+	--(c.x);
 	player->setCoords(c);
+	std::cout << "END : " << player->getCoords().x << "x" << player->getCoords().y << std::endl;
 	Map::map[c.y][c.x] = '0' + player->getId();
 	return true;
 }
@@ -182,11 +188,13 @@ bool
 Map::moveRight(Player * player)
 {
 	Coords c = player->getCoords();
+	std::cout << "BEGIN : " << c.x << "x" << c.y << std::endl;
 	if (c.x >= Map::map.size || Map::map[c.y][c.x + 1] != NONE)
 		return false;
 	Map::map[c.y][c.x] = NONE;
-	++c.x;
+	++(c.x);
 	player->setCoords(c);
+	std::cout << "END : " << player->getCoords().x << "x" << player->getCoords().y << std::endl;
 	Map::map[c.y][c.x] = '0' + player->getId();
 	return true;
 }
