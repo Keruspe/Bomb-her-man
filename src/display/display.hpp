@@ -63,6 +63,11 @@ namespace bombherman
 		 * @param goTo The direction of the move
 		 */
 		static void movePlayer(Player *player, map::Direction goTo);
+		/// Plant a bomb
+		/**
+		 * @param coords Coordonates where to plant the bomb
+		 */
+		static void plantBomb(map::Coords coords);
 	
 	private:
 		static SDL_Surface *svgToSurface(std::string);
