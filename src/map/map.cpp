@@ -86,6 +86,7 @@ Map::newPlayer()
 			map[c.y][c.x + 1] = NONE;
 		Player *player = new Player(players.size() + 1, c);
 		map[c.y][c.x] = player->getId() + '0';
+		players.push_back(*player);
 		return *player;
 	}
 }
