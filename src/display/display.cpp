@@ -506,50 +506,38 @@ Display::updatePlayers()
 void
 Display::movePlayer(Player *player, map::Direction goTo)
 {
-	map::Coords coords = player->getCoords();
 	if ( player->go(goTo) )
 	{
+		map::Coords coords = player->getCoords();
 		SDL_Rect r, d;
-		r.x = gBegin.x + ( coords.x - 1 ) * gSize;
-		r.y = gBegin.y + ( coords.y - 1 ) * gSize;
-		if ( r.x < gBegin.x ) r.x = gBegin.x;
-		if ( r.y < gBegin.y ) r.y = gBegin.y;
-		bhout << "Coords = " << coords.x << '\t' << coords.y << bhendl;
-		bhout << "Rect   = " << r.x << '\t' << r.y << bhendl;
-		int ws = ( ( width - r.x ) / gSize );
-		int hs = ( ( height - r.y ) / gSize );
-		if ( ws > 3 ) ws = 3;
-		if ( hs > 3 ) hs = 3;
-		r.w = gSize * ws;
-		r.h = gSize * hs;
-		SDL_Surface *sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
-		
 		d.x = 0;
 		d.y = 0;
-		d.w = gSize;
-		d.h = gSize;
+		r.x = gBegin.x + coords.x * gSize;
+		r.y = gBegin.y + coords.y * gSize;
+		d.w = r.w = gSize;
+		d.h = r.h = gSize;
 		switch ( goTo )
 		{
 			case map::DOWN:
-				d.y = gSize * 2;
+				r.y -= gSize;
+				d.y = gSize;
 			case map::UP:
-				if ( coords.x > 1 )
-					d.x = gSize;
+				r.h += gSize;
 			break;
 			case map::RIGHT:
-				d.x = gSize * 2;
+				r.x -= gSize;
+				d.x = gSize;
 			case map::LEFT:
-				if ( coords.y > 1 )
-					d.y = gSize;
+				r.w += gSize;
 			break;
 		}
+		
+		SDL_Surface *sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
 		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
 		SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &d);
 		
-		bhout << "At (" << r.x << ',' << r.y << ") on " << r.w << 'x' << r.h << bhendl;
-		SDL_Surface *test = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
+
 		updateDisplay(sPlayer, r.x, r.y, r.w, r.h);
-		SDL_FreeSurface(test);
 		SDL_FreeSurface(sPlayer);
 	}
 }
