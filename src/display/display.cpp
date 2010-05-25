@@ -32,10 +32,10 @@ SDL_mutex *Display::mUpdate = SDL_CreateMutex();
 SDL_Color Display::textColor = SDL_Color();
 SDL_Color Display::highlightColor = SDL_Color();
 
-Uint32 Display::widthMax = 0;
-Uint32 Display::heightMax = 0;
-Uint32 Display::width = 0;
-Uint32 Display::height = 0;
+int Display::widthMax = 0;
+int Display::heightMax = 0;
+int Display::width = 0;
+int Display::height = 0;
 
 SDL_Surface *Display::sBackground = NULL;
 
@@ -348,7 +348,7 @@ Display::changeFullscreen()
 		gBegin.w = gBegin.x + width;
 		gBegin.h = gBegin.y + width;
 	}
-	gBeginPlayer = gBegin;
+	gBeginPlayers = gBegin;
 	
 	cleanSurface(sBackground);
 	sBackground = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
@@ -360,8 +360,13 @@ Display::changeFullscreen()
 void
 Display::updateDisplay(SDL_Surface *s, Uint16 x, Uint16 y, Uint16 w, Uint16 h)
 {
+	SDL_Rect r;
+	r.x = x;
+	r.y = y;
+	r.w = w;
+	r.h = h;
 	SDL_LockMutex(mUpdate);
-	SDL_BlitSurface(s, NULL, sDisplay, NULL);
+	SDL_BlitSurface(s, NULL, sDisplay, &r);
 	SDL_UpdateRect(sDisplay, x, y, w, h);
 	SDL_UnlockMutex(mUpdate);
 }
@@ -422,11 +427,11 @@ Display::setMap(map::Map *map)
 	
 	gMap = map;
 	
-	updateMap(true);
+	updateMap();
 }
 
 void
-Display::updateMap(bool full)
+Display::updateMap()
 {
 	SDL_Rect r;
 	cleanSurface(gMapLayer);
@@ -449,11 +454,11 @@ Display::updateMap(bool full)
 		r.y += gSize;
 	}
 	
-	updateBarrels(full);
+	updateBarrels();
 }
 
 void
-Display::updateBarrels(bool full)
+Display::updateBarrels()
 {
 	SDL_Rect r;
 	cleanSurface(gBarrelsLayer);
@@ -474,17 +479,13 @@ Display::updateBarrels(bool full)
 		r.y += gSize;
 	}
 	
-	updatePlayers(full);
+	updatePlayers();
 }
 
 void
-Display::updatePlayers(bool full)
+Display::updatePlayers()
 {
-	SDL_Rect r, n, m;
-	n.x = width;
-	n.y = height;
-	n.w = gBegin.x;
-	n.h = gBegin.y;
+	SDL_Rect r;
 	cleanSurface(gPlayersLayer);
 	gPlayersLayer = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
 	SDL_BlitSurface(gBarrelsLayer, NULL, gPlayersLayer, NULL);
@@ -497,17 +498,67 @@ Display::updatePlayers(bool full)
 		r.x = gBegin.x + ( coords.x * gSize );
 		r.y = gBegin.y + ( coords.y * gSize );
 		SDL_BlitSurface(gPlayers[(*i)->getId()-1][(*i)->getOrient()][0], NULL, gPlayersLayer, &r);
-		
-		if ( coords.x < n.x ) n.x = coords.x;
-		if ( coords.y < n.y ) n.y = coords.y;
-		if ( coords.x > n.w ) n.w = coords.x;
-		if ( coords.y > n.h ) n.h = coords.y;
 	}
-	n.w = n.x - n.w + gSize;
-	n.h = n.y - n.h + gSize;
-	if ( full )
-		updateDisplay(gPlayersLayer);
-	else
-		updateDisplay(gPlayersLayer, gBeginPlayers.x, gBeginPlayers.y, gBeginPlayers.w, gBeginPlayers.h);
-	gBeginPlayers = n;
+	
+	updateDisplay(gPlayersLayer);
 }
+
+void
+Display::movePlayer(Player *player, map::Direction goTo)
+{
+	map::Coords coords = player->getCoords();
+	if ( player->go(goTo) )
+	{
+		SDL_Surface *sPlayer = SDL_CreateRGBSurface(flags, gSize * 3, gSize * 3, 32, 0, 0, 0, 0);
+		SDL_Rect r, d;
+		r.x = gBegin.x + ( coords.x - 1 ) * gSize;
+		r.y = gBegin.y + ( coords.y - 1 ) * gSize;
+		if ( r.x < 0 ) r.x = 0;
+		//else if ( r.x > width ) r.x = width;
+		if ( r.y < 0 ) r.y = 0;
+		//else if ( r.y > height ) r.y = height;
+		bhout << "Coords = " << coords.x << '\t' << coords.y << bhendl;
+		bhout << "Rect   = " << r.x << '\t' << r.y << bhendl;
+		r.w = gSize * ( ( width - r.x ) / gSize );
+		r.h = gSize * ( ( height - r.y ) / gSize );
+		
+		d.w = gSize;
+		d.h = gSize;
+		
+		switch ( goTo )
+		{
+			case map::DOWN:
+				d.y = gSize * 2;
+			case map::UP:
+				d.x = gSize;
+			break;
+			case map::RIGHT:
+				d.x = gSize * 2;
+			case map::LEFT:
+				d.y = gSize;
+			break;
+		}
+		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
+		SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &d);
+		
+		updateDisplay(sPlayer, r.x, r.y, r.w, r.h);
+		SDL_FreeSurface(sPlayer);
+	}
+}
+
+/*
+void
+Display::plantBomb(map::Coords coords)
+{
+	SDL_Rect r;
+	
+	r.x = gBegin.x + coords.x * gSize;
+	r.y = gBegin.y + coords.y * gSize;
+	r.w = gSize;
+	r.h = gSize ;
+	
+	SDL_BlitSurface(gBomb, NULL, gBarrelsLayer, &r);
+	
+	updatePlayers();
+}
+*/

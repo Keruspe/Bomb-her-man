@@ -212,40 +212,32 @@ Game::eventGame(void *event)
 		
 		// Player 1
 		case SDLK_UP:		// Up
-			if ( player1->go(map::UP) )
-				Display::updatePlayers();
+			Display::movePlayer(player1, map::UP);
 		break;
 		case SDLK_DOWN:		// Down
-			if ( player1->go(map::DOWN) )
-				Display::updatePlayers();
+			Display::movePlayer(player1, map::DOWN);
 		break;
 		case SDLK_RIGHT:	// Right
-			if ( player1->go(map::RIGHT) )
-				Display::updatePlayers();
+			Display::movePlayer(player1, map::RIGHT);
 		break;
 		case SDLK_LEFT:		// Left
-			if ( player1->go(map::LEFT) )
-				Display::updatePlayers();
+			Display::movePlayer(player1, map::LEFT);
 		break;
 		case SDLK_SPACE:	// Bomb
 		break;
 		
 		// Player 2
 		case SDLK_e:		// Up
-			if ( player2->go(map::UP) )
-				Display::updatePlayers();
+			Display::movePlayer(player2, map::UP);
 		break;
 		case SDLK_d:		// Down
-			if ( player2->go(map::DOWN) )
-				Display::updatePlayers();
+			Display::movePlayer(player2, map::DOWN);
 		break;
 		case SDLK_f:		// Right
-			if ( player2->go(map::RIGHT) )
-				Display::updatePlayers();
+			Display::movePlayer(player2, map::RIGHT);
 		break;
 		case SDLK_s:		// Left
-			if ( player2->go(map::LEFT) )
-				Display::updatePlayers();
+			Display::movePlayer(player2, map::LEFT);
 		break;
 		case SDLK_r:		// Bomb
 		break;

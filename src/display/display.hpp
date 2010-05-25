@@ -54,9 +54,15 @@ namespace bombherman
 		static void setMap(map::Map *map);
 		
 		/// Update the barrels
-		static void updateBarrels() { updateBarrels(false); }
+		static void updateBarrels();
 		/// Update the players
-		static void updatePlayers() { updatePlayers(false); }
+		static void updatePlayers();
+		/// Move a player
+		/**
+		 * @param player Pointer to the player who move
+		 * @param goTo The direction of the move
+		 */
+		static void movePlayer(Player *player, map::Direction goTo);
 	
 	private:
 		static SDL_Surface *svgToSurface(std::string);
@@ -65,9 +71,7 @@ namespace bombherman
 		
 		static void updateDisplay(SDL_Surface *, Uint16 = 0, Uint16 = 0, Uint16 = 0, Uint16 = 0);
 		
-		static void updateBarrels(bool full);
-		static void updatePlayers(bool full);
-		static void updateMap(bool full);
+		static void updateMap();
 		
 		// To store the SDL display surface
 		static SDL_Surface *sDisplay;
@@ -80,9 +84,9 @@ namespace bombherman
 		static SDL_Color highlightColor;
 		
 		// Max Width and Height of the display
-		static Uint32 widthMax, heightMax;
+		static int widthMax, heightMax;
 		// Width and Height of the display
-		static Uint32 width, height;
+		static int width, height;
 		
 		static SDL_Surface *sBackground;
 		
