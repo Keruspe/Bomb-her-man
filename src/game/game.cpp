@@ -47,6 +47,9 @@ void Game::init()
 	SDL_EventState(SDL_USEREVENT, SDL_IGNORE);
 	SDL_EventState(SDL_SYSWMEVENT, SDL_IGNORE);
 	
+	if ( Config::getInt("mapSize") < 15 )
+		Config::set("mapSize", 15);
+	
 	isInit = true;
 }
 

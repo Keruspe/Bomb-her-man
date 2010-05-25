@@ -17,6 +17,7 @@
  */
 
 #include "display.hpp"
+#include "game/player.hpp"
 #include <sstream>
 #include <librsvg/rsvg-cairo.h>
 #include <cairo.h>
@@ -485,13 +486,13 @@ Display::updatePlayers()
 	SDL_BlitSurface(gBarrelsLayer, NULL, gPlayersLayer, NULL);
 	if ( ! gPlayers[0][0][0] ) initSurfaces();
 	map::Coords coords;
-	unsigned int max = Config::getInt("maxPlayers");
-	for ( unsigned int i = 1 ; i <= max ; ++i )
+	std::vector< Player * > players = Player::getPlayers();
+	for ( std::vector< Player * >::iterator i = players.begin(), e = players.end() ; i != e ; ++i )
 	{
-		map::Coords coords = gMap->getCoords(i);
+		map::Coords coords = (*i)->getCoords();
 		r.x = gBegin.x + ( coords.x * gSize );
 		r.y = gBegin.y + ( coords.y * gSize );
-		SDL_BlitSurface(gPlayers[i-1][0][0], NULL, gPlayersLayer, &r);
+		SDL_BlitSurface(gPlayers[(*i)->getId()-1][0][0], NULL, gPlayersLayer, &r);
 	}
 	
 	updateDisplay(gPlayersLayer);
