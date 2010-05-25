@@ -173,6 +173,9 @@ Game::eventMenu(void *event)
 {
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
+		case SDLK_ESCAPE:
+			playing = false;
+		break;
 		case SDLK_UP:
 			currentMenu->up();
 		break;
