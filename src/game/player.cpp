@@ -6,12 +6,10 @@
  */
 
 #include "player.hpp"
-#include "game/player.hpp"
 
 using namespace bombherman;
-using namespace bombherman::map;
 
-Player::Player(int i, Coords & coords) : plantableBombs (Config::getInt("defaultPlantableBombs")),
+Player::Player(int i, map::Coords & coords) : plantableBombs (Config::getInt("defaultPlantableBombs")),
 		range (Config::getInt("defaultRange")),
 		plantedBombs (0),
 		score (0),
@@ -26,7 +24,7 @@ Player::getRange()
 	return this->range;
 }
 
-Coords
+map::Coords &
 Player::getCoords()
 {
 	return this->coords;
@@ -57,7 +55,7 @@ Player::setRange(int range)
 }
 
 void
-Player::go(Direction direction)
+Player::go(map::Direction direction)
 {
 
 }

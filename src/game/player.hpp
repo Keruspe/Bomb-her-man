@@ -17,7 +17,7 @@ namespace bombherman
 	public:
 		Player(int, map::Coords &);
 		int getRange();
-		map::Coords getCoords();
+		map::Coords & getCoords();
 		bool isAbleToPlantBomb();
 		int getScore();
 		int getId();
@@ -32,7 +32,6 @@ namespace bombherman
 		int plantableBombs;
 		int range;
 		int plantedBombs;
-		static int maxId;
 		int score;
 		int id;
 		map::Coords coords;
