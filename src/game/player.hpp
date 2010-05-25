@@ -24,6 +24,7 @@ namespace bombherman
 		static std::vector< Player * > & getPlayers();
 		static Player & getPlayer(int);
 		static void newPlayer();
+		static void clean();
 		void setRange(int);
 		void go(map::Direction);
 		void plantBomb();

@@ -24,11 +24,6 @@ Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
 
 Player::~Player()
 {
-	for (std::vector< Player * >::iterator i = Player::players.begin(), i_end = Player::players.end(); i != i_end ; ++i)
-	{
-		delete(*i);
-	}
-	Player::players.clear();
 }
 
 int
@@ -79,6 +74,16 @@ Player::newPlayer()
 	if (Player::players.size() >= static_cast<unsigned>(Config::getInt("maxPlayers")))
 		throw exceptions::TooManyPlayersException();
 	Player::players.push_back(new Player());
+}
+
+void
+Player::clean()
+{
+	for (std::vector< Player * >::iterator i = Player::players.begin(), i_end = Player::players.end(); i != i_end ; ++i)
+	{
+		delete(*i);
+	}
+	Player::players.clear();
 }
 
 void
