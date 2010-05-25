@@ -39,6 +39,12 @@ Player::getCoords()
 	return this->coords;
 }
 
+map::Direction &
+Player::getOrient()
+{
+	return this->orient;
+}
+
 bool
 Player::isAbleToPlantBomb()
 {
