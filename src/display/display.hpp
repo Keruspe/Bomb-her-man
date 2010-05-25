@@ -21,7 +21,7 @@
 
 #include "bombherman.hpp"
 
-#include "display/elements/menu.hpp"
+#include "game/menu.hpp"
 #include "map/map.hpp"
 
 #include "exceptions/display/nosdl-exception.hpp"
@@ -33,86 +33,80 @@
 
 namespace bombherman
 {
-	namespace display
+	class Display
 	{
-		class Display
-		{
-		public:
-			/// To initialize the video
-			static void init();
-			/// To stop the video
-			static void quit();
-			/// To make the video fullscreen
-			static void fullscreen();
-			/// To make the video windowed
-			static void windowed();
-			/// Display the menu
-			/**
-			 * @param content The content of the menu to display
-			 * @param current The current active item of the menu
-			 */
-			static void displayMenu(std::vector< std::string> content, unsigned int current);
-			/// Set the map
-			/**
-			 * @param map Pointer to the map to use
-			 */
-			static void setMap(map::Map *map);
-			
-			/// Update the barrels
-			static void updateBarrels();
-			/// Update the players
-			static void updatePlayers();
+	public:
+		/// To initialize the video
+		static void init();
+		/// To stop the video
+		static void quit();
+		/// To make the video switch between fullscreen and windowed
+		static void changeFullscreen();
+		/// Display the menu
+		/**
+		 * @param content The content of the menu to display
+		 * @param current The current active item of the menu
+		 */
+		static void displayMenu(std::vector< std::string> content, unsigned int current);
+		/// Set the map
+		/**
+		 * @param map Pointer to the map to use
+		 */
+		static void setMap(map::Map *map);
 		
-		private:
-			static SDL_Surface *svgToSurface(std::string);
-			static void initSurfaces();
-			static void cleanSurface(SDL_Surface *);
-			
-			static void updateDisplay(SDL_Surface *);
-			static void newDisplay(Uint32 adds = 0);
-			
-			static void updateMap();
-			
-			// To store the SDL display surface
-			static SDL_Surface *sDisplay;
-			static Uint32 flags;
-			static bool isFullscreen;
-			static SDL_mutex *mUpdate;
-			
-			// To store the SDL text color
-			static SDL_Color textColor;
-			static SDL_Color highlightColor;
-			
-			// Max Width and Height of the display
-			static Uint32 widthMax, heightMax;
-			// Width and Height of the display
-			static Uint32 width, height;
-			
-			// To store the SDL title font
-			static TTF_Font *fontTitle;
-			// To store the SDL normal font
-			static TTF_Font *fontNormal;
-			
-			static SDL_Surface *sBackground;
-			
-			static map::Map *gMap;
-			
-			static SDL_Surface *gMapLayer;
-			static SDL_Surface *gBarrelsLayer;
-			static SDL_Surface *gPlayersLayer;
-			
-			static SDL_Surface *gPlayers[2][4][2];
-			static SDL_Surface *gBomb;
-			static SDL_Surface *gExplosion;
-			static SDL_Surface *gBarrel;
-			static SDL_Surface *gWall;
-			static SDL_Surface *gBack;
-			
-			static int gMapSize;
-			static Uint32 gSize;
-			static SDL_Rect gBegin;
-		};
-	}
+		/// Update the barrels
+		static void updateBarrels();
+		/// Update the players
+		static void updatePlayers();
+	
+	private:
+		static SDL_Surface *svgToSurface(std::string);
+		static void initSurfaces();
+		static void cleanSurface(SDL_Surface *);
+		
+		static void updateDisplay(SDL_Surface *);
+		
+		static void updateMap();
+		
+		// To store the SDL display surface
+		static SDL_Surface *sDisplay;
+		static Uint32 flags;
+		static bool isFullscreen;
+		static SDL_mutex *mUpdate;
+		
+		// To store the SDL text color
+		static SDL_Color textColor;
+		static SDL_Color highlightColor;
+		
+		// Max Width and Height of the display
+		static Uint32 widthMax, heightMax;
+		// Width and Height of the display
+		static Uint32 width, height;
+		
+		// To store the SDL title font
+		static TTF_Font *fontTitle;
+		// To store the SDL normal font
+		static TTF_Font *fontNormal;
+		
+		static SDL_Surface *sBackground;
+		
+		static map::Map *gMap;
+		
+		static SDL_Surface *gMapLayer;
+		static SDL_Surface *gBarrelsLayer;
+		static SDL_Surface *gPlayersLayer;
+		
+		static SDL_Surface *gPlayers[2][4][2];
+		static SDL_Surface *gBomb;
+		static SDL_Surface *gExplosion;
+		static SDL_Surface *gBarrel;
+		static SDL_Surface *gWall;
+		static SDL_Surface *gBack;
+		
+		static int gMapSize;
+		static Uint32 gSize;
+		static SDL_Rect gBegin;
+	};
 }
 
 #endif // _DISPLAY_HPP_

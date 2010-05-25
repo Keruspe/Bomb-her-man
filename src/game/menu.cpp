@@ -17,17 +17,20 @@
  */
 
 #include "bombherman.hpp"
-#include "game/game.hpp"
 #include "menu.hpp"
+#include "game.hpp"
+#include "player.hpp"
+
+#include <cstdio>
 
 using namespace bombherman;
-using namespace bombherman::display;
-using namespace bombherman::display::elements;
 
 Menu *
 Menu::getMenu(Type which)
 {
 	std::vector<std::string> menu;
+	char *nbPlayers = NULL;
+	char *nbMaps = NULL;
 	switch ( which )
 	{
 		case MAIN:
@@ -39,12 +42,13 @@ Menu::getMenu(Type which)
 		case GAME:
 			menu.push_back(_("Game"));
 			menu.push_back(_("Play"));
+			menu.push_back(nbPlayers);
+			menu.push_back(nbMaps);
 			menu.push_back(_("Back"));
 		break;
 		case SETTINGS:
 			menu.push_back(_("Settings"));
-			menu.push_back(_("Fullscreen"));
-			menu.push_back(_("Windowed"));
+			menu.push_back(( Config::getInt("fullscreen") ) ? _("Fullscreen") : _("Windowed"));
 			menu.push_back(_("Back"));
 		break;
 		case INGAME:
@@ -53,12 +57,17 @@ Menu::getMenu(Type which)
 			menu.push_back(_("Back to main menu"));
 		break;
 	}
+	if ( nbPlayers )
+		free(nbPlayers);
+	if ( nbMaps )
+		free(nbMaps);
 	return new Menu(which, menu);
 }
 
 void
 Menu::action()
 {
+	int n;
 	switch ( this->type )
 	{
 		case MAIN:
@@ -78,7 +87,12 @@ Menu::action()
 			switch ( this->current )
 			{
 				case 1:
+					Player::newPlayer();
+					Player::newPlayer();
 					Game::play();
+				break;
+				case 2:
+				case 3:
 				break;
 				default:
 					Game::changeMenu(MAIN);
@@ -88,13 +102,10 @@ Menu::action()
 			switch ( this->current )
 			{
 				case 1:
-					Config::set("fullscreen", "true");
-					Display::fullscreen();
-					Display::displayMenu(this->content, this->current);
-				break;
-				case 2:
-					Config::set("fullscreen", "false");
-					Display::windowed();
+					n = ( Config::getInt("fullscreen") + 1 ) % 1;
+					Config::set("fullscreen", n);
+					Display::changeFullscreen();
+					this->content[1] = ( n ) ? _("Fullscreen") : _("Windowed");
 					Display::displayMenu(this->content, this->current);
 				break;
 				default:
@@ -130,4 +141,76 @@ Menu::down()
 		this->current = ( content.size() - 1 );
 	
 	return this->current;
+}
+
+void
+Menu::left()
+{
+	int n;
+	switch ( this->type )
+	{
+		case MAIN:
+		break;
+		case GAME:
+			switch ( this->current )
+			{
+				case 1:
+				break;
+				default:
+				break;
+			}
+		break;
+		case SETTINGS:
+			switch ( this->current )
+			{
+				case 1:
+					n = ( Config::getInt("fullscreen") + 1 ) % 1;
+					Config::set("fullscreen", n);
+					Display::changeFullscreen();
+					this->content[1] = ( n ) ? _("Fullscreen") : _("Windowed");
+					Display::displayMenu(this->content, this->current);
+				break;
+				default:
+				break;
+			}
+		break;
+		case INGAME:
+		break;
+	}
+}
+
+void
+Menu::right()
+{
+	int n;
+	switch ( this->type )
+	{
+		case MAIN:
+		break;
+		case GAME:
+			switch ( this->current )
+			{
+				case 1:
+				break;
+				default:
+				break;
+			}
+		break;
+		case SETTINGS:
+			switch ( this->current )
+			{
+				case 1:
+					n = ( Config::getInt("fullscreen") + 1 ) % 1;
+					Config::set("fullscreen", n);
+					Display::changeFullscreen();
+					this->content[1] = ( n ) ? _("Fullscreen") : _("Windowed");
+					Display::displayMenu(this->content, this->current);
+				break;
+				default:
+				break;
+			}
+		break;
+		case INGAME:
+		break;
+	}
 }

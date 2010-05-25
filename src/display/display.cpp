@@ -23,7 +23,6 @@
 #include <cairo.h>
 
 using namespace bombherman;
-using namespace bombherman::display;
 
 SDL_Surface *Display::sDisplay = NULL;
 Uint32 Display::flags = SDL_HWSURFACE;
@@ -92,14 +91,14 @@ Display::init()
 		initSuccess = SDL_InitSubSystem(SDL_INIT_VIDEO) == 0;
 	
 	if ( ! initSuccess )
-		throw new exceptions::display::NoSDLException("Can't init Video subsystem of SDL");
+		throw exceptions::display::NoSDLException("Can't init Video subsystem of SDL");
 	
 	SDL_WM_SetCaption(_("Bomb-her-man"), "bomb-her-man.svg");
 	SDL_ShowCursor(SDL_DISABLE);
 	
 	SDL_Rect **modes = SDL_ListModes(0, flags|SDL_FULLSCREEN);
 	if ( modes == reinterpret_cast<SDL_Rect**>(0) )
-		throw new exceptions::display::NoSDLException("No modes available!");
+		throw exceptions::display::NoSDLException("No modes available!");
 	
 	bool ok;
 	
@@ -108,7 +107,7 @@ Display::init()
 	{
 		bhout << "All resolutions available." << bhendl;
 		if ( ( width == 0 ) || ( height == 0 ) )
-			throw new exceptions::display::NoSDLException("Can't choice the resolution");
+			throw exceptions::display::NoSDLException("Can't choice the resolution");
 		else
 			ok = true;
 	}
@@ -135,10 +134,7 @@ Display::init()
 		heightMax = modes[0]->h;
 	}
 	
-	if ( Config::get("fullscreen") == "true" )
-		fullscreen();
-	else
-		windowed();
+	changeFullscreen();
 	
 	if ( TTF_Init() == -1 )
 	{
@@ -171,7 +167,7 @@ Display::svgToSurface(std::string file)
 	GError **err = NULL;
 	RsvgHandle *rsvg = rsvg_handle_new_from_file(file.c_str(), err);
 	if ( err )
-		throw new exceptions::display::NoSVGException("Can't read the file");
+		throw exceptions::display::NoSVGException("Can't read the file");
 	RsvgDimensionData dims;
 	rsvg_handle_get_dimensions(rsvg, &dims);
 	
@@ -320,8 +316,22 @@ Display::quit()
 }
 
 void
-Display::newDisplay(Uint32 adds)
+Display::changeFullscreen()
 {
+	bool beFullscreen = ( Config::getInt("fullscreen") == 1 );
+	if ( ( sDisplay ) && ( beFullscreen == isFullscreen ) ) return;
+	Uint32 adds = 0;
+	if ( beFullscreen )
+	{
+		adds = SDL_FULLSCREEN;
+		width = widthMax;
+		height = heightMax;
+	}
+	else
+	{
+		width = widthMax * 0.9;
+		height = heightMax * 0.9;
+	}
 	SDL_LockMutex(mUpdate);
 	
 	SDL_Surface *tmp = SDL_SetVideoMode(width, height, 32, flags|adds);
@@ -353,24 +363,6 @@ Display::newDisplay(Uint32 adds)
 	SDL_FillRect(sBackground, NULL, 0x00444444);
 	initSurfaces();
 	SDL_UnlockMutex(mUpdate);
-}
-
-void
-Display::fullscreen()
-{
-	if ( ( sDisplay ) && ( isFullscreen ) ) return;
-	width = widthMax;
-	height = heightMax;
-	newDisplay(SDL_FULLSCREEN);
-}
-
-void
-Display::windowed()
-{
-	if ( ( sDisplay ) && ( ! isFullscreen ) ) return;
-	width = widthMax * 0.9;
-	height = heightMax * 0.9;
-	newDisplay();
 }
 
 void
