@@ -140,7 +140,7 @@ bool
 Map::moveUp(Player * player)
 {
 	Coords *c = &(player->getCoords());
-	if (c->y <= 0 || Map::map[c->y - 1][c->x] != NONE)
+	if (c->y <= 0 || Map::map[c->y - 1][c->x] == BARREL)
 		return false;
 	Map::map[c->y][c->x] = NONE;
 	--(c->y);
@@ -153,7 +153,7 @@ bool
 Map::moveDown(Player * player)
 {
 	Coords *c = &(player->getCoords());
-	if (c->y >= (Map::map.size - 1) || Map::map[c->y + 1][c->x] != NONE)
+	if (c->y >= (Map::map.size - 1) || Map::map[c->y + 1][c->x] == BARREL)
 		return false;
 	Map::map[c->y][c->x] = NONE;
 	++(c->y);
@@ -166,7 +166,7 @@ bool
 Map::moveLeft(Player * player)
 {
 	Coords *c = &(player->getCoords());
-	if (c->x <= 0 || Map::map[c->y][c->x - 1] != NONE)
+	if (c->x <= 0 || Map::map[c->y][c->x - 1] == BARREL)
 		return false;
 	Map::map[c->y][c->x] = NONE;
 	--(c->x);
@@ -179,7 +179,7 @@ bool
 Map::moveRight(Player * player)
 {
 	Coords *c = &(player->getCoords());
-	if (c->x >= (Map::map.size - 1) || Map::map[c->y][c->x + 1] != NONE)
+	if (c->x >= (Map::map.size - 1) || Map::map[c->y][c->x + 1] == BARREL)
 		return false;
 	Map::map[c->y][c->x] = NONE;
 	++(c->x);
