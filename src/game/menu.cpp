@@ -170,9 +170,11 @@ void
 Menu::left()
 {
 	int n;
+	bool update = true;
 	switch ( this->type )
 	{
 		case MAIN:
+			update = false;
 		break;
 		case GAME:
 			switch ( this->current )
@@ -184,8 +186,6 @@ Menu::left()
 						Config::set("nbPlayers", n);
 						if ( ( n == 1 ) && ( Config::getInt("nbAIs") == 0 ) )
 							Config::set("nbAIs", 1);
-						this->setContent();
-						Display::displayMenu(this);
 					}
 				break;
 				case 3:
@@ -196,8 +196,6 @@ Menu::left()
 							Config::set("nbAIs", 1);
 						else
 							Config::set("nbAIs", n);
-						this->setContent();
-						Display::displayMenu(this);
 					}
 				break;
 				case 4:
@@ -205,11 +203,10 @@ Menu::left()
 					if ( n > 0 )
 					{
 						Config::set("nbMaps", n);
-						this->setContent();
-						Display::displayMenu(this);
 					}
 				break;
 				default:
+					update = false;
 				break;
 			}
 		break;
@@ -220,15 +217,20 @@ Menu::left()
 					n = ( Config::getInt("fullscreen") + 1 ) % 2;
 					Config::set("fullscreen", n);
 					Display::changeFullscreen();
-					this->setContent();
-					Display::displayMenu(this);
 				break;
 				default:
+					update = false;
 				break;
 			}
 		break;
 		case INGAME:
+			update = false;
 		break;
+	}
+	if ( update )
+	{
+		this->setContent();
+		Display::displayMenu(this);
 	}
 }
 
@@ -236,9 +238,11 @@ void
 Menu::right()
 {
 	int n, m;
+	bool update = true;
 	switch ( this->type )
 	{
 		case MAIN:
+			update = false;
 		break;
 		case GAME:
 			switch ( this->current )
@@ -251,8 +255,6 @@ Menu::right()
 						m = Config::getInt("maxPlayers");
 						if ( ( Config::getInt("nbAIs") + n ) > m )
 							Config::set("nbAIs", m - n);
-						this->setContent();
-						Display::displayMenu(this);
 					}
 				break;
 				case 3:
@@ -263,8 +265,6 @@ Menu::right()
 						m = Config::getInt("maxPlayers");
 						if ( ( Config::getInt("nbPlayers") + n ) > m )
 							Config::set("nbPlayers", m - n);
-						this->setContent();
-						Display::displayMenu(this);
 					}
 				break;
 				case 4:
@@ -272,11 +272,10 @@ Menu::right()
 					if ( n <= Config::getInt("maxMaps") )
 					{
 						Config::set("nbMaps", n);
-						this->setContent();
-						Display::displayMenu(this);
 					}
 				break;
 				default:
+					update = false;
 				break;
 			}
 		break;
@@ -287,14 +286,19 @@ Menu::right()
 					n = ( Config::getInt("fullscreen") + 1 ) % 2;
 					Config::set("fullscreen", n);
 					Display::changeFullscreen();
-					this->setContent();
-					Display::displayMenu(this);
 				break;
 				default:
+					update = false;
 				break;
 			}
 		break;
 		case INGAME:
+			update = false;
 		break;
+	}
+	if ( update )
+	{
+		this->setContent();
+		Display::displayMenu(this);
 	}
 }
