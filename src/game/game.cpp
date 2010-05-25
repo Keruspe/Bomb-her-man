@@ -93,6 +93,7 @@ Game::changeMenu(Menu::Type type, bool stopGame)
 	{
 		delete(currentMap);
 		currentMap = NULL;
+		Player::clean();
 	}
 	if ( currentMenu )
 	{
@@ -211,40 +212,40 @@ Game::eventGame(void *event)
 		
 		// Player 1
 		case SDLK_UP:		// Up
-			player1.go(map::UP);
-			Display::updatePlayers();
+			if ( player1.go(map::UP) )
+				Display::updatePlayers();
 		break;
 		case SDLK_DOWN:		// Down
-			player1.go(map::DOWN);
-			Display::updatePlayers();
+			if ( player1.go(map::DOWN) )
+				Display::updatePlayers();
 		break;
 		case SDLK_RIGHT:	// Right
-			player1.go(map::RIGHT);
-			Display::updatePlayers();
+			if ( player1.go(map::RIGHT) )
+				Display::updatePlayers();
 		break;
 		case SDLK_LEFT:		// Left
-			player1.go(map::LEFT);
-			Display::updatePlayers();
+			if ( player1.go(map::LEFT) )
+				Display::updatePlayers();
 		break;
 		case SDLK_SPACE:	// Bomb
 		break;
 		
 		// Player 2
 		case SDLK_e:		// Up
-			player2.go(map::UP);
-			Display::updatePlayers();
+			if ( player2.go(map::UP) )
+				Display::updatePlayers();
 		break;
 		case SDLK_d:		// Down
-			player2.go(map::DOWN);
-			Display::updatePlayers();
+			if ( player2.go(map::DOWN) )
+				Display::updatePlayers();
 		break;
 		case SDLK_f:		// Right
-			player2.go(map::RIGHT);
-			Display::updatePlayers();
+			if ( player2.go(map::RIGHT) )
+				Display::updatePlayers();
 		break;
 		case SDLK_s:		// Left
-			player2.go(map::LEFT);
-			Display::updatePlayers();
+			if ( player2.go(map::LEFT) )
+				Display::updatePlayers();
 		break;
 		case SDLK_r:		// Bomb
 		break;
