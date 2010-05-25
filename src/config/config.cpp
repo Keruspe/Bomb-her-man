@@ -79,6 +79,7 @@ Config::init()
 		config["defaultPlantableBombs"] =3;
 		config["defaultRange"] = 5;
 		config["maxPlayers"] = 2;
+		config["maxMaps"] = 10;
 		config["mgInsertionProbabilityBase"] = 100;
 		config["mgInsertionProbabilityBaseHorizontal"] = 50;
 		config["mgInsertionProbabilityBaseVertical"] = 50;
@@ -87,8 +88,10 @@ Config::init()
 		config["mgInsertionProbabilityBarrel"] = 42 * 2;
 		config["mgInsertionElementSizeMaxHorizontal"] = 3;
 		config["mgInsertionElementSizeMaxVertical"] = 3;
-		config["nbPlayers"] = 2;
-		config["nbMaps"] = 4;
+		
+		config["nbAIs"] = 0;
+		config["nbPlayers"] = config["maxPlayers"];
+		config["nbMaps"] = config["maxMaps"];
 		
 		/*
 		 * Then read the file

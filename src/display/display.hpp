@@ -82,11 +82,6 @@ namespace bombherman
 		// Width and Height of the display
 		static Uint32 width, height;
 		
-		// To store the SDL title font
-		static TTF_Font *fontTitle;
-		// To store the SDL normal font
-		static TTF_Font *fontNormal;
-		
 		static SDL_Surface *sBackground;
 		
 		static map::Map *gMap;
