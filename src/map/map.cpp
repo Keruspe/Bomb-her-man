@@ -147,6 +147,7 @@ Map::moveUp(Player * player)
 		return false;
 	Map::map[c.y][c.x] = NONE;
 	--c.y;
+	player->setCoords(c);
 	Map::map[c.y][c.x] = '0' + player->getId();
 	return true;
 }
@@ -159,6 +160,7 @@ Map::moveDown(Player * player)
 		return false;
 	Map::map[c.y][c.x] = NONE;
 	++c.y;
+	player->setCoords(c);
 	Map::map[c.y][c.x] = '0' + player->getId();
 	return true;
 }
@@ -171,6 +173,7 @@ Map::moveLeft(Player * player)
 		return false;
 	Map::map[c.y][c.x] = NONE;
 	--c.x;
+	player->setCoords(c);
 	Map::map[c.y][c.x] = '0' + player->getId();
 	return true;
 }
@@ -183,6 +186,7 @@ Map::moveRight(Player * player)
 		return false;
 	Map::map[c.y][c.x] = NONE;
 	++c.x;
+	player->setCoords(c);
 	Map::map[c.y][c.x] = '0' + player->getId();
 	return true;
 }
