@@ -98,7 +98,7 @@ MapGenerator::throwDice(int percentage)
 }
 
 bool
-MapGenerator::testCellFull(Grid& grid, Coords coords)
+MapGenerator::testCellFull(Grid & grid, Coords & coords)
 {
 	bool result = true;
 	if (coords.x > 0 && coords.y > 0)
@@ -115,24 +115,18 @@ MapGenerator::testCellFull(Grid& grid, Coords coords)
 }
 
 bool
-MapGenerator::testCellLimited(Grid& grid, Coords coords)
+MapGenerator::testCellLimited(Grid & grid, Coords & coords)
 {
 	return (coords.y == grid.size - 1 || coords.x == 0 ||
 		grid[coords.y + 1][coords.x - 1] != INDESTRUCTIBLE);
 }
 
 int
-MapGenerator::horizontalScan(Grid& grid, Coords coords)
+MapGenerator::horizontalScan(Grid & grid, Coords & coords)
 {
-	int i = 0;
-	if (coords.x == 0)
-		return 0;
-	while(grid[coords.y][coords.x - i - 1] == INDESTRUCTIBLE)
-	{
-		++i;
-		if (coords.x - i == 0)
-			return i;
-	}
+	int i;
+	for (i = 0 ; coords.x - i != 0
+		&& grid[coords.y][coords.x - i - 1] == INDESTRUCTIBLE ; ++i);
 	return i;
 }
 
