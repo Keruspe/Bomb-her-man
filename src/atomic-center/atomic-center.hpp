@@ -20,6 +20,7 @@
 
 #include "map/map-utils.hpp"
 #include "game/player.hpp"
+#include "map/map.hpp"
 #include <SDL.h>
 
 

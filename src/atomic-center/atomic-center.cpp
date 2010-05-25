@@ -48,13 +48,51 @@ AtomicCenter::wait (void * param)
 void
 AtomicCenter::explode (vector<int> * bombInfo)
 {
-	Player player = Player::getPlayer (bombInfo->at (2));
-	int range = player.getRange ();
+	Player * player = Player::getPlayer (bombInfo->at (2));
+	int range = player->getRange ();
 	Coords c;
 	c.x = bombInfo->at (0);
 	c.y = bombInfo->at(1);
 	cout << "Explosion avec les caractéristiques suivantes :" << endl <<
-	"Numéro du joueur : " << player.getId () << endl <<
+	"Numéro du joueur : " << player->getId () << endl <<
 	"Portée de la bombe : " << range << endl <<
 	"Position de la bombe : [" << c.x << ", " << c.y << "]" << endl;
+	//parcourons la case de la bombe et les cases à gauche de la bombe
+	char item;
+	for(int x = c.x; x >= (c.x - range) && x >= 0; x --) {
+		item = Map::get(x, c.y);
+		if (item == 'x')
+		{
+			cout << "UN MUR §§§" << endl;
+			break;
+		}
+		cout << "Parcours de la case : [" << x << ", " << c.y << "]" << endl;
+	}
+	for(int x = c.x + 1; x <= (c.x + range) && x <= c.max; x ++) {
+		item = Map::get(x, c.y);
+		if (item == 'x')
+		{
+			cout << "UN MUR §§§" << endl;
+			break;
+		}
+		cout << "Parcours de la case : [" << x << ", " << c.y << "]" << endl;
+	}
+	for(int y = c.y - 1; y >= (c.y - range) && y >= 0; y --) {
+		item = Map::get(c.x, y);
+		if (item == 'x')
+		{
+			cout << "UN MUR §§§" << endl;
+			break;
+		}
+		cout << "Parcours de la case : [" << c.x << ", " << y << "]" << endl;
+	}
+	for(int y = c.y + 1; y <= (c.y + range) && y <= c.max; y ++) {
+		item = Map::get(c.x, y);
+		if (item == 'x')
+		{
+			cout << "UN MUR §§§" << endl;
+			break;
+		}
+		cout << "Parcours de la case : [" << c.x << ", " << y << "]" << endl;
+	}
 }

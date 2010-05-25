@@ -73,11 +73,11 @@ Map::placePlayers()
 		while (true)
 		{
 			c = MapGenerator::getRandomCoords();
-			if(isPlayer(Map::map[c.y][c.x])
-				|| (c.y != 0 && isPlayer(Map::map[c.y - 1][c.x]))
-				|| (c.y != Map::map.size - 1 && isPlayer(Map::map[c.y+1][c.x]))
-				|| (c.x != 0 && isPlayer(Map::map[c.y][c.x - 1]))
-				|| (c.x != Map::map.size - 1 && isPlayer(Map::map[c.y][c.x + 1])))
+			if((Map::map[c.y][c.x] == PLAYER)
+				|| (c.y != 0 && Map::map[c.y - 1][c.x] == PLAYER)
+				|| (c.y != Map::map.size - 1 && Map::map[c.y+1][c.x] == PLAYER)
+				|| (c.x != 0 && Map::map[c.y][c.x - 1] == PLAYER)
+				|| (c.x != Map::map.size - 1 && Map::map[c.y][c.x + 1] == PLAYER))
 					continue;
 			if (c.y != 0)
 				Map::map[c.y - 1][c.x] = NONE;
@@ -88,39 +88,36 @@ Map::placePlayers()
 			if (c.x != Map::map.size - 1)
 				Map::map[c.y][c.x + 1] = NONE;
 			(*i)->setCoords(c);
-			Map::map[c.y][c.x] = (*i)->getId() + '0';
+			Map::map[c.y][c.x] = PLAYER;
 			break;
 		}
 	}
 }
 
 bool
-Map::isPlayer(char playerNo)
+Map::plantBomb(Coords & c)
 {
-	return (playerNo >= '1' && playerNo <= '0' + Config::getInt("maxPlayers"));
+	if (0 > c.x || 0 > c.y || Map::map.size <= c.y || Map::map.size <= c.x || Map::get(c) != NONE)
+		return false;
+	Map::map[c.y][c.x] = BOMB;
+	return true;
+	
 }
 
 char
 Map::get(Coords c)
 {
+	if (0 > c.x || 0 > c.y || Map::map.size <= c.y || Map::map.size <= c.x)
+		return 0;
 	return Map::map[c.y][c.x];
 }
 
-Coords &
-Map::getCoords(int playerNo)
+char
+Map::get(int x, int y)
 {
-	Coords *coords = new Coords();
-	for(coords->y = 0 ; coords->y < Map::map.size ; ++coords->y)
-	{
-		for(coords->x = 0 ; coords->x < Map::map.size ; ++coords->x)
-		{
-			if (this->get(*coords) == playerNo + '0')
-				return *coords;
-		}
-	}
-	coords->x = -1;
-	coords->y = -1;
-	return *coords;
+	if (0 > x || 0 > y || Map::map.size <= y || Map::map.size <= x)
+		return 0;
+	return Map::map[y][x];
 }
 
 bool
@@ -143,14 +140,12 @@ bool
 Map::moveUp(Player * player)
 {
 	Coords *c = &(player->getCoords());
-	std::cout << "BEGIN : " << c->x << "x" << c->y << std::endl;
 	if (c->y <= 0 || Map::map[c->y - 1][c->x] != NONE)
 		return false;
 	Map::map[c->y][c->x] = NONE;
 	--(c->y);
 	player->setCoords(*c);
-	std::cout << "END : " << player->getCoords().x << "x" << player->getCoords().y << std::endl;
-	Map::map[c->y][c->x] = '0' + player->getId();
+	Map::map[c->y][c->x] = PLAYER;
 	return true;
 }
 
@@ -158,14 +153,12 @@ bool
 Map::moveDown(Player * player)
 {
 	Coords *c = &(player->getCoords());
-	std::cout << "BEGIN : " << c->x << "x" << c->y << std::endl;
-	if (c->y >= Map::map.size || Map::map[c->y + 1][c->x] != NONE)
+	if (c->y >= (Map::map.size - 1) || Map::map[c->y + 1][c->x] != NONE)
 		return false;
 	Map::map[c->y][c->x] = NONE;
 	++(c->y);
 	player->setCoords(*c);
-	std::cout << "END : " << player->getCoords().x << "x" << player->getCoords().y << std::endl;
-	Map::map[c->y][c->x] = '0' + player->getId();
+	Map::map[c->y][c->x] = PLAYER;
 	return true;
 }
 
@@ -173,14 +166,12 @@ bool
 Map::moveLeft(Player * player)
 {
 	Coords *c = &(player->getCoords());
-	std::cout << "BEGIN : " << c->x << "x" << c->y << std::endl;
 	if (c->x <= 0 || Map::map[c->y][c->x - 1] != NONE)
 		return false;
 	Map::map[c->y][c->x] = NONE;
 	--(c->x);
 	player->setCoords(*c);
-	std::cout << "END : " << player->getCoords().x << "x" << player->getCoords().y << std::endl;
-	Map::map[c->y][c->x] = '0' + player->getId();
+	Map::map[c->y][c->x] = PLAYER;
 	return true;
 }
 
@@ -188,14 +179,12 @@ bool
 Map::moveRight(Player * player)
 {
 	Coords *c = &(player->getCoords());
-	std::cout << "BEGIN : " << c->x << "x" << c->y << std::endl;
-	if (c->x >= Map::map.size || Map::map[c->y][c->x + 1] != NONE)
+	if (c->x >= (Map::map.size - 1) || Map::map[c->y][c->x + 1] != NONE)
 		return false;
 	Map::map[c->y][c->x] = NONE;
 	++(c->x);
 	player->setCoords(*c);
-	std::cout << "END : " << player->getCoords().x << "x" << player->getCoords().y << std::endl;
-	Map::map[c->y][c->x] = '0' + player->getId();
+	Map::map[c->y][c->x] = PLAYER;
 	return true;
 }
 
