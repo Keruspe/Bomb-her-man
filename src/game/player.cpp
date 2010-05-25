@@ -11,13 +11,11 @@
 using namespace bombherman;
 using namespace bombherman::map;
 
-int Player::maxId = 0;
-
-Player::Player(Coords & coords) : plantableBombs (Config::getInt("defaultPlantableBombs")),
+Player::Player(int i, Coords & coords) : plantableBombs (Config::getInt("defaultPlantableBombs")),
 		range (Config::getInt("defaultRange")),
 		plantedBombs (0),
 		score (0),
-		id (++ Player::maxId),
+		id (i),
 		coords (coords)
 {
 }
