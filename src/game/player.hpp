@@ -24,7 +24,7 @@ namespace bombherman
 		int getId();
 		bool go(map::Direction);
 		static std::vector< Player * > & getPlayers();
-		static Player & getPlayer(int);
+		static Player * getPlayer(int);
 		static void newPlayer();
 		static void clean();
 		void setRange(int);
