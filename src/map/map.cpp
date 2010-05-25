@@ -140,11 +140,14 @@ bool
 Map::moveUp(Player * player)
 {
 	Coords *c = &(player->getCoords());
-	if (c->y <= 0 || Map::map[c->y - 1][c->x] == BARREL)
+	if (c->y <= 0 || Map::map[c->y - 1][c->x] == BARREL
+		|| Map::map[c->y - 1][c->x] == INDESTRUCTIBLE
+		|| Map::map[c->y - 1][c->x] == PLAYER)
 		return false;
 	Map::map[c->y][c->x] = NONE;
 	--(c->y);
 	player->setCoords(*c);
+	applyBonus(Map::map[c->y][c->x]);
 	Map::map[c->y][c->x] = PLAYER;
 	return true;
 }
@@ -153,11 +156,14 @@ bool
 Map::moveDown(Player * player)
 {
 	Coords *c = &(player->getCoords());
-	if (c->y >= (Map::map.size - 1) || Map::map[c->y + 1][c->x] == BARREL)
+	if (c->y >= (Map::map.size - 1) || Map::map[c->y + 1][c->x] == BARREL
+		|| Map::map[c->y + 1][c->x] == INDESTRUCTIBLE
+		|| Map::map[c->y + 1][c->x] == PLAYER)
 		return false;
 	Map::map[c->y][c->x] = NONE;
 	++(c->y);
 	player->setCoords(*c);
+	applyBonus(Map::map[c->y][c->x]);
 	Map::map[c->y][c->x] = PLAYER;
 	return true;
 }
@@ -166,11 +172,14 @@ bool
 Map::moveLeft(Player * player)
 {
 	Coords *c = &(player->getCoords());
-	if (c->x <= 0 || Map::map[c->y][c->x - 1] == BARREL)
+	if (c->x <= 0 || Map::map[c->y][c->x - 1] == BARREL
+		|| Map::map[c->y][c->x - 1] == INDESTRUCTIBLE
+		|| Map::map[c->y][c->x - 1] == PLAYER)
 		return false;
 	Map::map[c->y][c->x] = NONE;
 	--(c->x);
 	player->setCoords(*c);
+	applyBonus(Map::map[c->y][c->x]);
 	Map::map[c->y][c->x] = PLAYER;
 	return true;
 }
@@ -179,11 +188,14 @@ bool
 Map::moveRight(Player * player)
 {
 	Coords *c = &(player->getCoords());
-	if (c->x >= (Map::map.size - 1) || Map::map[c->y][c->x + 1] == BARREL)
+	if (c->x >= (Map::map.size - 1) || Map::map[c->y][c->x + 1] == BARREL
+		|| Map::map[c->y][c->x + 1] == INDESTRUCTIBLE
+		|| Map::map[c->y][c->x + 1] == PLAYER)
 		return false;
 	Map::map[c->y][c->x] = NONE;
 	++(c->x);
 	player->setCoords(*c);
+	applyBonus(Map::map[c->y][c->x]);
 	Map::map[c->y][c->x] = PLAYER;
 	return true;
 }
@@ -197,5 +209,21 @@ Map::destroy(Coords & c)
 		Map::map[c.y][c.x] = BOMBUP + MapGenerator::random(0, NULLFIRE - BOMBUP);
 	else
 		Map::map[c.y][c.x] = NONE;
+}
+
+void
+Map::applyBonus(char c)
+{
+	switch(c)
+	{
+	case NONE:
+	case BOMBUP:
+	case BOMBDOWN:
+	case FIREUP:
+	case FIREDOWN:
+	case FULLFIRE:
+	case NULLFIRE:
+		break;
+	}
 }
 
