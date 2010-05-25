@@ -189,7 +189,7 @@ Map::moveRight(Player * player)
 }
 
 void
-destroy(Coords & c)
+Map::destroy(Coords & c)
 {
 	if (0 > c.x || 0 > c.y || Map::map.size <= c.y || Map::map.size <= c.x || Map::get(c) != BARREL)
 		return;
