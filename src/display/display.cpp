@@ -155,29 +155,36 @@ SDL_Surface *
 Display::svgToSurface(std::string file)
 {
 	GError **err = NULL;
+	
 	RsvgHandle *rsvg = rsvg_handle_new_from_file(file.c_str(), err);
+	
 	if ( err )
 		throw exceptions::display::NoSVGException("Can't read the file");
+	
 	RsvgDimensionData dims;
+	
 	rsvg_handle_get_dimensions(rsvg, &dims);
+	
+	double s = static_cast<double>(Display::gSize) / static_cast<double>(dims.width);
 	
 	Uint32 stride = 4 * gSize;
 	void *buffer = calloc(stride * gSize, 1);
+	
 	cairo_surface_t *cSurface = cairo_image_surface_create_for_data(static_cast<unsigned char *>(buffer), CAIRO_FORMAT_ARGB32, gSize, gSize, stride);
 	cairo_t *cObject = cairo_create(cSurface);
 	
-	double s = static_cast<double>(Display::gSize) / static_cast<double>(dims.width);
 	cairo_scale(cObject, s, s);
-	bhout << "Scale to " << s << bhendl;
 	
 	rsvg_handle_render_cairo(rsvg, cObject);
-	g_object_unref(rsvg);
-	rsvg = NULL;
 	
 	cairo_surface_finish(cSurface);
 	
 	SDL_Surface *ret = SDL_CreateRGBSurfaceFrom(buffer, gSize, gSize, 32, stride, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
-	//free(buffer);
+	
+	g_object_unref(rsvg);
+	cairo_destroy(cObject);
+	cairo_surface_destroy(cSurface);
+	free(buffer);
 	
 	return ret;
 }
@@ -189,61 +196,44 @@ Display::initSurfaces()
 	
 	
 	// Logo
-	bhout << "Creating Logo" << bhendl;
 	SDL_Surface *icon = svgToSurface(DATADIR"/bomb-her-man.svg");
 	//SDL_WM_SetIcon(icon, NULL);
 	SDL_FreeSurface(icon);
 	icon = NULL;
-	bhout << "Logo created" << bhendl;
 	
 	
 	// gBomb
-	bhout << "Creating gBomb" << bhendl;
 	cleanSurface(gBomb);
 	gBomb = svgToSurface(DATADIR"/bomb.svg");
-	bhout << "gBomb created" << bhendl;
 	
 	
 	// gWall
-	bhout << "Creating gWall" << bhendl;
 	cleanSurface(gWall);
 	gWall = svgToSurface(DATADIR"/wall.svg");
-	bhout << "gWall created" << bhendl;
 	
 	// gBack
-	bhout << "Creating gBack" << bhendl;
 	cleanSurface(gBack);
 	gBack = svgToSurface(DATADIR"/back.svg");
-	bhout << "gBack created" << bhendl;
 	
 	// gBarrel
-	bhout << "Creating gBarrel" << bhendl;
 	cleanSurface(gBarrel);
 	gBarrel = svgToSurface(DATADIR"/barrel.svg");
-	bhout << "gBarrel created" << bhendl;
 	
 	
 	/*
 	 * Players
 	 */
-	unsigned char max = Config::getInt("maxPlayers") + '1';
-	for ( unsigned char p = '1' ; p < max ; ++p )
+	unsigned int max = Config::getInt("maxPlayers");
+	for ( unsigned int p = 0 ; p < max ; ++p )
 	{
-		bhout << "Make Player " << p << bhendl;
-		for ( unsigned char i = '0' ; i < '4' ; ++i )
+		for ( unsigned int i = 0 ; i < 4 ; ++i )
 		{
-			bhout << "	Make Face " << i << bhendl;
-			for ( unsigned char j = '0' ; j < '2' ; ++j )
+			for ( unsigned int j = 0 ; j < 2 ; ++j )
 			{
-				bhout << "		Make Image " << j << bhendl;
-				cleanSurface(gPlayers[p-'0'-1][i-'0'][j-'0']);
-				
+				cleanSurface(gPlayers[p][i][j]);
 				std::ostringstream f;
-				f << DATADIR << "/players/" << p << '/' << i << '/' << j << ".svg";
-				bhout << "File " << f.str() << bhendl; 
-				gPlayers[p-'0'-1][i-'0'][j-'0'] = svgToSurface(f.str());
-				
-				//gPlayers[p-'0'-1][i-'0'-1][j-'0'-1] = svgToSurface(DATADIR"/her.svg");
+				f << DATADIR << "/players/" << (p+1) << '/' << i << '/' << j << ".svg";
+				gPlayers[p][i][j] = svgToSurface(f.str());
 			}
 		}
 	}
@@ -277,6 +267,7 @@ Display::quit()
 	cleanSurface(gBarrel);
 	cleanSurface(gWall);
 	cleanSurface(gBack);
+	
 	unsigned int max = Config::getInt("maxPlayers");
 	for ( unsigned int p = 0 ; p < max ; ++p )
 	{
@@ -286,6 +277,8 @@ Display::quit()
 				cleanSurface(gPlayers[p][i][j]);
 		}
 	}
+	
+	
 	//SDL_LockMutex(mUpdate);
 	SDL_DestroyMutex(mUpdate);
 	
@@ -559,7 +552,6 @@ Display::movePlayer(Player *player, map::Direction goTo)
 	}
 }
 
-/*
 void
 Display::plantBomb(map::Coords coords)
 {
@@ -574,4 +566,4 @@ Display::plantBomb(map::Coords coords)
 	
 	updatePlayers();
 }
-*/
+

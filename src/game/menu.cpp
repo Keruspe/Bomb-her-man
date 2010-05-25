@@ -21,8 +21,6 @@
 #include "game.hpp"
 #include "player.hpp"
 
-#include <cstdio>
-
 using namespace bombherman;
 
 std::map<Menu::Type, Menu *> Menu::menus;
@@ -58,6 +56,7 @@ Menu::setContent()
 		case SETTINGS:
 			this->content.push_back(_("Settings"));
 			this->content.push_back(std::string(_("Go to ")) + ( ( Config::getInt("fullscreen") ) ? _("Windowed") : _("Fullscreen") ));
+			this->content.push_back(_("Maximum number of players: ") + Config::get("maxPlayers"));
 			this->content.push_back(_("Back"));
 		break;
 		case INGAME:
@@ -88,6 +87,7 @@ void
 Menu::action()
 {
 	int n;
+	bool update = false;
 	switch ( this->type )
 	{
 		case MAIN:
@@ -128,8 +128,11 @@ Menu::action()
 					n = ( Config::getInt("fullscreen") + 1 ) % 2;
 					Config::set("fullscreen", n);
 					Display::changeFullscreen();
-					this->setContent();
-					Display::displayMenu(this);
+					update = true;
+				break;
+				case 2:
+					Config::set("maxPlayers", 2);
+					update = true;
 				break;
 				default:
 					Game::changeMenu(MAIN);
@@ -145,6 +148,11 @@ Menu::action()
 					Game::changeMenu(MAIN, false);
 			}
 		break;
+	}
+	if ( update )
+	{
+		this->setContent();
+		Display::displayMenu(this);
 	}
 }
 
@@ -218,6 +226,13 @@ Menu::left()
 					Config::set("fullscreen", n);
 					Display::changeFullscreen();
 				break;
+				case 2:
+					n = Config::getInt("maxPlayers") - 1;
+					if ( n < 2 )
+						update = false;
+					else
+						Config::set("maxPlayers", n);
+				break;
 				default:
 					update = false;
 				break;
@@ -286,6 +301,9 @@ Menu::right()
 					n = ( Config::getInt("fullscreen") + 1 ) % 2;
 					Config::set("fullscreen", n);
 					Display::changeFullscreen();
+				break;
+				case 2:
+						Config::set("maxPlayers", Config::getInt("maxPlayers") + 1);
 				break;
 				default:
 					update = false;
