@@ -107,9 +107,9 @@ Menu::action()
 			switch ( this->current )
 			{
 				case 1:
-					for ( int i = 0, e = Config::getInt("nbPlayers") ; i <= e ; ++i )
+					for ( int i = 0, e = Config::getInt("nbPlayers") ; i < e ; ++i )
 						Player::newPlayer();
-					//for ( int i = 0, e = Config::getInt("nbAIs") ; i <= e ; ++i )
+					//for ( int i = 0, e = Config::getInt("nbAIs") ; i < e ; ++i )
 					//	AI::newAI();
 					Game::play();
 				break;
