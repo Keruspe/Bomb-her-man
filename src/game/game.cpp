@@ -18,6 +18,7 @@
 
 #include "game.hpp"
 #include "menu.hpp"
+#include "map/map-utils.hpp"
 
 using namespace bombherman;
 
@@ -185,7 +186,6 @@ Game::eventMenu(void *event)
 		case SDLK_LEFT:
 			currentMenu->left();
 		break;
-		break;
 		case SDLK_RIGHT:
 			currentMenu->right();
 		break;
@@ -201,6 +201,8 @@ Game::eventMenu(void *event)
 int
 Game::eventGame(void *event)
 {
+	Player player1 = Player::getPlayer(1);
+	Player player2 = Player::getPlayer(2);
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
 		case SDLK_ESCAPE:
@@ -209,18 +211,40 @@ Game::eventGame(void *event)
 		
 		// Player 1
 		case SDLK_UP:		// Up
+			player1.go(map::UP);
+			Display::updatePlayers();
+		break;
 		case SDLK_DOWN:		// Down
+			player1.go(map::DOWN);
+			Display::updatePlayers();
+		break;
 		case SDLK_RIGHT:	// Right
+			player1.go(map::RIGHT);
+			Display::updatePlayers();
+		break;
 		case SDLK_LEFT:		// Left
+			player1.go(map::LEFT);
+			Display::updatePlayers();
 		break;
 		case SDLK_SPACE:	// Bomb
 		break;
 		
 		// Player 2
 		case SDLK_e:		// Up
+			player2.go(map::UP);
+			Display::updatePlayers();
+		break;
 		case SDLK_d:		// Down
+			player2.go(map::DOWN);
+			Display::updatePlayers();
+		break;
 		case SDLK_f:		// Right
+			player2.go(map::RIGHT);
+			Display::updatePlayers();
+		break;
 		case SDLK_s:		// Left
+			player2.go(map::LEFT);
+			Display::updatePlayers();
 		break;
 		case SDLK_r:		// Bomb
 		break;

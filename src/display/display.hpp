@@ -54,18 +54,20 @@ namespace bombherman
 		static void setMap(map::Map *map);
 		
 		/// Update the barrels
-		static void updateBarrels();
+		static void updateBarrels() { updateBarrels(false); }
 		/// Update the players
-		static void updatePlayers();
+		static void updatePlayers() { updatePlayers(false); }
 	
 	private:
 		static SDL_Surface *svgToSurface(std::string);
 		static void initSurfaces();
 		static void cleanSurface(SDL_Surface *);
 		
-		static void updateDisplay(SDL_Surface *);
+		static void updateDisplay(SDL_Surface *, Uint16 = 0, Uint16 = 0, Uint16 = 0, Uint16 = 0);
 		
-		static void updateMap();
+		static void updateBarrels(bool full);
+		static void updatePlayers(bool full);
+		static void updateMap(bool full);
 		
 		// To store the SDL display surface
 		static SDL_Surface *sDisplay;

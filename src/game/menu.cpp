@@ -243,7 +243,7 @@ Menu::right()
 			{
 				case 2:
 					n = Config::getInt("nbPlayers") + 1;
-					if ( n <= Config::getInt("maxPlayers") )
+					if ( n <= 2 )
 					{
 						Config::set("nbPlayers", n);
 						m = Config::getInt("maxPlayers");
