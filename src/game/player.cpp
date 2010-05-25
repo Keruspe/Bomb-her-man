@@ -11,12 +11,12 @@ using namespace bombherman;
 
 Player::players = std::vector< Player >();
 
-Player::Player(map::Coords & coords) : plantableBombs (Config::getInt("defaultPlantableBombs")),
+Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
 		range (Config::getInt("defaultRange")),
 		plantedBombs (0),
 		score (0),
 		id (Player::players.size() + 1),
-		coords (coords)
+		coords (Coords())
 {
 	Player::players.push_back(this);
 }

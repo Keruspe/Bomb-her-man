@@ -33,7 +33,7 @@ namespace bombherman
 		void resetToDefaultStats();
 		void setCoords(map::Coords &);
 	private:
-		Player(map::Coords &);
+		Player();
 		int plantableBombs;
 		int range;
 		int plantedBombs;
