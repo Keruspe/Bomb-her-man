@@ -94,8 +94,7 @@ MapGenerator::random(int min, int max)
 bool
 MapGenerator::throwDice(int percentage)
 {
-	int random = (rand() % 100);
-	return (percentage > random);
+	return (percentage > rand() % 100);
 }
 
 bool
