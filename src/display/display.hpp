@@ -102,6 +102,7 @@ namespace bombherman
 		static int gMapSize;
 		static Uint32 gSize;
 		static SDL_Rect gBegin;
+		static SDL_Rect gBeginPlayers;
 	};
 }
 

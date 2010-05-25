@@ -70,6 +70,7 @@ SDL_Surface *Display::gBack = NULL;
 int Display::gMapSize = 0;
 Uint32 Display::gSize = 0;
 SDL_Rect Display::gBegin;
+SDL_Rect Display::gBeginPlayers;
 
 void
 Display::init()
@@ -336,13 +337,19 @@ Display::changeFullscreen()
 		gSize = height / gMapSize;
 		gBegin.x = width - height;
 		gBegin.y = 0;
+		gBegin.w = gBegin.x + height;
+		gBegin.h = gBegin.y + height;
 	}
 	else
 	{
 		gSize = width / gMapSize;
 		gBegin.x = 0;
 		gBegin.y = height - width;
+		gBegin.w = gBegin.x + width;
+		gBegin.h = gBegin.y + width;
 	}
+	gBeginPlayer = gBegin;
+	
 	cleanSurface(sBackground);
 	sBackground = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
 	SDL_FillRect(sBackground, NULL, 0x00444444);
@@ -473,11 +480,11 @@ Display::updateBarrels(bool full)
 void
 Display::updatePlayers(bool full)
 {
-	SDL_Rect r, u, m;
-	u.x = width;
-	u.y = height;
-	m.x = gBegin.x;
-	m.y = gBegin.y;
+	SDL_Rect r, n, m;
+	n.x = width;
+	n.y = height;
+	n.w = gBegin.x;
+	n.h = gBegin.y;
 	cleanSurface(gPlayersLayer);
 	gPlayersLayer = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
 	SDL_BlitSurface(gBarrelsLayer, NULL, gPlayersLayer, NULL);
@@ -491,15 +498,16 @@ Display::updatePlayers(bool full)
 		r.y = gBegin.y + ( coords.y * gSize );
 		SDL_BlitSurface(gPlayers[(*i)->getId()-1][(*i)->getOrient()][0], NULL, gPlayersLayer, &r);
 		
-		if ( coords.x < u.x ) u.x = coords.x;
-		if ( coords.y < u.y ) u.y = coords.y;
-		if ( coords.x > m.x ) m.x = coords.x;
-		if ( coords.y > m.y ) m.y = coords.y;
+		if ( coords.x < n.x ) n.x = coords.x;
+		if ( coords.y < n.y ) n.y = coords.y;
+		if ( coords.x > n.w ) n.w = coords.x;
+		if ( coords.y > n.h ) n.h = coords.y;
 	}
-	u.w = u.x - m.x;
-	u.h = u.y - m.y;
+	n.w = n.x - n.w + gSize;
+	n.h = n.y - n.h + gSize;
 	if ( full )
 		updateDisplay(gPlayersLayer);
 	else
-		updateDisplay(gPlayersLayer, u.x, u.y, u.w, u.h);
+		updateDisplay(gPlayersLayer, gBeginPlayers.x, gBeginPlayers.y, gBeginPlayers.w, gBeginPlayers.h);
+	gBeginPlayers = n;
 }

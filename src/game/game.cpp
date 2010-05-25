@@ -202,8 +202,8 @@ Game::eventMenu(void *event)
 int
 Game::eventGame(void *event)
 {
-	Player player1 = Player::getPlayer(1);
-	Player player2 = Player::getPlayer(2);
+	Player *player1 = Player::getPlayer(1);
+	Player *player2 = Player::getPlayer(2);
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
 		case SDLK_ESCAPE:
@@ -212,19 +212,19 @@ Game::eventGame(void *event)
 		
 		// Player 1
 		case SDLK_UP:		// Up
-			if ( player1.go(map::UP) )
+			if ( player1->go(map::UP) )
 				Display::updatePlayers();
 		break;
 		case SDLK_DOWN:		// Down
-			if ( player1.go(map::DOWN) )
+			if ( player1->go(map::DOWN) )
 				Display::updatePlayers();
 		break;
 		case SDLK_RIGHT:	// Right
-			if ( player1.go(map::RIGHT) )
+			if ( player1->go(map::RIGHT) )
 				Display::updatePlayers();
 		break;
 		case SDLK_LEFT:		// Left
-			if ( player1.go(map::LEFT) )
+			if ( player1->go(map::LEFT) )
 				Display::updatePlayers();
 		break;
 		case SDLK_SPACE:	// Bomb
@@ -232,19 +232,19 @@ Game::eventGame(void *event)
 		
 		// Player 2
 		case SDLK_e:		// Up
-			if ( player2.go(map::UP) )
+			if ( player2->go(map::UP) )
 				Display::updatePlayers();
 		break;
 		case SDLK_d:		// Down
-			if ( player2.go(map::DOWN) )
+			if ( player2->go(map::DOWN) )
 				Display::updatePlayers();
 		break;
 		case SDLK_f:		// Right
-			if ( player2.go(map::RIGHT) )
+			if ( player2->go(map::RIGHT) )
 				Display::updatePlayers();
 		break;
 		case SDLK_s:		// Left
-			if ( player2.go(map::LEFT) )
+			if ( player2->go(map::LEFT) )
 				Display::updatePlayers();
 		break;
 		case SDLK_r:		// Bomb
