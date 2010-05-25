@@ -506,6 +506,7 @@ Display::updatePlayers()
 void
 Display::movePlayer(Player *player, map::Direction goTo)
 {
+	map::Direction was = player->getOrient();
 	if ( player->go(goTo) )
 	{
 		map::Coords coords = player->getCoords();
@@ -535,6 +536,22 @@ Display::movePlayer(Player *player, map::Direction goTo)
 		SDL_Surface *sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
 		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
 		SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &d);
+		
+
+		updateDisplay(sPlayer, r.x, r.y, r.w, r.h);
+		SDL_FreeSurface(sPlayer);
+	}
+	else if ( was != player->getOrient() )
+	{
+		map::Coords coords = player->getCoords();
+		SDL_Rect r;
+		r.x = gBegin.x + coords.x * gSize;
+		r.y = gBegin.y + coords.y * gSize;
+		r.w = gSize;
+		r.h = gSize;
+		SDL_Surface *sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
+		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
+		SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, NULL);
 		
 
 		updateDisplay(sPlayer, r.x, r.y, r.w, r.h);
