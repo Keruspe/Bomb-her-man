@@ -43,6 +43,8 @@ namespace bombherman
 		 * @return A menu
 		 */
 		static Menu * getMenu(Type type);
+		/// Clear menus
+		static void clear();
 		
 		/// To get the content of the menu
 		/**
@@ -56,15 +58,9 @@ namespace bombherman
 		unsigned int getCurrent() { return this->current; }
 		
 		/// Up in the menu
-		/**
-		 * @return The new place in the menu
-		 */
-		unsigned int up();
+		void up();
 		/// Down in the menu
-		/**
-		 * @return The new place in the menu
-		 */
-		unsigned int down();
+		void down();
 		/// Go left (change a value)
 		void left();
 		/// Go right (change value)
@@ -76,8 +72,10 @@ namespace bombherman
 		virtual ~Menu() {}
 	
 	private:
-		Menu(Type type, std::vector<std::string> content) : type(type), content(content), current(1) {}
+		Menu(Type type);
+		void setContent();
 		
+		static std::map<Type, Menu *> menus;
 		Type type;
 		std::vector<std::string> content;
 		unsigned int current;

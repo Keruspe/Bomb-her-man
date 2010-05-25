@@ -87,6 +87,8 @@ Config::init()
 		config["mgInsertionProbabilityBarrel"] = 42 * 2;
 		config["mgInsertionElementSizeMaxHorizontal"] = 3;
 		config["mgInsertionElementSizeMaxVertical"] = 3;
+		config["nbPlayers"] = 2;
+		config["nbMaps"] = 4;
 		
 		/*
 		 * Then read the file

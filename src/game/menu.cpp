@@ -25,43 +25,62 @@
 
 using namespace bombherman;
 
+std::map<Menu::Type, Menu *> Menu::menus;
+
+Menu::Menu(Type type) :
+	type(type),
+	content(),
+	current(1)
+{
+	this->setContent();
+}
+
+void
+Menu::setContent()
+{
+	this->content.clear();
+	switch ( this->type )
+	{
+		case MAIN:
+			this->content.push_back(_("Main menu"));
+			this->content.push_back(_("Play"));
+			this->content.push_back(_("Settings"));
+			this->content.push_back(_("Quit"));
+		break;
+		case GAME:
+			this->content.push_back(_("Game"));
+			this->content.push_back(_("Play"));
+			this->content.push_back(_("Players: ") + Config::get("nbPlayers"));
+			this->content.push_back(_("Maps: ") + Config::get("nbMaps"));
+			this->content.push_back(_("Back"));
+		break;
+		case SETTINGS:
+			this->content.push_back(_("Settings"));
+			this->content.push_back(std::string(_("Go to ")) + ( ( Config::getInt("fullscreen") ) ? _("Windowed") : _("Fullscreen") ));
+			this->content.push_back(_("Back"));
+		break;
+		case INGAME:
+			this->content.push_back(_("Pause"));
+			this->content.push_back(_("Back to game"));
+			this->content.push_back(_("Back to main menu"));
+		break;
+	}
+}
+
 Menu *
 Menu::getMenu(Type which)
 {
-	std::vector<std::string> menu;
-	char *nbPlayers = NULL;
-	char *nbMaps = NULL;
-	switch ( which )
-	{
-		case MAIN:
-			menu.push_back(_("Main menu"));
-			menu.push_back(_("Play"));
-			menu.push_back(_("Settings"));
-			menu.push_back(_("Quit"));
-		break;
-		case GAME:
-			menu.push_back(_("Game"));
-			menu.push_back(_("Play"));
-			menu.push_back(nbPlayers);
-			menu.push_back(nbMaps);
-			menu.push_back(_("Back"));
-		break;
-		case SETTINGS:
-			menu.push_back(_("Settings"));
-			menu.push_back(( Config::getInt("fullscreen") ) ? _("Fullscreen") : _("Windowed"));
-			menu.push_back(_("Back"));
-		break;
-		case INGAME:
-			menu.push_back(_("Pause"));
-			menu.push_back(_("Back to game"));
-			menu.push_back(_("Back to main menu"));
-		break;
-	}
-	if ( nbPlayers )
-		free(nbPlayers);
-	if ( nbMaps )
-		free(nbMaps);
-	return new Menu(which, menu);
+	Menu *menu = menus[which];
+	if ( ! menu )
+		menu = new Menu(which);
+	return menu;
+}
+
+void
+Menu::clear()
+{
+	for ( std::map<Menu::Type, Menu *>::iterator i = menus.begin(), e = menus.end(); i != e ; ++ i )
+		delete(i->second);
 }
 
 void
@@ -102,11 +121,11 @@ Menu::action()
 			switch ( this->current )
 			{
 				case 1:
-					n = ( Config::getInt("fullscreen") + 1 ) % 1;
+					n = ( Config::getInt("fullscreen") + 1 ) % 2;
 					Config::set("fullscreen", n);
 					Display::changeFullscreen();
-					this->content[1] = ( n ) ? _("Fullscreen") : _("Windowed");
-					Display::displayMenu(this->content, this->current);
+					this->setContent();
+					Display::displayMenu(this);
 				break;
 				default:
 					Game::changeMenu(MAIN);
@@ -125,22 +144,22 @@ Menu::action()
 	}
 }
 
-unsigned int
+void
 Menu::up()
 {
 	if ( --(this->current) < 1 )
 		this->current = 1;
 	
-	return this->current;
+	Display::displayMenu(this);
 }
 
-unsigned int
+void
 Menu::down()
 {
 	if ( ++(this->current) == content.size() )
 		this->current = ( content.size() - 1 );
 	
-	return this->current;
+	Display::displayMenu(this);
 }
 
 void
@@ -164,11 +183,11 @@ Menu::left()
 			switch ( this->current )
 			{
 				case 1:
-					n = ( Config::getInt("fullscreen") + 1 ) % 1;
+					n = ( Config::getInt("fullscreen") + 1 ) % 2;
 					Config::set("fullscreen", n);
 					Display::changeFullscreen();
-					this->content[1] = ( n ) ? _("Fullscreen") : _("Windowed");
-					Display::displayMenu(this->content, this->current);
+					this->setContent();
+					Display::displayMenu(this);
 				break;
 				default:
 				break;
@@ -200,11 +219,11 @@ Menu::right()
 			switch ( this->current )
 			{
 				case 1:
-					n = ( Config::getInt("fullscreen") + 1 ) % 1;
+					n = ( Config::getInt("fullscreen") + 1 ) % 2;
 					Config::set("fullscreen", n);
 					Display::changeFullscreen();
-					this->content[1] = ( n ) ? _("Fullscreen") : _("Windowed");
-					Display::displayMenu(this->content, this->current);
+					this->setContent();
+					Display::displayMenu(this);
 				break;
 				default:
 				break;

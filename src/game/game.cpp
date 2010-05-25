@@ -99,7 +99,7 @@ Game::changeMenu(Menu::Type type, bool stopGame)
 		currentMenu = NULL;
 	}
 	currentMenu = Menu::getMenu(type);
-	Display::displayMenu(currentMenu->getContent(), currentMenu->getCurrent());
+	Display::displayMenu(currentMenu);
 }
 
 void
@@ -148,6 +148,8 @@ Game::quit()
 	}
 	delete(threads);
 	
+	Menu::clear();
+	
 	Config::write();
 }
 
@@ -170,15 +172,22 @@ Game::eventMenu(void *event)
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
 		case SDLK_UP:
-			Display::displayMenu(currentMenu->getContent(), currentMenu->up());
+			currentMenu->up();
 		break;
 		case SDLK_DOWN:
-			Display::displayMenu(currentMenu->getContent(), currentMenu->down());
+			currentMenu->down();
 		break;
 		case SDLK_KP_ENTER:
 		case SDLK_SPACE:
 		case SDLK_RETURN:
 			currentMenu->action();
+		break;
+		case SDLK_LEFT:
+			currentMenu->left();
+		break;
+		break;
+		case SDLK_RIGHT:
+			currentMenu->right();
 		break;
 		default:
 		break;

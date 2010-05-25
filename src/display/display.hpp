@@ -44,10 +44,9 @@ namespace bombherman
 		static void changeFullscreen();
 		/// Display the menu
 		/**
-		 * @param content The content of the menu to display
-		 * @param current The current active item of the menu
+		 * @param menu The pointer the menu to display
 		 */
-		static void displayMenu(std::vector< std::string> content, unsigned int current);
+		static void displayMenu(Menu *menu);
 		/// Set the map
 		/**
 		 * @param map Pointer to the map to use

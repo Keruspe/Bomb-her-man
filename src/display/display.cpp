@@ -375,10 +375,12 @@ Display::updateDisplay(SDL_Surface *s)
 }
 
 void
-Display::displayMenu(std::vector< std::string> content, unsigned int current)
+Display::displayMenu(Menu *menu)
 {
 	if ( ! sDisplay ) init();
 	
+	std::vector< std::string> content = menu->getContent();
+	unsigned int current = menu->getCurrent();
 	bhout << "Displaying menu" << bhendl;
 	
 	SDL_Surface *textSurface, *sMenu = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
@@ -387,16 +389,18 @@ Display::displayMenu(std::vector< std::string> content, unsigned int current)
 	SDL_Rect r;
 	r.x = 0;
 	r.y = ( ( height - ( dy * content.size() ) ) / 2 );
-	for ( unsigned int i = 0 ; i < content.size() ; ++i )
+	unsigned int e = content.size();
+	for ( unsigned int i = 0 ; i < e ; ++i )
 	{
 		TTF_Font *font = ( i == 0 ) ? ( fontTitle ) : ( fontNormal );
 		SDL_Color color = ( i == current ) ? ( highlightColor ) : ( textColor );
-		if ( ! ( textSurface = TTF_RenderUTF8_Blended(font, content[i].c_str(), color) ) )
-			bherr << "Can't display the line" << content[i] << bhendl;
+		const char *text = content[i].c_str();
+		if ( ! ( textSurface = TTF_RenderUTF8_Blended(font, text, color) ) )
+			bherr << "Can't display the line" << text << bhendl;
 		else
 		{
 			int w, h;
-			TTF_SizeText(font, content[i].c_str(), &w, &h);
+			TTF_SizeText(font, text, &w, &h);
 			r.x = bx - ( w / 2 );
 			SDL_BlitSurface(textSurface, NULL, sMenu, &r);
 			r.y += dy;
