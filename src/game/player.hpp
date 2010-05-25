@@ -21,11 +21,12 @@ namespace bombherman
 		bool isAbleToPlantBomb();
 		int getScore();
 		int getId();
+		bool go(map::Direction);
 		static std::vector< Player * > & getPlayers();
 		static Player & getPlayer(int);
 		static void newPlayer();
+		static void clean();
 		void setRange(int);
-		void go(map::Direction);
 		void plantBomb();
 		void addToScore(int);
 		void setPlantableBombs(int);

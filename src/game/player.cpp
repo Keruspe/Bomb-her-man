@@ -6,6 +6,7 @@
  */
 
 #include "player.hpp"
+#include "map/map.hpp"
 #include "exceptions/too-many-players-exception.hpp"
 
 using namespace bombherman;
@@ -24,11 +25,6 @@ Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
 
 Player::~Player()
 {
-	for (std::vector< Player * >::iterator i = Player::players.begin(), i_end = Player::players.end(); i != i_end ; ++i)
-	{
-		delete(*i);
-	}
-	Player::players.clear();
 }
 
 int
@@ -82,15 +78,25 @@ Player::newPlayer()
 }
 
 void
+Player::clean()
+{
+	for (std::vector< Player * >::iterator i = Player::players.begin(), i_end = Player::players.end(); i != i_end ; ++i)
+	{
+		delete(*i);
+	}
+	Player::players.clear();
+}
+
+void
 Player::setRange(int range)
 {
 	this->range = range;
 }
 
-void
+bool
 Player::go(map::Direction direction)
 {
-
+	return map::Map::movePlayer(this, direction);
 }
 
 void
