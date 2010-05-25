@@ -552,7 +552,6 @@ Display::movePlayer(Player *player, map::Direction goTo)
 	}
 }
 
-/*
 void
 Display::plantBomb(map::Coords coords)
 {
@@ -567,4 +566,4 @@ Display::plantBomb(map::Coords coords)
 	
 	updatePlayers();
 }
-*/
+
