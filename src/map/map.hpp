@@ -49,6 +49,7 @@ namespace bombherman
 			static bool moveDown(Player *);
 			static bool moveLeft(Player *);
 			static bool moveRight(Player *);
+			static void applyBonus(char);
 			static Grid map;
 		};
 	}
