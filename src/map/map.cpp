@@ -73,11 +73,11 @@ Map::placePlayers()
 		while (true)
 		{
 			c = MapGenerator::getRandomCoords();
-			if(isPlayer(Map::map[c.y][c.x])
-				|| (c.y != 0 && isPlayer(Map::map[c.y - 1][c.x]))
-				|| (c.y != Map::map.size - 1 && isPlayer(Map::map[c.y+1][c.x]))
-				|| (c.x != 0 && isPlayer(Map::map[c.y][c.x - 1]))
-				|| (c.x != Map::map.size - 1 && isPlayer(Map::map[c.y][c.x + 1])))
+			if((Map::map[c.y][c.x] == PLAYER)
+				|| (c.y != 0 && Map::map[c.y - 1][c.x] == PLAYER)
+				|| (c.y != Map::map.size - 1 && Map::map[c.y+1][c.x] == PLAYER)
+				|| (c.x != 0 && Map::map[c.y][c.x - 1] == PLAYER)
+				|| (c.x != Map::map.size - 1 && Map::map[c.y][c.x + 1] == PLAYER))
 					continue;
 			if (c.y != 0)
 				Map::map[c.y - 1][c.x] = NONE;
@@ -88,16 +88,10 @@ Map::placePlayers()
 			if (c.x != Map::map.size - 1)
 				Map::map[c.y][c.x + 1] = NONE;
 			(*i)->setCoords(c);
-			Map::map[c.y][c.x] = (*i)->getId() + '0';
+			Map::map[c.y][c.x] = PLAYER;
 			break;
 		}
 	}
-}
-
-bool
-Map::isPlayer(char playerNo)
-{
-	return (playerNo >= '1' && playerNo <= '0' + Config::getInt("maxPlayers"));
 }
 
 bool
@@ -151,7 +145,7 @@ Map::moveUp(Player * player)
 	Map::map[c->y][c->x] = NONE;
 	--(c->y);
 	player->setCoords(*c);
-	Map::map[c->y][c->x] = '0' + player->getId();
+	Map::map[c->y][c->x] = PLAYER;
 	return true;
 }
 
@@ -164,7 +158,7 @@ Map::moveDown(Player * player)
 	Map::map[c->y][c->x] = NONE;
 	++(c->y);
 	player->setCoords(*c);
-	Map::map[c->y][c->x] = '0' + player->getId();
+	Map::map[c->y][c->x] = PLAYER;
 	return true;
 }
 
@@ -177,7 +171,7 @@ Map::moveLeft(Player * player)
 	Map::map[c->y][c->x] = NONE;
 	--(c->x);
 	player->setCoords(*c);
-	Map::map[c->y][c->x] = '0' + player->getId();
+	Map::map[c->y][c->x] = PLAYER;
 	return true;
 }
 
@@ -190,7 +184,7 @@ Map::moveRight(Player * player)
 	Map::map[c->y][c->x] = NONE;
 	++(c->x);
 	player->setCoords(*c);
-	Map::map[c->y][c->x] = '0' + player->getId();
+	Map::map[c->y][c->x] = PLAYER;
 	return true;
 }
 
