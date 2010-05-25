@@ -120,3 +120,21 @@ Map::getCoords(int playerNo)
 	coords->y = -1;
 	return *coords;
 }
+
+bool
+Map::movePlayer(Player * player, Direction & direction)
+{
+	switch(direction)
+	{
+	case UP:
+		break;
+	case DOWN:
+		break;
+	case LEFT:
+		break;
+	case RIGHT:
+		break;
+	}
+	return false;
+}
+

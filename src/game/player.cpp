@@ -6,6 +6,7 @@
  */
 
 #include "player.hpp"
+#include "map/map.hpp"
 #include "exceptions/too-many-players-exception.hpp"
 
 using namespace bombherman;
@@ -92,10 +93,10 @@ Player::setRange(int range)
 	this->range = range;
 }
 
-void
+bool
 Player::go(map::Direction direction)
 {
-
+	return map::Map::movePlayer(this, direction);
 }
 
 void

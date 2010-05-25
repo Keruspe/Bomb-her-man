@@ -41,6 +41,7 @@ namespace bombherman
 			char get(Coords);
 			Coords & getCoords(int);
 			void placePlayers();
+			static bool movePlayer(Player *, Direction &);
 		private:
 			Grid map;
 		};
