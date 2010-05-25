@@ -73,6 +73,8 @@ Player::getPlayers()
 Player *
 Player::getPlayer(int playerNo)
 {
+	if (Player::players.size() <= static_cast<unsigned>(playerNo) || 0 >= playerNo)
+		return 0;
 	return Player::players[playerNo - 1];
 }
 
