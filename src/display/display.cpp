@@ -184,7 +184,7 @@ Display::svgToSurface(std::string file)
 	g_object_unref(rsvg);
 	cairo_destroy(cObject);
 	cairo_surface_destroy(cSurface);
-	free(buffer);
+	//free(buffer);
 	
 	return ret;
 }
