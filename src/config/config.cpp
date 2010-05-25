@@ -92,7 +92,9 @@ Config::init()
 		config["nbAIs"] = 0;
 		config["nbPlayers"] = config["maxPlayers"];
 		config["nbMaps"] = config["maxMaps"];
-		
+	
+		config["bonusApparitionProbability"] = 50;
+
 		/*
 		 * Then read the file
 		 */

@@ -65,20 +65,21 @@ namespace bombherman
 
 		typedef enum
 		{
-			BOMB='b',
-			BARREL='t',
-			INDESTRUCTIBLE='x',
-			NONE=' ',
-			PLAYER='p'
+			BOMB = 'b',
+			BARREL = 't',
+			INDESTRUCTIBLE = 'x',
+			NONE = ' ',
+			PLAYER = 'p'
 		} Element;
 
 		typedef enum
 		{
-			BOMBUP,
-			BOMBDOWN,
-			FIREUP,
-			FIREDOWN,
-			FULLFIRE
+			BOMBUP = '1',
+			BOMBDOWN = '2',
+			FIREUP = '3',
+			FIREDOWN = '4',
+			FULLFIRE = '5',
+			NULLFIRE = '6'
 		} Bonus;
 	}
 }

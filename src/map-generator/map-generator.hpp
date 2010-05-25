@@ -35,9 +35,9 @@ namespace bombherman
         public:
             static void generate(Grid&);
 	    static Coords & getRandomCoords();
-        private:
+            static bool throwDice(int);
             static int random(int, int);
-            static bool throwDice(float);
+        private:
             static bool testCellFull(Grid&, Coords);
             static bool testCellLimited(Grid&, Coords);
             static int horizontalScan(Grid&, Coords);
