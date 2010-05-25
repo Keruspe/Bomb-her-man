@@ -104,7 +104,7 @@ Player::setRange(int range)
 bool
 Player::go(map::Direction direction)
 {
-	this->orient(direction);
+	this->orient = direction;
 	return map::Map::movePlayer(this, direction);
 }
 
