@@ -9,13 +9,25 @@
 
 using namespace bombherman;
 
-Player::Player(int i, map::Coords & coords) : plantableBombs (Config::getInt("defaultPlantableBombs")),
+Player::players = std::vector< Player >();
+
+Player::Player(map::Coords & coords) : plantableBombs (Config::getInt("defaultPlantableBombs")),
 		range (Config::getInt("defaultRange")),
 		plantedBombs (0),
 		score (0),
-		id (i),
+		id (Player::players.size() + 1),
 		coords (coords)
 {
+	Player::players.push_back(this);
+}
+
+Player::~Player()
+{
+	for (std::vector< Player * >::iterator i = Player::players.begin(), i_end = Player::players.end(); i != i_end ; ++i)
+	{
+		delete(*i);
+	}
+	Player::players.clear();
 }
 
 int
@@ -46,6 +58,26 @@ int
 Player::getId ()
 {
 	return this->id;
+}
+
+std::vector< Player * > &
+Player::getPlayers()
+{
+	return Player::players;
+}
+
+Player &
+Player::getPlayer(int playerNo)
+{
+	return *(Player::players[playerNo - 1]);
+}
+
+void
+Player::newPlayer()
+{
+	if (Player::players.size >= Config::getInt("maxPlayers"))
+		throw exceptions::TooManyPlayersException;
+	Player::players.push_back(new Player());
 }
 
 void
@@ -84,4 +116,10 @@ Player::resetToDefaultStats()
 	this->plantableBombs = Config::getInt("defaultPlantableBombs");
 	this->range = Config::getInt("defaultRange");
 	this->plantedBombs = 0;
+}
+
+void
+Player::setCoords(map::Coords & c)
+{
+	this->coords = c;
 }

@@ -24,12 +24,12 @@ using namespace bombherman;
 using namespace bombherman::map;
 using namespace bombherman::exceptions;
 
-Map::Map() : map(Grid()), players(std::vector< Player >())
+Map::Map() : map(Grid())
 {
 	MapGenerator::generate(map);
 }
 
-Map::Map(Grid & model) : map(Grid()), players(std::vector< Player >())
+Map::Map(Grid & model) : map(Grid())
 {
 	for(int x(0) ; x < map.size ; ++x)
 	{
@@ -40,7 +40,7 @@ Map::Map(Grid & model) : map(Grid()), players(std::vector< Player >())
 	}
 }
 
-Map::Map(std::string path) : map(Grid()), players(std::vector< Player >())
+Map::Map(std::string path) : map(Grid())
 {
 	try
 	{
@@ -62,32 +62,33 @@ Map::~Map()
 {
 }
 
-
-Player &
-Map::newPlayer()
+void
+Map::placePlayers()
 {
 	Coords c;
-	while (true)
+	for(std::vector< Player * >::iterator i = Player::getPlayers().begin(), i_end = Player::getPlayers().end() ; i != i_end ; ++i)
 	{
-		c = MapGenerator::getRandomCoords();
-		if(isPlayer(map[c.y][c.x])
-			|| (c.y != 0 && isPlayer(map[c.y - 1][c.x]))
-			|| (c.y != map.size - 1 && isPlayer(map[c.y+1][c.x]))
-			|| (c.x != 0 && isPlayer(map[c.y][c.x - 1]))
-			|| (c.x != map.size - 1 && isPlayer(map[c.y][c.x + 1])))
-				continue;
-		if (c.y != 0)
-			map[c.y - 1][c.x] = NONE;
-		if (c.y != map.size - 1)
-			map[c.y + 1][c.x] = NONE;
-		if (c.x != 0)
-			map[c.y][c.x - 1] = NONE;
-		if (c.x != map.size - 1)
-			map[c.y][c.x + 1] = NONE;
-		Player *player = new Player(players.size() + 1, c);
-		map[c.y][c.x] = player->getId() + '0';
-		players.push_back(*player);
-		return *player;
+		while (true)
+		{
+			c = MapGenerator::getRandomCoords();
+			if(isPlayer(map[c.y][c.x])
+				|| (c.y != 0 && isPlayer(map[c.y - 1][c.x]))
+				|| (c.y != map.size - 1 && isPlayer(map[c.y+1][c.x]))
+				|| (c.x != 0 && isPlayer(map[c.y][c.x - 1]))
+				|| (c.x != map.size - 1 && isPlayer(map[c.y][c.x + 1])))
+					continue;
+			if (c.y != 0)
+				map[c.y - 1][c.x] = NONE;
+			if (c.y != map.size - 1)
+				map[c.y + 1][c.x] = NONE;
+			if (c.x != 0)
+				map[c.y][c.x - 1] = NONE;
+			if (c.x != map.size - 1)
+				map[c.y][c.x + 1] = NONE;
+			(*i)->setCoords(c);
+			map[c.y][c.x] = (*i)->getId() + '0';
+			break;
+		}
 	}
 }
 

@@ -17,34 +17,23 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _MAP_HPP_
-#define _MAP_HPP_
+#ifndef _TOO_MANY_PLAYERS_EXCEPTION_HPP_
+#define _TOO_MANY_PLAYERS_EXCEPTION_HPP_
 
-#include <vector>
-
-#include "map-parser.hpp"
-#include "exceptions/map/malformed-file-exception.hpp"
-#include "game/player.hpp"
+#include "exceptions/exception.hpp"
 
 namespace bombherman
 {
-	namespace map
-	{	
-		class Map
+	namespace exceptions
+	{
+		class TooManyPlayersException :
+			public Exception 
 		{
 		public:
-			Map();
-			Map(Grid &);
-			Map(std::string);
-			virtual ~Map();
-			bool isPlayer(char);
-			char get(Coords);
-			Coords & getCoords(int);
-			void placePlayers();
-		private:
-			Grid map;
+			TooManyPlayersException() throw();
+			virtual ~TooManyPlayersException() throw ();
 		};
 	}
 }
 
-#endif // _MAP_HPP_
+#endif // _TOO_MANY_PLAYERS_EXCEPTION_HPP_

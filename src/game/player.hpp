@@ -15,12 +15,15 @@ namespace bombherman
 	class Player
 	{
 	public:
-		Player(int, map::Coords &);
+		virtual ~Player();
 		int getRange();
 		map::Coords & getCoords();
 		bool isAbleToPlantBomb();
 		int getScore();
 		int getId();
+		static std::vector< Player * > & getPlayers();
+		static Player & getPlayer(int);
+		static void newPlayer();
 		void setRange(int);
 		void go(map::Direction);
 		void plantBomb();
@@ -28,13 +31,16 @@ namespace bombherman
 		void setPlantableBombs(int);
 		void addToPlantableBombs(int);
 		void resetToDefaultStats();
+		void setCoords(map::Coords &);
 	private:
+		Player(map::Coords &);
 		int plantableBombs;
 		int range;
 		int plantedBombs;
 		int score;
 		int id;
 		map::Coords coords;
+		static std::vector< Player * > players;
 	};
 };
 

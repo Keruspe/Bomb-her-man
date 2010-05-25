@@ -17,34 +17,16 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _MAP_HPP_
-#define _MAP_HPP_
+#include "too-many-players-exception.hpp"
 
-#include <vector>
+using namespace bombherman;
+using namespace bombherman::exceptions;
 
-#include "map-parser.hpp"
-#include "exceptions/map/malformed-file-exception.hpp"
-#include "game/player.hpp"
-
-namespace bombherman
+MalformedFileException::MalformedFileException() throw() :
+	Exception("Too many player creations have been called, you have reached the maximum number allowed.")
 {
-	namespace map
-	{	
-		class Map
-		{
-		public:
-			Map();
-			Map(Grid &);
-			Map(std::string);
-			virtual ~Map();
-			bool isPlayer(char);
-			char get(Coords);
-			Coords & getCoords(int);
-			void placePlayers();
-		private:
-			Grid map;
-		};
-	}
 }
 
-#endif // _MAP_HPP_
+MalformedFileException::~MalformedFileException() throw()
+{
+}
