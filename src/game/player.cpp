@@ -18,7 +18,8 @@ Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
 		plantedBombs (0),
 		score (0),
 		id (Player::players.size() + 1),
-		coords (map::Coords())
+		coords (map::Coords()),
+		orient(map::UP)
 {
 	Player::players.push_back(this);
 }
