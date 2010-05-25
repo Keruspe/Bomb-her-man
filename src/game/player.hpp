@@ -18,6 +18,7 @@ namespace bombherman
 		virtual ~Player();
 		int getRange();
 		map::Coords & getCoords();
+		map::Direction & getOrient();
 		bool isAbleToPlantBomb();
 		int getScore();
 		int getId();
@@ -41,6 +42,7 @@ namespace bombherman
 		int score;
 		int id;
 		map::Coords coords;
+		map::Direction orient;
 		static std::vector< Player * > players;
 	};
 };
