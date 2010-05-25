@@ -22,11 +22,11 @@
 using namespace bombherman;
 using namespace bombherman::exceptions;
 
-MalformedFileException::MalformedFileException() throw() :
+TooManyPlayersException::TooManyPlayersException() throw() :
 	Exception("Too many player creations have been called, you have reached the maximum number allowed.")
 {
 }
 
-MalformedFileException::~MalformedFileException() throw()
+TooManyPlayersException::~TooManyPlayersException() throw()
 {
 }

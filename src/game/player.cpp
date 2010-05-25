@@ -6,10 +6,11 @@
  */
 
 #include "player.hpp"
+#include "exceptions/too-many-players-exception.hpp"
 
 using namespace bombherman;
 
-Player::players = std::vector< Player >();
+std::vector<Player * > Player::players;
 
 Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
 		range (Config::getInt("defaultRange")),
@@ -75,8 +76,8 @@ Player::getPlayer(int playerNo)
 void
 Player::newPlayer()
 {
-	if (Player::players.size() >= Config::getInt("maxPlayers"))
-		throw exceptions::TooManyPlayersException;
+	if (Player::players.size() >= static_cast<unsigned>(Config::getInt("maxPlayers")))
+		throw exceptions::TooManyPlayersException();
 	Player::players.push_back(new Player());
 }
 
