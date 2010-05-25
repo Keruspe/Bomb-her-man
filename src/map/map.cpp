@@ -137,7 +137,7 @@ Map::movePlayer(Coords * coords, Direction & direction)
 		break;
 	case RIGHT:
 		move = Map::moveRight(coords);
-		move;
+		break;
 	}
 	if (! move)
 		return false;
