@@ -114,26 +114,11 @@ Game::play(bool newGame)
 			delete(currentMap);
 			currentMap = NULL;
 		}
-		
 		currentMap = new map::Map();
 		currentMap->newPlayer();
 		currentMap->newPlayer();
-		
-		map::Coords coords;
-		int size = Config::getInt("mapSize");
-		for(coords.y = 0 ; coords.y < size ; ++coords.y)
-		{
-			for(coords.x = 0 ; coords.x < size ; ++coords.x)
-			{
-				std::cout << currentMap->get(coords);
-			}
-			std::cout << std::endl;
-		}
-		
-		display::Display::setMap(currentMap);
 	}
-	else
-		display::Display::updatePlayers();
+	display::Display::setMap(currentMap);
 }
 
 void
@@ -211,18 +196,25 @@ Game::eventGame(void *event)
 		case SDLK_ESCAPE:
 			changeMenu(display::elements::Menu::INGAME, false);
 		break;
+		
 		// Player 1
 		case SDLK_UP:		// Up
 		case SDLK_DOWN:		// Down
 		case SDLK_RIGHT:	// Right
 		case SDLK_LEFT:		// Left
 		break;
+		case SDLK_SPACE:	// Bomb
+		break;
+		
 		// Player 2
 		case SDLK_e:		// Up
 		case SDLK_d:		// Down
 		case SDLK_f:		// Right
 		case SDLK_s:		// Left
 		break;
+		case SDLK_r:		// Bomb
+		break;
+		
 		default:
 		break;
 	}
