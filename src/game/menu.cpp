@@ -107,8 +107,10 @@ Menu::action()
 			switch ( this->current )
 			{
 				case 1:
-					Player::newPlayer();
-					Player::newPlayer();
+					for ( int i = 0, e = Config::getInt("nbPlayers") ; i < e ; ++i )
+						Player::newPlayer();
+					//for ( int i = 0, e = Config::getInt("nbAIs") ; i < e ; ++i )
+					//	AI::newAI();
 					Game::play();
 				break;
 				case 2:
@@ -243,7 +245,7 @@ Menu::right()
 			{
 				case 2:
 					n = Config::getInt("nbPlayers") + 1;
-					if ( n <= Config::getInt("maxPlayers") )
+					if ( n <= 2 )
 					{
 						Config::set("nbPlayers", n);
 						m = Config::getInt("maxPlayers");
