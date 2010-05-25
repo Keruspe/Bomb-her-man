@@ -39,6 +39,7 @@ namespace bombherman
 			virtual ~Map();
 			bool isPlayer(char);
 			void placePlayers();
+			static bool plantBomb(Coords &);
 			static char get(Coords);
 			static char get(int, int);
 			static bool movePlayer(Player *, Direction &);
