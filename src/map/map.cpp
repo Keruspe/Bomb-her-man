@@ -24,27 +24,29 @@ using namespace bombherman;
 using namespace bombherman::map;
 using namespace bombherman::exceptions;
 
-Map::Map() : map(Grid())
+Grid Map::map;
+
+Map::Map()
 {
-	MapGenerator::generate(map);
+	MapGenerator::generate(Map::map);
 }
 
-Map::Map(Grid & model) : map(Grid())
+Map::Map(Grid & model)
 {
-	for(int x(0) ; x < map.size ; ++x)
+	for(int x(0) ; x < Map::map.size ; ++x)
 	{
-		for(int y(0) ; y < map.size ; ++y)
+		for(int y(0) ; y < Map::map.size ; ++y)
 		{
-			map[y][x] = model[y][x];
+			Map::map[y][x] = model[y][x];
 		}
 	}
 }
 
-Map::Map(std::string path) : map(Grid())
+Map::Map(std::string path)
 {
 	try
 	{
-		if (! MapParser::parse(path, map))
+		if (! MapParser::parse(path, Map::map))
 		{
 			std::cerr << "The file in which the program looked "
 				<< "for the map was malformed." << std::endl;
@@ -71,22 +73,22 @@ Map::placePlayers()
 		while (true)
 		{
 			c = MapGenerator::getRandomCoords();
-			if(isPlayer(map[c.y][c.x])
-				|| (c.y != 0 && isPlayer(map[c.y - 1][c.x]))
-				|| (c.y != map.size - 1 && isPlayer(map[c.y+1][c.x]))
-				|| (c.x != 0 && isPlayer(map[c.y][c.x - 1]))
-				|| (c.x != map.size - 1 && isPlayer(map[c.y][c.x + 1])))
+			if(isPlayer(Map::map[c.y][c.x])
+				|| (c.y != 0 && isPlayer(Map::map[c.y - 1][c.x]))
+				|| (c.y != Map::map.size - 1 && isPlayer(Map::map[c.y+1][c.x]))
+				|| (c.x != 0 && isPlayer(Map::map[c.y][c.x - 1]))
+				|| (c.x != Map::map.size - 1 && isPlayer(Map::map[c.y][c.x + 1])))
 					continue;
 			if (c.y != 0)
-				map[c.y - 1][c.x] = NONE;
-			if (c.y != map.size - 1)
-				map[c.y + 1][c.x] = NONE;
+				Map::map[c.y - 1][c.x] = NONE;
+			if (c.y != Map::map.size - 1)
+				Map::map[c.y + 1][c.x] = NONE;
 			if (c.x != 0)
-				map[c.y][c.x - 1] = NONE;
-			if (c.x != map.size - 1)
-				map[c.y][c.x + 1] = NONE;
+				Map::map[c.y][c.x - 1] = NONE;
+			if (c.x != Map::map.size - 1)
+				Map::map[c.y][c.x + 1] = NONE;
 			(*i)->setCoords(c);
-			map[c.y][c.x] = (*i)->getId() + '0';
+			Map::map[c.y][c.x] = (*i)->getId() + '0';
 			break;
 		}
 	}
@@ -101,16 +103,16 @@ Map::isPlayer(char playerNo)
 char
 Map::get(Coords c)
 {
-	return map[c.y][c.x];
+	return Map::map[c.y][c.x];
 }
 
 Coords &
 Map::getCoords(int playerNo)
 {
 	Coords *coords = new Coords();
-	for(coords->y = 0 ; coords->y < map.size ; ++coords->y)
+	for(coords->y = 0 ; coords->y < Map::map.size ; ++coords->y)
 	{
-		for(coords->x = 0 ; coords->x < map.size ; ++coords->x)
+		for(coords->x = 0 ; coords->x < Map::map.size ; ++coords->x)
 		{
 			if (this->get(*coords) == playerNo + '0')
 				return *coords;
@@ -127,14 +129,61 @@ Map::movePlayer(Player * player, Direction & direction)
 	switch(direction)
 	{
 	case UP:
-		break;
+		return Map::moveUp(player);
 	case DOWN:
-		break;
+		return Map::moveDown(player);
 	case LEFT:
-		break;
+		return Map::moveLeft(player);
 	case RIGHT:
-		break;
+		return Map::moveRight(player);
 	}
-	return false;
+}
+
+bool
+Map::moveUp(Player * player)
+{
+	Coords c = player->getCoords();
+	if (c.y <= 0 || Map::map[c.y - 1][c.x] != NONE)
+		return false;
+	Map::map[c.y][c.x] = NONE;
+	--c.y;
+	Map::map[c.y][c.x] = '0' + player->getId();
+	return true;
+}
+
+bool
+Map::moveDown(Player * player)
+{
+	Coords c = player->getCoords();
+	if (c.y >= Map::map.size || Map::map[c.y + 1][c.x] != NONE)
+		return false;
+	Map::map[c.y][c.x] = NONE;
+	++c.y;
+	Map::map[c.y][c.x] = '0' + player->getId();
+	return true;
+}
+
+bool
+Map::moveLeft(Player * player)
+{
+	Coords c = player->getCoords();
+	if (c.x <= 0 || Map::map[c.y][c.x - 1] != NONE)
+		return false;
+	Map::map[c.y][c.x] = NONE;
+	--c.x;
+	Map::map[c.y][c.x] = '0' + player->getId();
+	return true;
+}
+
+bool
+Map::moveRight(Player * player)
+{
+	Coords c = player->getCoords();
+	if (c.x >= Map::map.size || Map::map[c.y][c.x + 1] != NONE)
+		return false;
+	Map::map[c.y][c.x] = NONE;
+	++c.x;
+	Map::map[c.y][c.x] = '0' + player->getId();
+	return true;
 }
 

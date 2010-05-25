@@ -43,7 +43,11 @@ namespace bombherman
 			void placePlayers();
 			static bool movePlayer(Player *, Direction &);
 		private:
-			Grid map;
+			static bool moveUp(Player *);
+			static bool moveDown(Player *);
+			static bool moveLeft(Player *);
+			static bool moveRight(Player *);
+			static Grid map;
 		};
 	}
 }
