@@ -37,9 +37,6 @@ Uint32 Display::heightMax = 0;
 Uint32 Display::width = 0;
 Uint32 Display::height = 0;
 
-TTF_Font *Display::fontTitle = NULL;
-TTF_Font *Display::fontNormal = NULL;
-
 SDL_Surface *Display::sBackground = NULL;
 
 map::Map *Display::gMap = NULL;
@@ -143,9 +140,6 @@ Display::init()
 	}
 	else
 	{
-		fontTitle = TTF_OpenFont(DATADIR"/biolinum.ttf", (height / 8));
-		fontNormal = TTF_OpenFont(DATADIR"/biolinum.ttf", (height / 15));
-		
 		textColor.r = 255;
 		textColor.g = 255;
 		textColor.b = 255;
@@ -153,11 +147,6 @@ Display::init()
 		highlightColor.r = 255;
 		highlightColor.g = 0;
 		highlightColor.b = 0;
-		if ( ( ! fontTitle ) || ( ! fontNormal ) )
-		{
-			bherr << TTF_GetError() << bhendl;
-			throw exceptions::display::NoSDLException("Impossible d'ouvrir la police");
-		}
 	}
 }
 
@@ -299,10 +288,6 @@ Display::quit()
 	//SDL_LockMutex(mUpdate);
 	SDL_DestroyMutex(mUpdate);
 	
-	TTF_CloseFont(fontTitle);
-	TTF_CloseFont(fontNormal);
-	fontTitle = NULL;
-	fontNormal = NULL;
 	TTF_Quit();
 	bhout << "Stop video" << bhendl;
 	sDisplay = NULL;
@@ -382,13 +367,23 @@ Display::displayMenu(Menu *menu)
 	std::vector< std::string> content = menu->getContent();
 	unsigned int current = menu->getCurrent();
 	bhout << "Displaying menu" << bhendl;
+	int fSize = 2 * content.size();
+	
+	TTF_Font *fontTitle = TTF_OpenFont(DATADIR"/biolinum.ttf", (height / fSize));
+	TTF_Font *fontNormal = TTF_OpenFont(DATADIR"/biolinum.ttf", (height / ( fSize * 2 )));
+	
+	if ( ( ! fontTitle ) || ( ! fontNormal ) )
+	{
+		bherr << TTF_GetError() << bhendl;
+		throw exceptions::display::NoSDLException("Impossible d'ouvrir la police");
+	}
 	
 	SDL_Surface *textSurface, *sMenu = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
 	SDL_BlitSurface(sBackground, NULL, sMenu, NULL);
-	Uint32 dy = ( TTF_FontLineSkip(fontTitle) + ( height / 15 ) ), bx = ( width / 2 );
+	Uint32 dy = ( TTF_FontLineSkip(fontTitle) + ( height / ( fSize * 2 ) ) ), bx = ( width / 2 );
 	SDL_Rect r;
 	r.x = 0;
-	r.y = ( ( height - ( dy * content.size() ) ) / 2 );
+	r.y = ( 2 *( height - ( dy * content.size() ) ) / 3 );
 	unsigned int e = content.size();
 	for ( unsigned int i = 0 ; i < e ; ++i )
 	{
@@ -409,6 +404,8 @@ Display::displayMenu(Menu *menu)
 	}
 	updateDisplay(sMenu);
 	SDL_FreeSurface(sMenu);
+	TTF_CloseFont(fontTitle);
+	TTF_CloseFont(fontNormal);
 }
 
 void

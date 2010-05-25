@@ -51,6 +51,7 @@ Menu::setContent()
 			this->content.push_back(_("Game"));
 			this->content.push_back(_("Play"));
 			this->content.push_back(_("Players: ") + Config::get("nbPlayers"));
+			this->content.push_back(_("AIs: ") + Config::get("nbAIs"));
 			this->content.push_back(_("Maps: ") + Config::get("nbMaps"));
 			this->content.push_back(_("Back"));
 		break;
@@ -112,6 +113,7 @@ Menu::action()
 				break;
 				case 2:
 				case 3:
+				case 4:
 				break;
 				default:
 					Game::changeMenu(MAIN);
@@ -173,7 +175,37 @@ Menu::left()
 		case GAME:
 			switch ( this->current )
 			{
-				case 1:
+				case 2:
+					n = Config::getInt("nbPlayers") - 1;
+					if ( n > 0 )
+					{
+						Config::set("nbPlayers", n);
+						if ( ( n == 1 ) && ( Config::getInt("nbAIs") == 0 ) )
+							Config::set("nbAIs", 1);
+						this->setContent();
+						Display::displayMenu(this);
+					}
+				break;
+				case 3:
+					n = Config::getInt("nbAIs") - 1;
+					if ( n >= 0 )
+					{
+						if ( ( n == 0 ) && ( Config::getInt("nbPlayers") == 1 ) )
+							Config::set("nbAIs", 1);
+						else
+							Config::set("nbAIs", n);
+						this->setContent();
+						Display::displayMenu(this);
+					}
+				break;
+				case 4:
+					n = Config::getInt("nbMaps") - 1;
+					if ( n > 0 )
+					{
+						Config::set("nbMaps", n);
+						this->setContent();
+						Display::displayMenu(this);
+					}
 				break;
 				default:
 				break;
@@ -201,7 +233,7 @@ Menu::left()
 void
 Menu::right()
 {
-	int n;
+	int n, m;
 	switch ( this->type )
 	{
 		case MAIN:
@@ -209,7 +241,38 @@ Menu::right()
 		case GAME:
 			switch ( this->current )
 			{
-				case 1:
+				case 2:
+					n = Config::getInt("nbPlayers") + 1;
+					if ( n <= Config::getInt("maxPlayers") )
+					{
+						Config::set("nbPlayers", n);
+						m = Config::getInt("maxPlayers");
+						if ( ( Config::getInt("nbAIs") + n ) > m )
+							Config::set("nbAIs", m - n);
+						this->setContent();
+						Display::displayMenu(this);
+					}
+				break;
+				case 3:
+					n = Config::getInt("nbAIs") + 1;
+					if ( n <= Config::getInt("maxPlayers") )
+					{
+						Config::set("nbAIs", n);
+						m = Config::getInt("maxPlayers");
+						if ( ( Config::getInt("nbPlayers") + n ) > m )
+							Config::set("nbPlayers", m - n);
+						this->setContent();
+						Display::displayMenu(this);
+					}
+				break;
+				case 4:
+					n = Config::getInt("nbMaps") + 1;
+					if ( n <= Config::getInt("maxMaps") )
+					{
+						Config::set("nbMaps", n);
+						this->setContent();
+						Display::displayMenu(this);
+					}
 				break;
 				default:
 				break;
