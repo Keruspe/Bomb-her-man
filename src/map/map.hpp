@@ -42,13 +42,13 @@ namespace bombherman
 			static bool plantBomb(Coords &);
 			static char get(Coords);
 			static char get(int, int);
-			static bool movePlayer(Player *, Direction &);
+			static bool movePlayer(Coords *, Direction &);
 			static void destroy(Coords &);
 		private:
-			static bool moveUp(Player *);
-			static bool moveDown(Player *);
-			static bool moveLeft(Player *);
-			static bool moveRight(Player *);
+			static bool moveUp(Coords *);
+			static bool moveDown(Coords *);
+			static bool moveLeft(Coords *);
+			static bool moveRight(Coords *);
 			static void applyBonus(char);
 			static Grid map;
 		};

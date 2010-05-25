@@ -121,82 +121,76 @@ Map::get(int x, int y)
 }
 
 bool
-Map::movePlayer(Player * player, Direction & direction)
+Map::movePlayer(Coords * coords, Direction & direction)
 {
+	bool move;
 	switch(direction)
 	{
 	case UP:
-		return Map::moveUp(player);
+		move = Map::moveUp(coords);
+		break;
 	case DOWN:
-		return Map::moveDown(player);
+		move = Map::moveDown(coords);
+		break;
 	case LEFT:
-		return Map::moveLeft(player);
+		move = Map::moveLeft(coords);
+		break;
 	case RIGHT:
-		return Map::moveRight(player);
+		move = Map::moveRight(coords);
+		move;
 	}
+	if (! move)
+		return false;
+	Map::applyBonus(Map::map[coords->y][coords->x]);
+	Map::map[coords->y][coords->x] = PLAYER;
+	return true;
 }
 
 bool
-Map::moveUp(Player * player)
+Map::moveUp(Coords * c)
 {
-	Coords *c = &(player->getCoords());
 	if (c->y <= 0 || Map::map[c->y - 1][c->x] == BARREL
 		|| Map::map[c->y - 1][c->x] == INDESTRUCTIBLE
 		|| Map::map[c->y - 1][c->x] == PLAYER)
 		return false;
 	Map::map[c->y][c->x] = NONE;
-	--(c->y);
-	player->setCoords(*c);
-	applyBonus(Map::map[c->y][c->x]);
-	Map::map[c->y][c->x] = PLAYER;
+	--c->y;
 	return true;
 }
 
 bool
-Map::moveDown(Player * player)
+Map::moveDown(Coords * c)
 {
-	Coords *c = &(player->getCoords());
 	if (c->y >= (Map::map.size - 1) || Map::map[c->y + 1][c->x] == BARREL
 		|| Map::map[c->y + 1][c->x] == INDESTRUCTIBLE
 		|| Map::map[c->y + 1][c->x] == PLAYER)
 		return false;
 	Map::map[c->y][c->x] = NONE;
-	++(c->y);
-	player->setCoords(*c);
-	applyBonus(Map::map[c->y][c->x]);
-	Map::map[c->y][c->x] = PLAYER;
+	++c->y;
 	return true;
 }
 
 bool
-Map::moveLeft(Player * player)
+Map::moveLeft(Coords * c)
 {
-	Coords *c = &(player->getCoords());
 	if (c->x <= 0 || Map::map[c->y][c->x - 1] == BARREL
 		|| Map::map[c->y][c->x - 1] == INDESTRUCTIBLE
 		|| Map::map[c->y][c->x - 1] == PLAYER)
 		return false;
 	Map::map[c->y][c->x] = NONE;
-	--(c->x);
-	player->setCoords(*c);
-	applyBonus(Map::map[c->y][c->x]);
-	Map::map[c->y][c->x] = PLAYER;
+	--c->x;
 	return true;
 }
 
 bool
-Map::moveRight(Player * player)
+Map::moveRight(Coords * c)
 {
-	Coords *c = &(player->getCoords());
 	if (c->x >= (Map::map.size - 1) || Map::map[c->y][c->x + 1] == BARREL
 		|| Map::map[c->y][c->x + 1] == INDESTRUCTIBLE
 		|| Map::map[c->y][c->x + 1] == PLAYER)
 		return false;
 	Map::map[c->y][c->x] = NONE;
-	++(c->x);
-	player->setCoords(*c);
-	applyBonus(Map::map[c->y][c->x]);
-	Map::map[c->y][c->x] = PLAYER;
+	++c->x;
 	return true;
 }
 

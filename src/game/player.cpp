@@ -105,7 +105,7 @@ bool
 Player::go(map::Direction direction)
 {
 	this->orient = direction;
-	return map::Map::movePlayer(this, direction);
+	return map::Map::movePlayer(&this->coords, direction);
 }
 
 void
