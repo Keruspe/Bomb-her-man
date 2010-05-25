@@ -25,6 +25,7 @@
 #include "map/map.hpp"
 
 #include "exceptions/display/nosdl-exception.hpp"
+#include "exceptions/display/nosvg-exception.hpp"
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -51,19 +52,26 @@ namespace bombherman
 			 * @param current The current active item of the menu
 			 */
 			static void displayMenu(std::vector< std::string> content, unsigned int current);
-			/// Display the map
+			/// Set the map
 			/**
-			 * @param map Pointer to the map to display
+			 * @param map Pointer to the map to use
 			 */
-			static void displayMap(map::Map *map);
+			static void setMap(map::Map *map);
+			
+			/// Update the barrels
+			static void updateBarrels();
+			/// Update the players
+			static void updatePlayers();
 		
 		private:
-			static SDL_Surface *rsvgToSurface(RsvgHandle *, double, double);
+			static SDL_Surface *svgToSurface(std::string);
 			static void initSurfaces();
 			static void cleanSurface(SDL_Surface *);
 			
 			static void updateDisplay(SDL_Surface *);
 			static void newDisplay(Uint32 adds = 0);
+			
+			static void updateMap();
 			
 			// To store the SDL display surface
 			static SDL_Surface *sDisplay;
@@ -85,19 +93,24 @@ namespace bombherman
 			// To store the SDL normal font
 			static TTF_Font *fontNormal;
 			
+			static SDL_Surface *sBackground;
 			
-			static SDL_Surface *gBackground;
+			static map::Map *gMap;
+			
+			static SDL_Surface *gMapLayer;
 			static SDL_Surface *gBarrelsLayer;
 			static SDL_Surface *gPlayersLayer;
 			
-			static SDL_Surface **gPlayers;
+			static SDL_Surface *gPlayers[2][4][2];
 			static SDL_Surface *gBomb;
 			static SDL_Surface *gExplosion;
 			static SDL_Surface *gBarrel;
 			static SDL_Surface *gWall;
 			static SDL_Surface *gBack;
 			
+			static int gMapSize;
 			static Uint32 gSize;
+			static SDL_Rect gBegin;
 		};
 	}
 }

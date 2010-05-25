@@ -16,8 +16,31 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "exceptions/display/nosdl-exception.hpp"
+#ifndef _DISPLAY_NOSVG_EXCEPTION_HPP_
+#define _DISPLAY_NOSVG_EXCEPTION_HPP_
 
-using namespace bombherman;
-using namespace bombherman::exceptions;
-using namespace bombherman::exceptions::display;
+#include "exceptions/exception.hpp"
+
+namespace bombherman
+{
+	namespace exceptions
+	{
+		namespace display
+		{
+			class NoSVGException :
+				public Exception
+			{
+			public:
+				/// Constructor
+				/**
+				 * @param m The message
+				 */
+				NoSVGException(const std::string &m) throw() : Exception("No SVG:" + m) {}
+				/// Destructor
+				virtual ~NoSVGException() throw() {}
+			};
+		}
+	}
+}
+
+#endif // _DISPLAY_NOSVG_EXCEPTION_HPP_

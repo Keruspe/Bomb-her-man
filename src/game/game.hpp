@@ -43,10 +43,14 @@ namespace bombherman
 		/// Change the menu
 		/**
 		 * @param type The new menu type
+		 * @param stopGame Set it to true (default) to stop the current game (if any)
 		 */
-		static void changeMenu(display::elements::Menu::Type type);
+		static void changeMenu(display::elements::Menu::Type type, bool stopGame = true);
 		/// Play
-		static void play();
+		/**
+		 * @param newGame Set it to true (default) if you want to start a new game
+		 */
+		static void play(bool newGame = true);
 		/// Stop
 		static void stop() { playing = false; }
 		/// Quit
