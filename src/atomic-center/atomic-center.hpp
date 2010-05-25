@@ -33,10 +33,11 @@ namespace bombherman
         class AtomicCenter
         {
         public:
-            static void plantBomb(map::Coords &, int playerId);
+            static void plantBomb (map::Coords &, int playerId);
         private:
-            static void explode ();
-            static std::vector<std::vector<Uint32> > bombList;
+            static int wait (void *);
+            static void explode (std::vector<int> *);
+            static std::vector<std::vector<int> > bombList;
         };
     }
 }
