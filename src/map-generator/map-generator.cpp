@@ -34,7 +34,7 @@ MapGenerator::generate(Grid& g)
 	for (std::vector< std::vector< char > >::iterator i = g.grid.begin(),
 		i_end = g.grid.end() ; i != i_end ; ++i)
 	{
-		i->resize(g.size, NONE);
+		i->resize(g.size, NOTHING);
 	}
 	for (c.x = 0; c.x < g.size; ++c.x)
 	{
@@ -78,7 +78,7 @@ MapGenerator::generate(Grid& g)
 	{
 		for (c.y = 0; c.y < g.size; ++c.y)
 		{
-			if (g[c.y][c.x] == NONE
+			if (g[c.y][c.x] == NOTHING
 				&& throwDice (Config::getInt("mgInsertionProbabilityBarrel")))
 					g[c.y][c.x] = BARREL;
 		}
