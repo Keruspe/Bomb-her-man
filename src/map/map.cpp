@@ -142,7 +142,7 @@ Map::movePlayer(Coords * coords, Direction & direction)
 	}
 	if (! move)
 		return false;
-	Map::applyBonus(static_cast<Bonus>(Map::map[coords->y][coords->x]));
+	Map::applyBonus(coords);
 	Map::map[coords->y][coords->x] = PLAYER;
 	return true;
 }
@@ -208,17 +208,30 @@ Map::destroy(Coords & c)
 }
 
 void
-Map::applyBonus(Bonus b)
+Map::applyBonus(Coords * c)
 {
-	switch(b)
+	Player * player = Player::playerAt(c);
+	if (player == 0)
+		return;
+	int variation(1);
+	switch(static_cast<Bonus>(Map::map[c->y][c->x]))
 	{
 	case NONE:
-	case BOMBUP:
-	case BOMBDOWN:
-	case FIREUP:
-	case FIREDOWN:
-	case FULLFIRE:
+		break;
 	case NULLFIRE:
+		variation *= 0; // will be minored by minRange
+	case FIREDOWN:
+		variation *= -1;
+	case FIREUP:
+		player->addToRange(variation * Config::getInt("rangeVariation"));
+		break;
+	case FULLFIRE:
+		player->setRange(Config::getInt("maxRange"));
+		break;
+	case BOMBDOWN:
+		variation *= -1;
+	case BOMBUP:
+		player->addToPlantableBombs(variation * Config::getInt("capacityVariation"));
 		break;
 	}
 }
