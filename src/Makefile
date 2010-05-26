@@ -20,16 +20,22 @@ FLAC_LDFLAGS=$(shell pkg-config --libs flac++)
 CXXFLAGS+=$(FLAC_CXXFLAGS)
 LDFLAGS+=$(FLAC_LDFLAGS)
 
-
 CXX=g++
 LD=g++
 
+<<<<<<< HEAD
+=======
+ECHO=echo
+>>>>>>> master
 
 all: $(OBJECTS)
-	$(LD) -o bomb-her-man $(OBJECTS) $(LDFLAGS)
+	@ $(ECHO) Linking bomb-her-man
+	@ $(LD) -o bomb-her-man $(OBJECTS) $(LDFLAGS)
 
 clean:
-	-rm -f $(OBJECTS) bomb-her-man 2>/dev/null
+	@ $(ECHO) Cleaning temporary files
+	@ -rm -f $(OBJECTS) 2>/dev/null
 
 .cpp.o:
-	$(CXX) -c $< -o $@ $(CXXFLAGS)
+	@ $(ECHO) Compiling $<
+	@ $(CXX) -c $< -o $@ $(CXXFLAGS)
