@@ -581,13 +581,19 @@ Display::movePlayer(Player *player, map::Direction goTo)
 	if ( player->go(goTo) )
 	{
 		map::Coords coords = player->getCoords();
-		SDL_Rect r, d;
-		d.x = 0;
-		d.y = 0;
-		r.x = coords.x * gSize;
-		r.y = coords.y * gSize;
-		d.w = r.w = gSize;
-		d.h = r.h = gSize;
+		SDL_Rect
+			r = {
+					coords.x * gSize,
+					coords.y * gSize,
+					gSize,
+					gSize
+				},
+			d = {
+					0,
+					0,
+					gSize,
+					gSize
+				};
 		Sint16 part = 0, cpart = 0;
 		if ( ANIM_IMAGES )
 		{
@@ -647,12 +653,13 @@ Display::movePlayer(Player *player, map::Direction goTo)
 	}
 	else if ( was != player->getOrient() )
 	{
-		SDL_Rect r;
 		map::Coords coords = player->getCoords();
-		r.x = coords.x * gSize;
-		r.y = coords.y * gSize;
-		r.w = gSize;
-		r.h = gSize;
+		SDL_Rect r = {
+					coords.x * gSize,
+					coords.y * gSize,
+					gSize,
+					gSize
+				};
 		SDL_Surface *sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
 		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
 		SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, NULL);
