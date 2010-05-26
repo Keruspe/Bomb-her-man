@@ -11,28 +11,32 @@
 #include <iostream>
 #include "map/map-utils.hpp"
 #include "game/player.hpp"
-#include "atomic-center.hpp"
 #include <SDL/SDL.h>
 
-using namespace bombherman;
-using namespace bombherman::map;
-using namespace bombherman::bomb;
-using namespace std;
 
-class Bomb {
-public:
-    Bomb (Player * player, Coords * coords);
-    Player * getPlayer ();
-    Uint32 getThreadId ();
-    Coords * getCoords ();
-    bool isExploding ();
-    virtual ~Bomb ();
-private:
-    Player * player;
-    Uint32 threadId;
-    Coords * coords;
-    bool exploding;
-};
+namespace bombherman
+{
+    namespace bomb
+    {
+        class Bomb {
+        public:
+            Bomb (Player * player, map::Coords coords);
+            Player * getPlayer ();
+            Uint32 getThreadId ();
+            map::Coords getCoords ();
+            bool isExploded ();
+            virtual ~Bomb ();
+        private:
+            static void explode (Bomb *);
+            static int wait (void *);
+            Player * player;
+            Uint32 threadId;
+            map::Coords coords;
+            bool exploded;
+            static char (* getMap)(int, int);
+        };
+    }
+}
 
 #endif	/* _BOMB_HPP */
 
