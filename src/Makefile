@@ -14,6 +14,7 @@ LDFLAGS=$(SDL_LDFLAGS) $(SVG_LDFLAGS)
 CXX=g++ $(CXXFLAGS)
 LD=g++
 
+RM=rm
 ECHO=echo
 
 all: $(OBJECTS)
@@ -22,7 +23,7 @@ all: $(OBJECTS)
 
 clean:
 	@ $(ECHO) Cleaning temporary files
-	@ -rm -f $(OBJECTS) 2>/dev/null
+	@ $(RM) -f $(shell find -name '*.o') 2>/dev/null
 
 .cpp.o:
 	@ $(ECHO) Compiling $<
