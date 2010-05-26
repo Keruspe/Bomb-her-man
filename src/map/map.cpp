@@ -236,3 +236,19 @@ Map::applyBonus(Coords * c)
 	}
 }
 
+void
+Map::toString()
+{
+	Coords c;
+	for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
+		i_end = Map::map.grid.end() ; i != i_end ; ++i)
+	{
+		for (std::vector< char >::iterator j = i->begin(), j_end = i->end() ;
+			j != j_end ; ++j)
+		{
+			std::cout << '[' << *j << ']';
+		}
+		std::cout << std::endl;
+	}
+}
+

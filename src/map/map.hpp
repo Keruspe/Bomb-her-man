@@ -44,6 +44,7 @@ namespace bombherman
 			static char get(int, int);
 			static bool movePlayer(Coords *, Direction &);
 			static void destroy(Coords &);
+			static void toString();
 		private:
 			static bool moveUp(Coords *);
 			static bool moveDown(Coords *);
