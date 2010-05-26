@@ -23,6 +23,7 @@ LDFLAGS+=$(FLAC_LDFLAGS)
 CXX=g++
 LD=g++
 
+RM=rm
 ECHO=echo
 
 all: $(OBJECTS)
@@ -31,7 +32,7 @@ all: $(OBJECTS)
 
 clean:
 	@ $(ECHO) Cleaning temporary files
-	@ -rm -f $(OBJECTS) 2>/dev/null
+	@ $(RM) -f $(shell find -name '*.o') 2>/dev/null
 
 .cpp.o:
 	@ $(ECHO) Compiling $<
