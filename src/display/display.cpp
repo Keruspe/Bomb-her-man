@@ -22,6 +22,8 @@
 #include <librsvg/rsvg-cairo.h>
 #include <cairo.h>
 
+#define FONT_FILE "biolinum.ttf"
+
 using namespace bombherman;
 
 SDL_Surface *Display::sDisplay = NULL;
@@ -29,37 +31,26 @@ Uint32 Display::flags = SDL_HWSURFACE;
 bool Display::isFullscreen = false;
 SDL_mutex *Display::mUpdate = SDL_CreateMutex();
 
-SDL_Color Display::textColor = SDL_Color();
-SDL_Color Display::highlightColor = SDL_Color();
+SDL_Color Display::textColor = {255, 255, 255, 0};
+SDL_Color Display::highlightColor = {255, 0, 0, 0};
 
 int Display::widthMax = 0;
 int Display::heightMax = 0;
 int Display::width = 0;
 int Display::height = 0;
 
+std::map<SDL_Surface *, void *> Display::buffers;
+
 SDL_Surface *Display::sBackground = NULL;
 
 map::Map *Display::gMap = NULL;
 
+SDL_Surface *Display::gScoresLayer = NULL;
 SDL_Surface *Display::gMapLayer = NULL;
 SDL_Surface *Display::gBarrelsLayer = NULL;
 SDL_Surface *Display::gPlayersLayer = NULL;
 
-SDL_Surface *Display::gPlayers[2][4][2] =
-{
-	{
-		{NULL, NULL},
-		{NULL, NULL},
-		{NULL, NULL},
-		{NULL, NULL}
-	},
-	{
-		{NULL, NULL},
-		{NULL, NULL},
-		{NULL, NULL},
-		{NULL, NULL}
-	}
-};
+std::vector< std::vector< std::vector<SDL_Surface *> > > Display::gPlayers;
 SDL_Surface *Display::gBomb = NULL;
 SDL_Surface *Display::gExplosion = NULL;
 SDL_Surface *Display::gBarrel = NULL;
@@ -69,8 +60,7 @@ SDL_Surface *Display::gBack = NULL;
 
 int Display::gMapSize = 0;
 Uint32 Display::gSize = 0;
-SDL_Rect Display::gBegin;
-SDL_Rect Display::gBeginPlayers;
+SDL_Rect Display::gZone;
 
 void
 Display::init()
@@ -79,7 +69,19 @@ Display::init()
 	height = Config::getInt("screenHeight");
 	gMapSize = Config::getInt("mapSize");
 	
-	bhout << "Initialize video" << bhendl;
+	unsigned int max = Config::getInt("maxPlayers");
+	for ( unsigned int p = 0 ; p < max ; ++p )
+	{
+		std::vector< std::vector<SDL_Surface *> > k;
+		for ( unsigned int i = 0 ; i < 4 ; ++i )
+		{
+			std::vector<SDL_Surface *> l;
+			for ( unsigned int j = 0 ; j < 2 ; ++j )
+				l.push_back(NULL);
+			k.push_back(l);
+		}
+		gPlayers.push_back(k);
+	}
 	
 	Uint32 wasInit = SDL_WasInit(SDL_INIT_EVERYTHING);
 	bool initSuccess(true);
@@ -98,26 +100,21 @@ Display::init()
 	if ( modes == reinterpret_cast<SDL_Rect**>(0) )
 		throw exceptions::display::NoSDLException("No modes available!");
 	
-	bool ok;
-	
-	ok = false;
+	bool ok = false;
 	if ( modes == reinterpret_cast<SDL_Rect**>(-1) )
 	{
-		bhout << "All resolutions available." << bhendl;
 		if ( ( width == 0 ) || ( height == 0 ) )
 			throw exceptions::display::NoSDLException("Can't choice the resolution");
-		else
-			ok = true;
 	}
 	else
 	{
-		/* Print valid modes */
-		bhout << "Available Modes" << bhendl;
 		for ( int i = 0 ; modes[i] ; ++i )
 		{
-			bhout << modes[i]->w << 'x' << modes[i]->h << bhendl;
 			if ( ( width == modes[i]->w ) && ( height == modes[i]->h ) )
+			{
 				ok = true;
+				break;
+			}
 		}
 	}
 	
@@ -132,27 +129,20 @@ Display::init()
 		heightMax = modes[0]->h;
 	}
 	
-	changeFullscreen();
-	
 	if ( TTF_Init() == -1 )
 	{
 		bherr << TTF_GetError() << bhendl;
 		throw exceptions::display::NoSDLException("Impossible d'initialiser l'utilisation des polices TrueType");
 	}
-	else
-	{
-		textColor.r = 255;
-		textColor.g = 255;
-		textColor.b = 255;
-		
-		highlightColor.r = 255;
-		highlightColor.g = 0;
-		highlightColor.b = 0;
-	}
+	
+	rsvg_init();
+	
+	
+	changeFullscreen();
 }
 
 SDL_Surface *
-Display::svgToSurface(std::string file)
+Display::svgToSurface(std::string file, Uint32 targetWidth, Uint32 targetHeight)
 {
 	GError **err = NULL;
 	
@@ -165,26 +155,27 @@ Display::svgToSurface(std::string file)
 	
 	rsvg_handle_get_dimensions(rsvg, &dims);
 	
-	double s = static_cast<double>(Display::gSize) / static_cast<double>(dims.width);
+	double sW = static_cast<double>(targetWidth) / static_cast<double>(dims.width);
+	double sH = static_cast<double>(targetHeight) / static_cast<double>(dims.height);
 	
-	Uint32 stride = 4 * gSize;
-	void *buffer = calloc(stride * gSize, 1);
+	Uint32 stride = 4 * targetWidth;
+	void *buffer = calloc(stride * targetHeight, 1);
 	
-	cairo_surface_t *cSurface = cairo_image_surface_create_for_data(static_cast<unsigned char *>(buffer), CAIRO_FORMAT_ARGB32, gSize, gSize, stride);
+	cairo_surface_t *cSurface = cairo_image_surface_create_for_data(static_cast<unsigned char *>(buffer), CAIRO_FORMAT_ARGB32, targetWidth, targetHeight, stride);
 	cairo_t *cObject = cairo_create(cSurface);
 	
-	cairo_scale(cObject, s, s);
+	cairo_scale(cObject, sW, sH);
 	
 	rsvg_handle_render_cairo(rsvg, cObject);
 	
 	cairo_surface_finish(cSurface);
 	
-	SDL_Surface *ret = SDL_CreateRGBSurfaceFrom(buffer, gSize, gSize, 32, stride, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+	SDL_Surface *ret = SDL_CreateRGBSurfaceFrom(buffer, targetWidth, targetHeight, 32, stride, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
 	
 	g_object_unref(rsvg);
 	cairo_destroy(cObject);
 	cairo_surface_destroy(cSurface);
-	//free(buffer);
+	buffers[ret] = buffer;
 	
 	return ret;
 }
@@ -192,14 +183,17 @@ Display::svgToSurface(std::string file)
 void
 Display::initSurfaces()
 {
-	rsvg_init();
-	
-	
 	// Logo
 	SDL_Surface *icon = svgToSurface(DATADIR"/bomb-her-man.svg");
 	//SDL_WM_SetIcon(icon, NULL);
 	SDL_FreeSurface(icon);
 	icon = NULL;
+	
+	
+	// sBackground
+	cleanSurface(sBackground);
+	sBackground = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
+	SDL_FillRect(sBackground, NULL, 0x00444444);
 	
 	
 	// gBomb
@@ -237,8 +231,6 @@ Display::initSurfaces()
 			}
 		}
 	}
-	
-	rsvg_term();
 }
 
 void
@@ -246,6 +238,12 @@ Display::cleanSurface(SDL_Surface *surf)
 {
 	if ( surf )
 	{
+		std::map<SDL_Surface *, void *>::iterator i = buffers.find(surf);
+		if ( i != buffers.end() )
+		{
+			free(i->second);
+			buffers.erase(i);
+		}
 		SDL_FreeSurface(surf);
 		surf = NULL;
 	}
@@ -278,20 +276,14 @@ Display::quit()
 		}
 	}
 	
-	
 	//SDL_LockMutex(mUpdate);
 	SDL_DestroyMutex(mUpdate);
 	
+	rsvg_term();
 	TTF_Quit();
-	bhout << "Stop video" << bhendl;
 	sDisplay = NULL;
 	if ( SDL_WasInit(SDL_INIT_VIDEO) )
-	{
 		SDL_QuitSubSystem(SDL_INIT_VIDEO);
-		bhout << "Video stopped" << bhendl;
-	}
-	else
-		bhout << "Video already stopped" << bhendl;
 }
 
 void
@@ -328,24 +320,19 @@ Display::changeFullscreen()
 	if ( height < width )
 	{
 		gSize = height / gMapSize;
-		gBegin.x = width - height;
-		gBegin.y = 0;
-		gBegin.w = gBegin.x + height;
-		gBegin.h = gBegin.y + height;
+		gZone.x = width - height;
+		gZone.y = 0;
 	}
 	else
 	{
 		gSize = width / gMapSize;
-		gBegin.x = 0;
-		gBegin.y = height - width;
-		gBegin.w = gBegin.x + width;
-		gBegin.h = gBegin.y + width;
+		gZone.x = 0;
+		gZone.y = height - width;
 	}
-	gBeginPlayers = gBegin;
+	gZone.w = width - gZone.x;
+	gZone.h = height - gZone.y;
 	
-	cleanSurface(sBackground);
-	sBackground = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
-	SDL_FillRect(sBackground, NULL, 0x00444444);
+	
 	initSurfaces();
 	SDL_UnlockMutex(mUpdate);
 }
@@ -371,11 +358,10 @@ Display::displayMenu(Menu *menu)
 	
 	std::vector< std::string> content = menu->getContent();
 	unsigned int current = menu->getCurrent();
-	bhout << "Displaying menu" << bhendl;
 	int fSize = 2 * content.size();
 	
-	TTF_Font *fontTitle = TTF_OpenFont(DATADIR"/biolinum.ttf", (height / fSize));
-	TTF_Font *fontNormal = TTF_OpenFont(DATADIR"/biolinum.ttf", (height / ( fSize * 2 )));
+	TTF_Font *fontTitle = TTF_OpenFont(DATADIR"/"FONT_FILE, (height / fSize));
+	TTF_Font *fontNormal = TTF_OpenFont(DATADIR"/"FONT_FILE, (height / ( fSize * 2 )));
 	
 	if ( ( ! fontTitle ) || ( ! fontNormal ) )
 	{
@@ -414,6 +400,89 @@ Display::displayMenu(Menu *menu)
 }
 
 void
+Display::updateScores()
+{
+	if ( ! sDisplay ) init();
+	
+	if ( ( gZone.x == 0 ) && ( gZone.y == 0 ) ) return;
+	
+	SDL_Rect z;
+	z.x = 0;
+	z.y = 0;
+	z.w = gZone.x;
+	z.h = gZone.y;
+	
+	unsigned int nbPlayers = Config::getInt("nbPlayers"), nbAIs = Config::getInt("nbAIs");
+	unsigned int nbAll = ( nbPlayers + nbAIs );
+	
+	cleanSurface(gScoresLayer);
+	gScoresLayer = SDL_CreateRGBSurface(flags, z.w, z.h, 32, 0, 0, 0, 0);
+	
+	SDL_Surface *s = SDL_CreateRGBSurface(flags, z.w, z.h, 32, 0, 0, 0, 0);
+	SDL_FillRect(s, NULL, 0x00FF00FF);
+	SDL_BlitSurface(s, NULL, gScoresLayer, NULL);
+	SDL_FreeSurface(s);
+	
+	Sint32 *scores = reinterpret_cast<Sint32 *>(malloc(nbAll * sizeof(Sint32)));
+	int max = -1;
+	bool neutral = false;
+	std::vector< Player * > players = Player::getPlayers();
+	for ( std::vector< Player * >::iterator i = players.begin(), e = players.end() ; i != e ; ++i )
+	{
+		Sint32 s = (*i)->getScore();
+		if ( s > max ) max = s;
+		else if ( s == max ) neutral = true;
+		scores[(*i)->getId()-1] = s;
+	}
+	/*
+	std::vector< Player * > ais = AI::getAIs();
+	for ( std::vector< Player * >::iterator i = ais.begin(), e = ais.end() ; i != e ; ++i )
+	{
+		scores[(*i)->getId()-1] = (*i)->getScore();
+	}
+	*/
+	
+	Uint16 dx = 0, dy = 0;
+	if ( z.h < z.w )
+		dx = z.w / nbAll; // Horizontal
+	else
+		dy = z.h / nbAll; // Vertical
+	Uint32 sSize = ( dx + dy ) / 4;
+	
+	// Scores heads
+	SDL_Surface *sWin = svgToSurface(DATADIR"/scores/win.svg", sSize, sSize);
+	SDL_Surface *sLose = svgToSurface(DATADIR"/scores/lose.svg", sSize, sSize);
+	SDL_Surface *sEqual = svgToSurface(DATADIR"/scores/equal.svg", sSize, sSize);
+	
+	TTF_Font *font = TTF_OpenFont(DATADIR"/"FONT_FILE, (2));
+	
+	for ( unsigned int i = 0 ; i < nbAll ; ++i )
+	{
+		int s = scores[i];
+		
+		SDL_Rect h, t;
+		
+		h.x = ( sSize / 2 ) + i * dx;
+		h.y = ( sSize / 2 ) + i * dy;
+		h.w = h.h = sSize;
+		
+		t.w = z.w - ( sSize / 2 );
+		t.h = z.h - ( sSize / 2 );
+		
+		SDL_BlitSurface(( s == max ) ? ( ( neutral ) ? ( sEqual ) : ( sWin ) ) : ( sLose ), NULL, gScoresLayer, &h);
+	}
+	
+	updateDisplay(gScoresLayer);
+	
+	free(scores);
+	TTF_CloseFont(font);
+	
+	SDL_FreeSurface(sWin);
+	SDL_FreeSurface(sLose);
+	SDL_FreeSurface(sEqual);
+}
+
+void
 Display::setMap(map::Map *map)
 {
 	if ( ! sDisplay ) init();
@@ -426,16 +495,19 @@ Display::setMap(map::Map *map)
 void
 Display::updateMap()
 {
-	SDL_Rect r;
+	if ( ( ! gWall ) || ( ! gBack ) ) initSurfaces();
+	
 	cleanSurface(gMapLayer);
-	gMapLayer = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
-	SDL_BlitSurface(sBackground, NULL, gMapLayer, NULL);
-	if ( ! gWall ) initSurfaces();
+	gMapLayer = SDL_CreateRGBSurface(flags, gZone.w, gZone.h, 32, 0, 0, 0, 0);
+	
 	map::Coords coords;
-	r.y = gBegin.y;
+	SDL_Rect r;
+	r.x = 0;
+	r.y = 0;
+	r.w = gSize;
+	r.h = gSize;
 	for(coords.y = 0 ; coords.y < gMapSize ; ++coords.y)
 	{
-		r.x = gBegin.x;
 		for(coords.x = 0 ; coords.x < gMapSize ; ++coords.x)
 		{
 			if ( gMap->get(coords) == 'x' )
@@ -444,6 +516,7 @@ Display::updateMap()
 				SDL_BlitSurface(gBack, NULL, gMapLayer, &r);
 			r.x += gSize;
 		}
+		r.x = 0;
 		r.y += gSize;
 	}
 	
@@ -455,14 +528,14 @@ Display::updateBarrels()
 {
 	SDL_Rect r;
 	cleanSurface(gBarrelsLayer);
-	gBarrelsLayer = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
+	gBarrelsLayer = SDL_CreateRGBSurface(flags, gZone.w, gZone.h, 32, 0, 0, 0, 0);
 	SDL_BlitSurface(gMapLayer, NULL, gBarrelsLayer, NULL);
 	if ( ! gWall ) initSurfaces();
 	map::Coords coords;
-	r.y = gBegin.y;
+	r.y = 0;
 	for(coords.y = 0 ; coords.y < gMapSize ; ++coords.y)
 	{
-		r.x = gBegin.x;
+		r.x = 0;
 		for(coords.x = 0 ; coords.x < gMapSize ; ++coords.x)
 		{
 			if (  gMap->get(coords) == 't' )
@@ -478,76 +551,83 @@ Display::updateBarrels()
 void
 Display::updatePlayers()
 {
-	SDL_Rect r;
-	cleanSurface(gPlayersLayer);
-	gPlayersLayer = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
-	SDL_BlitSurface(gBarrelsLayer, NULL, gPlayersLayer, NULL);
 	if ( ! gPlayers[0][0][0] ) initSurfaces();
+	
+	SDL_Rect r;
+	r.w = gSize;
+	r.h = gSize;
+	cleanSurface(gPlayersLayer);
+	gPlayersLayer = SDL_CreateRGBSurface(flags, gZone.w, gZone.h, 32, 0, 0, 0, 0);
+	SDL_BlitSurface(gBarrelsLayer, NULL, gPlayersLayer, NULL);
 	map::Coords coords;
 	std::vector< Player * > players = Player::getPlayers();
 	for ( std::vector< Player * >::iterator i = players.begin(), e = players.end() ; i != e ; ++i )
 	{
 		map::Coords coords = (*i)->getCoords();
-		r.x = gBegin.x + ( coords.x * gSize );
-		r.y = gBegin.y + ( coords.y * gSize );
+		r.x = ( coords.x * gSize );
+		r.y = ( coords.y * gSize );
 		SDL_BlitSurface(gPlayers[(*i)->getId()-1][(*i)->getOrient()][0], NULL, gPlayersLayer, &r);
 	}
 	
-	updateDisplay(gPlayersLayer);
+	updateDisplay(gPlayersLayer, gZone);
 }
 
 void
 Display::movePlayer(Player *player, map::Direction goTo)
 {
+	SDL_Surface *sPlayer = NULL;
+	SDL_Rect r;
 	map::Direction was = player->getOrient();
 	if ( player->go(goTo) )
 	{
 		map::Coords coords = player->getCoords();
-		SDL_Rect r, d;
+		SDL_Rect d;
 		d.x = 0;
 		d.y = 0;
-		r.x = gBegin.x + coords.x * gSize;
-		r.y = gBegin.y + coords.y * gSize;
+		r.x = coords.x * gSize;
+		r.y = coords.y * gSize;
 		d.w = r.w = gSize;
 		d.h = r.h = gSize;
 		switch ( goTo )
 		{
 			case map::DOWN:
 				r.y -= gSize;
+				r.h += gSize;
 				d.y = gSize;
+			break;
 			case map::UP:
+				d.y = gSize;
 				r.h += gSize;
 			break;
 			case map::RIGHT:
 				r.x -= gSize;
+				r.w += gSize;
 				d.x = gSize;
+			break;
 			case map::LEFT:
+				d.x = gSize;
 				r.w += gSize;
 			break;
 		}
 		
-		SDL_Surface *sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
+		sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
 		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
 		SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &d);
-		
-
-		updateDisplay(sPlayer, r.x, r.y, r.w, r.h);
-		SDL_FreeSurface(sPlayer);
 	}
 	else if ( was != player->getOrient() )
 	{
 		map::Coords coords = player->getCoords();
-		SDL_Rect r;
-		r.x = gBegin.x + coords.x * gSize;
-		r.y = gBegin.y + coords.y * gSize;
+		r.x = coords.x * gSize;
+		r.y = coords.y * gSize;
 		r.w = gSize;
 		r.h = gSize;
-		SDL_Surface *sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
+		sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
 		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
 		SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, NULL);
-		
-
-		updateDisplay(sPlayer, r.x, r.y, r.w, r.h);
+	}
+	if ( sPlayer )
+	{
+		updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
 		SDL_FreeSurface(sPlayer);
 	}
 }
@@ -557,8 +637,8 @@ Display::plantBomb(map::Coords coords)
 {
 	SDL_Rect r;
 	
-	r.x = gBegin.x + coords.x * gSize;
-	r.y = gBegin.y + coords.y * gSize;
+	r.x = gZone.x + coords.x * gSize;
+	r.y = gZone.y + coords.y * gSize;
 	r.w = gSize;
 	r.h = gSize ;
 	
