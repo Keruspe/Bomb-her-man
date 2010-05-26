@@ -512,7 +512,7 @@ Display::updateMap()
 	{
 		for(coords.x = 0 ; coords.x < gMapSize ; ++coords.x)
 		{
-			if ( gMap->get(coords) == 'x' )
+			if ( gMap->get(coords) == map::INDESTRUCTIBLE )
 				SDL_BlitSurface(gWall, NULL, gMapLayer, &r);
 			else
 				SDL_BlitSurface(gBack, NULL, gMapLayer, &r);
@@ -540,7 +540,7 @@ Display::updateBarrels()
 		r.x = 0;
 		for(coords.x = 0 ; coords.x < gMapSize ; ++coords.x)
 		{
-			if (  gMap->get(coords) == 't' )
+			if (  gMap->get(coords) == map::BARREL )
 				SDL_BlitSurface(gBarrel, NULL, gBarrelsLayer, &r);
 			r.x += gSize;
 		}
@@ -613,7 +613,7 @@ Display::movePlayer(Player *player, map::Direction goTo)
 		
 		SDL_Surface *sPlayer = NULL;
 		unsigned int anim = 0;
-		do
+		while ( true )
 		{
 			switch ( goTo )
 			{
@@ -640,9 +640,10 @@ Display::movePlayer(Player *player, map::Direction goTo)
 			SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][anim++], NULL, sPlayer, &d);
 			updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
 			SDL_FreeSurface(sPlayer);
-			SDL_Delay(( ANIM_TIME/ANIM_IMAGES ) * ( anim != 1 ));
+			if ( anim < ANIM_IMAGES )
+				SDL_Delay(ANIM_TIME/ANIM_IMAGES);
+			else break;
 		}
-		while ( anim < ANIM_IMAGES );
 	}
 	else if ( was != player->getOrient() )
 	{

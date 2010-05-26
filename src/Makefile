@@ -15,10 +15,10 @@ CXX=g++ $(CXXFLAGS)
 LD=g++
 
 all: $(OBJECTS)
-	$(LD) -o main $(OBJECTS) $(LDFLAGS)
+	$(LD) -o bomb-her-man $(OBJECTS) $(LDFLAGS)
 
 clean:
-	-rm -f $(OBJECTS) 2>/dev/null
+	-rm -f $(OBJECTS) bomb-her-man 2>/dev/null
 
 .cpp.o:
 	$(CXX) -c $< -o $@

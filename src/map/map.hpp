@@ -44,12 +44,13 @@ namespace bombherman
 			static char get(int, int);
 			static bool movePlayer(Coords *, Direction &);
 			static void destroy(Coords &);
+			void toString();
 		private:
 			static bool moveUp(Coords *);
 			static bool moveDown(Coords *);
 			static bool moveLeft(Coords *);
 			static bool moveRight(Coords *);
-			static void applyBonus(char);
+			static void applyBonus(Coords *);
 			static Grid map;
 		};
 	}

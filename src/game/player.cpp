@@ -48,7 +48,7 @@ Player::getOrient()
 bool
 Player::isAbleToPlantBomb()
 {
-  return (this->plantableBombs > this->plantedBombs);
+	return (this->plantableBombs > this->plantedBombs);
 }
 
 int
@@ -72,8 +72,9 @@ Player::getPlayers()
 Player *
 Player::getPlayer(int playerNo)
 {
-	if (Player::players.size() < static_cast<unsigned>(playerNo) || 0 >= playerNo)
-		return 0;
+	if (Player::players.size() < static_cast<unsigned>(playerNo)
+		|| 0 >= playerNo)
+			return 0;
 	return Player::players[playerNo - 1];
 }
 
@@ -88,7 +89,8 @@ Player::newPlayer()
 void
 Player::clean()
 {
-	for (std::vector< Player * >::iterator i = Player::players.begin(), i_end = Player::players.end(); i != i_end ; ++i)
+	for (std::vector< Player * >::iterator i = Player::players.begin(),
+		i_end = Player::players.end(); i != i_end ; ++i)
 	{
 		delete(*i);
 	}
@@ -98,11 +100,22 @@ Player::clean()
 void
 Player::setRange(int range)
 {
-	this->range = range;
+	if (range < Config::getInt("minRange"))
+		this->range = Config::getInt("minRange");
+	else if (range > Config::getInt("maxRange"))
+		this->range = Config::getInt("maxRange");
+	else
+		this->range = range;
+}
+
+void
+Player::addToRange(int range)
+{
+	this->setRange(this->range + range);
 }
 
 bool
-Player::go(map::Direction direction)
+Player::go(map::Direction & direction)
 {
 	this->orient = direction;
 	return map::Map::movePlayer(&this->coords, direction);
@@ -117,13 +130,18 @@ Player::addToScore(int score)
 void
 Player::setPlantableBombs(int plantableBombs)
 {
-	this->plantableBombs =plantableBombs;
+	if(plantableBombs < Config::getInt("minCapacity"))
+		this->plantableBombs = Config::getInt("minCapacity");
+	else if (plantableBombs > Config::getInt("maxCapacity"))
+		this->plantableBombs = Config::getInt("maxCapacity");
+	else
+		this->plantableBombs = plantableBombs;
 }
 
 void
 Player::addToPlantableBombs(int plantableBombs)
 {
-	this->plantableBombs += plantableBombs;
+	this->setPlantableBombs(this->plantableBombs + plantableBombs);
 }
 
 void
@@ -139,3 +157,16 @@ Player::setCoords(map::Coords & c)
 {
 	this->coords = c;
 }
+
+Player *
+Player::playerAt(map::Coords * c)
+{
+	for (std::vector< Player * >::iterator i = Player::players.begin(),
+		i_end = Player::players.end() ; i != i_end ; ++i)
+	{
+		if((*i)->getCoords().x == c->x && (*i)->getCoords().y == c->y)
+			return *i;
+	}
+	return 0;
+}
+
