@@ -147,6 +147,8 @@ Map::movePlayer(Coords * coords, Direction & direction)
 		Map::applyBonus(coords);
 		Map::map[coords->y][coords->x] = PLAYER;
 	}
+	else
+		Map::map[coords->y][coords->x] = PLAYONBOMB;
 	return true;
 }
 
@@ -155,10 +157,10 @@ Map::moveUp(Coords * c)
 {
 	if (c->y <= 0 || Map::map[c->y - 1][c->x] == BARREL
 		|| Map::map[c->y - 1][c->x] == INDESTRUCTIBLE
+		|| Map::map[c->y - 1][c->x] == PLAYONBOMB
 		|| Map::map[c->y - 1][c->x] == PLAYER)
 		return false;
-	if (Map::map[c->y][c->x] != BOMB)
-		Map::map[c->y][c->x] = NOTHING;
+	Map::cleanOldSpot(c);
 	--c->y;
 	return true;
 }
@@ -168,10 +170,10 @@ Map::moveDown(Coords * c)
 {
 	if (c->y >= (Map::map.size - 1) || Map::map[c->y + 1][c->x] == BARREL
 		|| Map::map[c->y + 1][c->x] == INDESTRUCTIBLE
+		|| Map::map[c->y + 1][c->x] == PLAYONBOMB
 		|| Map::map[c->y + 1][c->x] == PLAYER)
 		return false;
-	if (Map::map[c->y][c->x] != BOMB)
-		Map::map[c->y][c->x] = NOTHING;
+	Map::cleanOldSpot(c);
 	++c->y;
 	return true;
 }
@@ -181,10 +183,10 @@ Map::moveLeft(Coords * c)
 {
 	if (c->x <= 0 || Map::map[c->y][c->x - 1] == BARREL
 		|| Map::map[c->y][c->x - 1] == INDESTRUCTIBLE
+		|| Map::map[c->y][c->x - 1] == PLAYONBOMB
 		|| Map::map[c->y][c->x - 1] == PLAYER)
 		return false;
-	if (Map::map[c->y][c->x] != BOMB)
-		Map::map[c->y][c->x] = NOTHING;
+	Map::cleanOldSpot(c);
 	--c->x;
 	return true;
 }
@@ -194,10 +196,10 @@ Map::moveRight(Coords * c)
 {
 	if (c->x >= (Map::map.size - 1) || Map::map[c->y][c->x + 1] == BARREL
 		|| Map::map[c->y][c->x + 1] == INDESTRUCTIBLE
+		|| Map::map[c->y][c->x + 1] == PLAYONBOMB
 		|| Map::map[c->y][c->x + 1] == PLAYER)
 		return false;
-	if (Map::map[c->y][c->x] != BOMB)
-		Map::map[c->y][c->x] = NOTHING;
+	Map::cleanOldSpot(c);
 	++c->x;
 	return true;
 }
@@ -241,6 +243,15 @@ Map::applyBonus(Coords * c)
 		player->addToPlantableBombs(variation * Config::getInt("capacityVariation"));
 		break;
 	}
+}
+
+void
+Map::cleanOldSpot(Coords * c)
+{
+	if (Map::map[c->y][c->x] == PLAYONBOMB)
+		Map::map[c->y][c->x] = BOMB;
+	else if (Map::map[c->y][c->x] != BOMB)
+		Map::map[c->y][c->x] = NOTHING;
 }
 
 void

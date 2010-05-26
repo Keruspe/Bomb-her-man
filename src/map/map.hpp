@@ -51,6 +51,7 @@ namespace bombherman
 			static bool moveLeft(Coords *);
 			static bool moveRight(Coords *);
 			static void applyBonus(Coords *);
+			static void cleanOldSpot(Coords *);
 			static Grid map;
 		};
 	}
