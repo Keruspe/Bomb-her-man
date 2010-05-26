@@ -213,16 +213,25 @@ Map::applyBonus(Coords * c)
 	Player * player = Player::playerAt(c);
 	if (player == 0)
 		return;
+	int variation(1);
 	switch(static_cast<Bonus>(Map::map[c->y][c->x]))
 	{
 	case NONE:
 		break;
-	case BOMBUP:
-	case BOMBDOWN:
-	case FIREUP:
-	case FIREDOWN:
-	case FULLFIRE:
 	case NULLFIRE:
+		variation *= 0; // will be minored by minRange
+	case FIREDOWN:
+		variation *= -1;
+	case FIREUP:
+		player->addToRange(variation * Config::getInt("rangeVariation"));
+		break;
+	case FULLFIRE:
+		player->setRange(Config::getInt("maxRange"));
+		break;
+	case BOMBDOWN:
+		variation *= -1;
+	case BOMBUP:
+		player->addToPlantableBombs(variation * Config::getInt("capacityVariation"));
 		break;
 	}
 }
