@@ -538,8 +538,11 @@ Display::updateBarrels()
 		r.x = 0;
 		for(coords.x = 0 ; coords.x < gMapSize ; ++coords.x)
 		{
-			if (  gMap->get(coords) == map::BARREL )
+			char c = gMap->get(coords)
+			if ( c == map::BARREL )
 				SDL_BlitSurface(gBarrel, NULL, gBarrelsLayer, &r);
+			else if ( ( c == map::BOMB ) || ( c == map::PLAYONBOMB ) )
+				SDL_BlitSurface(gBomb, NULL, gBarrelsLayer, &r);
 			r.x += gSize;
 		}
 		r.y += gSize;
