@@ -510,7 +510,7 @@ Display::updateMap()
 	{
 		for(coords.x = 0 ; coords.x < gMapSize ; ++coords.x)
 		{
-			if ( gMap->get(coords) == 'x' )
+			if ( gMap->get(coords) == map::INDESTRUCTIBLE )
 				SDL_BlitSurface(gWall, NULL, gMapLayer, &r);
 			else
 				SDL_BlitSurface(gBack, NULL, gMapLayer, &r);
@@ -538,7 +538,7 @@ Display::updateBarrels()
 		r.x = 0;
 		for(coords.x = 0 ; coords.x < gMapSize ; ++coords.x)
 		{
-			if (  gMap->get(coords) == 't' )
+			if (  gMap->get(coords) == map::BARREL )
 				SDL_BlitSurface(gBarrel, NULL, gBarrelsLayer, &r);
 			r.x += gSize;
 		}
