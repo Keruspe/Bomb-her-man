@@ -160,10 +160,7 @@ Map::moveUp(Coords * c)
 		|| Map::map[c->y - 1][c->x] == PLAYONBOMB
 		|| Map::map[c->y - 1][c->x] == PLAYER)
 		return false;
-	if (Map::map[c->y][c->x] == PLAYONBOMB)
-		Map::map[c->y][c->x] = BOMB;
-	else if (Map::map[c->y][c->x] != BOMB)
-		Map::map[c->y][c->x] = NOTHING;
+	Map::cleanOldSpot(c);
 	--c->y;
 	return true;
 }
@@ -176,10 +173,7 @@ Map::moveDown(Coords * c)
 		|| Map::map[c->y + 1][c->x] == PLAYONBOMB
 		|| Map::map[c->y + 1][c->x] == PLAYER)
 		return false;
-	if (Map::map[c->y][c->x] == PLAYONBOMB)
-		Map::map[c->y][c->x] = BOMB;
-	else if (Map::map[c->y][c->x] != BOMB)
-		Map::map[c->y][c->x] = NOTHING;
+	Map::cleanOldSpot(c);
 	++c->y;
 	return true;
 }
@@ -192,10 +186,7 @@ Map::moveLeft(Coords * c)
 		|| Map::map[c->y][c->x - 1] == PLAYONBOMB
 		|| Map::map[c->y][c->x - 1] == PLAYER)
 		return false;
-	if (Map::map[c->y][c->x] == PLAYONBOMB)
-		Map::map[c->y][c->x] = BOMB;
-	else if (Map::map[c->y][c->x] != BOMB)
-		Map::map[c->y][c->x] = NOTHING;
+	Map::cleanOldSpot(c);
 	--c->x;
 	return true;
 }
@@ -208,10 +199,7 @@ Map::moveRight(Coords * c)
 		|| Map::map[c->y][c->x + 1] == PLAYONBOMB
 		|| Map::map[c->y][c->x + 1] == PLAYER)
 		return false;
-	if (Map::map[c->y][c->x] == PLAYONBOMB)
-		Map::map[c->y][c->x] = BOMB;
-	else if (Map::map[c->y][c->x] != BOMB)
-		Map::map[c->y][c->x] = NOTHING;
+	Map::cleanOldSpot(c);
 	++c->x;
 	return true;
 }
@@ -255,6 +243,15 @@ Map::applyBonus(Coords * c)
 		player->addToPlantableBombs(variation * Config::getInt("capacityVariation"));
 		break;
 	}
+}
+
+void
+Map::cleanOldSpot(Coords * c)
+{
+	if (Map::map[c->y][c->x] == PLAYONBOMB)
+		Map::map[c->y][c->x] = BOMB;
+	else if (Map::map[c->y][c->x] != BOMB)
+		Map::map[c->y][c->x] = NOTHING;
 }
 
 void
