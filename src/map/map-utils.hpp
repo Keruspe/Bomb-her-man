@@ -69,7 +69,8 @@ namespace bombherman
 			BARREL = 't',
 			INDESTRUCTIBLE = 'x',
 			NOTHING = ' ',
-			PLAYER = 'p'
+			PLAYER = 'p',
+			PLAYONBOMB = 'z'
 		} Element;
 		
 		typedef enum
