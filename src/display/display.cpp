@@ -671,12 +671,13 @@ Display::movePlayer(Player *player, map::Direction goTo)
 void
 Display::plantBomb(map::Coords coords)
 {
-	SDL_Rect r;
+	SDL_Rect r = {
 	
-	r.x = gZone.x + coords.x * gSize;
-	r.y = gZone.y + coords.y * gSize;
-	r.w = gSize;
-	r.h = gSize ;
+			gZone.x + coords.x * gSize,
+			gZone.y + coords.y * gSize,
+			gSize,
+			gSize
+		};
 	
 	SDL_BlitSurface(gBomb, NULL, gBarrelsLayer, &r);
 	
