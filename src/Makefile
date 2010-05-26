@@ -23,10 +23,7 @@ LDFLAGS+=$(FLAC_LDFLAGS)
 CXX=g++
 LD=g++
 
-<<<<<<< HEAD
-=======
 ECHO=echo
->>>>>>> master
 
 all: $(OBJECTS)
 	@ $(ECHO) Linking bomb-her-man
