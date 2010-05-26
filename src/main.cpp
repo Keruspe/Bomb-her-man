@@ -22,12 +22,14 @@
 #include "game/game.hpp"
 #include "atomic-center/atomic-center.hpp"
 #include "map/map-utils.hpp"
+#include "audio/audio.hpp"
 
 using namespace bombherman;
 
 int
 main()
 {
+	Audio::init();
 	try
 	{
 		Game::main();
@@ -36,11 +38,12 @@ main()
 	{
 		bherr << "Exception: " << e.message() << bhendl;
 	}
-	
+	Audio::quit();
+	/*
 	map::Coords c;
 	c.x = 2;
 	c.y= 3;
 	bomb::AtomicCenter::plantBomb (c, 0);
-	
+	*/
 	return 0;
 }

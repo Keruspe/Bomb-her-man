@@ -43,6 +43,7 @@ namespace bombherman
 		static SDL_AudioSpec specs;
 		static Uint8 *audio_chunk;
 		static Uint32 audio_len;
+		static Uint32 audio_left;
 		static Uint8 *audio_pos;
 	};
 }

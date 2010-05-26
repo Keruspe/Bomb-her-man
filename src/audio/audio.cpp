@@ -29,6 +29,7 @@ SDL_AudioSpec Audio::specs;
 
 Uint8 *Audio::audio_chunk = NULL;
 Uint32 Audio::audio_len = 0;
+Uint32 Audio::audio_left = 0;
 Uint8 *Audio::audio_pos = NULL;
 
 void
@@ -47,19 +48,30 @@ Audio::init()
 	
 
 	/* Set the audio format */
-	specs.freq = 22050;
-	specs.format = AUDIO_S16;
-	specs.channels = 2;    /* 1 = mono, 2 = stereo */
-	specs.samples = 1024;  /* Good low-latency value for callback */
-	specs.callback = &Audio::callback;
-	specs.userdata = NULL;
+	SDL_AudioSpec s;
+	s.freq = 96000;
+	s.format = AUDIO_S16;
+	s.channels = 2;    /* 1 = mono, 2 = stereo */
+	s.samples = 4096;  /* Good low-latency value for callback */
+	s.callback = &Audio::callback;
+	s.userdata = NULL;
 
 	/* Open the audio device, forcing the desired format */
-	if ( SDL_OpenAudio(&specs, NULL) < 0 )
+	if ( SDL_OpenAudio(&s, &specs) < 0 )
 		throw exceptions::audio::NoSDLException("Couldn't open audio");
 	
 	//menu.init(DATADIR"/music/menu.flac");
 	//game.init(DATADIR"/music/game.flac");
+	SDL_AudioSpec *s2;
+	if ( ( s2 = SDL_LoadWAV(DATADIR"/music/tetris.wav", &specs, &audio_chunk, &audio_len) ) == NULL )
+		bherr << "Putain de bug ! " << SDL_GetError() << bhendl;
+	bhout << s.freq << " => " << s2->freq << bhendl;
+	bhout << s.format << " => " << s2->format << bhendl;
+	bhout << s.channels << " => " << s2->channels << bhendl;
+	bhout << s.samples << " => " << s2->samples << bhendl;
+	bhout << "Audio length :" << audio_len << bhendl;
+	audio_left = audio_len;
+	audio_pos = audio_chunk;
 	
 	SDL_PauseAudio(0);
 }
@@ -67,6 +79,7 @@ Audio::init()
 void
 Audio::quit()
 {
+	SDL_FreeWAV(audio_chunk);
 	SDL_CloseAudio();
 	
 	if ( SDL_WasInit(SDL_INIT_AUDIO) )
@@ -77,12 +90,15 @@ void
 Audio::callback(void *, Uint8 *stream, Uint32 len)
 {
 	/* Only play if we have data left */
-	if ( audio_len == 0 )
-		return;
-
+	if ( audio_left == 0 )
+	{
+		audio_left = audio_len;
+		audio_pos = audio_chunk;
+		SDL_PauseAudio(0);
+	}
 	/* Mix as much data as possible */
-	len = ( len > audio_len ? audio_len : len );
+	len = ( len > audio_left ? audio_left : len );
 	SDL_MixAudio(stream, audio_pos, len, SDL_MIX_MAXVOLUME);
 	audio_pos += len;
-	audio_len -= len;
+	audio_left -= len;
 }
