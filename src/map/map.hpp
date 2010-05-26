@@ -49,7 +49,7 @@ namespace bombherman
 			static bool moveDown(Coords *);
 			static bool moveLeft(Coords *);
 			static bool moveRight(Coords *);
-			static void applyBonus(char);
+			static void applyBonus(Bonus);
 			static Grid map;
 		};
 	}
