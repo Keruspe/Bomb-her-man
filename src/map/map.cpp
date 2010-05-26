@@ -142,7 +142,7 @@ Map::movePlayer(Coords * coords, Direction & direction)
 	}
 	if (! move)
 		return false;
-	Map::applyBonus(static_cast<Bonus>(Map::map[coords->y][coords->x]));
+	Map::applyBonus(coords);
 	Map::map[coords->y][coords->x] = PLAYER;
 	return true;
 }
@@ -208,11 +208,15 @@ Map::destroy(Coords & c)
 }
 
 void
-Map::applyBonus(Bonus b)
+Map::applyBonus(Coords * c)
 {
-	switch(b)
+	Player * player = Player::playerAt(c);
+	if (player == 0)
+		return;
+	switch(static_cast<Bonus>(Map::map[c->y][c->x]))
 	{
 	case NONE:
+		break;
 	case BOMBUP:
 	case BOMBDOWN:
 	case FIREUP:

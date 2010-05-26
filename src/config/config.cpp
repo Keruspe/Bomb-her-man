@@ -94,7 +94,13 @@ Config::init()
 		config["nbMaps"] = config["maxMaps"];
 	
 		config["bonusApparitionProbability"] = 50;
-
+		config["rangeVariation"] = 2;
+		config["maxRange"] = 14;
+		config["minRange"] = 1;
+		config["capacityVariation"] = 1;
+		config["maxCapacity"] = 5;
+		config["minCapacity"] = 1;
+		
 		/*
 		 * Then read the file
 		 */
