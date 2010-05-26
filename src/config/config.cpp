@@ -33,32 +33,33 @@ Config::Config() :
 
 Config &Config::operator=(std::string value)
 {
-	iValue = 0;
-	sValue = value;
+	this->sValue = value;
+	this->intValue();
 	
 	return (*this);
 }
 
 Config &Config::operator=(int value)
 {
-	iValue = value;
-	
-	std::ostringstream s("");
-	s << iValue;
-	sValue = s.str();
+	this->iValue = value;
+	this->stringValue();
 	
 	return (*this);
 }
 
-int
+void
 Config::intValue()
 {
-	if ( ( ! sValue.empty() ) && ( iValue == 0 ) )
-	{
-		std::istringstream s(sValue);
-		s >> iValue;
-	}
-	return iValue;
+	std::istringstream s(this->sValue);
+	s >> this->iValue;
+}
+
+void
+Config::stringValue()
+{
+	std::ostringstream s("");
+	s << this->iValue;
+	this->sValue = s.str();
 }
 
 /*
@@ -76,10 +77,13 @@ Config::init()
 		 * Initializing defaults values
 		 */
 		config["mapSize"] = 15;
-		config["defaultPlantableBombs"] =3;
-		config["defaultRange"] = 5;
+		
 		config["maxPlayers"] = 2;
 		config["maxMaps"] = 10;
+		
+		config["defaultPlantableBombs"] = 3;
+		config["defaultRange"] = 5;
+		
 		config["mgInsertionProbabilityBase"] = 100;
 		config["mgInsertionProbabilityBaseHorizontal"] = 50;
 		config["mgInsertionProbabilityBaseVertical"] = 50;
@@ -90,15 +94,26 @@ Config::init()
 		config["mgInsertionElementSizeMaxVertical"] = 3;
 		
 		config["nbAIs"] = 0;
-		config["nbPlayers"] = config["maxPlayers"];
-		config["nbMaps"] = config["maxMaps"];
-	
+		
 		config["bonusApparitionProbability"] = 50;
-
+		
 		/*
 		 * Then read the file
 		 */
 		read();
+		
+		/*
+		 * And force some minimals
+		 */
+		if ( config["nbPlayers"].iValue < 1 )
+		{
+			config["nbPlayers"] = config["maxPlayers"];
+			config["nbAIs"] = 0;
+		}
+		if ( config["nbMaps"].iValue < 1 )
+			config["nbMaps"] = config["maxMaps"];
+		if ( config["mapSize"].iValue < 15 )
+			config["mapSize"] = 15;
 	}
 }
 
@@ -151,7 +166,7 @@ int
 Config::getInt (std::string key)
 {
 	Config::init();
-	return (config[key]).intValue();
+	return (config[key]).iValue;
 }
 
 void
