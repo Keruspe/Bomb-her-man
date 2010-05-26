@@ -23,6 +23,7 @@
 #include <cairo.h>
 
 #define FONT_FILE "biolinum.ttf"
+#define ANIM_IMAGES 4
 
 using namespace bombherman;
 
@@ -76,7 +77,7 @@ Display::init()
 		for ( unsigned int i = 0 ; i < 4 ; ++i )
 		{
 			std::vector<SDL_Surface *> l;
-			for ( unsigned int j = 0 ; j < 2 ; ++j )
+			for ( unsigned int j = 0 ; j < ANIM_IMAGES ; ++j )
 				l.push_back(NULL);
 			k.push_back(l);
 		}
@@ -222,7 +223,7 @@ Display::initSurfaces()
 	{
 		for ( unsigned int i = 0 ; i < 4 ; ++i )
 		{
-			for ( unsigned int j = 0 ; j < 2 ; ++j )
+			for ( unsigned int j = 0 ; j < ANIM_IMAGES ; ++j )
 			{
 				cleanSurface(gPlayers[p][i][j]);
 				std::ostringstream f;
@@ -593,19 +594,19 @@ Display::movePlayer(Player *player, map::Direction goTo)
 			case map::DOWN:
 				r.y -= gSize;
 				r.h += gSize;
-				d.y = gSize / 4;
+				d.y = gSize / ANIM_IMAGES;
 			break;
 			case map::UP:
-				d.y = 3 * gSize / 4;
+				d.y = (ANIM_IMAGES-1) * gSize / ANIM_IMAGES;
 				r.h += gSize;
 			break;
 			case map::RIGHT:
 				r.x -= gSize;
 				r.w += gSize;
-				d.x = gSize / 4;
+				d.x = gSize / ANIM_IMAGES;
 			break;
 			case map::LEFT:
-				d.x = 3 * gSize / 4;
+				d.x = (ANIM_IMAGES-1) * gSize / ANIM_IMAGES;
 				r.w += gSize;
 			break;
 		}
@@ -614,39 +615,39 @@ Display::movePlayer(Player *player, map::Direction goTo)
 		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
 		SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &d);
 		
-		bool anim = true;
+		unsigned int anim = 0;
 		do
 		{
 			updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
 			SDL_FreeSurface(sPlayer);
 			
-			SDL_Delay(25);
+			SDL_Delay(100/ANIM_IMAGES);
 			
 			
 			switch ( goTo )
 			{
 				case map::DOWN:
-					d.y += gSize / 4;
+					d.y += gSize / ANIM_IMAGES;
 					if ( d.y >= gSize ) anim = false;
 				break;
 				case map::UP:
-					d.y -= gSize / 4;
+					d.y -= gSize / ANIM_IMAGES;
 					if ( d.y <= 0 ) anim = false;
 				break;
 				case map::RIGHT:
-					d.x += gSize / 4;
+					d.x += gSize / ANIM_IMAGES;
 					if ( d.x >= gSize ) anim = false;
 				break;
 				case map::LEFT:
-					d.x -= gSize / 4;
+					d.x -= gSize / ANIM_IMAGES;
 					if ( d.x <= 0 ) anim = false;
 				break;
 			}
 			
 			sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
 			SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
-			SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &d);
-		} while ( anim );
+			SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][++anim], NULL, sPlayer, &d);
+		} while ( anim < ANIM_IMAGES );
 	}
 	else if ( was != player->getOrient() )
 	{
