@@ -101,7 +101,7 @@ Map::plantBomb(Coords & c)
 	if (0 > c.x || 0 > c.y || Map::map.size <= c.y
 		|| Map::map.size <= c.x || Map::get(c) != PLAYER)
 			return false;
-	Map::map[c.y][c.x] = BOMB;
+	Map::map[c.y][c.x] = PLAYONBOMB;
 	return true;
 }
 
