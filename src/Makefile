@@ -2,17 +2,28 @@
 SOURCES=$(shell find -name '*.cpp')
 OBJECTS=$(SOURCES:.cpp=.o)
 
+CXXFLAGS=-Wall -Wextra -Weffc++ -Wstrict-null-sentinel -Wno-non-template-friend -Wold-style-cast -Wno-pmf-conversions -Wsign-promo -g -DGIT_ROOT=\"$(shell pwd)/..\" -I. -I./include
+LDFLAGS=
+
 SDL_CXXFLAGS=$(shell sdl-config --cflags)
 SDL_LDFLAGS=-lSDL_ttf $(shell sdl-config --libs)
+CXXFLAGS+=$(SDL_CXXFLAGS)
+LDFLAGS+=$(SDL_LDFLAGS)
 
-SVG_CFLAGS=$(shell pkg-config --cflags cairo librsvg-2.0)
+SVG_CXXFLAGS=$(shell pkg-config --cflags cairo librsvg-2.0)
 SVG_LDFLAGS=$(shell pkg-config --libs cairo librsvg-2.0)
+CXXFLAGS+=$(SVG_CXXFLAGS)
+LDFLAGS+=$(SVG_LDFLAGS)
 
-CXXFLAGS=-Wall -Wextra -Weffc++ -Wstrict-null-sentinel -Wno-non-template-friend -Wold-style-cast -Wno-pmf-conversions -Wsign-promo -g -DGIT_ROOT=\"$(shell pwd)/..\" -I. -I./include $(SDL_CXXFLAGS) $(SVG_CFLAGS)
-LDFLAGS=$(SDL_LDFLAGS) $(SVG_LDFLAGS)
+FLAC_CXXFLAGS=$(shell pkg-config --cflags flac++)
+FLAC_LDFLAGS=$(shell pkg-config --libs flac++)
+CXXFLAGS+=$(FLAC_CXXFLAGS)
+LDFLAGS+=$(FLAC_LDFLAGS)
 
-CXX=g++ $(CXXFLAGS)
+
+CXX=g++
 LD=g++
+
 
 all: $(OBJECTS)
 	$(LD) -o bomb-her-man $(OBJECTS) $(LDFLAGS)
@@ -21,4 +32,4 @@ clean:
 	-rm -f $(OBJECTS) bomb-her-man 2>/dev/null
 
 .cpp.o:
-	$(CXX) -c $< -o $@
+	$(CXX) -c $< -o $@ $(CXXFLAGS)
