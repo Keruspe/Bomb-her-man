@@ -592,20 +592,14 @@ Display::movePlayer(Player *player, map::Direction goTo)
 		{
 			case map::DOWN:
 				r.y -= gSize;
-				r.h += gSize;
 				d.y = gSize;
-			break;
 			case map::UP:
-				d.y = gSize;
 				r.h += gSize;
 			break;
 			case map::RIGHT:
 				r.x -= gSize;
-				r.w += gSize;
 				d.x = gSize;
-			break;
 			case map::LEFT:
-				d.x = gSize;
 				r.w += gSize;
 			break;
 		}
