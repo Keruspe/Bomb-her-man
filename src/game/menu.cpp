@@ -107,11 +107,7 @@ Menu::action()
 			switch ( this->current )
 			{
 				case 1:
-					for ( int i = 0, e = Config::getInt("nbPlayers") ; i < e ; ++i )
-						Player::newPlayer();
-					//for ( int i = 0, e = Config::getInt("nbAIs") ; i < e ; ++i )
-					//	AI::newAI();
-					Game::play();
+					Game::newGame();
 				break;
 				case 2:
 				case 3:
@@ -142,7 +138,7 @@ Menu::action()
 			switch ( this->current )
 			{
 				case 1:
-					Game::play(false);
+					Game::play();
 				break;
 				default:
 					Game::changeMenu(MAIN, false);

@@ -48,9 +48,6 @@ void Game::init()
 	SDL_EventState(SDL_USEREVENT, SDL_IGNORE);
 	SDL_EventState(SDL_SYSWMEVENT, SDL_IGNORE);
 	
-	if ( Config::getInt("mapSize") < 15 )
-		Config::set("mapSize", 15);
-	
 	isInit = true;
 }
 
@@ -95,33 +92,39 @@ Game::changeMenu(Menu::Type type, bool stopGame)
 		currentMap = NULL;
 		Player::clean();
 	}
-	if ( currentMenu )
-	{
-		delete(currentMenu);
-		currentMenu = NULL;
-	}
 	currentMenu = Menu::getMenu(type);
 	Display::displayMenu(currentMenu);
 }
 
 void
-Game::play(bool newGame)
+Game::newGame()
 {
-	if ( currentMenu )
+	for ( int i = 0, e = Config::getInt("nbPlayers") ; i < e ; ++i )
+		Player::newPlayer();
+	//for ( int i = 0, e = Config::getInt("nbAIs") ; i < e ; ++i )
+	//	AI::newAI();
+	
+	nextMap();
+}
+
+void
+Game::nextMap()
+{
+	if ( currentMap )
 	{
-		delete(currentMenu);
-		currentMenu = NULL;
+		delete(currentMap);
+		currentMap = NULL;
 	}
-	if ( newGame )
-	{
-		if ( currentMap )
-		{
-			delete(currentMap);
-			currentMap = NULL;
-		}
-		currentMap = new map::Map();
-		currentMap->placePlayers();
-	}
+	currentMap = new map::Map();
+	currentMap->placePlayers();
+	play();
+}
+
+void
+Game::play()
+{
+	currentMenu = NULL;
+	Display::updateScores();
 	Display::setMap(currentMap);
 }
 
@@ -132,11 +135,7 @@ Game::quit()
 	
 	Display::quit();
 	
-	if ( currentMenu )
-	{
-		delete(currentMenu);
-		currentMenu = NULL;
-	}
+	currentMenu = NULL;
 	
 	if ( currentMap )
 	{
