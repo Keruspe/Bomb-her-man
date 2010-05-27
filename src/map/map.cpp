@@ -34,14 +34,6 @@ Map::newMap()
 }
 
 void
-Map::newMap(Grid & model)
-{
-	for(Uint32 x(0) ; x < Map::map.size ; ++x)
-		for(Uint32 y(0) ; y < Map::map.size ; ++y)
-			Map::map[y][x] = model[y][x];
-}
-
-void
 Map::newMap(std::string path)
 {
 	try
