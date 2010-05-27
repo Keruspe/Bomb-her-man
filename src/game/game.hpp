@@ -67,7 +67,6 @@ namespace bombherman
 		
 		// To store the actual menu
 		static Menu *currentMenu;
-		static map::Map *currentMap;
 		
 		static std::vector< SDL_Thread * > *threads;
 	};

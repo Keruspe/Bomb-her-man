@@ -57,6 +57,10 @@ namespace bombherman
 		 */
 		unsigned int getCurrent() { return this->current; }
 		
+		/// Make the action
+		void action();
+		/// Make the quit action
+		void quit();
 		/// Up in the menu
 		void up();
 		/// Down in the menu
@@ -65,8 +69,6 @@ namespace bombherman
 		void left();
 		/// Go right (change value)
 		void right();
-		/// Make the action
-		void action();
 		
 		/// Destructor
 		virtual ~Menu() {}

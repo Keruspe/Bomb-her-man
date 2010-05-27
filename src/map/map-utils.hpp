@@ -33,9 +33,11 @@ namespace bombherman
 		{
 			Uint32 size;
 			std::vector< std::vector< char > > grid;
+			bool exists;
 			
 			Grid() : size(static_cast<Uint32>(Config::getInt("mapSize"))),
-				grid(std::vector< std::vector< char > >())
+				grid(std::vector< std::vector< char > >()),
+				exists(false)
 			{
 			}
 			
@@ -52,6 +54,11 @@ namespace bombherman
 			Uint32 max;
 			
 			Coords() : x(-1), y(-1),
+				max(static_cast<Uint32>(Config::getInt("mapSize") - 1))
+			{
+			}
+
+			Coords(Uint32 _x, Uint32 _y) : x(_x), y(_y),
 				max(static_cast<Uint32>(Config::getInt("mapSize") - 1))
 			{
 			}

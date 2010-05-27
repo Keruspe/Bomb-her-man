@@ -49,14 +49,10 @@ namespace bombherman
 		 * @param menu The pointer the menu to display
 		 */
 		static void displayMenu(Menu *menu);
-		/// Set the map
-		/**
-		 * @param map Pointer to the map to use
-		 */
-		static void setMap(map::Map *map);
-		
 		/// Update the scores "panel"
 		static void updateScores();
+		/// Update the map
+		static void updateMap();
 		/// Update the barrels
 		static void updateBarrels();
 		/// Update the players
@@ -81,7 +77,6 @@ namespace bombherman
 		static void updateDisplay(SDL_Surface *s, SDL_Rect z) { updateDisplay(s, z.x, z.y, z.w, z.h); }
 		static void updateDisplay(SDL_Surface *, Uint16 = 0, Uint16 = 0, Uint16 = 0, Uint16 = 0);
 		
-		static void updateMap();
 		
 		// To store the SDL display surface
 		static SDL_Surface *sDisplay;
@@ -100,8 +95,6 @@ namespace bombherman
 		
 		static std::map<SDL_Surface *, void *> buffers;
 		static SDL_Surface *sBackground;
-		
-		static map::Map *gMap;
 		
 		static SDL_Surface *gScoresLayer;
 		static SDL_Surface *gMapLayer;

@@ -21,8 +21,15 @@ AtomicCenter::plantBomb (Player * player, Coords c)
 	bombs.push_back (bomb);
 }
 
+void
+AtomicCenter::removeBomb (Bomb* bomb)
+{
+	
+}
+
 std::vector<Bomb *>
 AtomicCenter::getBombs ()
 {
 	return bombs;
 }
+

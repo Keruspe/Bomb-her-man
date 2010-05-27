@@ -31,6 +31,8 @@ void
 Map::newMap()
 {
 	MapGenerator::generate(Map::map);
+	Map::map.exists = true;
+	Map::placePlayers();
 }
 
 void
@@ -50,16 +52,16 @@ Map::newMap(std::string path)
 		bherr << "An error has been detected in " << path << bhendl;
 		throw e;
 	}
+	Map::map.exists = true;
+	Map::placePlayers();
 }
 
 void
 Map::deleteMap()
 {
-        for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
+	for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
 		i_end = Map::map.grid.end() ; i != i_end ; ++i)
-	{
-		i->clear();
-	}
+			i->clear();
 	Map::map.grid.clear();
 }
 
@@ -97,7 +99,7 @@ Map::placePlayers()
 bool
 Map::plantBomb(Coords & c)
 {
-	if (0 > c.x || 0 > c.y || Map::map.size <= c.y
+	if (! Map::map.exists || 0 > c.x || 0 > c.y || Map::map.size <= c.y
 		|| Map::map.size <= c.x || Map::get(c) != PLAYER)
 			return false;
 	Map::map[c.y][c.x] = PLAYONBOMB;
@@ -107,22 +109,26 @@ Map::plantBomb(Coords & c)
 char
 Map::get(Coords c)
 {
-	if (0 > c.x || 0 > c.y || Map::map.size <= c.y || Map::map.size <= c.x)
-		return 0;
+	if (! Map::map.exists || 0 > c.x || 0 > c.y
+		|| Map::map.size <= c.y || Map::map.size <= c.x)
+			return 0;
 	return Map::map[c.y][c.x];
 }
 
 char
 Map::get(Uint32 x, Uint32 y)
 {
-	if (0 > x || 0 > y || Map::map.size <= y || Map::map.size <= x)
-		return 0;
+	if (! Map::map.exists || 0 > x || 0 > y
+		|| Map::map.size <= y || Map::map.size <= x)
+			return 0;
 	return Map::map[y][x];
 }
 
 bool
 Map::movePlayer(Coords * coords, Direction & direction)
 {
+	if(! Map::map.exists)
+		return false;
 	bool move;
 	switch(direction)
 	{
@@ -256,6 +262,8 @@ Map::cleanOldSpot(Coords * c)
 void
 Map::toString()
 {
+	if(! Map::map.exists)
+		return;
 	Coords c;
 	for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
 		i_end = Map::map.grid.end() ; i != i_end ; ++i)

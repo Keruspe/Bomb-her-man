@@ -37,7 +37,6 @@ namespace bombherman
 			static void newMap(std::string);
 			static void deleteMap();
 			static bool isPlayer(char);
-			static void placePlayers();
 			static bool plantBomb(Coords &);
 			static char get(Coords);
 			static char get(Uint32, Uint32);
@@ -45,6 +44,7 @@ namespace bombherman
 			static void destroy(Coords &);
 			static void toString();
 		private:
+			static void placePlayers();
 			static bool moveUp(Coords *);
 			static bool moveDown(Coords *);
 			static bool moveLeft(Coords *);
