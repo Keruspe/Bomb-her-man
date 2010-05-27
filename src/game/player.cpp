@@ -98,6 +98,12 @@ Player::clean()
 }
 
 void
+Player::die()
+{
+	return;
+}
+
+void
 Player::setRange(int range)
 {
 	if (range < Config::getInt("minRange"))

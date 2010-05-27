@@ -27,6 +27,7 @@ namespace bombherman
 		static Player * getPlayer(int);
 		static void newPlayer();
 		static void clean();
+		void die();
 		void setRange(int);
 		void addToRange(int);
 		void plantBomb();
