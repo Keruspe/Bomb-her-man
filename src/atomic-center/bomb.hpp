@@ -33,7 +33,6 @@ namespace bombherman
             Uint32 threadId;
             map::Coords coords;
             bool exploded;
-            static char (* getMap)(int, int);
         };
     }
 }

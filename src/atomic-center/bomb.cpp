@@ -13,8 +13,6 @@ using namespace bombherman::bomb;
 using namespace bombherman::map;
 using namespace std;
 
-char (* Bomb::getMap)(int, int) = Map::get;
-
 Bomb::Bomb (Player * player, Coords coords) : player (player),
 		coords (coords),
 		exploded (false)
@@ -69,7 +67,6 @@ Bomb::wait (void * param)
 void
 Bomb::explode (Bomb * bomb)
 {
-	(* getMap)(1, 2);
 	SDL_mutex * mutex;
 	mutex = SDL_CreateMutex ();
 	SDL_mutexP (mutex);
@@ -85,7 +82,7 @@ Bomb::explode (Bomb * bomb)
 	char item = 'a';
 	for(int x = coords.x; x >= (coords.x - range) && x >= 0; x --) {
 		cout << "Parcours de la case : [" << x << ", " << coords.y << "] : ";
-//		item = Map::get(x, coords.y);
+		item = Map::get(x, coords.y);
 		if (item == 'x')
 		{
 			cout << "UN MUR §§§" << endl;
@@ -121,4 +118,5 @@ Bomb::explode (Bomb * bomb)
 //		cout << "Parcours de la case : [" << coords.x << ", " << y << "]" << endl;
 //	}
 	SDL_mutexV (mutex);
+	SDL_DestroyMutex (mutex);
 }
