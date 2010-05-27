@@ -340,14 +340,13 @@ Display::changeFullscreen()
 void
 Display::updateDisplay(SDL_Surface *s, Uint16 x, Uint16 y, Uint16 w, Uint16 h)
 {
-	SDL_Rect r;
-	r.x = x;
-	r.y = y;
-	r.w = w;
-	r.h = h;
+	SDL_Rect r = { x, y, w, h };
 	SDL_LockMutex(mUpdate);
+	if ( SDL_MUSTLOCK(sDisplay) )
+		SDL_LockSurface(sDisplay);
 	SDL_BlitSurface(s, NULL, sDisplay, &r);
 	SDL_UpdateRect(sDisplay, x, y, w, h);
+	SDL_UnlockSurface(sDisplay);
 	SDL_UnlockMutex(mUpdate);
 }
 
@@ -406,25 +405,33 @@ Display::updateScores()
 	
 	if ( ( gZone.x == 0 ) && ( gZone.y == 0 ) ) return;
 	
-	SDL_Rect z;
-	z.x = 0;
-	z.y = 0;
-	z.w = gZone.x;
-	z.h = gZone.y;
+	SDL_Rect z = {0, 0, 0, 0};
 	
-	unsigned int nbPlayers = Config::getInt("nbPlayers"), nbAIs = Config::getInt("nbAIs");
-	unsigned int nbAll = ( nbPlayers + nbAIs );
+	Uint32 nbAll = ( Config::getInt("nbPlayers") + Config::getInt("nbAIs") );
+	Uint16 dx = 0, dy = 0;
+	if ( width > height )
+	{	// Horizontal
+		z.w = gZone.x;
+		z.h = height;
+		dx = z.w / nbAll;
+	}
+	else
+	{	// Vertical
+		z.w = width;
+		z.h = gZone.y;
+		dy = z.h / nbAll;
+	}
+	Uint32 sSize = ( dx + dy ) / 4;
+	
+	bhout << "x=" << z.x << '\t' << "y=" << z.y << bhendl;
+	bhout << "w=" << z.w << '\t' << "h=" << z.h << bhendl;
 	
 	cleanSurface(gScoresLayer);
 	gScoresLayer = SDL_CreateRGBSurface(flags, z.w, z.h, 32, 0, 0, 0, 0);
-	
-	SDL_Surface *s = SDL_CreateRGBSurface(flags, z.w, z.h, 32, 0, 0, 0, 0);
-	SDL_FillRect(s, NULL, 0x00FF00FF);
-	SDL_BlitSurface(s, NULL, gScoresLayer, NULL);
-	SDL_FreeSurface(s);
+	SDL_BlitSurface(sBackground, &z, gScoresLayer, NULL);
 	
 	Sint32 *scores = reinterpret_cast<Sint32 *>(malloc(nbAll * sizeof(Sint32)));
-	int max = -1;
+	Sint32 max = -1;
 	bool neutral = false;
 	std::vector< Player * > players = Player::getPlayers();
 	for ( std::vector< Player * >::iterator i = players.begin(), e = players.end() ; i != e ; ++i )
@@ -438,16 +445,12 @@ Display::updateScores()
 	std::vector< Player * > ais = AI::getAIs();
 	for ( std::vector< Player * >::iterator i = ais.begin(), e = ais.end() ; i != e ; ++i )
 	{
-		scores[(*i)->getId()-1] = (*i)->getScore();
+		Sint32 s = (*i)->getScore();
+		if ( s > max ) max = s;
+		else if ( s == max ) neutral = true;
+		scores[(*i)->getId()-1] = s;
 	}
 	*/
-	
-	Uint16 dx = 0, dy = 0;
-	if ( z.h < z.w )
-		dx = z.w / nbAll; // Horizontal
-	else
-		dy = z.h / nbAll; // Vertical
-	Uint32 sSize = ( dx + dy ) / 4;
 	
 	// Scores heads
 	SDL_Surface *sWin = svgToSurface(DATADIR"/scores/win.svg", sSize, sSize);
@@ -472,7 +475,8 @@ Display::updateScores()
 		SDL_BlitSurface(( s == max ) ? ( ( neutral ) ? ( sEqual ) : ( sWin ) ) : ( sLose ), NULL, gScoresLayer, &h);
 	}
 	
-	updateDisplay(gScoresLayer);
+	
+	updateDisplay(gScoresLayer, z);
 	
 	free(scores);
 	TTF_CloseFont(font);
@@ -653,7 +657,7 @@ Display::movePlayer(Player *player, map::Direction goTo)
 				SDL_Delay(ANIM_TIME/ANIM_IMAGES);
 			else break;
 		}
-		#endif // USE_ANIMATION
+		#endif // ANIM_IMAGES > 1
 		sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
 		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
 		SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &l);
@@ -681,7 +685,6 @@ void
 Display::plantBomb(map::Coords coords)
 {
 	SDL_Rect r = {
-	
 			gZone.x + coords.x * gSize,
 			gZone.y + coords.y * gSize,
 			gSize,

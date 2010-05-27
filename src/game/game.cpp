@@ -129,32 +129,6 @@ Game::play()
 }
 
 void
-Game::quit()
-{
-	if ( ! isInit ) return;
-	
-	Display::quit();
-	
-	currentMenu = NULL;
-	
-	if ( currentMap )
-	{
-		delete(currentMap);
-		currentMap = NULL;
-	}
-	
-	for ( std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end() ; i != e ; ++i )
-	{
-		SDL_WaitThread((*i), NULL);
-	}
-	delete(threads);
-	
-	Menu::clear();
-	
-	Config::write();
-}
-
-void
 Game::threadClean(Uint32 id)
 {
 	for ( std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end() ; i != e ; ++i )
@@ -173,7 +147,7 @@ Game::eventMenu(void *event)
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
 		case SDLK_ESCAPE:
-			playing = false;
+			currentMenu->quit();
 		break;
 		case SDLK_UP:
 			currentMenu->up();
@@ -212,34 +186,36 @@ Game::eventGame(void *event)
 		
 		// Player 1
 		case SDLK_UP:		// Up
-			Display::movePlayer( Player::getPlayer(1), map::UP);
+			Display::movePlayer(Player::getPlayer(1), map::UP);
 		break;
 		case SDLK_DOWN:		// Down
-			Display::movePlayer( Player::getPlayer(1), map::DOWN);
+			Display::movePlayer(Player::getPlayer(1), map::DOWN);
 		break;
 		case SDLK_RIGHT:	// Right
-			Display::movePlayer( Player::getPlayer(1), map::RIGHT);
+			Display::movePlayer(Player::getPlayer(1), map::RIGHT);
 		break;
 		case SDLK_LEFT:		// Left
-			Display::movePlayer( Player::getPlayer(1), map::LEFT);
+			Display::movePlayer(Player::getPlayer(1), map::LEFT);
 		break;
 		case SDLK_SPACE:	// Bomb
+			//Player::getPlayer(1)->plantBomb();
 		break;
 		
 		// Player 2
 		case SDLK_e:		// Up
-			Display::movePlayer( Player::getPlayer(2), map::UP);
+			Display::movePlayer(Player::getPlayer(2), map::UP);
 		break;
 		case SDLK_d:		// Down
-			Display::movePlayer( Player::getPlayer(2), map::DOWN);
+			Display::movePlayer(Player::getPlayer(2), map::DOWN);
 		break;
 		case SDLK_f:		// Right
-			Display::movePlayer( Player::getPlayer(2), map::RIGHT);
+			Display::movePlayer(Player::getPlayer(2), map::RIGHT);
 		break;
 		case SDLK_s:		// Left
-			Display::movePlayer( Player::getPlayer(2), map::LEFT);
+			Display::movePlayer(Player::getPlayer(2), map::LEFT);
 		break;
 		case SDLK_r:		// Bomb
+			//Player::getPlayer(2)->plantBomb();
 		break;
 		
 		default:
@@ -249,4 +225,35 @@ Game::eventGame(void *event)
 	Game::threadClean(SDL_ThreadID());
 	
 	return 0;
+}
+
+void
+Game::quit()
+{
+	if ( ! isInit ) return;
+	if ( playing )
+	{
+		playing = false;
+		return;
+	}
+	
+	Display::quit();
+	
+	currentMenu = NULL;
+	
+	if ( currentMap )
+	{
+		delete(currentMap);
+		currentMap = NULL;
+	}
+	
+	for ( std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end() ; i != e ; ++i )
+	{
+		SDL_WaitThread((*i), NULL);
+	}
+	delete(threads);
+	
+	Menu::clear();
+	
+	Config::write();
 }
