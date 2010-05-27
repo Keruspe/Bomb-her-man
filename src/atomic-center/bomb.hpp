@@ -11,6 +11,7 @@
 #include <iostream>
 #include "map/map-utils.hpp"
 #include "game/player.hpp"
+#include "bombherman.hpp"
 #include <SDL/SDL.h>
 
 
@@ -27,6 +28,7 @@ namespace bombherman
             bool isExploded ();
             virtual ~Bomb ();
         private:
+            static SDL_mutex * mutex;
             static void explode (Bomb *);
             static int wait (void *);
             Player * player;
