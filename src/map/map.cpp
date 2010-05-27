@@ -27,12 +27,12 @@ using namespace bombherman::exceptions;
 
 Grid Map::map;
 
-Map::Map()
+void Map::newMap()
 {
 	MapGenerator::generate(Map::map);
 }
 
-Map::Map(Grid & model)
+void Map::newMap(Grid & model)
 {
 	for(Uint32 x(0) ; x < Map::map.size ; ++x)
 	{
@@ -43,7 +43,7 @@ Map::Map(Grid & model)
 	}
 }
 
-Map::Map(std::string path)
+void Map::newMap(std::string path)
 {
 	try
 	{
@@ -59,10 +59,6 @@ Map::Map(std::string path)
 		bherr << "An error has been detected in " << path << bhendl;
 		throw e;
 	}
-}
-
-Map::~Map()
-{
 }
 
 void

@@ -131,8 +131,8 @@ Coords &
 MapGenerator::getRandomCoords()
 {
 	Coords *c = new Coords();
-	c->x = MapGenerator::random(0, c->max);
-	c->y = MapGenerator::random(0, c->max);
+	c->x = static_cast<Uint32>(MapGenerator::random(0, c->max));
+	c->y = static_cast<Uint32>(MapGenerator::random(0, c->max));
 	return *c;
 }
 
