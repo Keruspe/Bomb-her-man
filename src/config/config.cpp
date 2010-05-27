@@ -95,7 +95,7 @@ Config::init()
 		
 		config["nbAIs"] = 0;
 		
-		config["bonusApparitionProbability"] = 50;
+		config["bonusApparitionProbability"] = 100 - config["mgInsertionProbabilityBarrel"];
 		config["rangeVariation"] = 2;
 		config["maxRange"] = 14;
 		config["minRange"] = 1;
