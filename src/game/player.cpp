@@ -100,7 +100,8 @@ Player::clean()
 void
 Player::die()
 {
-	return;
+	std::cout << "Aoutch !" << std::endl;
+	map::Map::removePlayer(this->coords);
 }
 
 void
