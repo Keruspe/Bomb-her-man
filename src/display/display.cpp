@@ -181,6 +181,8 @@ Display::svgToSurface(std::string file, Uint32 targetWidth, Uint32 targetHeight)
 void
 Display::initSurfaces()
 {
+	if ( ! sDisplay ) init();
+	
 	// Logo
 	SDL_Surface *icon = svgToSurface(DATADIR"/bomb-her-man.svg");
 	//SDL_WM_SetIcon(icon, NULL);
@@ -338,6 +340,7 @@ Display::changeFullscreen()
 void
 Display::updateDisplay(SDL_Surface *s, Uint16 x, Uint16 y, Uint16 w, Uint16 h)
 {
+	if ( ! sDisplay ) init();
 	SDL_Rect r = { x, y, w, h };
 	SDL_LockMutex(mUpdate);
 	if ( SDL_MUSTLOCK(sDisplay) )
@@ -403,23 +406,49 @@ Display::updateScores()
 	
 	if ( ( gZone.x == 0 ) && ( gZone.y == 0 ) ) return;
 	
-	SDL_Rect z = {0, 0, 0, 0};
+	SDL_Rect z = {0, 0, 0, 0}, dp = {0, 0, 0, 0}, dt = {0, 0, 0, 0};
 	
-	Uint32 nbAll = ( Config::getInt("nbPlayers") + Config::getInt("nbAIs") );
+	Uint32 sSize = 0, nbAll = ( Config::getInt("nbPlayers") + Config::getInt("nbAIs") );
+	if ( nbAll < 1 ) return;
+	
+	TTF_Font *font = TTF_OpenFont(DATADIR"/"FONT_FILE, (gSize*2));
+	if ( ! font )
+	{
+		bherr << TTF_GetError() << bhendl;
+		throw exceptions::display::NoSDLException("Impossible d'ouvrir la police");
+	}
+	
 	Uint16 dx = 0, dy = 0;
+	int wText, hText;
+	TTF_SizeText(font, "00", &wText, &hText);
 	if ( width > height )
-	{	// Horizontal
+	{	// Horizontal screen -> Vertical scores
 		z.w = gZone.x;
 		z.h = height;
 		dy = z.h / nbAll;
+		sSize = dy / 4;
+		dp.x = sSize / 2 - gSize / 2;
+		dp.y = 5 * sSize / 4;
+		if ( z.w < dy )
+		{
+			dt.x = dp.y;
+			dt.y = sSize / 2 - hText / 2;
+		}
+		else
+			dt.y = dp.y + sSize / 2 - hText / 2;
 	}
 	else
-	{	// Vertical
+	{	// Vertical screen -> Horizontal scores
 		z.w = width;
 		z.h = gZone.y;
 		dx = z.w / nbAll;
+		sSize = dx / 4;
+		dp.x = 5 * sSize / 4;
+		dp.y = sSize / 2 - gSize / 2;
+		if ( z.h < dx ) dx = z.h / nbAll;
+		dt.x = sSize / 2 - wText / 2;
+		dt.y = dp.x;
 	}
-	Uint32 sSize = ( dx + dy ) / 4;
 	
 	cleanSurface(gScoresLayer);
 	gScoresLayer = SDL_CreateRGBSurface(flags, z.w, z.h, 32, 0, 0, 0, 0);
@@ -451,23 +480,46 @@ Display::updateScores()
 	SDL_Surface *sWin = svgToSurface(DATADIR"/scores/win.svg", sSize, sSize);
 	SDL_Surface *sLose = svgToSurface(DATADIR"/scores/lose.svg", sSize, sSize);
 	SDL_Surface *sEqual = svgToSurface(DATADIR"/scores/equal.svg", sSize, sSize);
-	
-	TTF_Font *font = TTF_OpenFont(DATADIR"/"FONT_FILE, (2));
-	
+		
 	for ( unsigned int i = 0 ; i < nbAll ; ++i )
 	{
 		int s = scores[i];
 		
-		SDL_Rect h, t;
-		
-		h.x = ( sSize / 2 ) + i * dx;
-		h.y = ( sSize / 2 ) + i * dy;
-		h.w = h.h = sSize;
-		
-		t.w = z.w - ( sSize / 2 );
-		t.h = z.h - ( sSize / 2 );
+		SDL_Rect
+			h = {
+				( 2 * sSize / 3 ) + ( i * dx ),
+				( 2 * sSize / 3 ) + ( i * dy ),
+				sSize,
+				sSize
+			},
+			p = {
+				h.x + dp.x,
+				h.y + dp.y,
+				sSize,
+				sSize
+			},
+			t = {
+				h.x + dt.x,
+				h.y + dt.y,
+				z.w - ( sSize / 2 ),
+				z.h - ( sSize / 2 )
+			};
 		
 		SDL_BlitSurface(( s == max ) ? ( ( neutral ) ? ( sEqual ) : ( sWin ) ) : ( sLose ), NULL, gScoresLayer, &h);
+		
+		SDL_BlitSurface(gPlayers[i][map::DOWN][0], NULL, gScoresLayer, &p);
+		
+		SDL_Surface *textSurface = NULL;
+		std::ostringstream st;
+		st << std::setw(2) << std::setfill('0') << s;
+		const char *text = st.str().c_str();
+		if ( ! ( textSurface = TTF_RenderUTF8_Blended(font, text, textColor) ) )
+			bherr << "Can't display the line" << text << bhendl;
+		else
+		{
+			SDL_BlitSurface(textSurface, NULL, gScoresLayer, &t);
+			SDL_FreeSurface(textSurface);
+		}
 	}
 	
 	
@@ -515,11 +567,11 @@ Display::updateMap()
 void
 Display::updateBarrels()
 {
+	if ( ! gWall ) initSurfaces();
 	SDL_Rect r;
 	cleanSurface(gBarrelsLayer);
 	gBarrelsLayer = SDL_CreateRGBSurface(flags, gZone.w, gZone.h, 32, 0, 0, 0, 0);
 	SDL_BlitSurface(gMapLayer, NULL, gBarrelsLayer, NULL);
-	if ( ! gWall ) initSurfaces();
 	map::Coords coords;
 	r.y = 0;
 	for(coords.y = 0 ; coords.y < gMapSize ; ++coords.y)
@@ -567,6 +619,7 @@ Display::updatePlayers()
 void
 Display::movePlayer(Player *player, map::Direction goTo)
 {
+	if ( ! sDisplay ) init();
 	map::Direction was = player->getOrient();
 	if ( player->go(goTo) )
 	{
@@ -669,6 +722,7 @@ Display::movePlayer(Player *player, map::Direction goTo)
 void
 Display::plantBomb(map::Coords coords)
 {
+	if ( ! sDisplay ) init();
 	SDL_Rect r = {
 			gZone.x + coords.x * gSize,
 			gZone.y + coords.y * gSize,
