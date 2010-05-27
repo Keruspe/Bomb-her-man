@@ -14,11 +14,16 @@ LDFLAGS=$(SDL_LDFLAGS) $(SVG_LDFLAGS)
 CXX=g++ $(CXXFLAGS)
 LD=g++
 
+ECHO=echo
+
 all: $(OBJECTS)
-	$(LD) -o main $(OBJECTS) $(LDFLAGS)
+	@ $(ECHO) Linking bomb-her-man
+	@ $(LD) -o bomb-her-man $(OBJECTS) $(LDFLAGS)
 
 clean:
-	-rm -f $(OBJECTS) 2>/dev/null
+	@ $(ECHO) Cleaning temporary files
+	@ -rm -f $(OBJECTS) 2>/dev/null
 
 .cpp.o:
-	$(CXX) -c $< -o $@
+	@ $(ECHO) Compiling $<
+	@ $(CXX) -c $< -o $@

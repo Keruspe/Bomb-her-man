@@ -48,9 +48,6 @@ void Game::init()
 	SDL_EventState(SDL_USEREVENT, SDL_IGNORE);
 	SDL_EventState(SDL_SYSWMEVENT, SDL_IGNORE);
 	
-	if ( Config::getInt("mapSize") < 15 )
-		Config::set("mapSize", 15);
-	
 	isInit = true;
 }
 
@@ -95,33 +92,39 @@ Game::changeMenu(Menu::Type type, bool stopGame)
 		currentMap = NULL;
 		Player::clean();
 	}
-	if ( currentMenu )
-	{
-		delete(currentMenu);
-		currentMenu = NULL;
-	}
 	currentMenu = Menu::getMenu(type);
 	Display::displayMenu(currentMenu);
 }
 
 void
-Game::play(bool newGame)
+Game::newGame()
 {
-	if ( currentMenu )
+	for ( int i = 0, e = Config::getInt("nbPlayers") ; i < e ; ++i )
+		Player::newPlayer();
+	//for ( int i = 0, e = Config::getInt("nbAIs") ; i < e ; ++i )
+	//	AI::newAI();
+	
+	nextMap();
+}
+
+void
+Game::nextMap()
+{
+	if ( currentMap )
 	{
-		delete(currentMenu);
-		currentMenu = NULL;
+		delete(currentMap);
+		currentMap = NULL;
 	}
-	if ( newGame )
-	{
-		if ( currentMap )
-		{
-			delete(currentMap);
-			currentMap = NULL;
-		}
-		currentMap = new map::Map();
-		currentMap->placePlayers();
-	}
+	currentMap = new map::Map();
+	currentMap->placePlayers();
+	play();
+}
+
+void
+Game::play()
+{
+	currentMenu = NULL;
+	Display::updateScores();
 	Display::setMap(currentMap);
 }
 
@@ -132,11 +135,7 @@ Game::quit()
 	
 	Display::quit();
 	
-	if ( currentMenu )
-	{
-		delete(currentMenu);
-		currentMenu = NULL;
-	}
+	currentMenu = NULL;
 	
 	if ( currentMap )
 	{
@@ -205,8 +204,6 @@ Game::eventMenu(void *event)
 int
 Game::eventGame(void *event)
 {
-	Player *player1 = Player::getPlayer(1);
-	Player *player2 = Player::getPlayer(2);
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
 		case SDLK_ESCAPE:
@@ -215,32 +212,32 @@ Game::eventGame(void *event)
 		
 		// Player 1
 		case SDLK_UP:		// Up
-			Display::movePlayer(player1, map::UP);
+			Display::movePlayer( Player::getPlayer(1), map::UP);
 		break;
 		case SDLK_DOWN:		// Down
-			Display::movePlayer(player1, map::DOWN);
+			Display::movePlayer( Player::getPlayer(1), map::DOWN);
 		break;
 		case SDLK_RIGHT:	// Right
-			Display::movePlayer(player1, map::RIGHT);
+			Display::movePlayer( Player::getPlayer(1), map::RIGHT);
 		break;
 		case SDLK_LEFT:		// Left
-			Display::movePlayer(player1, map::LEFT);
+			Display::movePlayer( Player::getPlayer(1), map::LEFT);
 		break;
 		case SDLK_SPACE:	// Bomb
 		break;
 		
 		// Player 2
 		case SDLK_e:		// Up
-			Display::movePlayer(player2, map::UP);
+			Display::movePlayer( Player::getPlayer(2), map::UP);
 		break;
 		case SDLK_d:		// Down
-			Display::movePlayer(player2, map::DOWN);
+			Display::movePlayer( Player::getPlayer(2), map::DOWN);
 		break;
 		case SDLK_f:		// Right
-			Display::movePlayer(player2, map::RIGHT);
+			Display::movePlayer( Player::getPlayer(2), map::RIGHT);
 		break;
 		case SDLK_s:		// Left
-			Display::movePlayer(player2, map::LEFT);
+			Display::movePlayer( Player::getPlayer(2), map::LEFT);
 		break;
 		case SDLK_r:		// Bomb
 		break;

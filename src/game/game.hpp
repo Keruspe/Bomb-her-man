@@ -46,11 +46,12 @@ namespace bombherman
 		 * @param stopGame Set it to true (default) to stop the current game (if any)
 		 */
 		static void changeMenu(Menu::Type type, bool stopGame = true);
+		/// Launch a new game
+		static void newGame();
+		/// Got to next map
+		static void nextMap();
 		/// Play
-		/**
-		 * @param newGame Set it to true (default) if you want to start a new game
-		 */
-		static void play(bool newGame = true);
+		static void play();
 		/// Stop
 		static void stop() { playing = false; }
 		/// Quit

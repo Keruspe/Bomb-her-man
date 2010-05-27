@@ -42,7 +42,7 @@ MapParser::parse(std::string path, Grid & map)
 			{
 				switch(c = line.at(x))
 				{
-					case NONE:
+					case NOTHING:
 					case BARREL:
 					case INDESTRUCTIBLE:
 					case BOMB:

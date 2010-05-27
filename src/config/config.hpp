@@ -68,14 +68,8 @@ namespace bombherman
 		/// To set the new value (int)
 		Config &operator=(int);
 		
-		/// Get the int value a of parameter
-		/**
-		 * This function convert the string to an int
-		 * if necessary
-		 * 
-		 * @return The int value
-		 */
-		int intValue();
+		void intValue();
+		void stringValue();
 		
 		/// The value of an int parameter
 		int iValue;

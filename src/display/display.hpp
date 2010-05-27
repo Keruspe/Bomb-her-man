@@ -31,6 +31,8 @@
 #include <SDL_ttf.h>
 #include <librsvg/rsvg.h>
 
+#include <map>
+
 namespace bombherman
 {
 	class Display
@@ -53,6 +55,8 @@ namespace bombherman
 		 */
 		static void setMap(map::Map *map);
 		
+		/// Update the scores "panel"
+		static void updateScores();
 		/// Update the barrels
 		static void updateBarrels();
 		/// Update the players
@@ -70,10 +74,11 @@ namespace bombherman
 		static void plantBomb(map::Coords coords);
 	
 	private:
-		static SDL_Surface *svgToSurface(std::string);
+		static SDL_Surface *svgToSurface(std::string, Uint32 = gSize, Uint32 = gSize);
 		static void initSurfaces();
 		static void cleanSurface(SDL_Surface *);
 		
+		static void updateDisplay(SDL_Surface *s, SDL_Rect z) { updateDisplay(s, z.x, z.y, z.w, z.h); }
 		static void updateDisplay(SDL_Surface *, Uint16 = 0, Uint16 = 0, Uint16 = 0, Uint16 = 0);
 		
 		static void updateMap();
@@ -93,15 +98,17 @@ namespace bombherman
 		// Width and Height of the display
 		static int width, height;
 		
+		static std::map<SDL_Surface *, void *> buffers;
 		static SDL_Surface *sBackground;
 		
 		static map::Map *gMap;
 		
+		static SDL_Surface *gScoresLayer;
 		static SDL_Surface *gMapLayer;
 		static SDL_Surface *gBarrelsLayer;
 		static SDL_Surface *gPlayersLayer;
 		
-		static SDL_Surface *gPlayers[2][4][2];
+		static std::vector< std::vector< std::vector<SDL_Surface *> > > gPlayers;
 		static SDL_Surface *gBomb;
 		static SDL_Surface *gExplosion;
 		static SDL_Surface *gBarrel;
@@ -109,9 +116,8 @@ namespace bombherman
 		static SDL_Surface *gBack;
 		
 		static int gMapSize;
-		static Uint32 gSize;
-		static SDL_Rect gBegin;
-		static SDL_Rect gBeginPlayers;
+		static Uint16 gSize;
+		static SDL_Rect gZone;
 	};
 }
 

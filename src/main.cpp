@@ -18,6 +18,7 @@
  */
 
 #include "bombherman.hpp"
+#include "exceptions/exception.hpp"
 #include "game/game.hpp"
 #include "atomic-center/atomic-center.hpp"
 #include "map/map-utils.hpp"
@@ -27,7 +28,14 @@ using namespace bombherman;
 int
 main()
 {
-	Game::main();
+	try
+	{
+		Game::main();
+	}
+	catch ( exceptions::Exception &e )
+	{
+		bherr << "Exception: " << e.message() << bhendl;
+	}
 	Player::newPlayer ();
 	Player::newPlayer ();
 	Player * player1 = Player::getPlayer (1);

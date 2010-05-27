@@ -81,13 +81,13 @@ Map::placePlayers()
 				|| (c.x != Map::map.size - 1 && Map::map[c.y][c.x+1] == PLAYER))
 					continue;
 			if (c.y != 0)
-				Map::map[c.y - 1][c.x] = NONE;
+				Map::map[c.y - 1][c.x] = NOTHING;
 			if (c.y != Map::map.size - 1)
-				Map::map[c.y + 1][c.x] = NONE;
+				Map::map[c.y + 1][c.x] = NOTHING;
 			if (c.x != 0)
-				Map::map[c.y][c.x - 1] = NONE;
+				Map::map[c.y][c.x - 1] = NOTHING;
 			if (c.x != Map::map.size - 1)
-				Map::map[c.y][c.x + 1] = NONE;
+				Map::map[c.y][c.x + 1] = NOTHING;
 			(*i)->setCoords(c);
 			Map::map[c.y][c.x] = PLAYER;
 			break;
@@ -99,9 +99,9 @@ bool
 Map::plantBomb(Coords & c)
 {
 	if (0 > c.x || 0 > c.y || Map::map.size <= c.y
-		|| Map::map.size <= c.x || Map::get(c) != NONE)
+		|| Map::map.size <= c.x || Map::get(c) != PLAYER)
 			return false;
-	Map::map[c.y][c.x] = BOMB;
+	Map::map[c.y][c.x] = PLAYONBOMB;
 	return true;
 }
 
@@ -142,8 +142,13 @@ Map::movePlayer(Coords * coords, Direction & direction)
 	}
 	if (! move)
 		return false;
-	Map::applyBonus(Map::map[coords->y][coords->x]);
-	Map::map[coords->y][coords->x] = PLAYER;
+	if (Map::map[coords->y][coords->x] != BOMB)
+	{
+		Map::applyBonus(coords);
+		Map::map[coords->y][coords->x] = PLAYER;
+	}
+	else
+		Map::map[coords->y][coords->x] = PLAYONBOMB;
 	return true;
 }
 
@@ -152,9 +157,10 @@ Map::moveUp(Coords * c)
 {
 	if (c->y <= 0 || Map::map[c->y - 1][c->x] == BARREL
 		|| Map::map[c->y - 1][c->x] == INDESTRUCTIBLE
+		|| Map::map[c->y - 1][c->x] == PLAYONBOMB
 		|| Map::map[c->y - 1][c->x] == PLAYER)
 		return false;
-	Map::map[c->y][c->x] = NONE;
+	Map::cleanOldSpot(c);
 	--c->y;
 	return true;
 }
@@ -164,9 +170,10 @@ Map::moveDown(Coords * c)
 {
 	if (c->y >= (Map::map.size - 1) || Map::map[c->y + 1][c->x] == BARREL
 		|| Map::map[c->y + 1][c->x] == INDESTRUCTIBLE
+		|| Map::map[c->y + 1][c->x] == PLAYONBOMB
 		|| Map::map[c->y + 1][c->x] == PLAYER)
 		return false;
-	Map::map[c->y][c->x] = NONE;
+	Map::cleanOldSpot(c);
 	++c->y;
 	return true;
 }
@@ -176,9 +183,10 @@ Map::moveLeft(Coords * c)
 {
 	if (c->x <= 0 || Map::map[c->y][c->x - 1] == BARREL
 		|| Map::map[c->y][c->x - 1] == INDESTRUCTIBLE
+		|| Map::map[c->y][c->x - 1] == PLAYONBOMB
 		|| Map::map[c->y][c->x - 1] == PLAYER)
 		return false;
-	Map::map[c->y][c->x] = NONE;
+	Map::cleanOldSpot(c);
 	--c->x;
 	return true;
 }
@@ -188,9 +196,10 @@ Map::moveRight(Coords * c)
 {
 	if (c->x >= (Map::map.size - 1) || Map::map[c->y][c->x + 1] == BARREL
 		|| Map::map[c->y][c->x + 1] == INDESTRUCTIBLE
+		|| Map::map[c->y][c->x + 1] == PLAYONBOMB
 		|| Map::map[c->y][c->x + 1] == PLAYER)
 		return false;
-	Map::map[c->y][c->x] = NONE;
+	Map::cleanOldSpot(c);
 	++c->x;
 	return true;
 }
@@ -204,22 +213,60 @@ Map::destroy(Coords & c)
 	if (MapGenerator::throwDice(Config::getInt("bonusApparitionProbability")))
 		Map::map[c.y][c.x] = BOMBUP + MapGenerator::random(0, NULLFIRE-BOMBUP);
 	else
-		Map::map[c.y][c.x] = NONE;
+		Map::map[c.y][c.x] = NOTHING;
 }
 
 void
-Map::applyBonus(char c)
+Map::applyBonus(Coords * c)
 {
-	switch(c)
+	Player * player = Player::playerAt(c);
+	if (player == 0)
+		return;
+	int variation(1);
+	switch(static_cast<Bonus>(Map::map[c->y][c->x]))
 	{
 	case NONE:
-	case BOMBUP:
-	case BOMBDOWN:
-	case FIREUP:
-	case FIREDOWN:
-	case FULLFIRE:
-	case NULLFIRE:
 		break;
+	case NULLFIRE:
+		variation *= 0; // will be minored by minRange
+	case FIREDOWN:
+		variation *= -1;
+	case FIREUP:
+		player->addToRange(variation * Config::getInt("rangeVariation"));
+		break;
+	case FULLFIRE:
+		player->setRange(Config::getInt("maxRange"));
+		break;
+	case BOMBDOWN:
+		variation *= -1;
+	case BOMBUP:
+		player->addToPlantableBombs(variation * Config::getInt("capacityVariation"));
+		break;
+	}
+}
+
+void
+Map::cleanOldSpot(Coords * c)
+{
+	if (Map::map[c->y][c->x] == PLAYONBOMB)
+		Map::map[c->y][c->x] = BOMB;
+	else if (Map::map[c->y][c->x] != BOMB)
+		Map::map[c->y][c->x] = NOTHING;
+}
+
+void
+Map::toString()
+{
+	Coords c;
+	for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
+		i_end = Map::map.grid.end() ; i != i_end ; ++i)
+	{
+		for (std::vector< char >::iterator j = i->begin(), j_end = i->end() ;
+			j != j_end ; ++j)
+		{
+			std::cout << '[' << *j << ']';
+		}
+		std::cout << std::endl;
 	}
 }
 
