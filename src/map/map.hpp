@@ -36,6 +36,7 @@ namespace bombherman
 			static void newMap();
 			static void newMap(Grid &);
 			static void newMap(std::string);
+			static void deleteMap();
 			static bool isPlayer(char);
 			static void placePlayers();
 			static bool plantBomb(Coords &);

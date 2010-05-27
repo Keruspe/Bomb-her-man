@@ -27,23 +27,22 @@ using namespace bombherman::exceptions;
 
 Grid Map::map;
 
-void Map::newMap()
+void
+Map::newMap()
 {
 	MapGenerator::generate(Map::map);
 }
 
-void Map::newMap(Grid & model)
+void
+Map::newMap(Grid & model)
 {
 	for(Uint32 x(0) ; x < Map::map.size ; ++x)
-	{
 		for(Uint32 y(0) ; y < Map::map.size ; ++y)
-		{
 			Map::map[y][x] = model[y][x];
-		}
-	}
 }
 
-void Map::newMap(std::string path)
+void
+Map::newMap(std::string path)
 {
 	try
 	{
@@ -59,6 +58,17 @@ void Map::newMap(std::string path)
 		bherr << "An error has been detected in " << path << bhendl;
 		throw e;
 	}
+}
+
+void
+Map::deleteMap()
+{
+        for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
+		i_end = Map::map.grid.end() ; i != i_end ; ++i)
+	{
+		i->clear();
+	}
+	Map::map.grid.clear();
 }
 
 void
