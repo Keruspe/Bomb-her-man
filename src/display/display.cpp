@@ -23,12 +23,6 @@
 #include <cairo.h>
 
 #define FONT_FILE "biolinum.ttf"
-#ifdef USE_ANIMATION
-	#define ANIM_TIME 100
-	#define ANIM_IMAGES 4
-#else
-	#define ANIM_IMAGES 1
-#endif
 
 using namespace bombherman;
 
@@ -606,7 +600,7 @@ Display::movePlayer(Player *player, map::Direction goTo)
 		{
 			case map::DOWN:
 				r.y -= gSize;
-				#ifndef USE_ANIMATION
+				#if ANIM_IMAGES == 1
 				d.y = gSize;
 				#endif // ! USE_ANIMATION
 			case map::UP:
@@ -614,7 +608,7 @@ Display::movePlayer(Player *player, map::Direction goTo)
 			break;
 			case map::RIGHT:
 				r.x -= gSize;
-				#ifndef USE_ANIMATION
+				#if ANIM_IMAGES == 1
 				d.x = gSize;
 				#endif // ! USE_ANIMATION
 			case map::LEFT:
@@ -623,9 +617,9 @@ Display::movePlayer(Player *player, map::Direction goTo)
 		}
 		
 		SDL_Surface *sPlayer = NULL;
+		#if ANIM_IMAGES > 1
 		unsigned int anim = 0;
-		#if USE_ANIMATION
-		const Sint16 part = (gSize+2) / ANIM_IMAGES;
+		const Sint16 part = gSize / ANIM_IMAGES;
 		const Sint16 cpart = (ANIM_IMAGES-1) * part;
 		while ( true )
 		{
@@ -648,18 +642,23 @@ Display::movePlayer(Player *player, map::Direction goTo)
 					if ( d.x <= 0 ) anim = ANIM_IMAGES-1;
 				break;
 			}
-			#endif // USE_ANIMATION
 			sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
 			SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
-			SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][anim++], NULL, sPlayer, &d);
+			unsigned int debug = ++anim%ANIM_IMAGES;
+			bhout << "Image " << debug << bhendl;
+			SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][debug], NULL, sPlayer, &d);
 			updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
 			SDL_FreeSurface(sPlayer);
-			#if USE_ANIMATION
 			if ( anim < ANIM_IMAGES )
 				SDL_Delay(ANIM_TIME/ANIM_IMAGES);
 			else break;
 		}
 		#endif // USE_ANIMATION
+		sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
+		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
+		SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &d);
+		updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
+		SDL_FreeSurface(sPlayer);
 	}
 	else if ( was != player->getOrient() )
 	{
