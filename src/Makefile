@@ -2,8 +2,11 @@
 SOURCES=$(shell find -name '*.cpp')
 OBJECTS=$(SOURCES:.cpp=.o)
 
-CXXFLAGS=-Wall -Wextra -Weffc++ -Wstrict-null-sentinel -Wno-non-template-friend -Wold-style-cast -Wno-pmf-conversions -Wsign-promo -g -DGIT_ROOT=\"$(shell pwd)/..\" -I. -I./include
-LDFLAGS=
+CXXFLAGS+= -g -DGIT_ROOT=\"$(shell pwd)/..\" -I. -I./include
+LDFLAGS+=
+
+WARNINGS_CFLAGS=-Wall -Wextra -Weffc++ -Wstrict-null-sentinel -Wno-non-template-friend -Wold-style-cast -Wno-pmf-conversions -Wsign-promo
+CXXFLAGS+=$(WARNING_CFLAGS)
 
 SDL_CXXFLAGS=$(shell sdl-config --cflags)
 SDL_LDFLAGS=-lSDL_ttf $(shell sdl-config --libs)
@@ -19,6 +22,12 @@ FLAC_CXXFLAGS=$(shell pkg-config --cflags flac++)
 FLAC_LDFLAGS=$(shell pkg-config --libs flac++)
 CXXFLAGS+=$(FLAC_CXXFLAGS)
 LDFLAGS+=$(FLAC_LDFLAGS)
+
+ifdef ANIM
+CXXFLAGS+=-DANIM_IMAGES=4 -DANIM_TIME=100
+else
+CXXFLAGS+=-DANIM_IMAGES=1
+endif
 
 CXX=g++
 LD=g++
