@@ -19,6 +19,7 @@
 
 #include "map.hpp"
 #include "map-generator/map-generator.hpp"
+#include "bombherman.hpp"
 
 using namespace bombherman;
 using namespace bombherman::map;
@@ -33,9 +34,9 @@ Map::Map()
 
 Map::Map(Grid & model)
 {
-	for(int x(0) ; x < Map::map.size ; ++x)
+	for(Uint32 x(0) ; x < Map::map.size ; ++x)
 	{
-		for(int y(0) ; y < Map::map.size ; ++y)
+		for(Uint32 y(0) ; y < Map::map.size ; ++y)
 		{
 			Map::map[y][x] = model[y][x];
 		}
@@ -48,14 +49,14 @@ Map::Map(std::string path)
 	{
 		if (! MapParser::parse(path, Map::map))
 		{
-			std::cerr << "The file in which the program looked "
-				<< "for the map was malformed." << std::endl;
+			bherr << "The file in which the program looked "
+				<< "for the map was malformed." << bhendl;
 			throw MalformedFileException(path);
 		}
 	}
 	catch(BadElementException & e)
 	{
-		std::cerr << "An error has been detected in " << path << std::endl;
+		bherr << "An error has been detected in " << path << bhendl;
 		throw e;
 	}
 }
@@ -114,11 +115,11 @@ Map::get(Coords c)
 }
 
 char
-Map::get(int x, int y)
+Map::get(Uint32 x, Uint32 y)
 {
 	if (0 > x || 0 > y || Map::map.size <= y || Map::map.size <= x)
 		return 0;
-	return Map::map[static_cast<unsigned>(y)][static_cast<unsigned>(x)];
+	return Map::map[y][x];
 }
 
 bool
@@ -159,7 +160,7 @@ Map::moveUp(Coords * c)
 		|| Map::map[c->y - 1][c->x] == INDESTRUCTIBLE
 		|| Map::map[c->y - 1][c->x] == PLAYONBOMB
 		|| Map::map[c->y - 1][c->x] == PLAYER)
-		return false;
+			return false;
 	Map::cleanOldSpot(c);
 	--c->y;
 	return true;
@@ -172,7 +173,7 @@ Map::moveDown(Coords * c)
 		|| Map::map[c->y + 1][c->x] == INDESTRUCTIBLE
 		|| Map::map[c->y + 1][c->x] == PLAYONBOMB
 		|| Map::map[c->y + 1][c->x] == PLAYER)
-		return false;
+			return false;
 	Map::cleanOldSpot(c);
 	++c->y;
 	return true;
@@ -185,7 +186,7 @@ Map::moveLeft(Coords * c)
 		|| Map::map[c->y][c->x - 1] == INDESTRUCTIBLE
 		|| Map::map[c->y][c->x - 1] == PLAYONBOMB
 		|| Map::map[c->y][c->x - 1] == PLAYER)
-		return false;
+			return false;
 	Map::cleanOldSpot(c);
 	--c->x;
 	return true;
@@ -198,7 +199,7 @@ Map::moveRight(Coords * c)
 		|| Map::map[c->y][c->x + 1] == INDESTRUCTIBLE
 		|| Map::map[c->y][c->x + 1] == PLAYONBOMB
 		|| Map::map[c->y][c->x + 1] == PLAYER)
-		return false;
+			return false;
 	Map::cleanOldSpot(c);
 	++c->x;
 	return true;
@@ -266,7 +267,7 @@ Map::toString()
 		{
 			std::cout << '[' << *j << ']';
 		}
-		std::cout << std::endl;
+		std::cout << bhendl;
 	}
 }
 

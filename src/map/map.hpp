@@ -41,7 +41,7 @@ namespace bombherman
 			void placePlayers();
 			static bool plantBomb(Coords &);
 			static char get(Coords);
-			static char get(int, int);
+			static char get(Uint32, Uint32);
 			static bool movePlayer(Coords *, Direction &);
 			static void destroy(Coords &);
 			void toString();
