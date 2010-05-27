@@ -33,9 +33,11 @@ namespace bombherman
 		{
 			Uint32 size;
 			std::vector< std::vector< char > > grid;
+			bool exists;
 			
 			Grid() : size(static_cast<Uint32>(Config::getInt("mapSize"))),
-				grid(std::vector< std::vector< char > >())
+				grid(std::vector< std::vector< char > >()),
+				exists(false)
 			{
 			}
 			
