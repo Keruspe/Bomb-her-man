@@ -33,19 +33,18 @@ namespace bombherman
 		class Map
 		{
 		public:
-			Map();
-			Map(Grid &);
-			Map(std::string);
-			virtual ~Map();
-			bool isPlayer(char);
-			void placePlayers();
+			static void newMap();
+			static void newMap(std::string);
+			static void deleteMap();
+			static bool isPlayer(char);
 			static bool plantBomb(Coords &);
 			static char get(Coords);
-			static char get(int, int);
+			static char get(Uint32, Uint32);
 			static bool movePlayer(Coords *, Direction &);
 			static void destroy(Coords &);
-			void toString();
+			static void toString();
 		private:
+			static void placePlayers();
 			static bool moveUp(Coords *);
 			static bool moveDown(Coords *);
 			static bool moveLeft(Coords *);

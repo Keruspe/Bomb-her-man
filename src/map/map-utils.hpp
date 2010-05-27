@@ -21,6 +21,7 @@
 #define _MAP_UTILS_HPP_
 
 #include <vector>
+#include <SDL_types.h>
 
 #include "config/config.hpp"
 
@@ -30,15 +31,17 @@ namespace bombherman
 	{
 		typedef struct Grid
 		{
-			int size;
+			Uint32 size;
 			std::vector< std::vector< char > > grid;
+			bool exists;
 			
-			Grid() : size(Config::getInt("mapSize")),
-				grid(std::vector< std::vector< char > >())
+			Grid() : size(static_cast<Uint32>(Config::getInt("mapSize"))),
+				grid(std::vector< std::vector< char > >()),
+				exists(false)
 			{
 			}
 			
-			std::vector< char > & operator[] (int y)
+			std::vector< char > & operator[] (Uint32 y)
 			{
 				return grid[y];
 			}
@@ -46,11 +49,12 @@ namespace bombherman
 		
 		typedef struct Coords
 		{
-			int x;
-			int y;
-			int max;
+			Uint32 x;
+			Uint32 y;
+			Uint32 max;
 			
-			Coords() : x(-1), y(-1), max(Config::getInt("mapSize") - 1)
+			Coords() : x(-1), y(-1),
+				max(static_cast<Uint32>(Config::getInt("mapSize") - 1))
 			{
 			}
 		} Coords;

@@ -19,6 +19,7 @@
 
 #include "map.hpp"
 #include "map-generator/map-generator.hpp"
+#include "bombherman.hpp"
 
 using namespace bombherman;
 using namespace bombherman::map;
@@ -26,42 +27,42 @@ using namespace bombherman::exceptions;
 
 Grid Map::map;
 
-Map::Map()
+void
+Map::newMap()
 {
 	MapGenerator::generate(Map::map);
+	Map::map.exists = true;
+	Map::placePlayers();
 }
 
-Map::Map(Grid & model)
-{
-	for(int x(0) ; x < Map::map.size ; ++x)
-	{
-		for(int y(0) ; y < Map::map.size ; ++y)
-		{
-			Map::map[y][x] = model[y][x];
-		}
-	}
-}
-
-Map::Map(std::string path)
+void
+Map::newMap(std::string path)
 {
 	try
 	{
 		if (! MapParser::parse(path, Map::map))
 		{
-			std::cerr << "The file in which the program looked "
-				<< "for the map was malformed." << std::endl;
+			bherr << "The file in which the program looked "
+				<< "for the map was malformed." << bhendl;
 			throw MalformedFileException(path);
 		}
 	}
 	catch(BadElementException & e)
 	{
-		std::cerr << "An error has been detected in " << path << std::endl;
+		bherr << "An error has been detected in " << path << bhendl;
 		throw e;
 	}
+	Map::map.exists = true;
+	Map::placePlayers();
 }
 
-Map::~Map()
+void
+Map::deleteMap()
 {
+	for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
+		i_end = Map::map.grid.end() ; i != i_end ; ++i)
+			i->clear();
+	Map::map.grid.clear();
 }
 
 void
@@ -98,7 +99,7 @@ Map::placePlayers()
 bool
 Map::plantBomb(Coords & c)
 {
-	if (0 > c.x || 0 > c.y || Map::map.size <= c.y
+	if (! Map::map.exists || 0 > c.x || 0 > c.y || Map::map.size <= c.y
 		|| Map::map.size <= c.x || Map::get(c) != PLAYER)
 			return false;
 	Map::map[c.y][c.x] = PLAYONBOMB;
@@ -108,22 +109,26 @@ Map::plantBomb(Coords & c)
 char
 Map::get(Coords c)
 {
-	if (0 > c.x || 0 > c.y || Map::map.size <= c.y || Map::map.size <= c.x)
-		return 0;
+	if (! Map::map.exists || 0 > c.x || 0 > c.y
+		|| Map::map.size <= c.y || Map::map.size <= c.x)
+			return 0;
 	return Map::map[c.y][c.x];
 }
 
 char
-Map::get(int x, int y)
+Map::get(Uint32 x, Uint32 y)
 {
-	if (0 > x || 0 > y || Map::map.size <= y || Map::map.size <= x)
-		return 0;
-	return Map::map[static_cast<unsigned>(y)][static_cast<unsigned>(x)];
+	if (! Map::map.exists || 0 > x || 0 > y
+		|| Map::map.size <= y || Map::map.size <= x)
+			return 0;
+	return Map::map[y][x];
 }
 
 bool
 Map::movePlayer(Coords * coords, Direction & direction)
 {
+	if(! Map::map.exists)
+		return false;
 	bool move;
 	switch(direction)
 	{
@@ -159,7 +164,7 @@ Map::moveUp(Coords * c)
 		|| Map::map[c->y - 1][c->x] == INDESTRUCTIBLE
 		|| Map::map[c->y - 1][c->x] == PLAYONBOMB
 		|| Map::map[c->y - 1][c->x] == PLAYER)
-		return false;
+			return false;
 	Map::cleanOldSpot(c);
 	--c->y;
 	return true;
@@ -172,7 +177,7 @@ Map::moveDown(Coords * c)
 		|| Map::map[c->y + 1][c->x] == INDESTRUCTIBLE
 		|| Map::map[c->y + 1][c->x] == PLAYONBOMB
 		|| Map::map[c->y + 1][c->x] == PLAYER)
-		return false;
+			return false;
 	Map::cleanOldSpot(c);
 	++c->y;
 	return true;
@@ -185,7 +190,7 @@ Map::moveLeft(Coords * c)
 		|| Map::map[c->y][c->x - 1] == INDESTRUCTIBLE
 		|| Map::map[c->y][c->x - 1] == PLAYONBOMB
 		|| Map::map[c->y][c->x - 1] == PLAYER)
-		return false;
+			return false;
 	Map::cleanOldSpot(c);
 	--c->x;
 	return true;
@@ -198,7 +203,7 @@ Map::moveRight(Coords * c)
 		|| Map::map[c->y][c->x + 1] == INDESTRUCTIBLE
 		|| Map::map[c->y][c->x + 1] == PLAYONBOMB
 		|| Map::map[c->y][c->x + 1] == PLAYER)
-		return false;
+			return false;
 	Map::cleanOldSpot(c);
 	++c->x;
 	return true;
@@ -257,6 +262,8 @@ Map::cleanOldSpot(Coords * c)
 void
 Map::toString()
 {
+	if(! Map::map.exists)
+		return;
 	Coords c;
 	for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
 		i_end = Map::map.grid.end() ; i != i_end ; ++i)
@@ -266,7 +273,7 @@ Map::toString()
 		{
 			std::cout << '[' << *j << ']';
 		}
-		std::cout << std::endl;
+		std::cout << bhendl;
 	}
 }
 
