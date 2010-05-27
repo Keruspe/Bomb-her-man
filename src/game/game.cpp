@@ -23,7 +23,6 @@
 using namespace bombherman;
 
 Menu *Game::currentMenu = NULL;
-map::Map *Game::currentMap = NULL;
 std::vector< SDL_Thread * > *Game::threads = new std::vector< SDL_Thread * >();
 bool Game::isInit = false;
 bool Game::playing = true;
@@ -86,10 +85,9 @@ Game::main()
 void
 Game::changeMenu(Menu::Type type, bool stopGame)
 {
-	if ( ( stopGame ) && ( currentMap ) )
+	if ( ( stopGame ) )
 	{
-		delete(currentMap);
-		currentMap = NULL;
+		map::Map::deleteMap();
 		Player::clean();
 	}
 	currentMenu = Menu::getMenu(type);
@@ -110,13 +108,8 @@ Game::newGame()
 void
 Game::nextMap()
 {
-	if ( currentMap )
-	{
-		delete(currentMap);
-		currentMap = NULL;
-	}
-	currentMap = new map::Map();
-	currentMap->placePlayers();
+	map::Map::deleteMap();
+	map::Map::newMap();
 	play();
 }
 
@@ -125,7 +118,7 @@ Game::play()
 {
 	currentMenu = NULL;
 	Display::updateScores();
-	Display::setMap(currentMap);
+	Display::updateMap();
 }
 
 void
@@ -241,11 +234,7 @@ Game::quit()
 	
 	currentMenu = NULL;
 	
-	if ( currentMap )
-	{
-		delete(currentMap);
-		currentMap = NULL;
-	}
+	map::Map::deleteMap();
 	
 	for ( std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end() ; i != e ; ++i )
 	{

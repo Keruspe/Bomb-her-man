@@ -43,8 +43,6 @@ std::map<SDL_Surface *, void *> Display::buffers;
 
 SDL_Surface *Display::sBackground = NULL;
 
-map::Map *Display::gMap = NULL;
-
 SDL_Surface *Display::gScoresLayer = NULL;
 SDL_Surface *Display::gMapLayer = NULL;
 SDL_Surface *Display::gBarrelsLayer = NULL;
@@ -413,18 +411,15 @@ Display::updateScores()
 	{	// Horizontal
 		z.w = gZone.x;
 		z.h = height;
-		dx = z.w / nbAll;
+		dy = z.h / nbAll;
 	}
 	else
 	{	// Vertical
 		z.w = width;
 		z.h = gZone.y;
-		dy = z.h / nbAll;
+		dx = z.w / nbAll;
 	}
 	Uint32 sSize = ( dx + dy ) / 4;
-	
-	bhout << "x=" << z.x << '\t' << "y=" << z.y << bhendl;
-	bhout << "w=" << z.w << '\t' << "h=" << z.h << bhendl;
 	
 	cleanSurface(gScoresLayer);
 	gScoresLayer = SDL_CreateRGBSurface(flags, z.w, z.h, 32, 0, 0, 0, 0);
@@ -487,16 +482,6 @@ Display::updateScores()
 }
 
 void
-Display::setMap(map::Map *map)
-{
-	if ( ! sDisplay ) init();
-	
-	gMap = map;
-	
-	updateMap();
-}
-
-void
 Display::updateMap()
 {
 	if ( ( ! gWall ) || ( ! gBack ) ) initSurfaces();
@@ -514,7 +499,7 @@ Display::updateMap()
 	{
 		for(coords.x = 0 ; coords.x < gMapSize ; ++coords.x)
 		{
-			if ( gMap->get(coords) == map::INDESTRUCTIBLE )
+			if ( map::Map::get(coords) == map::INDESTRUCTIBLE )
 				SDL_BlitSurface(gWall, NULL, gMapLayer, &r);
 			else
 				SDL_BlitSurface(gBack, NULL, gMapLayer, &r);
@@ -542,7 +527,7 @@ Display::updateBarrels()
 		r.x = 0;
 		for(coords.x = 0 ; coords.x < gMapSize ; ++coords.x)
 		{
-			char c = gMap->get(coords);
+			char c = map::Map::get(coords);
 			if ( c == map::BARREL )
 				SDL_BlitSurface(gBarrel, NULL, gBarrelsLayer, &r);
 			else if ( ( c == map::BOMB ) || ( c == map::PLAYONBOMB ) )
