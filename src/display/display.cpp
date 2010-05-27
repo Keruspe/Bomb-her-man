@@ -589,7 +589,7 @@ Display::movePlayer(Player *player, map::Direction goTo)
 					gSize,
 					gSize
 				},
-			d = {
+			l = {
 					0,
 					0,
 					gSize,
@@ -600,17 +600,13 @@ Display::movePlayer(Player *player, map::Direction goTo)
 		{
 			case map::DOWN:
 				r.y -= gSize;
-				#if ANIM_IMAGES == 1
-				d.y = gSize;
-				#endif // ! USE_ANIMATION
+				l.y = gSize;
 			case map::UP:
 				r.h += gSize;
 			break;
 			case map::RIGHT:
 				r.x -= gSize;
-				#if ANIM_IMAGES == 1
-				d.x = gSize;
-				#endif // ! USE_ANIMATION
+				l.x = gSize;
 			case map::LEFT:
 				r.w += gSize;
 			break;
@@ -623,6 +619,12 @@ Display::movePlayer(Player *player, map::Direction goTo)
 		const Sint16 cpart = (ANIM_IMAGES-1) * part;
 		while ( true )
 		{
+			SDL_Rect d = {
+					0,
+					0,
+					gSize,
+					gSize
+				};
 			switch ( goTo )
 			{
 				case map::DOWN:
@@ -654,7 +656,7 @@ Display::movePlayer(Player *player, map::Direction goTo)
 		#endif // USE_ANIMATION
 		sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
 		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
-		SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &d);
+		SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &l);
 		updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
 		SDL_FreeSurface(sPlayer);
 	}
