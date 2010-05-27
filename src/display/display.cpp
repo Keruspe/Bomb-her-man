@@ -644,9 +644,7 @@ Display::movePlayer(Player *player, map::Direction goTo)
 			}
 			sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
 			SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
-			unsigned int debug = ++anim%ANIM_IMAGES;
-			bhout << "Image " << debug << bhendl;
-			SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][debug], NULL, sPlayer, &d);
+			SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][++anim%ANIM_IMAGES], NULL, sPlayer, &d);
 			updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
 			SDL_FreeSurface(sPlayer);
 			if ( anim < ANIM_IMAGES )
