@@ -118,7 +118,7 @@ Map::get(int x, int y)
 {
 	if (0 > x || 0 > y || Map::map.size <= y || Map::map.size <= x)
 		return 0;
-	return Map::map[y][x];
+	return Map::map[static_cast<unsigned>(y)][static_cast<unsigned>(x)];
 }
 
 bool
