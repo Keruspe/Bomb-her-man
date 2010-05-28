@@ -115,8 +115,7 @@ Player::die()
 		map::Map::removePlayer(this->coords);
 		this->alive = false;
 	}
-	else if ( ( Player::players.size() - ++Player::icyDeadPeople ) == 1 )
-	// Don't ask reInit twice or more if lots of people die at the end
+	else
 		Player::reInit();
 }
 
