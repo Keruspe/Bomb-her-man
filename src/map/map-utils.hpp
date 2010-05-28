@@ -53,18 +53,6 @@ namespace bombherman
 			Uint32 y;
 			Uint32 max;
 			
-			bool
-			operator== (Coords & c)
-			{
-				return (this->x == c.x && this->y == c.y);
-			}
-			
-			bool
-			operator< (Coords & c)
-			{
-				return (this->x < c.x);
-			}
-			
 			Coords() : x(-1), y(-1),
 				max(static_cast<Uint32>(Config::getInt("mapSize") - 1))
 			{
@@ -75,15 +63,6 @@ namespace bombherman
 			{
 			}
 		} Coords;
-		
-		class Comparator
-		{
-			bool
-			operator () (Coords & a, Coords & b)
-			{
-				return (a < b);
-			}
-		};
 		
 		typedef enum
 		{
