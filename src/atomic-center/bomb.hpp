@@ -26,11 +26,11 @@ namespace bombherman
             Player * getPlayer ();
             map::Coords * getCoords ();
             bool isExploded ();
+            static void explode (Bomb *);
             virtual ~Bomb ();
         private:
             bool exploded;
             static SDL_mutex * mutex;
-            static void explode (Bomb *);
             static int wait (void *);
             static bool check (int, int);
             Player * player;

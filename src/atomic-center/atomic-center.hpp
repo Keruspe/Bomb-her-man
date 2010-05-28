@@ -21,6 +21,8 @@
 #define	_ATOMICCENTER_HPP
 
 #include "map/map-utils.hpp"
+#include <iostream>
+#include <ios>
 #include "display/display.hpp"
 #include "game/player.hpp"
 #include "map/map.hpp"
@@ -35,11 +37,12 @@ namespace bombherman
         {
         public:
             static void plantBomb (Player *);
-            static void removeBomb(Bomb * &);
-            static std::map<map::Coords *, Bomb *> getBombs ();
-            static Bomb * getBomb (map::Coords *);
+            static void removeBomb (Bomb * &);
+            static std::vector<std::vector<Bomb *> > getBombs ();
+            static Bomb * getBomb (int, int);
+            static void boum ();
         private:
-            static std::map<map::Coords *, Bomb *> bombs;
+            static std::vector<std::vector<Bomb *> > bombs;
         };
     }
 }
