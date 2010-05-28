@@ -33,18 +33,73 @@ namespace bombherman
 		class Map
 		{
 		public:
+			/// Create a new randomly generated map
 			static void newMap();
+			
+			/// Create a new map from a file
+			/*
+			 * @param Path to the file (std::string)
+			 */
 			static void newMap(std::string);
+			
+			/// Delete the map
 			static void deleteMap();
-			static bool isPlayer(char);
+			
+			/// Plant a bomb on the map
+			/*
+			 * @param The coords where to plant the bomb (map::Coords)
+			 */
 			static bool plantBomb(Coords &);
+			
+			/// What is there in this cell ?
+			/*
+			 * @param The coords where to look for (map::Coords)
+			 *
+			 * @return The element in the corresponding cell (char)
+			 */
 			static char get(Coords);
+			
+			/// What is there in this cell ?
+			/*
+			 * @param The coords where to look for (Uint32 x, Uint32 y)
+			 *
+			 * @return The element in the corresponding cell (char)
+			 */
 			static char get(Uint32, Uint32);
+			
+			/// Make a player move
+			/*
+			 * @param The coords from where the move start and the direction (map::Coords, map::Direction)
+			 *
+			 * @return The sumary of the move (map::MoveResult)
+			 */
 			static MoveResult movePlayer(Coords &, Direction &);
+			
+			/// Destroy a barrel
+			/*
+			 * @param The coords of the barrel (map::coords)
+			 */
 			static void destroy(Coords &);
+			
+			/// Display the map
 			static void toString();
+			
+			/// Remove a player from the map
+			/*
+			 * @param The coords of the player (map::Coords)
+			 */
 			static void removePlayer(Coords &);
+			
+			/// Remove a bomb from the map
+			/*
+			 * @param The coords of the bomb (map::Coords)
+			 */
 			static void removeBomb(Coords &);
+			
+			/// Remove a bonus from the map
+			/*
+			 * @param The coords of the bonus (map::Coords)
+			 */
 			static void removeBonus(Coords &);
 		private:
 			static void placePlayers();
