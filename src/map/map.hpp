@@ -101,6 +101,12 @@ namespace bombherman
 			 * @param The coords of the bonus (map::Coords)
 			 */
 			static void removeBonus(Coords &);
+			
+			/// Does the map exist ?
+			/*
+			 * @return True if the map exists
+			 */
+			static bool exists();
 		private:
 			static void placePlayers();
 			static bool moveUp(Coords &);
