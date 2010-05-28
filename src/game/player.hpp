@@ -41,13 +41,13 @@ namespace bombherman
 		 */
 		bool isAbleToPlantBomb();
 		
-		/// score getter
+		/// Score getter
 		/*
 		 * @return The score of the player
 		 */
 		int getScore();
 		
-		/// id getter
+		/// Id getter
 		/*
 		 * @return The id of the player
 		 */
@@ -61,25 +61,90 @@ namespace bombherman
 		 */
 		map::MoveResult go(map::Direction &);
 		
-		
+		/// List of all players
 		static std::vector< Player * > players;
 		
+		/// Get a player by his id
+		/*
+		 * @param The player's id (int)
+		 *
+		 * @return A pointer to the player (Player *)
+		 */
 		static Player * getPlayer(int);
+		
+		/// Create a new player
 		static void newPlayer();
+		
+		/// Erase all players
 		static void clean();
+		
+		/// Kill the player
 		void die();
+		
+		/// Reinitialize players and start a new game
 		static void reInit();
+		
+		/// Range setter
+		/*
+		 * @param The new range for the player (int)
+		 */
 		void setRange(int);
+		
+		/// Range adder
+		/*
+		 * @param The range to add to the player, make it negative to remove (int)
+		 */
 		void addToRange(int);
+		
+		/// Make the player plant a bomb
 		void plantBomb();
+		
+		/// Increase/decrease the player's score
+		/*
+		 * @param New points gained (int)
+		 */
 		void addToScore(int);
+		
+		/// Plantable bombs number setter
+		/*
+		 * @param The new number of bombs the player can drop (int)
+		 */
 		void setPlantableBombs(int);
+		
+		/// Plantable bombs number adder
+		/*
+		 * @param The number to add to the number of bombs the player can carry (int)
+		 */
 		void addToPlantableBombs(int);
+		
+		/// Reset the player to its default statistics
 		void resetToDefaultStats();
+		
+		/// Coords setter
+		/*
+		 * @param The new coords of the player (map::Coords)
+		 */
 		void setCoords(map::Coords &);
+		
+		/// Which player is out there ?
+		/*
+		 * @param The coords where to look for any player (map::Coords)
+		 *
+		 * @return The player if any, or 0 if none (map::Player*)
+		 */
 		static Player * playerAt(map::Coords &);
+		
+		/// Is this player still alive ?
+		/*
+		 * @return True if the player is alive
+		 */
 		bool isAlive();
-		void kill(Player *killed);
+		
+		/// Murder a poor player
+		/*
+		 * @param The player to kill (Player *)
+		 */
+		void kill(Player * killed);
 	private:
 		/// Private constructor, please call static newPlayer instead
 		Player();
