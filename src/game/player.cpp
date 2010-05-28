@@ -98,6 +98,8 @@ Player::clean()
 void
 Player::kill(Player *killed)
 {
+	if (! killed->alive)
+		return;
 	if ( killed == this )
 	{
 		if ( (this->score -= 2) < -9 )
@@ -112,10 +114,10 @@ Player::kill(Player *killed)
 void
 Player::die()
 {
+	this->alive = false;
 	if ( ( Player::players.size() - ++Player::icyDeadPeople ) > 1 )
 	{
 		map::Map::removePlayer(this->coords);
-		this->alive = false;
 	}
 	else
 		Player::reInit();
