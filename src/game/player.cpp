@@ -98,7 +98,6 @@ Player::clean()
 void
 Player::kill(Player *killed)
 {
-	--this->plantedBombs;
 	if ( killed == this )
 		if ( (this->score -= 2) < -9 )
 			this->score = -9;
@@ -228,5 +227,11 @@ bool
 Player::isAlive()
 {
 	return this->alive;
+}
+
+void
+Player::bombHasExploded()
+{
+	--this->plantedBombs;
 }
 

@@ -145,6 +145,9 @@ namespace bombherman
 		 * @param The player to kill (Player *)
 		 */
 		void kill(Player * killed);
+
+		/// Tells the player that his bomb has exploded (decreases planted bombs counter)
+		void bombHasExploded();
 	private:
 		/// Private constructor, please call static newPlayer instead
 		Player();
