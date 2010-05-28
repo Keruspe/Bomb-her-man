@@ -27,14 +27,14 @@ namespace bombherman
             map::Coords * getCoords ();
             bool isExploded ();
             virtual ~Bomb ();
-            bool exploded;
         private:
+            bool exploded;
             static SDL_mutex * mutex;
             static void explode (Bomb *);
             static int wait (void *);
             static bool check (int, int);
             Player * player;
-            map::Coords * coords;
+            map::Coords coords;
         };
     }
 }

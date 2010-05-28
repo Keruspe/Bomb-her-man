@@ -16,7 +16,7 @@ using namespace bombherman::bomb;
 SDL_mutex * Bomb::mutex = SDL_CreateMutex ();
 
 Bomb::Bomb (Player * player) : player (player),
-		coords (& player->getCoords ()),
+		coords (player->getCoords ()),
 		exploded (false)
 {
 
@@ -35,7 +35,7 @@ Bomb::getPlayer ()
 map::Coords *
 Bomb::getCoords ()
 {
-	return this->coords;
+	return & this->coords;
 }
 
 bool
@@ -64,39 +64,39 @@ void
 Bomb::explode (Bomb * bomb)
 {
 	bomb->exploded = true;
-	std::vector<map::Coords *> explodedCells;
+	std::vector<map::Coords> explodedCells;
 	SDL_LockMutex (mutex);
 	Player player = * bomb->player;
-	map::Coords * coords = bomb->coords;
+	map::Coords coords = bomb->coords;
 	int range = static_cast<Uint32>(player.getRange ());
 	//parcourons la case de la bombe et les cases à gauche de la bombe
-	if (coords->x != 0)
-		for(int x = coords->x, xFixed = coords->x; x >= (xFixed - range) && (x >= 0); -- x)
+	if (coords.x != 0)
+		for(int x = coords.x, xFixed = coords.x; x >= (xFixed - range) && (x >= 0); -- x)
 		{
-			if (! check(x, coords->y))
+			if (! check(x, coords.y))
 				break;
-			explodedCells.push_back (new map::Coords(x, coords->y));
+			explodedCells.push_back (map::Coords(x, coords.y));
 		}
-	if (coords->x != coords->max)
-		for(int x = coords->x + 1, xFixed = coords->x; x <= (xFixed + range) && (x <= coords->max); ++ x)
+	if (coords.x != coords.max)
+		for(int x = coords.x + 1, xFixed = coords.x; x <= (xFixed + range) && (x <= coords.max); ++ x)
 		{
-			if (! check(x, coords->y))
+			if (! check(x, coords.y))
 				break;
-			explodedCells.push_back (new map::Coords(x, coords->y));
+			explodedCells.push_back (map::Coords(x, coords.y));
 		}
-	if (coords->y != 0)
-		for(int y = coords->y - 1, yFixed = coords->y; y >= (yFixed - range) && (y >= 0); -- y)
+	if (coords.y != 0)
+		for(int y = coords.y - 1, yFixed = coords.y; y >= (yFixed - range) && (y >= 0); -- y)
 		{
-			if (! check(coords->x, y))
+			if (! check(coords.x, y))
 				break;
-			explodedCells.push_back (new map::Coords(coords->x, y));
+			explodedCells.push_back (map::Coords(coords.x, y));
 		}
-	if (coords->y != coords->max)
-		for(int y = coords->y + 1, yFixed = coords->y; y <= (yFixed + range) && (y <= coords->max); ++ y)
+	if (coords.y != coords.max)
+		for(int y = coords.y + 1, yFixed = coords.y; y <= (yFixed + range) && (y <= coords.max); ++ y)
 		{
-			if (! check(coords->x, y))
+			if (! check(coords.x, y))
 				break;
-			explodedCells.push_back (new map::Coords(coords->x, y));
+			explodedCells.push_back (map::Coords(coords.x, y));
 		}
 	map::Map::toString();
 	SDL_UnlockMutex (mutex);

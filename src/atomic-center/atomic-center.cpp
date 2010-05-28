@@ -18,16 +18,15 @@ void
 AtomicCenter::plantBomb (Player * player)
 {
 	Bomb * bomb;
-	if (! getBomb(& player->getCoords ())) {
-		if (map::Map::plantBomb (player->getCoords ())) {
-			bomb = new Bomb(player);
-			bombs[& player->getCoords ()] = bomb;
-		}
+	if (map::Map::plantBomb (player->getCoords ()))
+	{
+		bomb = new Bomb(player);
+		bombs[bomb->getCoords ()] = bomb;
 	}
 }
 
 void
-AtomicCenter::removeBomb (Bomb* & bomb)
+AtomicCenter::removeBomb (Bomb * & bomb)
 {
 	bombs.erase (bomb->getCoords ());
 	delete (bomb);
