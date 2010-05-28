@@ -158,7 +158,7 @@ Menu::quit()
 	if ( this->type == INGAME)
 		Game::play();
 	else
-		Game::quit();
+		Game::stop();
 }
 
 void

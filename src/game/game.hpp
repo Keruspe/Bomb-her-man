@@ -54,11 +54,12 @@ namespace bombherman
 		static void play();
 		/// Stop
 		static void stop() { playing = false; }
-		/// Quit
-		static void quit();
 	
 	private:
 		static bool isInit, playing;
+		
+		/// Quit
+		static void quit();
 		
 		#ifdef THREAD_EVENTS
 		static std::vector< SDL_Thread * > *threads;

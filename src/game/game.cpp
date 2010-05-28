@@ -19,6 +19,7 @@
 #include "game.hpp"
 #include "menu.hpp"
 #include "map/map-utils.hpp"
+#include "atomic-center/atomic-center.hpp"
 #include "atomic-center/bomb.hpp"
 
 using namespace bombherman;
@@ -35,6 +36,7 @@ Sint32 Game::mapCount = -1;
 void Game::init()
 {
 	Display::init();
+	bomb::AtomicCenter::init();
 	changeMenu(Menu::MAIN);
 	
 	SDL_EventState(SDL_ACTIVEEVENT, SDL_IGNORE);
