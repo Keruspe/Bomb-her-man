@@ -226,35 +226,35 @@ Map::destroy(Coords & c)
 }
 
 void
-Map::removePlayer(Coords * c)
+Map::removePlayer(Coords & c)
 {
-	if (0 > c->x || 0 > c->y || Map::map.size <= c->y || Map::map.size <= c->x)
+	if (0 > c.x || 0 > c.y || Map::map.size <= c.y || Map::map.size <= c.x)
 		return;
-	if (Map::get(*c) == PLAYER)
-		Map::map[c->y][c->x] = NONE;
-	else if (Map::get(*c) == PLAYONBOMB)
-		Map::map[c->y][c->x] = BOMB;
-	c->x = -1;
-	c->y = -1;
+	if (Map::get(c) == PLAYER)
+		Map::map[c.y][c.x] = NONE;
+	else if (Map::get(c) == PLAYONBOMB)
+		Map::map[c.y][c.x] = BOMB;
+	c.x = -1;
+	c.y = -1;
 }
 
 void
-Map::removeBomb(Coords * c)
+Map::removeBomb(Coords & c)
 {
-	if (0 > c->x || 0 > c->y || Map::map.size <= c->y || Map::map.size <= c->x)
+	if (0 > c.x || 0 > c.y || Map::map.size <= c.y || Map::map.size <= c.x)
 		return;
-	if (Map::get(*c) == BOMB)
-		Map::map[c->y][c->x] = NONE;
-	else if (Map::get(*c) == PLAYONBOMB)
-		Map::map[c->y][c->x] = PLAYER;
+	if (Map::get(c) == BOMB)
+		Map::map[c.y][c.x] = NONE;
+	else if (Map::get(c) == PLAYONBOMB)
+		Map::map[c.y][c.x] = PLAYER;
 }
 
 void
-Map::removeBonus(Coords * c)
+Map::removeBonus(Coords & c)
 {
-	if (0 > c->x || 0 > c->y || Map::map.size <= c->y || Map::map.size <= c->x)
+	if (0 > c.x || 0 > c.y || Map::map.size <= c.y || Map::map.size <= c.x)
 		return;
-	Map::map[c->y][c->x] = NONE;
+	Map::map[c.y][c.x] = NONE;
 }
 
 bool

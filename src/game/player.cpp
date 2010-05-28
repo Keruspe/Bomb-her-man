@@ -105,7 +105,7 @@ void
 Player::die()
 {
 	++Player::icyDeadPeople;
-	map::Map::removePlayer(&this->coords);
+	map::Map::removePlayer(this->coords);
 	if (Player::players.size() - Player::icyDeadPeople > 1)
 		this->alive = false;
 	else

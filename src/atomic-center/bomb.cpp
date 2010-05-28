@@ -103,7 +103,7 @@ Bomb::explode (Bomb * bomb)
 			explodedCells.push_back (map::Coords(coords.x, y));
 		}
 	}
-	map::Map::removeBomb (& coords);
+	map::Map::removeBomb (coords);
 	Display::explode (coords, explodedCells);
 	SDL_UnlockMutex (mutex);
 }
@@ -135,7 +135,7 @@ Bomb::check (int x, int y)
 	case map::FIREUP :
 	case map::FULLFIRE :
 	case map::NULLFIRE :
-		map::Map::removeBonus (& coords);
+		map::Map::removeBonus (coords);
 		break;
 	}
 	return true;
