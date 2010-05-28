@@ -16,13 +16,51 @@ namespace bombherman
 	{
 	public:
 		virtual ~Player();
+		
+		/// range getter
+		/*
+		 * @return The actual range of the player's bombs (int)
+		 */
 		int getRange();
+		
+		/// coords getter
+		/*
+		 * @return The coords of the player (map::Coords)
+		 */
 		map::Coords & getCoords();
+		
+		/// orientation getter
+		/*
+		 * @return The orientation of the player (map::Direction)
+		 */
 		map::Direction & getOrient();
+		
+		/// Controlling if player can plant a bomb
+		/*
+		 * @return True if player can plant a bomb
+		 */
 		bool isAbleToPlantBomb();
+		
+		/// score getter
+		/*
+		 * @return The score of the player
+		 */
 		int getScore();
+		
+		/// id getter
+		/*
+		 * @return The id of the player
+		 */
 		int getId();
+		
+		/// To move
+		/*
+		 * @param The direction where player wants to go (map::Direction)
+		 * 
+		 * @return What did happen during the move (map::MoveResult)
+		 */
 		map::MoveResult go(map::Direction &);
+		
 		static std::vector< Player * > & getPlayers();
 		static Player * getPlayer(int);
 		static void newPlayer();
@@ -40,8 +78,8 @@ namespace bombherman
 		static Player * playerAt(map::Coords &);
 		bool isAlive();
 		void kill(Player *killed);
-	
 	private:
+		/// Private constructor, please call static newPlayer instead
 		Player();
 		int plantableBombs;
 		int range;
