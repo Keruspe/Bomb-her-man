@@ -33,10 +33,34 @@ namespace bombherman
 		class MapGenerator
 		{
 		public:
+			/// Generate a random map
+			/**
+			  * @param The grid in which to put the map (map::Grid)
+			  */
 			static void generate(Grid &);
-			static Coords & getRandomCoords();
-			static bool throwDice(int);
+			
+			/// Generate random coords to place players
+			/**
+			  * @return Random coords (map::Coords)
+			  */
+			static Coords getRandomCoords();
+			
+			/// Generate a random number
+			/**
+			  * @param Minimum (int)
+			  * @param Maximum (int)
+			  *
+			  * @return Random number (int)
+			  */
 			static int random(int, int);
+			
+			/// Throw a 100 faces dice to check random probabilities
+			/**
+			  * @Param Percentage of chance to get True as a result (int)
+			  *
+			  *	@return 80% of chances to get true ig 80 was the parameter
+			  */
+			static bool throwDice(int);
 		private:
 			static bool testCellFull(Grid &, Coords &);
 			static bool testCellLimited(Grid &, Coords &);

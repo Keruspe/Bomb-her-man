@@ -127,12 +127,12 @@ MapGenerator::horizontalScan(Grid & grid, Coords & coords)
 	return i;
 }
 
-Coords &
+Coords
 MapGenerator::getRandomCoords()
 {
-	Coords *c = new Coords();
-	c->x = static_cast<Uint32>(MapGenerator::random(0, c->max));
-	c->y = static_cast<Uint32>(MapGenerator::random(0, c->max));
-	return *c;
+	Coords c;
+	c.x = static_cast<Uint32>(MapGenerator::random(0, c.max));
+	c.y = static_cast<Uint32>(MapGenerator::random(0, c.max));
+	return c;
 }
 
