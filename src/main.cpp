@@ -36,34 +36,5 @@ main()
 	{
 		bherr << "Exception: " << e.message() << bhendl;
 	}
-	Player::newPlayer ();
-	Player::newPlayer ();
-	Player * player1 = Player::getPlayer (1);
-	Player * player2 = Player::getPlayer (2);
-	map::Coords c;
-	c.x = 2;
-	c.y= 3;
-	bomb::AtomicCenter::plantBomb (player1, c);
-//	c.x = 4;
-//	c.y= 4;
-//	bomb::AtomicCenter::plantBomb (player2, c);
-//	c.x = 5;
-//	c.y= 5;
-//	bomb::AtomicCenter::plantBomb (player2, c);
-//	c.x = 6;
-//	c.y= 6;
-//	bomb::AtomicCenter::plantBomb (player1, c);
-//	c.x = 7;
-//	c.y= 7;
-//	bomb::AtomicCenter::plantBomb (player2, c);
-//	c.x = 4;
-//	c.y= 5;
-//	bomb::AtomicCenter::plantBomb (player1, c);
-//	c.x = 4;
-//	c.y= 3;
-//	bomb::AtomicCenter::plantBomb (player2, c);
-	SDL_Delay (7000);
-	delete(player1);
-	delete(player2);
 	return 0;
 }

@@ -8,6 +8,7 @@
 #include "player.hpp"
 #include "map/map.hpp"
 #include "exceptions/too-many-players-exception.hpp"
+#include "atomic-center/atomic-center.hpp"
 
 using namespace bombherman;
 
@@ -157,6 +158,12 @@ Player::resetToDefaultStats()
 	this->plantableBombs = Config::getInt("defaultPlantableBombs");
 	this->range = Config::getInt("defaultRange");
 	this->plantedBombs = 0;
+}
+
+void
+Player::plantBomb()
+{
+	bomb::AtomicCenter::plantBomb(this);
 }
 
 void
