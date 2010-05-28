@@ -98,16 +98,13 @@ Player::clean()
 void
 Player::kill(Player *killed)
 {
+	--this->plantedBombs;
 	if ( killed == this )
-	{
 		if ( (this->score -= 2) < -9 )
 			this->score = -9;
-	}
 	else
-	{
 		if( ++(this->score) > 99 )
-			this->score = 99;
-	}
+			<wthis->score = 99;
 	killed->die();
 }
 
@@ -156,7 +153,7 @@ Player::go(map::Direction & direction)
 {
 	if (! this->alive)
 		return map::NOTHINGHAPPENED;
-	bool orientChanged = false;
+	bool orientChanged(false);
 	if (this->orient != direction)
 	{
 		orientChanged = true;
@@ -203,7 +200,10 @@ Player::resetToDefaultStats()
 void
 Player::plantBomb()
 {
+	if (this->plantableBombs <= this->plantedBombs)
+		return;
 	bomb::AtomicCenter::plantBomb(this);
+	++this->plantedBombs;
 }
 
 void
