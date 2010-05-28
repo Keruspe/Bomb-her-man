@@ -112,7 +112,7 @@ Player::die()
 				++stillAlive;
 	if (stillAlive <= 1)
 	{
-		bomb::boum();
+		bomb::AtomicCenter::boum();
 		for (std::vector< Player * > ::iterator i = Player::players.begin(),
 			i_end = Player::players.end() ; i != i_end ; ++i)
 				(*i)->alive = true;
