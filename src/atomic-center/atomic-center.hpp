@@ -19,8 +19,10 @@
 
 
 #include "map/map-utils.hpp"
+#include "display/display.hpp"
 #include "game/player.hpp"
 #include "map/map.hpp"
+#include "bomb.hpp"
 #include <SDL.h>
 
 
@@ -34,11 +36,12 @@ namespace bombherman
         class AtomicCenter
         {
         public:
-            static void plantBomb (map::Coords &, int playerId);
+            static void plantBomb (Player *);
+            static void removeBomb(Bomb * &);
+            static std::map<map::Coords *, Bomb *> getBombs ();
+            static Bomb * getBomb (map::Coords *);
         private:
-            static int wait (void *);
-            static void explode (std::vector<int> *);
-            static std::vector<std::vector<int> > bombList;
+            static std::map<map::Coords *, Bomb *> bombs;
         };
     }
 }

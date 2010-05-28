@@ -36,11 +36,5 @@ main()
 	{
 		bherr << "Exception: " << e.message() << bhendl;
 	}
-	
-	map::Coords c;
-	c.x = 2;
-	c.y= 3;
-	bomb::AtomicCenter::plantBomb (c, 0);
-	
 	return 0;
 }
