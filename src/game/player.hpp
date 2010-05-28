@@ -49,6 +49,7 @@ namespace bombherman
 		map::Coords coords;
 		map::Direction orient;
 		static std::vector< Player * > players;
+		static unsigned icyDeadPeople;
 	};
 };
 

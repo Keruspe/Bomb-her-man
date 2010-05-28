@@ -9,10 +9,12 @@
 #include "map/map.hpp"
 #include "exceptions/too-many-players-exception.hpp"
 #include "atomic-center/atomic-center.hpp"
+#include "game.hpp"
 
 using namespace bombherman;
 
 std::vector<Player * > Player::players;
+unsigned icyDeadPeople = 0;
 
 Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
 		range (Config::getInt("defaultRange")),
@@ -102,9 +104,21 @@ Player::clean()
 void
 Player::die()
 {
+	++icyDeadPeople;
 	std::cout << "Aoutch !" << std::endl;
 	map::Map::removePlayer(&this->coords);
-	this->alive = false;
+	if (Player::players.size() - icyDeadPeople > 1)
+		this->alive = false;
+	else
+	{
+		bomb::AtomicCenter::boum();
+		icyDeadPeople = 0;
+		for (std::vector< Player * > ::iterator i = Player::players.begin(),
+			i_end = Player::players.end() ; i != i_end ; ++i)
+				(*i)->alive = true;
+		/* TODO : End of game */
+		Game::nextMap();
+	}
 }
 
 void
