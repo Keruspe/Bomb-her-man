@@ -53,11 +53,16 @@ namespace bombherman
 			Uint32 y;
 			Uint32 max;
 			
+			bool operator== (Coords & c)
+			{
+				return (this->x == c.x && this->y == c.y);
+			}
+			
 			Coords() : x(-1), y(-1),
 				max(static_cast<Uint32>(Config::getInt("mapSize") - 1))
 			{
 			}
-
+			
 			Coords(Uint32 _x, Uint32 _y) : x(_x), y(_y),
 				max(static_cast<Uint32>(Config::getInt("mapSize") - 1))
 			{
