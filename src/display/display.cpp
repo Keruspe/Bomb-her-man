@@ -528,9 +528,10 @@ Display::updateScores()
 		SDL_BlitSurface(gPlayers[i][map::DOWN][0], NULL, gScoresLayer, &p);
 		
 		SDL_Surface *textSurface = NULL;
-		std::ostringstream st;
-		st << std::setw(2) << std::setfill('0') << s;
-		const char *text = st.str().c_str();
+		std::ostringstream ost;
+		ost << std::setw(2) << std::setfill('0') << s;
+		std::string st = ost.str();
+		const char *text = st.c_str();
 		if ( ! ( textSurface = TTF_RenderUTF8_Blended(font, text, textColor) ) )
 			bherr << "Can't display the line" << text << bhendl;
 		else
