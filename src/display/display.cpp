@@ -234,7 +234,7 @@ Display::initSurfaces()
 }
 
 void
-Display::cleanSurface(SDL_Surface *surf)
+Display::cleanSurface(SDL_Surface * &surf)
 {
 	if ( surf )
 	{
