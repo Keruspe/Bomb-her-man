@@ -76,6 +76,15 @@ namespace bombherman
 			}
 		} Coords;
 		
+		class Comparator
+		{
+			bool
+			operator () (Coords & a, Coords & b)
+			{
+				return (a < b);
+			}
+		};
+		
 		typedef enum
 		{
 			UP = 0,
