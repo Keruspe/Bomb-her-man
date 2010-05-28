@@ -45,6 +45,7 @@ namespace bombherman
 			static void toString();
 			static void removePlayer(Coords *);
 			static void removeBomb(Coords *);
+			static void removeBonus(Coords *);
 		private:
 			static void placePlayers();
 			static bool moveUp(Coords *);

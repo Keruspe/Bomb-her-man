@@ -147,6 +147,7 @@ Map::movePlayer(Coords * coords, Direction & direction)
 	}
 	if (! tmpBool)
 		return NOTHINGHAPPENED;
+	tmpBool = false;
 	if (Map::map[coords->y][coords->x] != BOMB)
 	{
 		tmpBool = Map::applyBonus(coords);
@@ -246,6 +247,14 @@ Map::removeBomb(Coords * c)
 		Map::map[c->y][c->x] = NONE;
 	else if (Map::get(*c) == PLAYONBOMB)
 		Map::map[c->y][c->x] = PLAYER;
+}
+
+void
+Map::removeBonus(Coords * c)
+{
+	if (0 > c->x || 0 > c->y || Map::map.size <= c->y || Map::map.size <= c->x)
+		return;
+	Map::map[c->y][c->x] = NONE;
 }
 
 bool
