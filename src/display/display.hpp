@@ -24,6 +24,8 @@
 #include "game/menu.hpp"
 #include "map/map.hpp"
 
+#define NB_BONUSES 6
+
 #include "exceptions/display/nosdl-exception.hpp"
 #include "exceptions/display/nosvg-exception.hpp"
 
@@ -108,6 +110,7 @@ namespace bombherman
 		static SDL_Surface *gPlayersLayer;
 		
 		static std::vector< std::vector< std::vector<SDL_Surface *> > > gPlayers;
+		static SDL_Surface *gBonuses[NB_BONUSES];
 		static SDL_Surface *gBomb;
 		static SDL_Surface *gExplosion;
 		static SDL_Surface *gBarrel;

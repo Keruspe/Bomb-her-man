@@ -173,7 +173,7 @@ Game::eventGame(void *event)
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
 		case SDLK_ESCAPE:
-			changeMenu(Menu::INGAME, false);
+			changeMenu(Menu::MAIN);
 		break;
 		
 		// Player 1
