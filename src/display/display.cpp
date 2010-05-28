@@ -263,15 +263,21 @@ Display::cleanSurface(SDL_Surface * &surf)
 }
 
 void
+Display::quitGame()
+{
+	cleanSurface(gMapLayer);
+	cleanSurface(gBarrelsLayer);
+	cleanSurface(gPlayersLayer);
+}
+
+void
 Display::quit()
 {
 	if ( ! sDisplay ) return;
 	
 	cleanSurface(sBackground);
 	
-	cleanSurface(gMapLayer);
-	cleanSurface(gBarrelsLayer);
-	cleanSurface(gPlayersLayer);
+	quitGame();
 	
 	cleanSurface(gBomb);
 	cleanSurface(gExplosion);
@@ -588,6 +594,7 @@ Display::updateMap()
 void
 Display::updateBarrels()
 {
+	if ( ! gMapLayer ) return;
 	if ( ! gWall ) initSurfaces();
 	SDL_Rect r;
 	cleanSurface(gBarrelsLayer);

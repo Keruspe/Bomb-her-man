@@ -42,6 +42,8 @@ namespace bombherman
 	public:
 		/// To initialize the video
 		static void init();
+		/// Inform the display we quit the game (it can free some surfaces)
+		static void quitGame();
 		/// To stop the video
 		static void quit();
 		/// To make the video switch between fullscreen and windowed
