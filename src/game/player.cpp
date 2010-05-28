@@ -98,6 +98,8 @@ Player::clean()
 void
 Player::kill(Player *killed)
 {
+	if (! killed->alive)
+		return;
 	if ( killed == this )
 	{
 		if ( (this->score -= 2) < -9 )
