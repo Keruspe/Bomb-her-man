@@ -25,7 +25,7 @@ namespace bombherman
 		public:
 			Bomb (Player * player);
 			Player * getPlayer ();
-			map::Coords * getCoords ();
+			map::Coords & getCoords ();
 			void explode ();
 			virtual ~Bomb ();
 			

@@ -31,14 +31,15 @@ Bomb::getPlayer ()
 	return this->player;
 }
 
-map::Coords *
+map::Coords &
 Bomb::getCoords ()
 {
-	return & this->coords;
+	return this->coords;
 }
 
 Bomb::~Bomb ()
 {
+	this->explode();
 }
 
 int
@@ -46,6 +47,7 @@ Bomb::wait (void * param)
 {
 	SDL_Delay (5000);
 	static_cast<Bomb * >(param)->explode();
+	AtomicCenter::removeBomb(static_cast<Bomb * >(param));
 	return 0;
 }
 
@@ -53,8 +55,8 @@ void
 Bomb::explode()
 {
 	if ( this->exploded ) return;
-	SDL_LockMutex (mutex);
 	this->exploded = true;
+	SDL_LockMutex (mutex);
 	std::vector<map::Coords> explodedCells;
 	int range = static_cast<Uint32>(this->player->getRange ());
 	if (coords.x != 0)

@@ -40,12 +40,11 @@ AtomicCenter::plantBomb (Player * player)
 }
 
 void
-AtomicCenter::removeBomb (Bomb * & bomb)
+AtomicCenter::removeBomb (Bomb * bomb)
 {
-	map::Coords coords = * bomb->getCoords ();
+	map::Coords coords = bomb->getCoords ();
 	bombs[coords.x][coords.y] = NULL;
 	delete (bomb);
-	bomb = NULL;
 }
 
 Bomb *
