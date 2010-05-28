@@ -5,25 +5,25 @@
  * Created on May 25, 2010, 8:15 PM
  */
 
+#include <iostream>
+
 #include "bomb.hpp"
-#include "map/map.hpp"
+#include "atomic-center.hpp"
 
 using namespace bombherman;
 using namespace bombherman::bomb;
-using namespace bombherman::map;
 
 SDL_mutex * Bomb::mutex = SDL_CreateMutex ();
 
-Bomb::Bomb (Player * player, Coords coords) : player (player),
-		coords (coords),
+Bomb::Bomb (Player * player) : player (player),
+		coords (& player->getCoords ()),
 		exploded (false)
 {
 
 	SDL_Thread *thread;
 	if ((thread = SDL_CreateThread(wait, this)) == NULL)
 		bherr <<  "Unable to create thread to manage a bomb : " << SDL_GetError();
-	bhout << "!!! Attention la bombe va exploser dans 5 secondes ..." << bhendl;
-	this->threadId = SDL_GetThreadID (thread);
+	std::cout << "!!! Attention la bombe va exploser dans 5 secondes ..." << bhendl;
 }
 
 Player *
@@ -32,13 +32,7 @@ Bomb::getPlayer ()
 	return this->player;
 }
 
-Uint32
-Bomb::getThreadId ()
-{
-	return this->threadId;
-}
-
-Coords
+map::Coords *
 Bomb::getCoords ()
 {
 	return this->coords;
@@ -52,7 +46,7 @@ Bomb::isExploded ()
 
 Bomb::~Bomb ()
 {
-	delete this;
+	std::cout << "deletion" << std::endl;
 }
 
 int
@@ -60,61 +54,77 @@ Bomb::wait (void * param)
 {
 	Bomb * bomb = static_cast<Bomb * >(param);
 	SDL_Delay (5000);
-	if (! bomb->exploded)
+	if (! bomb->exploded) {
 		explode (bomb);
+	}
 	return 0;
 }
 
 void
 Bomb::explode (Bomb * bomb)
 {
+	bomb->exploded = true;
+	std::vector<map::Coords *> explodedCells;
 	SDL_LockMutex (mutex);
 	Player player = * bomb->player;
-	Coords coords = bomb->coords;
-	Uint32 threadId = bomb->threadId;
-	int range =player.getRange ();
-	bhout << "Explosion avec les caractéristiques suivantes :" << bhendl <<
-	"Numéro du joueur : " << bomb->player->getId () << bhendl <<
-	"Portée de la bombe : " << range << bhendl <<
-	"Position de la bombe : [" << coords.x << ", " << coords.y << "]" << bhendl;
+	map::Coords * coords = bomb->coords;
+	int range = static_cast<Uint32>(player.getRange ());
 	//parcourons la case de la bombe et les cases à gauche de la bombe
-	char item = 'a';
-	for(int x = coords.x; x >= (coords.x - range) && x >= 0; x --) {
-		std::cout << "Parcours de la case : [" << x << ", " << coords.y << "] : ";
-//		item = Map::get(x, coords.y);
-		if (item == 'x')
+	if (coords->x != 0)
+		for(int x = coords->x, xFixed = coords->x; x >= (xFixed - range) && (x >= 0); -- x)
 		{
-			std::cout << "UN MUR §§§" << std::endl;
-			break;
+			if (! check(x, coords->y))
+				break;
+			explodedCells.push_back (new map::Coords(x, coords->y));
 		}
-		std::cout << "OK !" << std::endl;
-	}
-//	for(int x = coords.x + 1; x <= (coords.x + range) && x <= coords.max; x ++) {
-//		item = Map::get(x, coords.y);
-//		if (item == 'x')
-//		{
-//			bhout << "UN MUR §§§" << bhendl;
-//			break;
-//		}
-//		bhout << "Parcours de la case : [" << x << ", " << coords.y << "]" << bhendl;
-//	}
-//	for(int y = coords.y - 1; y >= (coords.y - range) && y >= 0; y --) {
-//		item = Map::get(coords.x, y);
-//		if (item == 'x')
-//		{
-//			cout << "UN MUR §§§" << endl;
-//			break;
-//		}
-//		cout << "Parcours de la case : [" << coords.x << ", " << y << "]" << endl;
-//	}
-//	for(int y = coords.y + 1; y <= (coords.y + range) && y <= coords.max; y ++) {
-//		item = Map::get(coords.x, y);
-//		if (item == 'x')
-//		{
-//			cout << "UN MUR §§§" << endl;
-//			break;
-//		}
-//		cout << "Parcours de la case : [" << coords.x << ", " << y << "]" << endl;
-//	}
+	if (coords->x != coords->max)
+		for(int x = coords->x + 1, xFixed = coords->x; x <= (xFixed + range) && (x <= coords->max); ++ x)
+		{
+			if (! check(x, coords->y))
+				break;
+			explodedCells.push_back (new map::Coords(x, coords->y));
+		}
+	if (coords->y != 0)
+		for(int y = coords->y - 1, yFixed = coords->y; y >= (yFixed - range) && (y >= 0); -- y)
+		{
+			if (! check(coords->x, y))
+				break;
+			explodedCells.push_back (new map::Coords(coords->x, y));
+		}
+	if (coords->y != coords->max)
+		for(int y = coords->y + 1, yFixed = coords->y; y <= (yFixed + range) && (y <= coords->max); ++ y)
+		{
+			if (! check(coords->x, y))
+				break;
+			explodedCells.push_back (new map::Coords(coords->x, y));
+		}
+	map::Map::toString();
 	SDL_UnlockMutex (mutex);
+}
+
+bool
+Bomb::check (int x, int y)
+{
+	map::Coords coords(x, y);
+	char item = map::Map::get(coords);
+	switch (item)
+	{
+	case map::INDESTRUCTIBLE :
+		return false;
+	case map::BOMB :
+		if (AtomicCenter::getBomb (& coords))
+			explode (AtomicCenter::getBomb (& coords));
+		break;
+	case map::BARREL :
+		map::Map::destroy (coords);
+		break;
+	case map::PLAYER :
+		Player::playerAt (& coords)->die();
+		break;
+	case map::PLAYONBOMB :
+		Player::playerAt (& coords)->die();
+		break;
+	}
+	std::cout << "Parcours de : [" << x << ", "  << y << "]" << std::endl;
+	return true;
 }

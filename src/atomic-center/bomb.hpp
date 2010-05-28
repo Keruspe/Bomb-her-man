@@ -11,6 +11,7 @@
 #include <iostream>
 #include "map/map-utils.hpp"
 #include "game/player.hpp"
+#include "map/map.hpp"
 #include "bombherman.hpp"
 #include <SDL/SDL.h>
 
@@ -21,20 +22,19 @@ namespace bombherman
     {
         class Bomb {
         public:
-            Bomb (Player * player, map::Coords coords);
+            Bomb (Player * player);
             Player * getPlayer ();
-            Uint32 getThreadId ();
-            map::Coords getCoords ();
+            map::Coords * getCoords ();
             bool isExploded ();
             virtual ~Bomb ();
+            bool exploded;
         private:
             static SDL_mutex * mutex;
             static void explode (Bomb *);
             static int wait (void *);
+            static bool check (int, int);
             Player * player;
-            Uint32 threadId;
-            map::Coords coords;
-            bool exploded;
+            map::Coords * coords;
         };
     }
 }
