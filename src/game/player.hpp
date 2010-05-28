@@ -17,19 +17,19 @@ namespace bombherman
 	public:
 		virtual ~Player();
 		
-		/// range getter
+		/// Range getter
 		/*
 		 * @return The actual range of the player's bombs (int)
 		 */
 		int getRange();
 		
-		/// coords getter
+		/// Coords getter
 		/*
 		 * @return The coords of the player (map::Coords)
 		 */
 		map::Coords & getCoords();
 		
-		/// orientation getter
+		/// Orientation getter
 		/*
 		 * @return The orientation of the player (map::Direction)
 		 */
@@ -145,6 +145,9 @@ namespace bombherman
 		 * @param The player to kill (Player *)
 		 */
 		void kill(Player * killed);
+
+		/// Tells the player that his bomb has exploded (decreases planted bombs counter)
+		void bombHasExploded();
 	private:
 		/// Private constructor, please call static newPlayer instead
 		Player();

@@ -95,6 +95,7 @@ Bomb::explode()
 			explodedCells.push_back (map::Coords(coords.x, y));
 		}
 	}
+	this->player->bombHasExploded();
 	map::Map::removeBomb (coords);
 	Display::explode (coords, explodedCells);
 	SDL_UnlockMutex (mutex);

@@ -23,13 +23,13 @@
 
 using namespace bombherman;
 using namespace bombherman::map;
-using namespace bombherman::exceptions;
 
 Grid Map::map;
 
 void
 Map::newMap()
 {
+	Map::map = Grid();
 	MapGenerator::generate(Map::map);
 	Map::map.exists = true;
 	Map::placePlayers();
@@ -44,10 +44,10 @@ Map::newMap(std::string path)
 		{
 			bherr << "The file in which the program looked "
 				<< "for the map was malformed." << bhendl;
-			throw MalformedFileException(path);
+			throw exceptions::MalformedFileException(path);
 		}
 	}
-	catch(BadElementException & e)
+	catch(exceptions::BadElementException & e)
 	{
 		bherr << "An error has been detected in " << path << bhendl;
 		throw e;
@@ -148,18 +148,16 @@ Map::movePlayer(Coords & coords, Direction & direction)
 	}
 	if (! tmpBool)
 		return NOTHINGHAPPENED;
-	tmpBool = false;
 	if (Map::map[coords.y][coords.x] != BOMB)
 	{
 		tmpBool = Map::applyBonus(coords);
 		Map::map[coords.y][coords.x] = PLAYER;
+		if (tmpBool)
+			return BONUSTAKEN;
 	}
 	else
 		Map::map[coords.y][coords.x] = PLAYONBOMB;
-	if (tmpBool)
-		return BONUSTAKEN;
-	else
-		return MOVED;
+	return MOVED;
 }
 
 bool
@@ -276,7 +274,7 @@ Map::applyBonus(Coords & c)
 	case NONE:
 		return false;
 	case FIREDOWN:
-		variation *= -1;
+		variation = -1;
 	case FIREUP:
 		player->addToRange(variation * Config::getInt("rangeVariation"));
 		break;
@@ -287,7 +285,7 @@ Map::applyBonus(Coords & c)
 		player->setRange(Config::getInt("maxRange"));
 		break;
 	case BOMBDOWN:
-		variation *= -1;
+		variation = -1;
 	case BOMBUP:
 		player->addToPlantableBombs(variation * Config::getInt("capacityVariation"));
 		break;
