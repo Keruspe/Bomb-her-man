@@ -206,7 +206,7 @@ Player::plantBomb()
 {
 	if (this->plantableBombs <= this->plantedBombs)
 		return;
-	bomb::AtomicCenter::plantBomb(this);
+	bomb::AtomicCenter::plantBomb(this->id, this->coords);
 	++this->plantedBombs;
 }
 

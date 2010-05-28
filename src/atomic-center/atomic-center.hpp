@@ -31,20 +31,21 @@
 
 namespace bombherman
 {
-    namespace bomb
-    {
-        class AtomicCenter
-        {
-        public:
-            static void plantBomb (Player *);
-            static void removeBomb (Bomb *);
-            static std::vector<std::vector<Bomb *> > getBombs ();
-            static Bomb * getBomb (int, int);
-            static void boum ();
-        private:
-            static std::vector<std::vector<Bomb *> > bombs;
-        };
-    }
+	namespace bomb
+	{
+		class AtomicCenter
+		{
+		public:
+			static void init();
+			static void plantBomb (int, map::Coords);
+			static void removeBomb (map::Coords);
+			static Bomb * getBomb (Uint32, Uint32);
+			static void boum ();
+		private:
+			static std::vector<Bomb *> bombs;
+			static std::vector<std::vector<Bomb *> > bombsXY;
+		};
+	}
 }
 
 #endif	/* _ATOMICCENTER_HPP */

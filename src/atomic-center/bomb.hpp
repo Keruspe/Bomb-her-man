@@ -23,8 +23,7 @@ namespace bombherman
 		class Bomb
 		{
 		public:
-			Bomb (Player * player);
-			Player * getPlayer ();
+			Bomb (int, map::Coords);
 			map::Coords & getCoords ();
 			void explode ();
 			virtual ~Bomb ();
@@ -36,7 +35,7 @@ namespace bombherman
 			static SDL_mutex * mutex;
 			static int wait (void *);
 			bool check (int, int);
-			Player * player;
+			int player;
 			map::Coords coords;
 		};
 	}
