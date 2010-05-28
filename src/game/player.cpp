@@ -105,20 +105,23 @@ void
 Player::die()
 {
 	++Player::icyDeadPeople;
-	std::cout << "Aoutch !" << std::endl;
 	map::Map::removePlayer(&this->coords);
 	if (Player::players.size() - Player::icyDeadPeople > 1)
 		this->alive = false;
 	else
-	{
-		bomb::AtomicCenter::boum();
-		Player::icyDeadPeople = 0;
-		for (std::vector< Player * > ::iterator i = Player::players.begin(),
-			i_end = Player::players.end() ; i != i_end ; ++i)
-				(*i)->alive = true;
-		/* TODO : End of game */
-		Game::nextMap();
-	}
+		Player::reInit();
+}
+
+void
+Player::reInit()
+{
+	bomb::AtomicCenter::boum();
+	Player::icyDeadPeople = 0;
+	for (std::vector< Player * > ::iterator i = Player::players.begin(),
+		i_end = Player::players.end() ; i != i_end ; ++i)
+			(*i)->alive = true;
+	/* TODO : End of game */
+	Game::nextMap();
 }
 
 void
