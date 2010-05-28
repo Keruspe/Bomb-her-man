@@ -9,6 +9,7 @@
 #include "map/map.hpp"
 #include "exceptions/too-many-players-exception.hpp"
 #include "atomic-center/atomic-center.hpp"
+#include "game.hpp"
 
 using namespace bombherman;
 
@@ -105,6 +106,14 @@ Player::die()
 	std::cout << "Aoutch !" << std::endl;
 	map::Map::removePlayer(&this->coords);
 	this->alive = false;
+	int stillAlive(0);
+	for (std::vector< Player * > ::iterator i = Player::players.begin(),
+		i_end = Player::players.end() ; i != i_end ; ++i)
+			if ((*i)->isAlive())
+				++stillAlive;
+	if (stillAlive <= 1)
+		/* TODO : End of game */
+		Game::nextMap();
 }
 
 void
