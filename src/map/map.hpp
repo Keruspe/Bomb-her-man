@@ -40,7 +40,7 @@ namespace bombherman
 			static bool plantBomb(Coords &);
 			static char get(Coords);
 			static char get(Uint32, Uint32);
-			static MoveResult movePlayer(Coords *, Direction &);
+			static MoveResult movePlayer(Coords &, Direction &);
 			static void destroy(Coords &);
 			static void toString();
 			static void removePlayer(Coords *);
@@ -48,12 +48,12 @@ namespace bombherman
 			static void removeBonus(Coords *);
 		private:
 			static void placePlayers();
-			static bool moveUp(Coords *);
-			static bool moveDown(Coords *);
-			static bool moveLeft(Coords *);
-			static bool  moveRight(Coords *);
-			static bool applyBonus(Coords *);
-			static void cleanOldSpot(Coords *);
+			static bool moveUp(Coords &);
+			static bool moveDown(Coords &);
+			static bool moveLeft(Coords &);
+			static bool moveRight(Coords &);
+			static bool applyBonus(Coords &);
+			static void cleanOldSpot(Coords &);
 			static Grid map;
 		};
 	}

@@ -152,7 +152,7 @@ Player::go(map::Direction & direction)
 		orientChanged = true;
 		this->orient = direction;
 	}
-	map::MoveResult moveResult = map::Map::movePlayer(&this->coords, direction);
+	map::MoveResult moveResult = map::Map::movePlayer(this->coords, direction);
 	if (moveResult == map::NOTHINGHAPPENED && orientChanged)
 		return map::ORIENTCHANGED;
 	return moveResult;

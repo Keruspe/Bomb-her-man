@@ -125,7 +125,7 @@ Map::get(Uint32 x, Uint32 y)
 }
 
 MoveResult
-Map::movePlayer(Coords * coords, Direction & direction)
+Map::movePlayer(Coords & coords, Direction & direction)
 {
 	if(! Map::map.exists)
 		return NOTHINGHAPPENED;
@@ -148,13 +148,13 @@ Map::movePlayer(Coords * coords, Direction & direction)
 	if (! tmpBool)
 		return NOTHINGHAPPENED;
 	tmpBool = false;
-	if (Map::map[coords->y][coords->x] != BOMB)
+	if (Map::map[coords.y][coords.x] != BOMB)
 	{
 		tmpBool = Map::applyBonus(coords);
-		Map::map[coords->y][coords->x] = PLAYER;
+		Map::map[coords.y][coords.x] = PLAYER;
 	}
 	else
-		Map::map[coords->y][coords->x] = PLAYONBOMB;
+		Map::map[coords.y][coords.x] = PLAYONBOMB;
 	if (tmpBool)
 		return BONUSTAKEN;
 	else
@@ -162,54 +162,54 @@ Map::movePlayer(Coords * coords, Direction & direction)
 }
 
 bool
-Map::moveUp(Coords * c)
+Map::moveUp(Coords & c)
 {
-	if (c->y <= 0 || Map::map[c->y - 1][c->x] == BARREL
-		|| Map::map[c->y - 1][c->x] == INDESTRUCTIBLE
-		|| Map::map[c->y - 1][c->x] == PLAYONBOMB
-		|| Map::map[c->y - 1][c->x] == PLAYER)
+	if (c.y <= 0 || Map::map[c.y - 1][c.x] == BARREL
+		|| Map::map[c.y - 1][c.x] == INDESTRUCTIBLE
+		|| Map::map[c.y - 1][c.x] == PLAYONBOMB
+		|| Map::map[c.y - 1][c.x] == PLAYER)
 			return false;
 	Map::cleanOldSpot(c);
-	--c->y;
+	--c.y;
 	return true;
 }
 
 bool
-Map::moveDown(Coords * c)
+Map::moveDown(Coords & c)
 {
-	if (c->y >= (Map::map.size - 1) || Map::map[c->y + 1][c->x] == BARREL
-		|| Map::map[c->y + 1][c->x] == INDESTRUCTIBLE
-		|| Map::map[c->y + 1][c->x] == PLAYONBOMB
-		|| Map::map[c->y + 1][c->x] == PLAYER)
+	if (c.y >= (Map::map.size - 1) || Map::map[c.y + 1][c.x] == BARREL
+		|| Map::map[c.y + 1][c.x] == INDESTRUCTIBLE
+		|| Map::map[c.y + 1][c.x] == PLAYONBOMB
+		|| Map::map[c.y + 1][c.x] == PLAYER)
 			return false;
 	Map::cleanOldSpot(c);
-	++c->y;
+	++c.y;
 	return true;
 }
 
 bool
-Map::moveLeft(Coords * c)
+Map::moveLeft(Coords & c)
 {
-	if (c->x <= 0 || Map::map[c->y][c->x - 1] == BARREL
-		|| Map::map[c->y][c->x - 1] == INDESTRUCTIBLE
-		|| Map::map[c->y][c->x - 1] == PLAYONBOMB
-		|| Map::map[c->y][c->x - 1] == PLAYER)
+	if (c.x <= 0 || Map::map[c.y][c.x - 1] == BARREL
+		|| Map::map[c.y][c.x - 1] == INDESTRUCTIBLE
+		|| Map::map[c.y][c.x - 1] == PLAYONBOMB
+		|| Map::map[c.y][c.x - 1] == PLAYER)
 			return false;
 	Map::cleanOldSpot(c);
-	--c->x;
+	--c.x;
 	return true;
 }
 
 bool
-Map::moveRight(Coords * c)
+Map::moveRight(Coords & c)
 {
-	if (c->x >= (Map::map.size - 1) || Map::map[c->y][c->x + 1] == BARREL
-		|| Map::map[c->y][c->x + 1] == INDESTRUCTIBLE
-		|| Map::map[c->y][c->x + 1] == PLAYONBOMB
-		|| Map::map[c->y][c->x + 1] == PLAYER)
+	if (c.x >= (Map::map.size - 1) || Map::map[c.y][c.x + 1] == BARREL
+		|| Map::map[c.y][c.x + 1] == INDESTRUCTIBLE
+		|| Map::map[c.y][c.x + 1] == PLAYONBOMB
+		|| Map::map[c.y][c.x + 1] == PLAYER)
 			return false;
 	Map::cleanOldSpot(c);
-	++c->x;
+	++c.x;
 	return true;
 }
 
@@ -258,13 +258,13 @@ Map::removeBonus(Coords * c)
 }
 
 bool
-Map::applyBonus(Coords * c)
+Map::applyBonus(Coords & c)
 {
-	Player * player = Player::playerAt(*c);
+	Player * player = Player::playerAt(c);
 	if (player == 0)
 		return false;
 	int variation(1);
-	switch(static_cast<Bonus>(Map::map[c->y][c->x]))
+	switch(static_cast<Bonus>(Map::map[c.y][c.x]))
 	{
 	case NONE:
 		return false;
@@ -289,12 +289,12 @@ Map::applyBonus(Coords * c)
 }
 
 void
-Map::cleanOldSpot(Coords * c)
+Map::cleanOldSpot(Coords & c)
 {
-	if (Map::map[c->y][c->x] == PLAYONBOMB)
-		Map::map[c->y][c->x] = BOMB;
-	else if (Map::map[c->y][c->x] != BOMB)
-		Map::map[c->y][c->x] = NOTHING;
+	if (Map::map[c.y][c.x] == PLAYONBOMB)
+		Map::map[c.y][c.x] = BOMB;
+	else if (Map::map[c.y][c.x] != BOMB)
+		Map::map[c.y][c.x] = NOTHING;
 }
 
 void
