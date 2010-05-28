@@ -102,7 +102,7 @@ void
 Player::die()
 {
 	std::cout << "Aoutch !" << std::endl;
-	map::Map::removePlayer(this->coords);
+	map::Map::removePlayer(&this->coords);
 }
 
 void

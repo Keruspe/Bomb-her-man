@@ -43,7 +43,7 @@ namespace bombherman
 			static bool movePlayer(Coords *, Direction &);
 			static void destroy(Coords &);
 			static void toString();
-			static void removePlayer(Coords &);
+			static void removePlayer(Coords *);
 		private:
 			static void placePlayers();
 			static bool moveUp(Coords *);

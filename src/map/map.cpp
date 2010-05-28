@@ -222,14 +222,16 @@ Map::destroy(Coords & c)
 }
 
 void
-Map::removePlayer(Coords & c)
+Map::removePlayer(Coords * c)
 {
-	if (0 > c.x || 0 > c.y || Map::map.size <= c.y || Map::map.size <= c.x)
+	if (0 > c->x || 0 > c->y || Map::map.size <= c->y || Map::map.size <= c->x)
 		return;
-	if (Map::get(c) == PLAYER)
-		Map::map[c.y][c.x] = NONE;
-	else if (Map::get(c) == PLAYONBOMB)
-		Map::map[c.y][c.x] = BOMB;
+	if (Map::get(*c) == PLAYER)
+		Map::map[c->y][c->x] = NONE;
+	else if (Map::get(*c) == PLAYONBOMB)
+		Map::map[c->y][c->x] = BOMB;
+	c->x = -1;
+	c->y = -1;
 }
 
 void
