@@ -733,13 +733,16 @@ Display::plantBomb(map::Coords coords)
 {
 	if ( ! sDisplay ) init();
 	SDL_Rect r = {
-			gZone.x + coords.x * gSize,
-			gZone.y + coords.y * gSize,
+			coords.x * gSize,
+			coords.y * gSize,
 			gSize,
 			gSize
 		};
 	
 	SDL_BlitSurface(gBomb, NULL, gBarrelsLayer, &r);
+	r.x += gZone.x;
+	r.y += gZone.y;
+	updateDisplay(gBomb, r);
 	
 	updatePlayers();
 }
