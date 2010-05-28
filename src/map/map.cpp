@@ -59,6 +59,7 @@ Map::newMap(std::string path)
 void
 Map::deleteMap()
 {
+	Map::map.exists = false;
 	for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
 		i_end = Map::map.grid.end() ; i != i_end ; ++i)
 			i->clear();
