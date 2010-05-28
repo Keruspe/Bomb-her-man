@@ -155,7 +155,7 @@ Player::addToRange(int range)
 map::MoveResult
 Player::go(map::Direction & direction)
 {
-	if (! this->alive)
+	if (! this || ! this->alive)
 		return map::NOTHINGHAPPENED;
 	bool orientChanged(false);
 	if (this->orient != direction)
