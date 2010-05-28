@@ -105,7 +105,6 @@ Bomb::explode (Bomb * bomb)
 	}
 	map::Map::removeBomb (& coords);
 	Display::explode (coords, explodedCells);
-	map::Map::toString();
 	SDL_UnlockMutex (mutex);
 }
 
@@ -118,10 +117,6 @@ Bomb::check (int x, int y)
 	{
 	case map::INDESTRUCTIBLE :
 		return false;
-	case map::BOMB :
-		if (! AtomicCenter::getBomb (x, y)->exploded)
-			explode (AtomicCenter::getBomb (x, y));
-		break;
 	case map::BARREL :
 		map::Map::destroy (coords);
 		break;
@@ -130,6 +125,17 @@ Bomb::check (int x, int y)
 		break;
 	case map::PLAYONBOMB :
 		Player::playerAt (& coords)->die();
+	case map::BOMB :
+		if (! AtomicCenter::getBomb (x, y)->exploded)
+			explode (AtomicCenter::getBomb (x, y));
+		break;
+	case map::BOMBDOWN :
+	case map::BOMBUP :
+	case map::FIREDOWN :
+	case map::FIREUP :
+	case map::FULLFIRE :
+	case map::NULLFIRE :
+		map::Map::removeBonus (& coords);
 		break;
 	}
 	return true;
