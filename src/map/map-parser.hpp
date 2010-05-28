@@ -34,9 +34,10 @@ namespace bombherman
 		{
 		public:
 			/// Parse a file to make a map
-			/*
-			 * @param The path to the file to parse and the Grid in which to copy it (std::string, map::Grid)
-			 */
+			/**
+			  * @param The path to the file to parse (std::string)
+			  * @param The grid in which to copy it (map::Grid)
+			  */
 			static bool parse(std::string, Grid &);
 		};
 	}
