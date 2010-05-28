@@ -53,9 +53,16 @@ namespace bombherman
 			Uint32 y;
 			Uint32 max;
 			
-			bool operator== (Coords & c)
+			bool
+			operator== (Coords & c)
 			{
 				return (this->x == c.x && this->y == c.y);
+			}
+			
+			bool
+			operator< (Coords & c)
+			{
+				return (this->x < c.y);
 			}
 			
 			Coords() : x(-1), y(-1),
