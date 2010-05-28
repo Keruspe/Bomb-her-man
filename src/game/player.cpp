@@ -202,12 +202,12 @@ Player::setCoords(map::Coords & c)
 }
 
 Player *
-Player::playerAt(map::Coords * c)
+Player::playerAt(map::Coords & c)
 {
 	for (std::vector< Player * >::iterator i = Player::players.begin(),
 		i_end = Player::players.end() ; i != i_end ; ++i)
 	{
-		if((*i)->getCoords().x == c->x && (*i)->getCoords().y == c->y)
+		if((*i)->getCoords().x == c.x && (*i)->getCoords().y == c.y)
 			return *i;
 	}
 	return 0;

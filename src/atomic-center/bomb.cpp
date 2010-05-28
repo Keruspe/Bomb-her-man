@@ -121,10 +121,10 @@ Bomb::check (int x, int y)
 		map::Map::destroy (coords);
 		break;
 	case map::PLAYER :
-		Player::playerAt (& coords)->die();
+		Player::playerAt (coords)->die();
 		break;
 	case map::PLAYONBOMB :
-		Player::playerAt (& coords)->die();
+		Player::playerAt (coords)->die();
 	case map::BOMB :
 		if (! AtomicCenter::getBomb (x, y)->exploded)
 			explode (AtomicCenter::getBomb (x, y));

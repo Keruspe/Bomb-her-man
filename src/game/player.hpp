@@ -37,7 +37,7 @@ namespace bombherman
 		void addToPlantableBombs(int);
 		void resetToDefaultStats();
 		void setCoords(map::Coords &);
-		static Player * playerAt(map::Coords *);
+		static Player * playerAt(map::Coords &);
 		bool isAlive();
 	private:
 		Player();

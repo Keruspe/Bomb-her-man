@@ -260,7 +260,7 @@ Map::removeBonus(Coords * c)
 bool
 Map::applyBonus(Coords * c)
 {
-	Player * player = Player::playerAt(c);
+	Player * player = Player::playerAt(*c);
 	if (player == 0)
 		return false;
 	int variation(1);
