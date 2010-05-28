@@ -100,6 +100,7 @@ Game::changeMenu(Menu::Type type, bool stopGame)
 	{
 		map::Map::deleteMap();
 		Player::clean();
+		Display::quitGame();
 	}
 	currentMenu = Menu::getMenu(type);
 	Display::displayMenu(currentMenu);
@@ -210,7 +211,7 @@ Game::eventGame(void *event)
 		case SDLK_LEFT:		// Left
 			Display::movePlayer(Player::getPlayer(1), map::LEFT);
 		break;
-		case SDLK_SPACE:	// Bomb
+		case SDLK_RSHIFT:	// Bomb
 			Player::getPlayer(1)->plantBomb();
 		break;
 		
@@ -227,7 +228,7 @@ Game::eventGame(void *event)
 		case SDLK_s:		// Left
 			Display::movePlayer(Player::getPlayer(2), map::LEFT);
 		break;
-		case SDLK_r:		// Bomb
+		case SDLK_SPACE:	// Bomb
 			Player::getPlayer(2)->plantBomb();
 		break;
 		
