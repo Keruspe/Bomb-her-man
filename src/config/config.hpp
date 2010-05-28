@@ -81,7 +81,7 @@ namespace bombherman
 		/// To read the file
 		static void read();
 		
-		/// The confguration map
+		/// The configuration map
 		static std::map<std::string, Config> config;
 	
 	};
