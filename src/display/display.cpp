@@ -184,7 +184,7 @@ Display::initSurfaces()
 	if ( ! sDisplay ) init();
 	
 	// Logo
-	SDL_Surface *icon = svgToSurface(DATADIR"/bomb-her-man.svg");
+	SDL_Surface *icon = svgToSurface(DATADIR"/graphics/bomb-her-man.svg");
 	//SDL_WM_SetIcon(icon, NULL);
 	SDL_FreeSurface(icon);
 	icon = NULL;
@@ -198,20 +198,20 @@ Display::initSurfaces()
 	
 	// gBomb
 	cleanSurface(gBomb);
-	gBomb = svgToSurface(DATADIR"/bomb.svg");
+	gBomb = svgToSurface(DATADIR"/graphics/bomb.svg");
 	
 	
 	// gWall
 	cleanSurface(gWall);
-	gWall = svgToSurface(DATADIR"/wall.svg");
+	gWall = svgToSurface(DATADIR"/graphics/wall.svg");
 	
 	// gBack
 	cleanSurface(gBack);
-	gBack = svgToSurface(DATADIR"/back.svg");
+	gBack = svgToSurface(DATADIR"/graphics/back.svg");
 	
 	// gBarrel
 	cleanSurface(gBarrel);
-	gBarrel = svgToSurface(DATADIR"/barrel.svg");
+	gBarrel = svgToSurface(DATADIR"/graphics/barrel.svg");
 	
 	
 	/*
@@ -226,7 +226,7 @@ Display::initSurfaces()
 			{
 				cleanSurface(gPlayers[p][i][j]);
 				std::ostringstream f;
-				f << DATADIR << "/players/" << (p+1) << '/' << i << '/' << j << ".svg";
+				f << DATADIR << "/graphics/players/" << (p+1) << '/' << i << '/' << j << ".svg";
 				gPlayers[p][i][j] = svgToSurface(f.str());
 			}
 		}
@@ -481,9 +481,9 @@ Display::updateScores()
 	*/
 	
 	// Scores heads
-	SDL_Surface *sWin = svgToSurface(DATADIR"/scores/win.svg", sSize, sSize);
-	SDL_Surface *sLose = svgToSurface(DATADIR"/scores/lose.svg", sSize, sSize);
-	SDL_Surface *sEqual = svgToSurface(DATADIR"/scores/equal.svg", sSize, sSize);
+	SDL_Surface *sWin = svgToSurface(DATADIR"/graphics/scores/win.svg", sSize, sSize);
+	SDL_Surface *sLose = svgToSurface(DATADIR"/graphics/scores/lose.svg", sSize, sSize);
+	SDL_Surface *sEqual = svgToSurface(DATADIR"/graphics/scores/equal.svg", sSize, sSize);
 		
 	for ( unsigned int i = 0 ; i < nbAll ; ++i )
 	{
