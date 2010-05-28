@@ -24,7 +24,6 @@
 
 using namespace bombherman;
 using namespace bombherman::map;
-using namespace bombherman::exceptions;
 
 bool
 MapParser::parse(std::string path, Grid & map)
@@ -50,7 +49,7 @@ MapParser::parse(std::string path, Grid & map)
 						break;
 					default:
 						char elem[2] = {c, '\0'};
-						throw BadElementException(elem);
+						throw exceptions::BadElementException(elem);
 				}
 			}
 			catch (std::exception)

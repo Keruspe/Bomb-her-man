@@ -119,7 +119,8 @@ Player::die()
 	{
 		map::Map::removePlayer(this->coords);
 	}
-	else
+	else if ( ( Player::players.size() - Player::icyDeadPeople ) == 1 )
+	// Don't reinit twice or more in a game, or weird things will happen :)
 		Player::reInit();
 }
 
