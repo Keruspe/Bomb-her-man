@@ -113,6 +113,14 @@ namespace bombherman
 			FULLFIRE = '5',
 			NULLFIRE = '6'
 		} Bonus;
+		
+		typedef enum
+		{
+			ORIENTCHANGED,
+			MOVED,
+			BONUSTAKEN,
+			NOTHINGHAPPENED
+		} MoveResult;
 	}
 }
 

@@ -22,7 +22,7 @@ namespace bombherman
 		bool isAbleToPlantBomb();
 		int getScore();
 		int getId();
-		bool go(map::Direction &);
+		map::MoveResult go(map::Direction &);
 		static std::vector< Player * > & getPlayers();
 		static Player * getPlayer(int);
 		static void newPlayer();

@@ -124,37 +124,40 @@ Map::get(Uint32 x, Uint32 y)
 	return Map::map[y][x];
 }
 
-bool
+MoveResult
 Map::movePlayer(Coords * coords, Direction & direction)
 {
 	if(! Map::map.exists)
-		return false;
-	bool move;
+		return NOTHINGHAPPENED;
+	bool tmpBool;
 	switch(direction)
 	{
 	case UP:
-		move = Map::moveUp(coords);
+		tmpBool = Map::moveUp(coords);
 		break;
 	case DOWN:
-		move = Map::moveDown(coords);
+		tmpBool = Map::moveDown(coords);
 		break;
 	case LEFT:
-		move = Map::moveLeft(coords);
+		tmpBool = Map::moveLeft(coords);
 		break;
 	case RIGHT:
-		move = Map::moveRight(coords);
+		tmpBool = Map::moveRight(coords);
 		break;
 	}
-	if (! move)
-		return false;
+	if (! tmpBool)
+		return NOTHINGHAPPENED;
 	if (Map::map[coords->y][coords->x] != BOMB)
 	{
-		Map::applyBonus(coords);
+		tmpBool = Map::applyBonus(coords);
 		Map::map[coords->y][coords->x] = PLAYER;
 	}
 	else
 		Map::map[coords->y][coords->x] = PLAYONBOMB;
-	return true;
+	if (tmpBool)
+		return BONUSTAKEN;
+	else
+		return MOVED;
 }
 
 bool
@@ -245,17 +248,17 @@ Map::removeBomb(Coords * c)
 		Map::map[c->y][c->x] = PLAYER;
 }
 
-void
+bool
 Map::applyBonus(Coords * c)
 {
 	Player * player = Player::playerAt(c);
 	if (player == 0)
-		return;
+		return false;
 	int variation(1);
 	switch(static_cast<Bonus>(Map::map[c->y][c->x]))
 	{
 	case NONE:
-		break;
+		return false;
 	case FIREDOWN:
 		variation *= -1;
 	case FIREUP:
@@ -273,6 +276,7 @@ Map::applyBonus(Coords * c)
 		player->addToPlantableBombs(variation * Config::getInt("capacityVariation"));
 		break;
 	}
+	return true;
 }
 
 void

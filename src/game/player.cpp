@@ -124,11 +124,21 @@ Player::addToRange(int range)
 	this->setRange(this->range + range);
 }
 
-bool
+map::MoveResult
 Player::go(map::Direction & direction)
 {
-	this->orient = direction;
-	return map::Map::movePlayer(&this->coords, direction);
+	if (! this->alive)
+		return map::NOTHINGHAPPENED;
+	bool orientChanged = false;
+	if (this->orient != direction)
+	{
+		orientChanged = true;
+		this->orient = direction;
+	}
+	map::MoveResult moveResult = map::Map::movePlayer(&this->coords, direction);
+	if (moveResult == map::NOTHINGHAPPENED && orientChanged)
+		return map::ORIENTCHANGED;
+	return moveResult;
 }
 
 void
