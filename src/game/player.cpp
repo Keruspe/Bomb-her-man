@@ -99,8 +99,10 @@ void
 Player::kill(Player *killed)
 {
 	if ( killed == this )
+	{
 		if ( (this->score -= 2) < -9 )
 			this->score = -9;
+	}
 	else
 		if( ++(this->score) > 99 )
 			this->score = 99;
