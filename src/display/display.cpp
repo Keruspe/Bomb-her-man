@@ -595,6 +595,8 @@ Display::updateBarrels()
 		r.y += gSize;
 	}
 	
+	updateDisplay(gBarrelsLayer, gZone);
+
 	updatePlayers();
 }
 
@@ -603,24 +605,22 @@ Display::updatePlayers()
 {
 	if ( ! gPlayers[0][0][0] ) initSurfaces();
 	
-	SDL_Rect r;
-	r.w = gSize;
-	r.h = gSize;
-	cleanSurface(gPlayersLayer);
-	gPlayersLayer = SDL_CreateRGBSurface(flags, gZone.w, gZone.h, 32, 0, 0, 0, 0);
-	SDL_BlitSurface(gBarrelsLayer, NULL, gPlayersLayer, NULL);
+	SDL_Rect r = {
+			0,
+			0,
+			gSize,
+			gSize
+		};
 	map::Coords coords;
 	std::vector< Player * > players = Player::getPlayers();
 	for ( std::vector< Player * >::iterator i = players.begin(), e = players.end() ; i != e ; ++i )
 	{
-		map::Coords coords = (*i)->getCoords();
-		if ( ( coords.x < 0 ) || ( coords.y < 0 ) || ( coords.x >= coords.max ) || ( coords.y >= coords.max ) ) continue;
-		r.x = ( coords.x * gSize );
-		r.y = ( coords.y * gSize );
-		SDL_BlitSurface(gPlayers[(*i)->getId()-1][(*i)->getOrient()][0], NULL, gPlayersLayer, &r);
+		coords = (*i)->getCoords();
+		if ( ( coords.x < 0 ) || ( coords.y < 0 ) || ( coords.x > coords.max ) || ( coords.y > coords.max ) ) continue;
+		r.x = ( coords.x * gSize ) + gZone.x;
+		r.y = ( coords.y * gSize ) + gZone.y;
+		updateDisplay(gPlayers[(*i)->getId()-1][(*i)->getOrient()][0], r);
 	}
-	
-	updateDisplay(gPlayersLayer, gZone);
 }
 
 void
