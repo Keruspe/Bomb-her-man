@@ -105,15 +105,22 @@ Player::die()
 {
 	std::cout << "Aoutch !" << std::endl;
 	map::Map::removePlayer(&this->coords);
-	this->alive = false;
 	int stillAlive(0);
 	for (std::vector< Player * > ::iterator i = Player::players.begin(),
 		i_end = Player::players.end() ; i != i_end ; ++i)
 			if ((*i)->isAlive())
 				++stillAlive;
 	if (stillAlive <= 1)
+	{
+		bomb::boum();
+		for (std::vector< Player * > ::iterator i = Player::players.begin(),
+			i_end = Player::players.end() ; i != i_end ; ++i)
+				(*i)->alive = true;
 		/* TODO : End of game */
 		Game::nextMap();
+	}
+	else
+		this->alive = false;
 }
 
 void
