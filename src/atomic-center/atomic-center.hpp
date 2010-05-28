@@ -17,6 +17,8 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _ATOMICCENTER_HPP
+#define	_ATOMICCENTER_HPP
 
 #include "map/map-utils.hpp"
 #include "display/display.hpp"
@@ -24,10 +26,6 @@
 #include "map/map.hpp"
 #include "bomb.hpp"
 #include <SDL.h>
-
-
-#ifndef _ATOMICCENTER_HPP
-#define	_ATOMICCENTER_HPP
 
 namespace bombherman
 {

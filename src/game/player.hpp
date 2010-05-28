@@ -5,10 +5,10 @@
  * Created on May 24, 2010, 11:52 AM
  */
 
-#include "map/map-utils.hpp"
-
 #ifndef _PLAYER_HPP_
 #define	_PLAYER_HPP_
+
+#include "map/map-utils.hpp"
 
 namespace bombherman
 {
