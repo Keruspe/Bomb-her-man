@@ -235,6 +235,17 @@ Map::removePlayer(Coords * c)
 }
 
 void
+Map::removeBomb(Coords * c)
+{
+	if (0 > c->x || 0 > c->y || Map::map.size <= c->y || Map::map.size <= c->x)
+		return;
+	if (Map::get(*c) == BOMB)
+		Map::map[c->y][c->x] = NONE;
+	else if (Map::get(*c) == PLAYONBOMB)
+		Map::map[c->y][c->x] = PLAYER;
+}
+
+void
 Map::applyBonus(Coords * c)
 {
 	Player * player = Player::playerAt(c);
