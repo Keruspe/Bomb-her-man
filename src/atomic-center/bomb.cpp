@@ -19,7 +19,7 @@ Bomb::Bomb (Player * player) : player (player),
 		coords (player->getCoords ()),
 		exploded (false)
 {
-
+	Display::plantBomb (coords);
 	SDL_Thread *thread;
 	if ((thread = SDL_CreateThread(wait, this)) == NULL)
 		bherr <<  "Unable to create thread to manage a bomb : " << SDL_GetError();
@@ -98,6 +98,7 @@ Bomb::explode (Bomb * bomb)
 				break;
 			explodedCells.push_back (map::Coords(coords.x, y));
 		}
+	Display::explode (coords, explodedCells);
 	map::Map::toString();
 	SDL_UnlockMutex (mutex);
 }
@@ -114,6 +115,7 @@ Bomb::check (int x, int y)
 	case map::BOMB :
 		if (AtomicCenter::getBomb (& coords))
 			explode (AtomicCenter::getBomb (& coords));
+		map::Map::removeBomb (& coords);
 		break;
 	case map::BARREL :
 		map::Map::destroy (coords);
