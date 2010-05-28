@@ -20,11 +20,9 @@ Bomb::Bomb (Player * player) : player (player),
 		exploded (false)
 {
 	Display::plantBomb (coords);
-	std::cout << "appel du display nan mais :(" << std::endl;
 	SDL_Thread *thread;
 	if ((thread = SDL_CreateThread(wait, this)) == NULL)
 		bherr <<  "Unable to create thread to manage a bomb : " << SDL_GetError();
-	std::cout << "!!! Attention la bombe va exploser dans 5 secondes ..." << bhendl;
 }
 
 Player *
@@ -47,7 +45,6 @@ Bomb::isExploded ()
 
 Bomb::~Bomb ()
 {
-	std::cout << "deletion" << std::endl;
 }
 
 int
@@ -70,8 +67,6 @@ Bomb::explode (Bomb * bomb)
 	Player player = * bomb->player;
 	map::Coords coords = bomb->coords;
 	int range = static_cast<Uint32>(player.getRange ());
-	//parcourons la case de la bombe et les cases à gauche de la bombe
-	std::cout << "lollllllllolololol";
 	if (coords.x != 0)
 	{
 		for(int x = coords.x, xFixed = coords.x; x >= (xFixed - range) && (x >= 0); -- x)
@@ -137,6 +132,5 @@ Bomb::check (int x, int y)
 		Player::playerAt (& coords)->die();
 		break;
 	}
-	std::cout << "Parcours de : [" << x << ", "  << y << "]" << std::endl;
 	return true;
 }

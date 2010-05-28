@@ -17,7 +17,7 @@ AtomicCenter::boum ()
 {
 	for (std::vector<std::vector<Bomb *> >::iterator i = bombs.begin (), iEnd = bombs.end (); i != iEnd; ++ i)
 		for (std::vector<Bomb *>::iterator j = i->begin (), jEnd = i->end (); j != jEnd; ++ j)
-			if (! (* j))
+			if (* j)
 				if (! (* j)->isExploded ())
 					(* j)->explode(* j);
 }
