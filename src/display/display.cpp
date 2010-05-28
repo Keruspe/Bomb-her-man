@@ -474,7 +474,7 @@ Display::updateScores()
 	SDL_BlitSurface(sBackground, &z, gScoresLayer, NULL);
 	
 	Sint32 *scores = reinterpret_cast<Sint32 *>(malloc(nbAll * sizeof(Sint32)));
-	Sint32 max = -1;
+	Sint32 max = -10;
 	bool neutral = false;
 	std::vector< Player * > players = Player::getPlayers();
 	for ( std::vector< Player * >::iterator i = players.begin(), e = players.end() ; i != e ; ++i )

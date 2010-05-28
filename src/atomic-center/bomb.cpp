@@ -37,12 +37,6 @@ Bomb::getCoords ()
 	return & this->coords;
 }
 
-bool
-Bomb::isExploded ()
-{
-	return this->exploded;
-}
-
 Bomb::~Bomb ()
 {
 }
@@ -50,23 +44,19 @@ Bomb::~Bomb ()
 int
 Bomb::wait (void * param)
 {
-	Bomb * bomb = static_cast<Bomb * >(param);
 	SDL_Delay (5000);
-	if (! bomb->exploded) {
-		explode (bomb);
-	}
+	static_cast<Bomb * >(param)->explode();
 	return 0;
 }
 
 void
-Bomb::explode (Bomb * bomb)
+Bomb::explode()
 {
+	if ( this->exploded ) return;
 	SDL_LockMutex (mutex);
-	bomb->exploded = true;
+	this->exploded = true;
 	std::vector<map::Coords> explodedCells;
-	Player player = * bomb->player;
-	map::Coords coords = bomb->coords;
-	int range = static_cast<Uint32>(player.getRange ());
+	int range = static_cast<Uint32>(this->player->getRange ());
 	if (coords.x != 0)
 	{
 		for(int x = coords.x, xFixed = coords.x; x >= (xFixed - range) && (x >= 0); -- x)
@@ -113,29 +103,23 @@ Bomb::check (int x, int y)
 {
 	map::Coords coords(x, y);
 	char item = map::Map::get(coords);
-	switch (item)
+	switch ( item )
 	{
-	case map::INDESTRUCTIBLE :
-		return false;
-	case map::BARREL :
-		map::Map::destroy (coords);
+		case map::INDESTRUCTIBLE :
+			return false;
+		case map::BARREL :
+			map::Map::destroy (coords);
 		break;
-	case map::PLAYER :
-		Player::playerAt (coords)->die();
+		case map::PLAYER :
+			this->player->kill(Player::playerAt(coords));
 		break;
-	case map::PLAYONBOMB :
-		Player::playerAt (coords)->die();
-	case map::BOMB :
-		if (! AtomicCenter::getBomb (x, y)->exploded)
-			explode (AtomicCenter::getBomb (x, y));
+		case map::PLAYONBOMB :
+			this->player->kill(Player::playerAt(coords));
+		case map::BOMB :
+			AtomicCenter::getBomb(x, y)->explode();
 		break;
-	case map::BOMBDOWN :
-	case map::BOMBUP :
-	case map::FIREDOWN :
-	case map::FIREUP :
-	case map::FULLFIRE :
-	case map::NULLFIRE :
-		map::Map::removeBonus (coords);
+		default : // Bonuses
+			map::Map::removeBonus (coords);
 		break;
 	}
 	return true;

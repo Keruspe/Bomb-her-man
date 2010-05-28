@@ -39,6 +39,8 @@ namespace bombherman
 		void setCoords(map::Coords &);
 		static Player * playerAt(map::Coords &);
 		bool isAlive();
+		void kill(Player *killed);
+	
 	private:
 		Player();
 		int plantableBombs;

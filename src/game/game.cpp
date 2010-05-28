@@ -19,13 +19,18 @@
 #include "game.hpp"
 #include "menu.hpp"
 #include "map/map-utils.hpp"
+#include "atomic-center/bomb.hpp"
 
 using namespace bombherman;
 
 Menu *Game::currentMenu = NULL;
+#ifdef THREAD_EVENTS
 std::vector< SDL_Thread * > *Game::threads = new std::vector< SDL_Thread * >();
+#endif // THREAD_EVENTS
 bool Game::isInit = false;
 bool Game::playing = true;
+
+Sint32 Game::mapCount = -1;
 
 void Game::init()
 {
@@ -66,13 +71,19 @@ Game::main()
 			case SDL_KEYDOWN:
 				if ( currentMenu )
 				{
-					//threads->push_back(SDL_CreateThread(&bombherman::Game::eventMenu, &event.key));
+					#ifdef THREAD_EVENTS
+					threads->push_back(SDL_CreateThread(&bombherman::Game::eventMenu, &event.key));
+					#else
 					eventMenu(&event.key);
+					#endif // THREAD_EVENTS
 				}
 				else
 				{
-					//threads->push_back(SDL_CreateThread(&bombherman::Game::eventGame, &event.key));
+					#ifdef THREAD_EVENTS
+					threads->push_back(SDL_CreateThread(&bombherman::Game::eventGame, &event.key));
+					#else
 					eventGame(&event.key);
+					#endif // THREAD_EVENTS
 				}
 			break;
 			default:
@@ -102,6 +113,7 @@ Game::newGame()
 	//for ( int i = 0, e = Config::getInt("nbAIs") ; i < e ; ++i )
 	//	AI::newAI();
 	
+	mapCount = Config::getInt("nbMaps");
 	nextMap();
 }
 
@@ -109,8 +121,13 @@ void
 Game::nextMap()
 {
 	map::Map::deleteMap();
-	map::Map::newMap();
-	play();
+	if ( --mapCount < 0 )
+		changeMenu(Menu::MAIN);
+	else
+	{
+		map::Map::newMap();
+		play();
+	}
 }
 
 void
@@ -120,6 +137,7 @@ Game::play()
 	Display::updateMap();
 }
 
+#ifdef THREAD_EVENTS
 void
 Game::threadClean(Uint32 id)
 {
@@ -132,6 +150,7 @@ Game::threadClean(Uint32 id)
 		}
 	}
 }
+#endif // THREAD_EVENTS
 
 int
 Game::eventMenu(void *event)
@@ -162,7 +181,9 @@ Game::eventMenu(void *event)
 		break;
 	}
 	
+	#ifdef THREAD_EVENTS
 	Game::threadClean(SDL_ThreadID());
+	#endif // THREAD_EVENTS
 	
 	return 0;
 }
@@ -214,7 +235,9 @@ Game::eventGame(void *event)
 		break;
 	}
 	
+	#ifdef THREAD_EVENTS
 	Game::threadClean(SDL_ThreadID());
+	#endif // THREAD_EVENTS
 	
 	return 0;
 }
@@ -231,16 +254,19 @@ Game::quit()
 	
 	Display::quit();
 	
-	currentMenu = NULL;
-	
 	map::Map::deleteMap();
 	
+	#ifdef THREAD_EVENTS
 	for ( std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end() ; i != e ; ++i )
 	{
 		SDL_WaitThread((*i), NULL);
 	}
 	delete(threads);
+	#endif // THREAD_EVENTS
 	
+	bomb::Bomb::deinit();
+	
+	currentMenu = NULL;
 	Menu::clear();
 	
 	Config::write();

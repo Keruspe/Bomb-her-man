@@ -60,7 +60,10 @@ namespace bombherman
 	private:
 		static bool isInit, playing;
 		
+		#ifdef THREAD_EVENTS
+		static std::vector< SDL_Thread * > *threads;
 		static void threadClean(Uint32 id);
+		#endif // THREAD_EVENTS
 		
 		static int eventMenu(void *);
 		static int eventGame(void *);
@@ -68,7 +71,7 @@ namespace bombherman
 		// To store the actual menu
 		static Menu *currentMenu;
 		
-		static std::vector< SDL_Thread * > *threads;
+		static Sint32 mapCount;
 	};
 }
 

@@ -102,12 +102,29 @@ Player::clean()
 }
 
 void
+Player::kill(Player *killed)
+{
+	if ( killed == this )
+	{
+		if ( (this->score -= 2) < -9 )
+			this->score = -9;
+	}
+	else
+	{
+		if( ++(this->score) > 99 )
+			this->score = 99;
+	}
+	killed->die();
+}
+
+void
 Player::die()
 {
-	++Player::icyDeadPeople;
-	map::Map::removePlayer(this->coords);
-	if (Player::players.size() - Player::icyDeadPeople > 1)
+	if ( ( Player::players.size() - ++Player::icyDeadPeople ) > 1 )
+	{
+		map::Map::removePlayer(this->coords);
 		this->alive = false;
+	}
 	else
 		Player::reInit();
 }
@@ -120,7 +137,6 @@ Player::reInit()
 	for (std::vector< Player * > ::iterator i = Player::players.begin(),
 		i_end = Player::players.end() ; i != i_end ; ++i)
 			(*i)->alive = true;
-	/* TODO : End of game */
 	Game::nextMap();
 }
 

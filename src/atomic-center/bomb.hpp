@@ -13,30 +13,33 @@
 #include "game/player.hpp"
 #include "map/map.hpp"
 #include "bombherman.hpp"
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 
 namespace bombherman
 {
-    namespace bomb
-    {
-        class Bomb {
-        public:
-            Bomb (Player * player);
-            Player * getPlayer ();
-            map::Coords * getCoords ();
-            bool isExploded ();
-            static void explode (Bomb *);
-            virtual ~Bomb ();
-        private:
-            bool exploded;
-            static SDL_mutex * mutex;
-            static int wait (void *);
-            static bool check (int, int);
-            Player * player;
-            map::Coords coords;
-        };
-    }
+	namespace bomb
+	{
+		class Bomb
+		{
+		public:
+			Bomb (Player * player);
+			Player * getPlayer ();
+			map::Coords * getCoords ();
+			void explode ();
+			virtual ~Bomb ();
+			
+			static void deinit() { SDL_DestroyMutex(mutex); }
+			
+		private:
+			bool exploded;
+			static SDL_mutex * mutex;
+			static int wait (void *);
+			bool check (int, int);
+			Player * player;
+			map::Coords coords;
+		};
+	}
 }
 
 #endif	/* _BOMB_HPP */
