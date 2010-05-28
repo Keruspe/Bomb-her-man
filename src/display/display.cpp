@@ -429,13 +429,13 @@ Display::updateScores()
 		sSize = dy / 4;
 		dp.x = sSize / 2 - gSize / 2;
 		dp.y = 5 * sSize / 4;
-		if ( z.w < dy )
+		if ( dy < z.w )
 		{
 			dt.x = dp.y;
 			dt.y = sSize / 2 - hText / 2;
 		}
 		else
-			dt.y = dp.y + sSize / 2 - hText / 2;
+			dt.y = dp.y + sSize - hText / 2;
 	}
 	else
 	{	// Vertical screen -> Horizontal scores
@@ -445,9 +445,13 @@ Display::updateScores()
 		sSize = dx / 4;
 		dp.x = 5 * sSize / 4;
 		dp.y = sSize / 2 - gSize / 2;
-		if ( z.h < dx ) dx = z.h / nbAll;
-		dt.x = sSize / 2 - wText / 2;
-		dt.y = dp.x;
+		if ( dy < z.w )
+		{
+			dt.x = sSize / 2 - wText / 2;
+			dt.y = dp.x;
+		}
+		else
+			dt.x = dp.x + sSize - wText / 2;
 	}
 	
 	cleanSurface(gScoresLayer);
