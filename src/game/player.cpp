@@ -14,7 +14,7 @@
 using namespace bombherman;
 
 std::vector<Player * > Player::players;
-unsigned icyDeadPeople = 0;
+unsigned Player::icyDeadPeople = 0;
 
 Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
 		range (Config::getInt("defaultRange")),
@@ -104,15 +104,15 @@ Player::clean()
 void
 Player::die()
 {
-	++icyDeadPeople;
+	++Player::icyDeadPeople;
 	std::cout << "Aoutch !" << std::endl;
 	map::Map::removePlayer(&this->coords);
-	if (Player::players.size() - icyDeadPeople > 1)
+	if (Player::players.size() - Player::icyDeadPeople > 1)
 		this->alive = false;
 	else
 	{
 		bomb::AtomicCenter::boum();
-		icyDeadPeople = 0;
+		Player::icyDeadPeople = 0;
 		for (std::vector< Player * > ::iterator i = Player::players.begin(),
 			i_end = Player::players.end() ; i != i_end ; ++i)
 				(*i)->alive = true;
