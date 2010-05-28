@@ -540,6 +540,8 @@ Display::updateScores()
 void
 Display::updateMap()
 {
+	updateScores();
+	
 	if ( ( ! gWall ) || ( ! gBack ) ) initSurfaces();
 	
 	cleanSurface(gMapLayer);
