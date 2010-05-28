@@ -628,7 +628,7 @@ void
 Display::movePlayer(Player *player, map::Direction goTo)
 {
 	if ( ! sDisplay ) init();
-	if (!  (*i)->isAlive() ) return;
+	if ( ! player->isAlive() ) return;
 	map::Direction was = player->getOrient();
 	if ( player->go(goTo) )
 	{
