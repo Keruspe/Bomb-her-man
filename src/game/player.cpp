@@ -20,7 +20,8 @@ Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
 		score (0),
 		id (Player::players.size() + 1),
 		coords (map::Coords()),
-		orient(map::DOWN)
+		orient(map::DOWN),
+		alive(true)
 {
 }
 
@@ -103,6 +104,7 @@ Player::die()
 {
 	std::cout << "Aoutch !" << std::endl;
 	map::Map::removePlayer(&this->coords);
+	this->alive = false;
 }
 
 void
