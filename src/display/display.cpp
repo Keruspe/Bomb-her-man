@@ -49,6 +49,7 @@ SDL_Surface *Display::gBarrelsLayer = NULL;
 SDL_Surface *Display::gPlayersLayer = NULL;
 
 std::vector< std::vector< std::vector<SDL_Surface *> > > Display::gPlayers;
+SDL_Surface *Display::gBonuses[NB_BONUSES];
 SDL_Surface *Display::gBomb = NULL;
 SDL_Surface *Display::gExplosion = NULL;
 SDL_Surface *Display::gBarrel = NULL;
@@ -231,6 +232,18 @@ Display::initSurfaces()
 			}
 		}
 	}
+	
+	
+	/*
+	 * Bonuses
+	 */
+	for ( unsigned int b = 0 ; b < NB_BONUSES ; ++b )
+	{
+		cleanSurface(gBonuses[b]);
+		std::ostringstream f;
+		f << DATADIR << "/graphics/bonuses/" << (b+1) << ".svg";
+		gBonuses[b] = svgToSurface(f.str());
+	}
 }
 
 void
@@ -275,6 +288,8 @@ Display::quit()
 				cleanSurface(gPlayers[p][i][j]);
 		}
 	}
+	for ( unsigned int b = 0 ; b < NB_BONUSES ; ++b )
+		cleanSurface(gBonuses[b]);
 	
 	//SDL_LockMutex(mUpdate);
 	SDL_DestroyMutex(mUpdate);
@@ -590,6 +605,8 @@ Display::updateBarrels()
 				SDL_BlitSurface(gBarrel, NULL, gBarrelsLayer, &r);
 			else if ( ( c == map::BOMB ) || ( c == map::PLAYONBOMB ) )
 				SDL_BlitSurface(gBomb, NULL, gBarrelsLayer, &r);
+			else if ( ( c >= '1' ) && ( c <= '6' ) )
+				SDL_BlitSurface(gBonuses[c-'1'], NULL, gBarrelsLayer, &r);
 			r.x += gSize;
 		}
 		r.y += gSize;
