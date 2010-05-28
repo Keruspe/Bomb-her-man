@@ -44,6 +44,7 @@ namespace bombherman
 		int plantedBombs;
 		int score;
 		int id;
+		bool alive;
 		map::Coords coords;
 		map::Direction orient;
 		static std::vector< Player * > players;

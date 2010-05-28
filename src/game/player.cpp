@@ -184,3 +184,9 @@ Player::playerAt(map::Coords * c)
 	return 0;
 }
 
+bool
+Player::isAlive()
+{
+	return this->alive;
+}
+
