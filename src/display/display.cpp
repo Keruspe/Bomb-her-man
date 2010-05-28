@@ -645,104 +645,93 @@ void
 Display::movePlayer(Player *player, map::Direction goTo)
 {
 	if ( ! sDisplay ) init();
-	if ( ! player->isAlive() ) return;
-	map::Direction was = player->getOrient();
-	if ( player->go(goTo) )
+	map::MoveResult status = player->go(goTo);
+	if ( status == map::NOTHINGHAPPENED ) return;
+	int p = player->getId() - 1;
+	SDL_Surface *sPlayer = NULL;
+	map::Coords coords = player->getCoords();
+	SDL_Rect
+		r = {
+				coords.x * gSize,
+				coords.y * gSize,
+				gSize,
+				gSize
+			},
+		l = {
+				0,
+				0,
+				gSize,
+				gSize
+			};
+	switch ( status )
 	{
-		map::Coords coords = player->getCoords();
-		SDL_Rect
-			r = {
-					coords.x * gSize,
-					coords.y * gSize,
-					gSize,
-					gSize
-				},
-			l = {
-					0,
-					0,
-					gSize,
-					gSize
-				};
-		
-		switch ( goTo )
-		{
-			case map::DOWN:
-				r.y -= gSize;
-				l.y = gSize;
-			case map::UP:
-				r.h += gSize;
-			break;
-			case map::RIGHT:
-				r.x -= gSize;
-				l.x = gSize;
-			case map::LEFT:
-				r.w += gSize;
-			break;
-		}
-		
-		SDL_Surface *sPlayer = NULL;
-		#if ANIM_IMAGES > 1
-		unsigned int anim = 0;
-		const Sint16 part = gSize / ANIM_IMAGES;
-		const Sint16 cpart = (ANIM_IMAGES-1) * part;
-		while ( true )
-		{
-			SDL_Rect d = {
-					0,
-					0,
-					gSize,
-					gSize
-				};
+		case map::BONUSTAKEN:
+			SDL_BlitSurface(gMapLayer, &r, gBarrelsLayer, &r);
+		case map::MOVED:
 			switch ( goTo )
 			{
 				case map::DOWN:
-					d.y = (1+anim)*part;
-					if ( static_cast<Uint16>(d.y) >= gSize ) anim = ANIM_IMAGES-1;
-				break;
+					r.y -= gSize;
+					l.y = gSize;
 				case map::UP:
-					d.y = cpart-anim*part;
-					if ( d.y <= 0 ) anim = ANIM_IMAGES-1;
+					r.h += gSize;
 				break;
 				case map::RIGHT:
-					d.x = (1+anim)*part;
-					if ( static_cast<Uint16>(d.x) >= gSize ) anim = ANIM_IMAGES-1;
-				break;
+					r.x -= gSize;
+					l.x = gSize;
 				case map::LEFT:
-					d.x = cpart-anim*part;
-					if ( d.x <= 0 ) anim = ANIM_IMAGES-1;
+					r.w += gSize;
 				break;
 			}
-			sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
-			SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
-			SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][++anim%ANIM_IMAGES], NULL, sPlayer, &d);
-			updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
-			SDL_FreeSurface(sPlayer);
-			if ( anim < ANIM_IMAGES )
-				SDL_Delay(ANIM_TIME/ANIM_IMAGES);
-			else break;
-		}
-		#endif // ANIM_IMAGES > 1
-		sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
-		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
-		SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &l);
-		updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
-		SDL_FreeSurface(sPlayer);
+			
+			#if ANIM_IMAGES > 1
+			unsigned int anim = 0;
+			const Sint16 part = gSize / ANIM_IMAGES;
+			const Sint16 cpart = (ANIM_IMAGES-1) * part;
+			while ( true )
+			{
+				SDL_Rect d = {
+						0,
+						0,
+						gSize,
+						gSize
+					};
+				switch ( goTo )
+				{
+					case map::DOWN:
+						d.y = (1+anim)*part;
+						if ( static_cast<Uint16>(d.y) >= gSize ) anim = ANIM_IMAGES-1;
+					break;
+					case map::UP:
+						d.y = cpart-anim*part;
+						if ( d.y <= 0 ) anim = ANIM_IMAGES-1;
+					break;
+					case map::RIGHT:
+						d.x = (1+anim)*part;
+						if ( static_cast<Uint16>(d.x) >= gSize ) anim = ANIM_IMAGES-1;
+					break;
+					case map::LEFT:
+						d.x = cpart-anim*part;
+						if ( d.x <= 0 ) anim = ANIM_IMAGES-1;
+					break;
+				}
+				sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
+				SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
+				SDL_BlitSurface(gPlayers[p][goTo][++anim%ANIM_IMAGES], NULL, sPlayer, &d);
+				updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
+				SDL_FreeSurface(sPlayer);
+				if ( anim < ANIM_IMAGES )
+					SDL_Delay(ANIM_TIME/ANIM_IMAGES);
+				else break;
+			}
+			#endif // ANIM_IMAGES > 1
+		break;
 	}
-	else if ( player->getOrient() != was )
-	{
-		map::Coords coords = player->getCoords();
-		SDL_Rect r = {
-					coords.x * gSize,
-					coords.y * gSize,
-					gSize,
-					gSize
-				};
-		SDL_Surface *sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
-		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
-		SDL_BlitSurface(gPlayers[player->getId()-1][goTo][0], NULL, sPlayer, NULL);
-		updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
-		SDL_FreeSurface(sPlayer);
-	}
+	sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
+	SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
+	SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &l);
+	updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
+	SDL_FreeSurface(sPlayer);
 }
 
 void
