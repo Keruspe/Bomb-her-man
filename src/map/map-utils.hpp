@@ -62,7 +62,7 @@ namespace bombherman
 			bool
 			operator< (Coords & c)
 			{
-				return (this->x < c.y);
+				return (this->x < c.x);
 			}
 			
 			Coords() : x(-1), y(-1),
