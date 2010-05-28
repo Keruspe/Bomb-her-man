@@ -117,7 +117,6 @@ void
 Game::play()
 {
 	currentMenu = NULL;
-	Display::updateScores();
 	Display::updateMap();
 }
 
@@ -191,7 +190,7 @@ Game::eventGame(void *event)
 			Display::movePlayer(Player::getPlayer(1), map::LEFT);
 		break;
 		case SDLK_SPACE:	// Bomb
-			//Player::getPlayer(1)->plantBomb();
+			Player::getPlayer(1)->plantBomb();
 		break;
 		
 		// Player 2
@@ -208,7 +207,7 @@ Game::eventGame(void *event)
 			Display::movePlayer(Player::getPlayer(2), map::LEFT);
 		break;
 		case SDLK_r:		// Bomb
-			//Player::getPlayer(2)->plantBomb();
+			Player::getPlayer(2)->plantBomb();
 		break;
 		
 		default:

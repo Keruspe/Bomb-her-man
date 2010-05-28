@@ -49,14 +49,8 @@ namespace bombherman
 		 * @param menu The pointer the menu to display
 		 */
 		static void displayMenu(Menu *menu);
-		/// Update the scores "panel"
-		static void updateScores();
 		/// Update the map
 		static void updateMap();
-		/// Update the barrels
-		static void updateBarrels();
-		/// Update the players
-		static void updatePlayers();
 		/// Move a player
 		/**
 		 * @param player Pointer to the player who move
@@ -83,6 +77,12 @@ namespace bombherman
 		static void updateDisplay(SDL_Surface *s, SDL_Rect z) { updateDisplay(s, z.x, z.y, z.w, z.h); }
 		static void updateDisplay(SDL_Surface *, Uint16 = 0, Uint16 = 0, Uint16 = 0, Uint16 = 0);
 		
+		/// Update the scores "panel"
+		static void updateScores();
+		/// Update the barrels
+		static void updateBarrels();
+		/// Update the players
+		static void updatePlayers();
 		
 		// To store the SDL display surface
 		static SDL_Surface *sDisplay;

@@ -540,6 +540,8 @@ Display::updateScores()
 void
 Display::updateMap()
 {
+	updateScores();
+	
 	if ( ( ! gWall ) || ( ! gBack ) ) initSurfaces();
 	
 	cleanSurface(gMapLayer);
@@ -612,6 +614,7 @@ Display::updatePlayers()
 	for ( std::vector< Player * >::iterator i = players.begin(), e = players.end() ; i != e ; ++i )
 	{
 		map::Coords coords = (*i)->getCoords();
+		if ( ( coords.x < 0 ) || ( coords.y < 0 ) || ( coords.x >= coords.max ) || ( coords.y >= coords.max ) ) continue;
 		r.x = ( coords.x * gSize );
 		r.y = ( coords.y * gSize );
 		SDL_BlitSurface(gPlayers[(*i)->getId()-1][(*i)->getOrient()][0], NULL, gPlayersLayer, &r);
