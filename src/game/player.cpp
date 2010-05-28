@@ -136,7 +136,7 @@ Player::reInit()
 	Player::icyDeadPeople = 0;
 	for (std::vector< Player * > ::iterator i = Player::players.begin(),
 		i_end = Player::players.end() ; i != i_end ; ++i)
-			(*i)->alive = true;
+			(*i)->resetToDefaultStats();
 	Game::nextMap();
 }
 
@@ -203,6 +203,7 @@ Player::resetToDefaultStats()
 	this->plantableBombs = Config::getInt("defaultPlantableBombs");
 	this->range = Config::getInt("defaultRange");
 	this->plantedBombs = 0;
+	this->alive = true;
 }
 
 void
