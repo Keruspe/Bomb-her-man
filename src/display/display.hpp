@@ -68,11 +68,17 @@ namespace bombherman
 		 * @param coords Coordonates where to plant the bomb
 		 */
 		static void plantBomb(map::Coords coords);
+		/// Show the bomb explosing
+		/**
+		 * @param coords Where the bomb was placed
+		 * @param cells Which cells (a vector of Coords) the bomb destroyed
+		 */
+		static void explode(map::Coords coords, std::vector<map::Coords> cells) { updateBarrels(); }
 	
 	private:
 		static SDL_Surface *svgToSurface(std::string, Uint32 = gSize, Uint32 = gSize);
 		static void initSurfaces();
-		static void cleanSurface(SDL_Surface *);
+		static void cleanSurface(SDL_Surface * &);
 		
 		static void updateDisplay(SDL_Surface *s, SDL_Rect z) { updateDisplay(s, z.x, z.y, z.w, z.h); }
 		static void updateDisplay(SDL_Surface *, Uint16 = 0, Uint16 = 0, Uint16 = 0, Uint16 = 0);
