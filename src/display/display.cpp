@@ -615,8 +615,9 @@ Display::updatePlayers()
 	std::vector< Player * > players = Player::getPlayers();
 	for ( std::vector< Player * >::iterator i = players.begin(), e = players.end() ; i != e ; ++i )
 	{
+		if ( ! (*i)->isAlive() ) continue;
+		
 		coords = (*i)->getCoords();
-		if ( ( coords.x < 0 ) || ( coords.y < 0 ) || ( coords.x > coords.max ) || ( coords.y > coords.max ) ) continue;
 		r.x = ( coords.x * gSize ) + gZone.x;
 		r.y = ( coords.y * gSize ) + gZone.y;
 		updateDisplay(gPlayers[(*i)->getId()-1][(*i)->getOrient()][0], r);
@@ -627,6 +628,7 @@ void
 Display::movePlayer(Player *player, map::Direction goTo)
 {
 	if ( ! sDisplay ) init();
+	if (!  (*i)->isAlive() ) return;
 	map::Direction was = player->getOrient();
 	if ( player->go(goTo) )
 	{
