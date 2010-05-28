@@ -104,7 +104,7 @@ Player::kill(Player *killed)
 			this->score = -9;
 	else
 		if( ++(this->score) > 99 )
-			<wthis->score = 99;
+			this->score = 99;
 	killed->die();
 }
 
