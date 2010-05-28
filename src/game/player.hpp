@@ -61,7 +61,9 @@ namespace bombherman
 		 */
 		map::MoveResult go(map::Direction &);
 		
-		static std::vector< Player * > & getPlayers();
+		
+		static std::vector< Player * > players;
+		
 		static Player * getPlayer(int);
 		static void newPlayer();
 		static void clean();
@@ -89,7 +91,6 @@ namespace bombherman
 		bool alive;
 		map::Coords coords;
 		map::Direction orient;
-		static std::vector< Player * > players;
 		static unsigned icyDeadPeople;
 	};
 };

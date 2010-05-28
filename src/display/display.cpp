@@ -476,8 +476,7 @@ Display::updateScores()
 	Sint32 *scores = reinterpret_cast<Sint32 *>(malloc(nbAll * sizeof(Sint32)));
 	Sint32 max = -10;
 	bool neutral = false;
-	std::vector< Player * > players = Player::getPlayers();
-	for ( std::vector< Player * >::iterator i = players.begin(), e = players.end() ; i != e ; ++i )
+	for ( std::vector< Player * >::iterator i = Player::players.begin(), e = Player::players.end() ; i != e ; ++i )
 	{
 		Sint32 s = (*i)->getScore();
 		if ( s > max ) max = s;
@@ -629,8 +628,7 @@ Display::updatePlayers()
 			gSize
 		};
 	map::Coords coords;
-	std::vector< Player * > players = Player::getPlayers();
-	for ( std::vector< Player * >::iterator i = players.begin(), e = players.end() ; i != e ; ++i )
+	for ( std::vector< Player * >::iterator i = Player::players.begin(), e = Player::players.end() ; i != e ; ++i )
 	{
 		if ( ! (*i)->isAlive() ) continue;
 		

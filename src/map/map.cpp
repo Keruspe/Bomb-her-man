@@ -69,8 +69,8 @@ void
 Map::placePlayers()
 {
 	Coords c;
-	for(std::vector< Player * >::iterator i = Player::getPlayers().begin(),
-		i_end = Player::getPlayers().end() ; i != i_end ; ++i)
+	for(std::vector< Player * >::iterator i = Player::players.begin(),
+		i_end = Player::players.end() ; i != i_end ; ++i)
 	{
 		while (true)
 		{

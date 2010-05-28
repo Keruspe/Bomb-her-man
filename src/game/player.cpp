@@ -67,12 +67,6 @@ Player::getId ()
 	return this->id;
 }
 
-std::vector< Player * > &
-Player::getPlayers()
-{
-	return Player::players;
-}
-
 Player *
 Player::getPlayer(int playerNo)
 {
