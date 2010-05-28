@@ -96,8 +96,8 @@ Config::init()
 		config["nbAIs"] = 0;
 		
 		config["bonusApparitionProbability"] = 100 - getInt("mgInsertionProbabilityBarrel");
-		config["rangeVariation"] = config["mapSize"]/10;
-		config["maxRange"] = config["mapSize"]/3;
+		config["rangeVariation"] = getInt("mapSize")/10;
+		config["maxRange"] = getInt("mapSize")/3;
 		config["minRange"] = 1;
 		config["capacityVariation"] = 1;
 		config["maxCapacity"] = 5;
