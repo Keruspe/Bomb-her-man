@@ -224,10 +224,12 @@ Map::destroy(Coords & c)
 void
 Map::removePlayer(Coords & c)
 {
-	if (0 > c.x || 0 > c.y || Map::map.size <= c.y
-		|| Map::map.size <= c.x || Map::get(c) != PLAYER)
-			return;
-	Map::map[c.y][c.x] = NONE;
+	if (0 > c.x || 0 > c.y || Map::map.size <= c.y || Map::map.size <= c.x)
+		return;
+	if (Map::get(c) == PLAYER)
+		Map::map[c.y][c.x] = NONE;
+	else if (Map::get(c) == PLAYONBOMB)
+		Map::map[c.y][c.x] = BOMB;
 }
 
 void
