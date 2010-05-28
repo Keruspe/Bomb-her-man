@@ -256,12 +256,13 @@ Map::applyBonus(Coords * c)
 	{
 	case NONE:
 		break;
-	case NULLFIRE:
-		variation *= 0; // will be minored by minRange
 	case FIREDOWN:
 		variation *= -1;
 	case FIREUP:
 		player->addToRange(variation * Config::getInt("rangeVariation"));
+		break;
+	case NULLFIRE:
+		player->setRange(Config::getInt("minRange"));
 		break;
 	case FULLFIRE:
 		player->setRange(Config::getInt("maxRange"));
