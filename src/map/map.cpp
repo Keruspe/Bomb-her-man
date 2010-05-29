@@ -44,10 +44,10 @@ Map::newMap(std::string path)
 		{
 			bherr << "The file in which the program looked "
 				<< "for the map was malformed." << bhendl;
-			throw exceptions::MalformedFileException(path);
+			throw exceptions::map::MalformedFileException(path);
 		}
 	}
-	catch(exceptions::BadElementException & e)
+	catch(exceptions::map::BadElementException & e)
 	{
 		bherr << "An error has been detected in " << path << bhendl;
 		throw e;

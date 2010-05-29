@@ -35,7 +35,9 @@ namespace bombherman
 				/**
 				 * @param m The message
 				 */
-				NoSVGException(const std::string &m) throw() : Exception("No SVG:" + m) {}
+				NoSVGException(const std::string &m) throw() :
+					Exception("No SVG:" + m) {}
+				
 				/// Destructor
 				virtual ~NoSVGException() throw() {}
 			};
@@ -44,3 +46,4 @@ namespace bombherman
 }
 
 #endif // _DISPLAY_NOSVG_EXCEPTION_HPP_
+

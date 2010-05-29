@@ -31,12 +31,17 @@ namespace bombherman
 			public std::exception
 		{
 		public:
+			/// Destructor
 			virtual ~Exception() throw();
+
+			/// Give you the message of the exception
+			/**
+			  * @return The message (std::string)
+			  */
 			const std::string & message() const throw();
-		
 		protected:
+			///Constructor
 			Exception(const std::string & message) throw();
-		
 		private:
 			const std::string _message;
 		};
@@ -44,3 +49,4 @@ namespace bombherman
 }
 
 #endif // _EXCEPTION_HPP_
+

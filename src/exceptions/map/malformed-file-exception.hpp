@@ -26,14 +26,25 @@ namespace bombherman
 {
 	namespace exceptions
 	{
-		class MalformedFileException :
-			public Exception 
+		namespace map
 		{
-		public:
-			MalformedFileException(const std::string & elem) throw();
-			virtual ~MalformedFileException() throw ();
-		};
+			class MalformedFileException :
+				public Exception 
+			{
+			public:
+				/// Constructor
+				/**
+				  * @param The message of the exception (std::string)
+				  */
+				MalformedFileException(const std::string & elem) throw() :
+					Exception("Malformed file : " + elem) {}
+			
+				/// Destructor
+				virtual ~MalformedFileException() throw () {}
+			};
+		}
 	}
 }
 
 #endif // _MALFORMED_FILE_EXCEPTION_HPP_
+

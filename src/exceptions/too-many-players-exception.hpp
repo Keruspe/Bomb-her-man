@@ -30,10 +30,12 @@ namespace bombherman
 			public Exception 
 		{
 		public:
-			TooManyPlayersException() throw();
-			virtual ~TooManyPlayersException() throw ();
+			TooManyPlayersException() throw() :
+				Exception("Too many player creations have been called, you have reached the maximum number allowed.") {}
+			virtual ~TooManyPlayersException() throw () {}
 		};
 	}
 }
 
 #endif // _TOO_MANY_PLAYERS_EXCEPTION_HPP_
+

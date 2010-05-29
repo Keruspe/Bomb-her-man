@@ -32,7 +32,8 @@ Exception::~Exception() throw()
 }
 
 const std::string &
-Exception::message() const throw ()
+Exception::message() const throw()
 {
 	return _message;
 }
+

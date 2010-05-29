@@ -49,7 +49,7 @@ MapParser::parse(std::string path, Grid & map)
 						break;
 					default:
 						char elem[2] = {c, '\0'};
-						throw exceptions::BadElementException(elem);
+						throw exceptions::map::BadElementException(elem);
 				}
 			}
 			catch (std::exception)
