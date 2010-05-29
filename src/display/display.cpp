@@ -536,7 +536,7 @@ Display::updateScores()
 		SDL_Surface *textSurface = NULL;
 		std::ostringstream ost;
 		ost << std::setw(2) << std::setfill('0') << s;
-		std::string st = ost.str();
+		std::string st(ost.str());
 		const char *text = st.c_str();
 		if ( ! ( textSurface = TTF_RenderUTF8_Blended(font, text, textColor) ) )
 			bherr << "Can't display the line" << text << bhendl;

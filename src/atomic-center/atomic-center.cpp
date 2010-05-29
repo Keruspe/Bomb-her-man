@@ -27,11 +27,11 @@ AtomicCenter::boum ()
 {
 	for (std::vector<Bomb *>::iterator i = bombs.begin (), iEnd = bombs.end (); i != iEnd; ++ i)
 	{
-		(*i)->explode();
-		delete(*i);
+		bhout << "We wants to boum bomb: " << std::ios::hex << (*i) << bhendl;
+		Bomb::doExplode(*i);
 	}
 	bombs.clear();
-	SDL_Delay(250);
+	SDL_Delay(5000);
 }
 
 void
@@ -42,17 +42,20 @@ AtomicCenter::plantBomb (int player, map::Coords coords)
 		Bomb * bomb = new Bomb(player, coords);
 		bombs.push_back(bomb);
 		bombsXY[coords.x][coords.y] = bomb;
+		bhout << "We wants to create x=" << coords.x << " y=" << coords.y << " bomb: " << std::ios::hex << bombsXY[coords.x][coords.y] << bhendl;
 	}
 }
 
 void
 AtomicCenter::removeBomb (map::Coords coords)
 {
+	bhout << "We wants to remove x=" << coords.x << " y=" << coords.y << " bomb: " << std::ios::hex << bombsXY[coords.x][coords.y] << bhendl;
 	bombsXY[coords.x][coords.y] = NULL;
 }
 
 Bomb *
-AtomicCenter::getBomb(Uint32 x, Uint32 y)
+AtomicCenter::getBomb(map::Coords c)
 {
-	return bombsXY[x][y];
+	bhout << "We wants the x=" << c.x << " y=" << c.y << " bomb: " << std::ios::hex << bombsXY[c.x][c.y] << bhendl;
+	return bombsXY[c.x][c.y];
 }

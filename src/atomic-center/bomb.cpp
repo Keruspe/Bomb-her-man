@@ -15,84 +15,92 @@ using namespace bombherman::bomb;
 
 SDL_mutex * Bomb::mutex = SDL_CreateMutex ();
 
-Bomb::Bomb (int player, map::Coords coords) : player (player),
-		coords (coords),
-		exploded (false)
+Bomb::Bomb (int player, map::Coords coords) :
+	explosion(SDL_CreateSemaphore(0)),
+	refsMutex(SDL_CreateMutex()),
+	player (player),
+	coords (coords),
+	refs(1)
 {
 	Display::plantBomb (coords);
-	if (SDL_CreateThread(wait, this) == NULL)
+	
+	if ( SDL_CreateThread(waitExplode, this) == NULL )
 		bherr <<  "Unable to create thread to manage a bomb : " << SDL_GetError();
 }
 
-Bomb::~Bomb ()
+Bomb::~Bomb()
 {
+	bhout << "Sorry, bomb " << std::ios::hex << this << " is died" << bhendl;
+	SDL_DestroyMutex(refsMutex);
+	SDL_DestroySemaphore(explosion);
 }
 
 int
-Bomb::wait (void * param)
+Bomb::waitExplode(void *p)
 {
-	SDL_Delay (5000);
-	static_cast<Bomb * >(param)->explode();
+	Bomb *b = static_cast<Bomb * >(p);
+	SDL_LockMutex(b->refsMutex);
+	SDL_SemWaitTimeout(b->explosion, 5000);
+	bhout << "Bomb " << std::ios::hex << b <<  " will explode now !" << bhendl;
+	b->explode();
+	SDL_UnlockMutex(b->refsMutex);
 	return 0;
+}
+
+void
+Bomb::doExplode(Bomb *b)
+{
+	bhout << "Bomb " << std::ios::hex << b <<  " will explode" << bhendl;
+	SDL_SemPost(b->explosion);
+	bhout << "Bomb " << std::ios::hex << b <<  " is now able to explode" << bhendl;
+	SDL_LockMutex(b->refsMutex);
+	if ( --b->refs < 1 )
+		delete(b);
+	else
+		SDL_UnlockMutex(b->refsMutex);
 }
 
 void
 Bomb::explode()
 {
-	if ( this->exploded ) return;
-	this->exploded = true;
-	AtomicCenter::removeBomb(coords);
-	Player * p = NULL;
-	if ( ! ( p = Player::getPlayer(this->player) ) ) return;
-	SDL_LockMutex (mutex);
-	std::vector<map::Coords> explodedCells;
-	int range = static_cast<Uint32>(p->getRange());
-	if (coords.x != 0)
+	SDL_LockMutex(mutex);
+	bhout << "Explosing bomb " << std::ios::hex << this << bhendl;
+	Player * p = Player::getPlayer(this->player);
+	if ( ! p )
 	{
-		for(int x = coords.x -1, xFixed = coords.x; x >= (xFixed - range) && (x >= 0); -- x)
-		{
-			if (! check(x, coords.y))
-				break;
-			explodedCells.push_back (map::Coords(x, coords.y));
-		}
+		SDL_UnlockMutex(mutex);
+		return;
 	}
-	if (coords.x != coords.max)
+	Uint32 range = static_cast<Uint32>(p->getRange());
+	if ( map::Map::get(coords) == map::PLAYONBOMB )
 	{
-		for(int x = coords.x + 1, xFixed = coords.x; x <= (xFixed + range) && (x <= coords.max); ++ x)
-		{
-			if (! check(x, coords.y))
-				break;
-			explodedCells.push_back (map::Coords(x, coords.y));
-		}
+		p->kill(Player::playerAt(coords));
+		explodedCells.push_back(coords);
 	}
-	if (coords.y != 0)
+	bool up(true), down(true), left(true), right(true);
+	for ( Uint32 i = 1 ; i <= range ; ++i )
 	{
-		for(int y = coords.y - 1, yFixed = coords.y; y >= (yFixed - range) && (y >= 0); -- y)
-		{
-			if (! check(coords.x, y))
-				break;
-			explodedCells.push_back (map::Coords(coords.x, y));
-		}
-	}
-	if (coords.y != coords.max)
-	{
-		for(int y = coords.y + 1, yFixed = coords.y; y <= (yFixed + range) && (y <= coords.max); ++ y)
-		{
-			if (! check(coords.x, y))
-				break;
-			explodedCells.push_back (map::Coords(coords.x, y));
-		}
+		if ( up )	up =	check(coords.x, coords.y - i);
+		if ( down )	down =	check(coords.x, coords.y + i);
+		if ( right )	right =	check(coords.x - i, coords.y);
+		if ( left )	left =	check(coords.x + i, coords.y);
 	}
 	p->bombHasExploded();
-	map::Map::removeBomb (coords);
-	Display::explode (coords, explodedCells);
-	SDL_UnlockMutex (mutex);
+	AtomicCenter::removeBomb(coords);
+	map::Map::removeBomb(coords);
+	Display::explode(coords, explodedCells);
+	explodedCells.clear();
+	SDL_UnlockMutex(mutex);
+	for ( std::vector<Bomb *>::iterator i = chain.begin(), e = chain.end() ; i != e ; ++i )
+		doExplode(*i);
+	chain.clear();
 }
 
 bool
-Bomb::check (int x, int y)
+Bomb::check (Uint32 x, Uint32 y)
 {
 	map::Coords c(x, y);
+	if ( ! c.validate() ) return false;
 	char item = map::Map::get(c);
 	switch ( item )
 	{
@@ -107,12 +115,20 @@ Bomb::check (int x, int y)
 		case map::PLAYONBOMB :
 			Player::getPlayer(this->player)->kill(Player::playerAt(c));
 		case map::BOMB :
-			AtomicCenter::getBomb(x, y)->explode();
+			chainBomb(AtomicCenter::getBomb(c));
 		break;
 		case map::NOTHING :
 		break;
 		default : // Bonuses
-			map::Map::removeBonus (c);
+			map::Map::removeBonus(c);
 	}
+	explodedCells.push_back(c);
 	return true;
+}
+
+void
+Bomb::chainBomb(Bomb *b)
+{
+	++b->refs;
+	chain.push_back(b);
 }
