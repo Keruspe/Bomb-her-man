@@ -6,10 +6,9 @@
  */
 
 #include "player.hpp"
-#include "map/map.hpp"
+#include "game.hpp"
 #include "exceptions/too-many-players-exception.hpp"
 #include "atomic-center/atomic-center.hpp"
-#include "game.hpp"
 
 using namespace bombherman;
 
@@ -68,12 +67,12 @@ Player::getId ()
 }
 
 Player *
-Player::getPlayer(int playerNo)
+Player::getPlayer(int id)
 {
-	if (Player::players.size() < static_cast<unsigned>(playerNo)
-		|| 0 >= playerNo)
+	if (Player::players.size() < static_cast<unsigned>(id)
+		|| 0 >= id)
 			return 0;
-	return Player::players[playerNo - 1];
+	return Player::players[id - 1];
 }
 
 void
@@ -95,29 +94,33 @@ Player::clean()
 	Player::players.clear();
 }
 
-void
+bool
 Player::kill(Player *killed)
 {
 	if (! killed->alive)
-		return;
+		return false;
 	if ( killed == this )
 		this->addToScore(Config::getInt("suicideMalus"));
 	else
 		this->addToScore(Config::getInt("killBonus"));
-	killed->die();
+	return killed->die();
 }
 
-void
+bool
 Player::die()
 {
 	this->alive = false;
 	if ( ( Player::players.size() - ++Player::icyDeadPeople ) > 1 )
 	{
 		map::Map::removePlayer(this->coords);
+		return false;
 	}
 	else if ( ( Player::players.size() - Player::icyDeadPeople ) == 1 )
 	// Don't reinit twice or more in a game, or weird things will happen :)
+	{
 		Player::reInit();
+		return true;
+	}
 }
 
 void
@@ -203,7 +206,7 @@ Player::resetToDefaultStats()
 void
 Player::plantBomb()
 {
-	if (this->plantableBombs <= this->plantedBombs)
+	if (! this->isAbleToPlantBomb())
 		return;
 	bomb::AtomicCenter::plantBomb(this->id, this->coords);
 	++this->plantedBombs;

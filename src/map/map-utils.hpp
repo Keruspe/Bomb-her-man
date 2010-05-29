@@ -29,6 +29,7 @@ namespace bombherman
 {
 	namespace map
 	{
+		/// The grid used by the map
 		typedef struct Grid
 		{
 			/// The size of the Grid (Uint32)
@@ -50,16 +51,17 @@ namespace bombherman
 			
 			/// Operator[] to allow you using grid[a][b] instead of grid.grid[a][b]
 			/**
-			  * @param the number of the line which starts at 0 (Uint32)
-			  *
-			  * @return The line tou want (std::vector< char >)
-			  */
+			 * @param y The number of the line, the first one being 0 (Uint32)
+			 *
+			 * @return The line tou want (std::vector< char >)
+			 */
 			std::vector< char > & operator[] (Uint32 y)
 			{
 				return grid[y];
 			}
 		} Grid;
 		
+		/// The coords of an element
 		typedef struct Coords
 		{
 			/// The abscisse of the cell (Uint32)
@@ -80,9 +82,9 @@ namespace bombherman
 			
 			/// Coords constructor
 			/**
-			  * @param Abscisse (Uint32)
-			  * @param Ordinate (Uint32)
-			  */
+			 * @param _x Abscisse (Uint32)
+			 * @param _y Ordinate (Uint32)
+			 */
 			Coords(Uint32 _x, Uint32 _y) : x(_x), y(_y),
 				max(static_cast<Uint32>(Config::getInt("mapSize") - 1))
 			{
@@ -90,8 +92,8 @@ namespace bombherman
 			
 			/// Checks if coords are valid
 			/**
-			  * @return True if the coords are valid
-			  */
+			 * @return True if the coords are valid
+			 */
 			bool
 			validate()
 			{
@@ -134,10 +136,10 @@ namespace bombherman
 		/// Summary of what happened in a move
 		typedef enum
 		{
-			ORIENTCHANGED, /** < OrientChanged (no move, only an orientation change) */
-			MOVED, /** < Moved (the player moved) */
-			BONUSTAKEN, /** < BonusTaken (the player moved and took a bonus) */
-			NOTHINGHAPPENED /** < NothingHappened */
+			ORIENTCHANGED = 4, /** < OrientChanged (no move, only an orientation change) */
+			MOVED = 5, /** < Moved (the player moved) */
+			BONUSTAKEN = 6, /** < BonusTaken (the player moved and took a bonus) */
+			NOTHINGHAPPENED = 7 /** < NothingHappened */
 		} MoveResult;
 	}
 }

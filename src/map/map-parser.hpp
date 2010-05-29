@@ -30,15 +30,16 @@ namespace bombherman
 {
 	namespace map
 	{
+		/// A parser to create a map from a file descriptor
 		class MapParser
 		{
 		public:
 			/// Parse a file to make a map
 			/**
-			  * @param The path to the file to parse (std::string)
-			  * @param The grid in which to copy it (map::Grid)
-			  */
-			static bool parse(std::string, Grid &);
+			 * @param path The path to the file to parse (std::string)
+			 * @param map The grid in which to copy it (map::Grid)
+			 */
+			static bool parse(std::string path, Grid & map);
 		};
 	}
 }
