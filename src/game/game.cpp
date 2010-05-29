@@ -102,6 +102,7 @@ Game::changeMenu(Menu::Type type, bool stopGame)
 		map::Map::deleteMap();
 		Player::clean();
 		Display::quitGame();
+		bomb::AtomicCenter::boum();
 	}
 	currentMenu = Menu::getMenu(type);
 	Display::displayMenu(currentMenu);

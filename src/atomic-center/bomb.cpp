@@ -57,23 +57,26 @@ Bomb::explode()
 	Player * p = NULL;
 	if ( ! ( p = Player::getPlayer(this->player) ) )
 		Bomb::gameOver = true;
-	Uint32 range = static_cast<Uint32>(p->getRange());
-	if ( map::Map::get(coords) == map::PLAYONBOMB )
-		if ( p->kill(Player::playerAt(coords)) )
-			Bomb::gameOver = true;
-	bool up(true), down(true), right(true), left(true);
-	for ( Uint32 i = 1 ; i <= range ; ++i )
+	else
 	{
-		if ( up )
-			up =    check(coords.x, coords.y - i);
-		if ( down )
-			down =  check(coords.x, coords.y + i);
-		if ( right )
-			right = check(coords.x - i, coords.y);
-		if ( left )
-			left =  check(coords.x + i, coords.y);
-		if ( ( ! up ) && ( ! down ) && ( ! right ) && ( ! left ) )
-			break;
+		Uint32 range = static_cast<Uint32>(p->getRange());
+		if ( map::Map::get(coords) == map::PLAYONBOMB )
+			if ( p->kill(Player::playerAt(coords)) )
+				Bomb::gameOver = true;
+		bool up(true), down(true), right(true), left(true);
+		for ( Uint32 i = 1 ; i <= range ; ++i )
+		{
+			if ( up )
+				up =    check(coords.x, coords.y - i);
+			if ( down )
+				down =  check(coords.x, coords.y + i);
+			if ( right )
+				right = check(coords.x - i, coords.y);
+			if ( left )
+				left =  check(coords.x + i, coords.y);
+			if ( ( ! up ) && ( ! down ) && ( ! right ) && ( ! left ) )
+				break;
+		}
 	}
 	if ( Bomb::gameOver )
 	{
