@@ -87,6 +87,17 @@ namespace bombherman
 				max(static_cast<Uint32>(Config::getInt("mapSize") - 1))
 			{
 			}
+			
+			/// Checks if coords are valid
+			/**
+			  * @return True if the coords are valid
+			  */
+			bool
+			validate()
+			{
+				return (this->x >=0 && this->y >= 0 &&
+					this->x <= this->max && this->y <= this->max);
+			}
 		} Coords;
 		
 		/// Different directions
