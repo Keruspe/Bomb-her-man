@@ -55,22 +55,22 @@ namespace bombherman
 		
 		/// To move
 		/**
-		  * @param The direction where player wants to go (map::Direction)
+		  * @param direction The direction where player wants to go (map::Direction)
 		  * 
 		  * @return What did happen during the move (map::MoveResult)
 		  */
-		map::MoveResult go(map::Direction &);
+		map::MoveResult go(map::Direction & direction);
 		
 		/// List of all players
 		static std::vector< Player * > players;
 		
 		/// Get a player by his id
 		/**
-		  * @param The player's id (int)
+		  * @param id The player's id (int)
 		  *
 		  * @return A pointer to the player (Player *)
 		  */
-		static Player * getPlayer(int);
+		static Player * getPlayer(int id);
 		
 		/// Create a new player
 		static void newPlayer();
@@ -86,53 +86,53 @@ namespace bombherman
 		
 		/// Range setter
 		/**
-		  * @param The new range for the player (int)
+		  * @param range The new range for the player (int)
 		  */
-		void setRange(int);
+		void setRange(int range);
 		
 		/// Range adder
 		/**
-		  * @param The range to add to the player, make it negative to remove (int)
+		  * @param range The range to add to the player, make it negative to remove (int)
 		  */
-		void addToRange(int);
+		void addToRange(int range);
 		
 		/// Make the player plant a bomb
 		void plantBomb();
 		
 		/// Increase/decrease the player's score
 		/**
-		  * @param New points gained (int)
+		  * @param score New points gained (int)
 		  */
-		void addToScore(int);
+		void addToScore(int score);
 		
 		/// Plantable bombs number setter
 		/**
-		  * @param The new number of bombs the player can drop (int)
+		  * @param plantableBombs The new number of bombs the player can drop (int)
 		  */
-		void setPlantableBombs(int);
+		void setPlantableBombs(int plantableBombs);
 		
 		/// Plantable bombs number adder
 		/**
-		  * @param The number to add to the number of bombs the player can carry (int)
+		  * @param plantableBombs The number to add to the number of bombs the player can carry (int)
 		  */
-		void addToPlantableBombs(int);
+		void addToPlantableBombs(int plantableBombs);
 		
 		/// Reset the player to its default statistics
 		void resetToDefaultStats();
 		
 		/// Coords setter
 		/**
-		  * @param The new coords of the player (map::Coords)
+		  * @param c The new coords of the player (map::Coords)
 		  */
-		void setCoords(map::Coords &);
+		void setCoords(map::Coords & c);
 		
 		/// Which player is out there ?
 		/**
-		  * @param The coords where to look for any player (map::Coords)
+		  * @param c The coords where to look for any player (map::Coords)
 		  *
 		  * @return The player if any, or 0 if none (map::Player*)
 		  */
-		static Player * playerAt(map::Coords &);
+		static Player * playerAt(map::Coords & c);
 		
 		/// Is this player still alive ?
 		/**
@@ -142,7 +142,7 @@ namespace bombherman
 		
 		/// Murder a poor player
 		/**
-		  * @param The player to kill (Player *)
+		  * @param killed The player to kill (Player *)
 		  */
 		void kill(Player * killed);
 

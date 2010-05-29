@@ -38,71 +38,71 @@ namespace bombherman
 			
 			/// Create a new map from a file
 			/**
-			  * @param Path to the file (std::string)
+			  * @param path Path to the file (std::string)
 			  */
-			static void newMap(std::string);
+			static void newMap(std::string path);
 			
 			/// Delete the map
 			static void deleteMap();
 			
 			/// Plant a bomb on the map
 			/**
-			  * @param The coords where to plant the bomb (map::Coords)
+			  * @param c The coords where to plant the bomb (map::Coords)
 			  */
-			static bool plantBomb(Coords &);
+			static bool plantBomb(Coords & c);
 			
 			/// What is there in this cell ?
 			/**
-			  * @param The coords where to look for (map::Coords)
+			  * @param c The coords where to look for (map::Coords)
 			  *
 			  * @return The element in the corresponding cell (char)
 			  */
-			static char get(Coords);
+			static char get(Coords & c);
 			
 			/// What is there in this cell ?
 			/**
-			  * @param The abscisse (Uint32)
-			  * @param The ordinate (Uint32)
+			  * @param x The abscisse (Uint32)
+			  * @param y The ordinate (Uint32)
 			  *
 			  * @return The element in the corresponding cell (char)
 			  */
-			static char get(Uint32, Uint32);
+			static char get(Uint32 x, Uint32 y);
 			
 			/// Make a player move
 			/**
-			  * @param The coords from where the move start (map::Coords)
-			  * @param The direction of the move (map::Direction)
+			  * @param c The coords from where the move start (map::Coords)
+			  * @param direction The direction of the move (map::Direction)
 			  *
 			  * @return The sumary of the move (map::MoveResult)
 			  */
-			static MoveResult movePlayer(Coords &, Direction &);
+			static MoveResult movePlayer(Coords & c, Direction & direction);
 			
 			/// Destroy a barrel
 			/**
-			  * @param The coords of the barrel (map::coords)
+			  * @param c The coords of the barrel (map::coords)
 			  */
-			static void destroy(Coords &);
+			static void destroy(Coords & c);
 			
 			/// Display the map
 			static void toString();
 			
 			/// Remove a player from the map
 			/**
-			  * @param The coords of the player (map::Coords)
+			  * @param c The coords of the player (map::Coords)
 			  */
-			static void removePlayer(Coords &);
+			static void removePlayer(Coords & c);
 			
 			/// Remove a bomb from the map
 			/**
-			  * @param The coords of the bomb (map::Coords)
+			  * @param c The coords of the bomb (map::Coords)
 			  */
-			static void removeBomb(Coords &);
+			static void removeBomb(Coords & c);
 			
 			/// Remove a bonus from the map
 			/**
-			  * @param The coords of the bonus (map::Coords)
+			  * @param c The coords of the bonus (map::Coords)
 			  */
-			static void removeBonus(Coords &);
+			static void removeBonus(Coords & c);
 			
 			/// Does the map exist ?
 			/**

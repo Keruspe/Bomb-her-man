@@ -35,9 +35,9 @@ namespace bombherman
 		public:
 			/// Generate a random map
 			/**
-			  * @param The grid in which to put the map (map::Grid)
+			  * @param g The grid in which to put the map (map::Grid)
 			  */
-			static void generate(Grid &);
+			static void generate(Grid & g);
 			
 			/// Generate random coords to place players
 			/**
@@ -47,20 +47,20 @@ namespace bombherman
 			
 			/// Generate a random number
 			/**
-			  * @param Minimum (int)
-			  * @param Maximum (int)
+			  * @param min The minimum (int)
+			  * @param max The maximum (int)
 			  *
 			  * @return Random number (int)
 			  */
-			static int random(int, int);
+			static int random(int min, int max);
 			
 			/// Throw a 100 faces dice to check random probabilities
 			/**
-			  * @Param Percentage of chance to get True as a result (int)
+			  * @Param percentage Percentage of chance to get True as a result (int)
 			  *
 			  *	@return 80% of chances to get true ig 80 was the parameter
 			  */
-			static bool throwDice(int);
+			static bool throwDice(int percentage);
 		private:
 			static bool testCellFull(Grid &, Coords &);
 			static bool testCellLimited(Grid &, Coords &);

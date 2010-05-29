@@ -50,7 +50,7 @@ namespace bombherman
 			
 			/// Operator[] to allow you using grid[a][b] instead of grid.grid[a][b]
 			/**
-			  * @param the number of the line which starts at 0 (Uint32)
+			  * @param y The number of the line, the first one being 0 (Uint32)
 			  *
 			  * @return The line tou want (std::vector< char >)
 			  */
@@ -80,8 +80,8 @@ namespace bombherman
 			
 			/// Coords constructor
 			/**
-			  * @param Abscisse (Uint32)
-			  * @param Ordinate (Uint32)
+			  * @param _x Abscisse (Uint32)
+			  * @param _y Ordinate (Uint32)
 			  */
 			Coords(Uint32 _x, Uint32 _y) : x(_x), y(_y),
 				max(static_cast<Uint32>(Config::getInt("mapSize") - 1))

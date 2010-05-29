@@ -67,12 +67,12 @@ Player::getId ()
 }
 
 Player *
-Player::getPlayer(int playerNo)
+Player::getPlayer(int id)
 {
-	if (Player::players.size() < static_cast<unsigned>(playerNo)
-		|| 0 >= playerNo)
+	if (Player::players.size() < static_cast<unsigned>(id)
+		|| 0 >= id)
 			return 0;
-	return Player::players[playerNo - 1];
+	return Player::players[id - 1];
 }
 
 void

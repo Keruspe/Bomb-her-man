@@ -107,7 +107,7 @@ Map::plantBomb(Coords & c)
 }
 
 char
-Map::get(Coords c)
+Map::get(Coords & c)
 {
 	if (! Map::exists() || ! c.validate())
 		return 0;
@@ -123,7 +123,7 @@ Map::get(Uint32 x, Uint32 y)
 }
 
 MoveResult
-Map::movePlayer(Coords & coords, Direction & direction)
+Map::movePlayer(Coords & c, Direction & direction)
 {
 	if(! Map::exists())
 		return NOTHINGHAPPENED;
@@ -131,29 +131,29 @@ Map::movePlayer(Coords & coords, Direction & direction)
 	switch(direction)
 	{
 	case UP:
-		tmpBool = Map::moveUp(coords);
+		tmpBool = Map::moveUp(c);
 		break;
 	case DOWN:
-		tmpBool = Map::moveDown(coords);
+		tmpBool = Map::moveDown(c);
 		break;
 	case LEFT:
-		tmpBool = Map::moveLeft(coords);
+		tmpBool = Map::moveLeft(c);
 		break;
 	case RIGHT:
-		tmpBool = Map::moveRight(coords);
+		tmpBool = Map::moveRight(c);
 		break;
 	}
 	if (! tmpBool)
 		return NOTHINGHAPPENED;
-	if (Map::map[coords.y][coords.x] != BOMB)
+	if (Map::map[c.y][c.x] != BOMB)
 	{
-		tmpBool = Map::applyBonus(coords);
-		Map::map[coords.y][coords.x] = PLAYER;
+		tmpBool = Map::applyBonus(c);
+		Map::map[c.y][c.x] = PLAYER;
 		if (tmpBool)
 			return BONUSTAKEN;
 	}
 	else
-		Map::map[coords.y][coords.x] = PLAYONBOMB;
+		Map::map[c.y][c.x] = PLAYONBOMB;
 	return MOVED;
 }
 
