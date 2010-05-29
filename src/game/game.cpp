@@ -36,7 +36,6 @@ Sint32 Game::mapCount = -1;
 void Game::init()
 {
 	Display::init();
-	bomb::AtomicCenter::init();
 	changeMenu(Menu::MAIN);
 	
 	SDL_EventState(SDL_ACTIVEEVENT, SDL_IGNORE);

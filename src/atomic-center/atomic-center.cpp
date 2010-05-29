@@ -10,49 +10,47 @@
 using namespace bombherman;
 using namespace bombherman::bomb;
 
-std::vector<Bomb *> AtomicCenter::bombs;
-std::vector<std::vector<Bomb *> > AtomicCenter::bombsXY;
-
-void
-AtomicCenter::init()
-{
-	int size = Config::getInt("mapSize");
-	bombsXY.resize(size);
-	for (int i = 0; i < size; ++i)
-		bombsXY[i].resize(size);
-}
+std::vector<std::vector<Bomb *> > AtomicCenter::bombs;
 
 void
 AtomicCenter::boum ()
 {
-	for (std::vector<Bomb *>::iterator i = bombs.begin (), iEnd = bombs.end (); i != iEnd; ++ i)
+	for ( std::vector<std::vector<Bomb *> >::iterator i = bombs.begin (), iEnd = bombs.end(); i != iEnd; ++i )
 	{
-		(*i)->explode();
-		delete(*i);
+		for ( std::vector<Bomb *>::iterator j = i->begin (), jEnd = i->end (); j != jEnd; ++j )
+		{
+			if ( *j )
+				Bomb::doExplode(*j);
+		}
 	}
-	bombs.clear();
 	SDL_Delay(250);
 }
 
 void
 AtomicCenter::plantBomb (int player, map::Coords coords)
 {
-	if (map::Map::plantBomb (coords))
+	if ( bombs.empty() )
+	{
+		int size = Config::getInt("mapSize");
+		bombs.resize(size);
+		for (int i = 0; i < size; ++i)
+			bombs[i].resize(size);
+	}
+	if ( map::Map::plantBomb(coords) )
 	{
 		Bomb * bomb = new Bomb(player, coords);
-		bombs.push_back(bomb);
-		bombsXY[coords.x][coords.y] = bomb;
+		bombs[coords.x][coords.y] = bomb;
 	}
 }
 
 void
-AtomicCenter::removeBomb (map::Coords coords)
+AtomicCenter::removeBomb (map::Coords c)
 {
-	bombsXY[coords.x][coords.y] = NULL;
+	bombs[c.x][c.y] = NULL;
 }
 
 Bomb *
-AtomicCenter::getBomb(Uint32 x, Uint32 y)
+AtomicCenter::getBomb(map::Coords c)
 {
-	return bombsXY[x][y];
+	return bombs[c.x][c.y];
 }

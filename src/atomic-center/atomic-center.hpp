@@ -36,14 +36,12 @@ namespace bombherman
 		class AtomicCenter
 		{
 		public:
-			static void init();
 			static void plantBomb (int, map::Coords);
 			static void removeBomb (map::Coords);
-			static Bomb * getBomb (Uint32, Uint32);
+			static Bomb *getBomb (map::Coords);
 			static void boum ();
 		private:
-			static std::vector<Bomb *> bombs;
-			static std::vector<std::vector<Bomb *> > bombsXY;
+			static std::vector<std::vector<Bomb *> > bombs;
 		};
 	}
 }

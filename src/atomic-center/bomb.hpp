@@ -8,11 +8,11 @@
 #ifndef _BOMB_HPP
 #define	_BOMB_HPP
 
-#include <iostream>
+#include "bombherman.hpp"
 #include "map/map-utils.hpp"
 #include "game/player.hpp"
 #include "map/map.hpp"
-#include "bombherman.hpp"
+
 #include <SDL.h>
 
 
@@ -24,19 +24,27 @@ namespace bombherman
 		{
 		public:
 			Bomb (int, map::Coords);
-			map::Coords & getCoords ();
-			void explode ();
-			virtual ~Bomb ();
+			static void doExplode(Bomb *b);
 			
 			static void deinit() { SDL_DestroyMutex(mutex); }
 			
 		private:
-			bool exploded;
+			static int waitExplode(void *);
+			
+			void explode();
+			bool check(Uint32, Uint32);
+			
+			virtual ~Bomb ();
+		
 			static SDL_mutex * mutex;
-			static int wait (void *);
-			bool check (int, int);
+			
+			SDL_sem *explosion;
+			
 			int player;
 			map::Coords coords;
+			std::vector<map::Coords> explodedCells;
+			std::vector<map::Coords> chain;
+			bool gameOver;
 		};
 	}
 }
