@@ -36,14 +36,12 @@ AtomicCenter::plantBomb (int player, map::Coords & c)
 		for (int i(0) ; i < size ; ++i)
 			bombs[i].resize(size);
 	}
-	if ( map::Map::plantBomb(c) )
-	{
-		Bomb * bomb = new Bomb(player, c);
-		bombs[c.x][c.y] = bomb;
-		++AtomicCenter::numberOfBombs;
-		return true;
-	}
-	return false;
+	if ( ! map::Map::plantBomb(c) )
+		return false;
+	Bomb * bomb = new Bomb(player, c);
+	bombs[c.x][c.y] = bomb;
+	++AtomicCenter::numberOfBombs;
+	return true;
 }
 
 void
