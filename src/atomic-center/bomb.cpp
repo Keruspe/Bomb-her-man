@@ -85,6 +85,7 @@ Bomb::explode()
 	if ( Bomb::gameOver )
 	{
 		SDL_UnlockMutex(mutex);
+		Bomb::newGame();
 		return;
 	}
 	p->bombHasExploded();

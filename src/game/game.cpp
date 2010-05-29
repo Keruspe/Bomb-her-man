@@ -127,7 +127,6 @@ Game::nextMap()
 		changeMenu(Menu::MAIN);
 	else
 	{
-		bomb::Bomb::newGame();
 		map::Map::newMap();
 		play();
 	}
