@@ -6,24 +6,16 @@
  */
 
 #ifndef _BOMB_HPP
-#define	_BOMB_HPP
+#define _BOMB_HPP
 
-<<<<<<< HEAD
+#include <SDL.h>
+
+#include "bombherman.hpp"
 #include "map/map-utils.hpp"
 #include "game/player.hpp"
 #include "map/map.hpp"
-#include "bombherman.hpp"
-#include <SDL.h>
 
 #include <vector>
-=======
-#include <SDL.h>
-
-#include "bombherman.hpp"
-#include "map/map-utils.hpp"
-#include "game/player.hpp"
-#include "map/map.hpp"
->>>>>>> master
 
 namespace bombherman
 {
