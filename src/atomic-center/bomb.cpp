@@ -28,7 +28,6 @@ Bomb::Bomb (int player, map::Coords c) :
 
 Bomb::~Bomb ()
 {
-	bhout << "Sorry, bomb " << std::ios::hex << this << " is died" << bhendl;
 	SDL_DestroySemaphore(explosion);
 }
 
@@ -37,7 +36,6 @@ Bomb::waitExplode(void *p)
 {
 	Bomb *b = static_cast<Bomb * >(p);
 	SDL_SemWaitTimeout(b->explosion, 5000);
-	bhout << "Bomb " << std::ios::hex << b <<  " will explode now !" << bhendl;
 	b->explode();
 	delete(b);
 	return 0;
@@ -46,10 +44,8 @@ Bomb::waitExplode(void *p)
 void
 Bomb::doExplode(Bomb *b)
 {
-	if ( ! b )
-		return;
-	bhout << "Bomb " << std::ios::hex << b <<  " will explode" << bhendl;
-	SDL_SemPost(b->explosion);
+	if ( b )
+		SDL_SemPost(b->explosion);
 }
 
 void
@@ -63,26 +59,25 @@ Bomb::explode()
 	Uint32 range = static_cast<Uint32>(p->getRange());
 	if ( map::Map::get(coords) == map::PLAYONBOMB )
 		if ( p->kill(Player::playerAt(coords)) )
-		{
 			Bomb::gameOver = true;
-			SDL_UnlockMutex(mutex);
-			return;
-		}
-	bool up(true), down(true), right(true), left(true);
-	for ( Uint32 i = 1 ; i <= range ; ++i )
+	if ( ! Bomb::gameOver )
 	{
-		if ( up )
-			up =    check(coords.x, coords.y - i);
-		if ( down )
-			down =  check(coords.x, coords.y + i);
-		if ( right )
-			right = check(coords.x - i, coords.y);
-		if ( left )
-			left =  check(coords.x + i, coords.y);
-		if ( ( ! up ) && ( ! down ) && ( ! right ) && ( ! left ) )
-			break;
+		bool up(true), down(true), right(true), left(true);
+		for ( Uint32 i = 1 ; i <= range ; ++i )
+		{
+			if ( up )
+				up =    check(coords.x, coords.y - i);
+			if ( down )
+				down =  check(coords.x, coords.y + i);
+			if ( right )
+				right = check(coords.x - i, coords.y);
+			if ( left )
+				left =  check(coords.x + i, coords.y);
+			if ( ( ! up ) && ( ! down ) && ( ! right ) && ( ! left ) )
+				break;
+		}
 	}
-	if ( Bomb::gameOver )
+	else
 	{
 		SDL_UnlockMutex(mutex);
 		Bomb::newGame();
