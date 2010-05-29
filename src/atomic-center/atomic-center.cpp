@@ -26,10 +26,9 @@ AtomicCenter::boum ()
 		SDL_Delay(250);
 }
 
-void
+bool
 AtomicCenter::plantBomb (int player, map::Coords & c)
 {
-	++AtomicCenter::numberOfBombs;
 	if ( bombs.empty() )
 	{
 		int size = Config::getInt("mapSize");
@@ -41,7 +40,10 @@ AtomicCenter::plantBomb (int player, map::Coords & c)
 	{
 		Bomb * bomb = new Bomb(player, c);
 		bombs[c.x][c.y] = bomb;
+		++AtomicCenter::numberOfBombs;
+		return true;
 	}
+	return false;
 }
 
 void

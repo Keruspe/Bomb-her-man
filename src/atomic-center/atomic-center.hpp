@@ -42,8 +42,10 @@ namespace bombherman
 			/**
 			 * @param player The id of the player who planted the bomb (int)
 			 * @param c The coords where the bomb has been planted (map::Coords)
+			 *
+			 * @return True if a bomb has been planted
 			 */
-			static void plantBomb (int player, map::Coords & c);
+			static bool plantBomb (int player, map::Coords & c);
 			
 			/// Remove a bomb
 			/*

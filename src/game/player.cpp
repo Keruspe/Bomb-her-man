@@ -211,8 +211,8 @@ Player::plantBomb()
 {
 	if (! this->isAbleToPlantBomb())
 		return;
-	bomb::AtomicCenter::plantBomb(this->id, this->coords);
-	++this->plantedBombs;
+	if ( bomb::AtomicCenter::plantBomb(this->id, this->coords) )
+		++this->plantedBombs;
 }
 
 void
