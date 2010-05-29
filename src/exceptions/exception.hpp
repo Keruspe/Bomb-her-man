@@ -41,6 +41,9 @@ namespace bombherman
 			const std::string & message() const throw();
 		protected:
 			///Constructor
+			/**
+			  * @param message The message of the exception
+			  */
 			Exception(const std::string & message) throw();
 		private:
 			const std::string _message;

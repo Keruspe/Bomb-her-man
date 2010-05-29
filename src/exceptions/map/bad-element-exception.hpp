@@ -34,7 +34,7 @@ namespace bombherman
 			public:
 				/// Constructor
 				/**
-				  * @param The message of the exception (std::string)
+				  * @param elem The bad element (std::string)
 				  */
 				BadElementException(const std::string & elem) throw() :
 					Exception("Bad element : " + elem) {}

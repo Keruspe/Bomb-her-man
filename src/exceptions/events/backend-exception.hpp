@@ -35,7 +35,7 @@ namespace bombherman
 				/**
 				 * @param m The message
 				 */
-				BackendException(const std::string &m) throw() :
+				BackendException(const std::string & m) throw() :
 					Exception(m) {}
 				
 				/// Destructor

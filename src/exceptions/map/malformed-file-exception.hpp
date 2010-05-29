@@ -34,10 +34,10 @@ namespace bombherman
 			public:
 				/// Constructor
 				/**
-				  * @param The message of the exception (std::string)
+				  * @param path The path of the malformed file (std::string)
 				  */
-				MalformedFileException(const std::string & elem) throw() :
-					Exception("Malformed file : " + elem) {}
+				MalformedFileException(const std::string & path) throw() :
+					Exception("Malformed file : " + path) {}
 			
 				/// Destructor
 				virtual ~MalformedFileException() throw () {}

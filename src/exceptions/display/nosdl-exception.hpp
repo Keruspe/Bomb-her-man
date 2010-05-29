@@ -35,7 +35,7 @@ namespace bombherman
 				/**
 				 * @param m The message
 				 */
-				NoSDLException(const std::string &m) throw() :
+				NoSDLException(const std::string & m) throw() :
 					Exception("No SDL:" + m) {}
 				
 				/// Destructor
