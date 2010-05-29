@@ -8,6 +8,7 @@
 #ifndef _BOMB_HPP
 #define	_BOMB_HPP
 
+<<<<<<< HEAD
 #include "map/map-utils.hpp"
 #include "game/player.hpp"
 #include "map/map.hpp"
@@ -15,36 +16,54 @@
 #include <SDL.h>
 
 #include <vector>
+=======
+#include <SDL.h>
+
+#include "bombherman.hpp"
+#include "map/map-utils.hpp"
+#include "game/player.hpp"
+#include "map/map.hpp"
+>>>>>>> master
 
 namespace bombherman
 {
 	namespace bomb
 	{
+		/// A bomb
 		class Bomb
 		{
 		public:
-			Bomb (int, map::Coords);
-			map::Coords & getCoords ();
-			static void doExplode(Bomb *);
-			static int waitExplode(void *);
-			virtual ~Bomb ();
+			/// Constructor
+			/**
+			 * @param player The id of the player who planted the bomb (int)
+			 * @param c The coords where the bomb has been planted (map::Coords)
+			 */
+			Bomb (int player, map::Coords c);
 			
-			static void deinit() { SDL_DestroyMutex(mutex); }
+			/// Make a bomb explode
+			/**
+			 * @param b A pointer to the bomb which will explode (Bomb *)
+			 */
+			static void doExplode(Bomb * b);
 			
+			/// Free the mutex
+			static void deInit() { SDL_DestroyMutex(mutex); }
+
+			/// Start a new game
+			static void newGame() { Bomb::gameOver = false; }
 		private:
+			/// Destructor
+			virtual ~Bomb ();
+			static int waitExplode(void *);
 			void explode();
 			bool check(Uint32, Uint32);
-			void chainBomb(Bomb *);
-			
 			static SDL_mutex * mutex;
 			SDL_sem *explosion;
-			SDL_mutex *refsMutex;
-			
 			int player;
 			map::Coords coords;
 			std::vector<map::Coords> explodedCells;
-			std::vector<Bomb *> chain;
-			Uint8 refs;
+			std::vector<map::Coords> chain;
+			static bool gameOver;
 		};
 	}
 }
