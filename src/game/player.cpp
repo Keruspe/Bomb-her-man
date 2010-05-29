@@ -6,10 +6,9 @@
  */
 
 #include "player.hpp"
-#include "map/map.hpp"
+#include "game.hpp"
 #include "exceptions/too-many-players-exception.hpp"
 #include "atomic-center/atomic-center.hpp"
-#include "game.hpp"
 
 using namespace bombherman;
 

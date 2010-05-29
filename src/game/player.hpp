@@ -8,7 +8,7 @@
 #ifndef _PLAYER_HPP_
 #define	_PLAYER_HPP_
 
-#include "map/map-utils.hpp"
+#include "map/map.hpp"
 
 namespace bombherman
 {

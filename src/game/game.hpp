@@ -19,10 +19,9 @@
 #ifndef _GAME_HPP_
 #define _GAME_HPP_
 
-#include "bombherman.hpp"
-
 #include <vector>
 
+#include "bombherman.hpp"
 #include "display/display.hpp"
 
 namespace bombherman
