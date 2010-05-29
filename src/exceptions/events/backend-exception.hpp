@@ -27,6 +27,7 @@ namespace bombherman
 	{
 		namespace events
 		{
+			/// Generic exception for when a backend is not available
 			class BackendException :
 				public Exception
 			{
@@ -35,7 +36,9 @@ namespace bombherman
 				/**
 				 * @param m The message
 				 */
-				BackendException(const std::string &m) throw() : Exception(m) {}
+				BackendException(const std::string & m) throw() :
+					Exception(m) {}
+				
 				/// Destructor
 				virtual ~BackendException() throw () {}
 			};
@@ -44,3 +47,4 @@ namespace bombherman
 }
 
 #endif // _EVENTS_BACKEND_EXCEPTION_HPP_
+

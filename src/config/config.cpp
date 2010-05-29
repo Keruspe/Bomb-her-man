@@ -82,7 +82,7 @@ Config::init()
 		config["maxMaps"] = 10;
 		
 		config["defaultPlantableBombs"] = 3;
-		config["defaultRange"] = 5;
+		config["defaultRange"] = 2;
 		
 		config["mgInsertionProbabilityBase"] = 100;
 		config["mgInsertionProbabilityBaseHorizontal"] = 50;
@@ -95,13 +95,18 @@ Config::init()
 		
 		config["nbAIs"] = 0;
 		
-		config["bonusApparitionProbability"] = 50;
-		config["rangeVariation"] = 2;
-		config["maxRange"] = 14;
+		config["bonusApparitionProbability"] = 100 - getInt("mgInsertionProbabilityBarrel");
+		config["rangeVariation"] = getInt("mapSize")/10;
+		config["maxRange"] = getInt("mapSize")/3;
 		config["minRange"] = 1;
 		config["capacityVariation"] = 1;
 		config["maxCapacity"] = 5;
 		config["minCapacity"] = 1;
+		
+		config["suicideMalus"] = -2;
+		config["killBonus"] = 1;
+		config["minimumScore"] = -9;
+		config["maximumScore"] = 99;
 		
 		/*
 		 * Then read the file

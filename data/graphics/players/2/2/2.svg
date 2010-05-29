@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="50" height="50" id="Her" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+<circle cx="25" cy="25" r="25" fill="#FF00FF"/>
+<g stroke="#FFFFFF" ><line x1="0" x2="25" y1="25" y2="25" stroke-width="2.5" /></g>
+</svg>

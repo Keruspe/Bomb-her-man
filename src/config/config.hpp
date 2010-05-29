@@ -26,6 +26,7 @@
 
 namespace bombherman
 {
+	/// Class used to manage easily various configurations
 	class Config
 	{
 	public:
@@ -81,7 +82,7 @@ namespace bombherman
 		/// To read the file
 		static void read();
 		
-		/// The confguration map
+		/// The configuration map
 		static std::map<std::string, Config> config;
 	
 	};

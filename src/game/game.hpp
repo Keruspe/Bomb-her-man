@@ -19,14 +19,14 @@
 #ifndef _GAME_HPP_
 #define _GAME_HPP_
 
-#include "bombherman.hpp"
-
 #include <vector>
 
+#include "bombherman.hpp"
 #include "display/display.hpp"
 
 namespace bombherman
 {
+	/// Class used to manage the game
 	class Game
 	{
 	public:
@@ -54,22 +54,25 @@ namespace bombherman
 		static void play();
 		/// Stop
 		static void stop() { playing = false; }
-		/// Quit
-		static void quit();
 	
 	private:
 		static bool isInit, playing;
 		
+		/// Quit
+		static void quit();
+		
+		#ifdef THREAD_EVENTS
+		static std::vector< SDL_Thread * > *threads;
 		static void threadClean(Uint32 id);
+		#endif // THREAD_EVENTS
 		
 		static int eventMenu(void *);
 		static int eventGame(void *);
 		
 		// To store the actual menu
 		static Menu *currentMenu;
-		static map::Map *currentMap;
 		
-		static std::vector< SDL_Thread * > *threads;
+		static Sint32 mapCount;
 	};
 }
 

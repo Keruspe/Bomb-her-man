@@ -19,14 +19,19 @@
 #include "game.hpp"
 #include "menu.hpp"
 #include "map/map-utils.hpp"
+#include "atomic-center/atomic-center.hpp"
+#include "atomic-center/bomb.hpp"
 
 using namespace bombherman;
 
 Menu *Game::currentMenu = NULL;
-map::Map *Game::currentMap = NULL;
+#ifdef THREAD_EVENTS
 std::vector< SDL_Thread * > *Game::threads = new std::vector< SDL_Thread * >();
+#endif // THREAD_EVENTS
 bool Game::isInit = false;
 bool Game::playing = true;
+
+Sint32 Game::mapCount = -1;
 
 void Game::init()
 {
@@ -67,13 +72,19 @@ Game::main()
 			case SDL_KEYDOWN:
 				if ( currentMenu )
 				{
-					//threads->push_back(SDL_CreateThread(&bombherman::Game::eventMenu, &event.key));
+					#ifdef THREAD_EVENTS
+					threads->push_back(SDL_CreateThread(&bombherman::Game::eventMenu, &event.key));
+					#else
 					eventMenu(&event.key);
+					#endif // THREAD_EVENTS
 				}
 				else
 				{
-					//threads->push_back(SDL_CreateThread(&bombherman::Game::eventGame, &event.key));
+					#ifdef THREAD_EVENTS
+					threads->push_back(SDL_CreateThread(&bombherman::Game::eventGame, &event.key));
+					#else
 					eventGame(&event.key);
+					#endif // THREAD_EVENTS
 				}
 			break;
 			default:
@@ -86,11 +97,12 @@ Game::main()
 void
 Game::changeMenu(Menu::Type type, bool stopGame)
 {
-	if ( ( stopGame ) && ( currentMap ) )
+	if ( ( stopGame ) )
 	{
-		delete(currentMap);
-		currentMap = NULL;
+		map::Map::deleteMap();
 		Player::clean();
+		Display::quitGame();
+		bomb::AtomicCenter::boum();
 	}
 	currentMenu = Menu::getMenu(type);
 	Display::displayMenu(currentMenu);
@@ -104,56 +116,31 @@ Game::newGame()
 	//for ( int i = 0, e = Config::getInt("nbAIs") ; i < e ; ++i )
 	//	AI::newAI();
 	
+	mapCount = Config::getInt("nbMaps");
 	nextMap();
 }
 
 void
 Game::nextMap()
 {
-	if ( currentMap )
+	map::Map::deleteMap();
+	if ( --mapCount < 0 )
+		changeMenu(Menu::MAIN);
+	else
 	{
-		delete(currentMap);
-		currentMap = NULL;
+		map::Map::newMap();
+		play();
 	}
-	currentMap = new map::Map();
-	currentMap->placePlayers();
-	play();
 }
 
 void
 Game::play()
 {
 	currentMenu = NULL;
-	Display::updateScores();
-	Display::setMap(currentMap);
+	Display::updateMap();
 }
 
-void
-Game::quit()
-{
-	if ( ! isInit ) return;
-	
-	Display::quit();
-	
-	currentMenu = NULL;
-	
-	if ( currentMap )
-	{
-		delete(currentMap);
-		currentMap = NULL;
-	}
-	
-	for ( std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end() ; i != e ; ++i )
-	{
-		SDL_WaitThread((*i), NULL);
-	}
-	delete(threads);
-	
-	Menu::clear();
-	
-	Config::write();
-}
-
+#ifdef THREAD_EVENTS
 void
 Game::threadClean(Uint32 id)
 {
@@ -166,6 +153,7 @@ Game::threadClean(Uint32 id)
 		}
 	}
 }
+#endif // THREAD_EVENTS
 
 int
 Game::eventMenu(void *event)
@@ -173,7 +161,7 @@ Game::eventMenu(void *event)
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
 		case SDLK_ESCAPE:
-			playing = false;
+			currentMenu->quit();
 		break;
 		case SDLK_UP:
 			currentMenu->up();
@@ -196,7 +184,9 @@ Game::eventMenu(void *event)
 		break;
 	}
 	
+	#ifdef THREAD_EVENTS
 	Game::threadClean(SDL_ThreadID());
+	#endif // THREAD_EVENTS
 	
 	return 0;
 }
@@ -207,46 +197,80 @@ Game::eventGame(void *event)
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
 		case SDLK_ESCAPE:
-			changeMenu(Menu::INGAME, false);
+			changeMenu(Menu::MAIN);
 		break;
 		
 		// Player 1
 		case SDLK_UP:		// Up
-			Display::movePlayer( Player::getPlayer(1), map::UP);
+			Display::movePlayer(Player::getPlayer(1), map::UP);
 		break;
 		case SDLK_DOWN:		// Down
-			Display::movePlayer( Player::getPlayer(1), map::DOWN);
+			Display::movePlayer(Player::getPlayer(1), map::DOWN);
 		break;
 		case SDLK_RIGHT:	// Right
-			Display::movePlayer( Player::getPlayer(1), map::RIGHT);
+			Display::movePlayer(Player::getPlayer(1), map::RIGHT);
 		break;
 		case SDLK_LEFT:		// Left
-			Display::movePlayer( Player::getPlayer(1), map::LEFT);
+			Display::movePlayer(Player::getPlayer(1), map::LEFT);
 		break;
-		case SDLK_SPACE:	// Bomb
+		case SDLK_RSHIFT:	// Bomb
+			Player::getPlayer(1)->plantBomb();
 		break;
 		
 		// Player 2
 		case SDLK_e:		// Up
-			Display::movePlayer( Player::getPlayer(2), map::UP);
+			Display::movePlayer(Player::getPlayer(2), map::UP);
 		break;
 		case SDLK_d:		// Down
-			Display::movePlayer( Player::getPlayer(2), map::DOWN);
+			Display::movePlayer(Player::getPlayer(2), map::DOWN);
 		break;
 		case SDLK_f:		// Right
-			Display::movePlayer( Player::getPlayer(2), map::RIGHT);
+			Display::movePlayer(Player::getPlayer(2), map::RIGHT);
 		break;
 		case SDLK_s:		// Left
-			Display::movePlayer( Player::getPlayer(2), map::LEFT);
+			Display::movePlayer(Player::getPlayer(2), map::LEFT);
 		break;
-		case SDLK_r:		// Bomb
+		case SDLK_SPACE:	// Bomb
+			Player::getPlayer(2)->plantBomb();
 		break;
 		
 		default:
 		break;
 	}
 	
+	#ifdef THREAD_EVENTS
 	Game::threadClean(SDL_ThreadID());
+	#endif // THREAD_EVENTS
 	
 	return 0;
+}
+
+void
+Game::quit()
+{
+	if ( ! isInit ) return;
+	if ( playing )
+	{
+		playing = false;
+		return;
+	}
+	
+	Display::quit();
+	
+	map::Map::deleteMap();
+	
+	#ifdef THREAD_EVENTS
+	for ( std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end() ; i != e ; ++i )
+	{
+		SDL_WaitThread((*i), NULL);
+	}
+	delete(threads);
+	#endif // THREAD_EVENTS
+	
+	bomb::Bomb::deInit();
+	
+	currentMenu = NULL;
+	Menu::clear();
+	
+	Config::write();
 }

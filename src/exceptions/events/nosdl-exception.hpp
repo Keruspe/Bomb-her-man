@@ -27,6 +27,7 @@ namespace bombherman
 	{
 		namespace events
 		{
+			/// Exception thrown when the SDL backend is not available
 			class NoSDLException :
 				public BackendException
 			{
@@ -35,7 +36,9 @@ namespace bombherman
 				/**
 				 * @param m The message
 				 */
-				NoSDLException(const std::string &m) throw() : BackendException("No SDL backend:" + m) {}
+				NoSDLException(const std::string & m) throw() :
+					BackendException("No SDL backend:" + m) {}
+				
 				/// Destructor
 				virtual ~NoSDLException() throw() {}
 			};
@@ -44,3 +47,4 @@ namespace bombherman
 }
 
 #endif // _EVENTS_NOSDL_EXCEPTION_HPP_
+

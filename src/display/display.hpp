@@ -24,6 +24,8 @@
 #include "game/menu.hpp"
 #include "map/map.hpp"
 
+#define NB_BONUSES map::LASTBONUS - map::FIRSTBONUS + 1
+
 #include "exceptions/display/nosdl-exception.hpp"
 #include "exceptions/display/nosvg-exception.hpp"
 
@@ -35,11 +37,14 @@
 
 namespace bombherman
 {
+	/// Class used to manage all the graphical things
 	class Display
 	{
 	public:
 		/// To initialize the video
 		static void init();
+		/// Inform the display we quit the game (it can free some surfaces)
+		static void quitGame();
 		/// To stop the video
 		static void quit();
 		/// To make the video switch between fullscreen and windowed
@@ -49,18 +54,8 @@ namespace bombherman
 		 * @param menu The pointer the menu to display
 		 */
 		static void displayMenu(Menu *menu);
-		/// Set the map
-		/**
-		 * @param map Pointer to the map to use
-		 */
-		static void setMap(map::Map *map);
-		
-		/// Update the scores "panel"
-		static void updateScores();
-		/// Update the barrels
-		static void updateBarrels();
-		/// Update the players
-		static void updatePlayers();
+		/// Update the map
+		static void updateMap();
 		/// Move a player
 		/**
 		 * @param player Pointer to the player who move
@@ -72,16 +67,27 @@ namespace bombherman
 		 * @param coords Coordonates where to plant the bomb
 		 */
 		static void plantBomb(map::Coords coords);
+		/// Show the bomb explosing
+		/**
+		 * @param coords Where the bomb was placed
+		 * @param cells Which cells (a vector of Coords) the bomb destroyed
+		 */
+		static void explode(map::Coords coords, std::vector<map::Coords> cells) { updateBarrels(); }
 	
 	private:
 		static SDL_Surface *svgToSurface(std::string, Uint32 = gSize, Uint32 = gSize);
 		static void initSurfaces();
-		static void cleanSurface(SDL_Surface *);
+		static void cleanSurface(SDL_Surface * &);
 		
 		static void updateDisplay(SDL_Surface *s, SDL_Rect z) { updateDisplay(s, z.x, z.y, z.w, z.h); }
 		static void updateDisplay(SDL_Surface *, Uint16 = 0, Uint16 = 0, Uint16 = 0, Uint16 = 0);
 		
-		static void updateMap();
+		/// Update the scores "panel"
+		static void updateScores();
+		/// Update the barrels
+		static void updateBarrels();
+		/// Update the players
+		static void updatePlayers();
 		
 		// To store the SDL display surface
 		static SDL_Surface *sDisplay;
@@ -101,14 +107,13 @@ namespace bombherman
 		static std::map<SDL_Surface *, void *> buffers;
 		static SDL_Surface *sBackground;
 		
-		static map::Map *gMap;
-		
 		static SDL_Surface *gScoresLayer;
 		static SDL_Surface *gMapLayer;
 		static SDL_Surface *gBarrelsLayer;
 		static SDL_Surface *gPlayersLayer;
 		
 		static std::vector< std::vector< std::vector<SDL_Surface *> > > gPlayers;
+		static SDL_Surface *gBonuses[NB_BONUSES];
 		static SDL_Surface *gBomb;
 		static SDL_Surface *gExplosion;
 		static SDL_Surface *gBarrel;

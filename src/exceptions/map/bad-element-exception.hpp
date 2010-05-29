@@ -26,14 +26,26 @@ namespace bombherman
 {
 	namespace exceptions
 	{
-		class BadElementException :
-			public Exception 
+		namespace map
 		{
-		public:
-			BadElementException(const std::string & elem) throw();
-			virtual ~BadElementException() throw ();
-		};
+			/// Exception thrown by the map parser when a bad element is encountred
+			class BadElementException :
+				public Exception 
+			{
+			public:
+				/// Constructor
+				/**
+				 * @param elem The bad element (std::string)
+				 */
+				BadElementException(const std::string & elem) throw() :
+					Exception("Bad element : " + elem) {}
+			
+				/// Destructor
+				virtual ~BadElementException() throw () {}
+			};
+		}
 	}
 }
 
 #endif // _BAD_ELEMENT_EXCEPTION_HPP_
+

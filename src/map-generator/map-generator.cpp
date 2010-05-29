@@ -23,7 +23,7 @@ using namespace bombherman;
 using namespace bombherman::map;
 
 void
-MapGenerator::generate(Grid& g)
+MapGenerator::generate(Grid & g)
 {
 	::srand(time(0));
 	int currentHorizontalElementSize, currentVerticalElementSize = 0;
@@ -127,12 +127,12 @@ MapGenerator::horizontalScan(Grid & grid, Coords & coords)
 	return i;
 }
 
-Coords &
+Coords
 MapGenerator::getRandomCoords()
 {
-	Coords *c = new Coords();
-	c->x = MapGenerator::random(0, c->max);
-	c->y = MapGenerator::random(0, c->max);
-	return *c;
+	Coords c;
+	c.x = static_cast<Uint32>(MapGenerator::random(0, c.max));
+	c.y = static_cast<Uint32>(MapGenerator::random(0, c.max));
+	return c;
 }
 

@@ -23,12 +23,6 @@
 #include <cairo.h>
 
 #define FONT_FILE "biolinum.ttf"
-#ifdef USE_ANIMATION
-	#define ANIM_TIME 100
-	#define ANIM_IMAGES 4
-#else
-	#define ANIM_IMAGES 1
-#endif
 
 using namespace bombherman;
 
@@ -49,14 +43,13 @@ std::map<SDL_Surface *, void *> Display::buffers;
 
 SDL_Surface *Display::sBackground = NULL;
 
-map::Map *Display::gMap = NULL;
-
 SDL_Surface *Display::gScoresLayer = NULL;
 SDL_Surface *Display::gMapLayer = NULL;
 SDL_Surface *Display::gBarrelsLayer = NULL;
 SDL_Surface *Display::gPlayersLayer = NULL;
 
 std::vector< std::vector< std::vector<SDL_Surface *> > > Display::gPlayers;
+SDL_Surface *Display::gBonuses[NB_BONUSES];
 SDL_Surface *Display::gBomb = NULL;
 SDL_Surface *Display::gExplosion = NULL;
 SDL_Surface *Display::gBarrel = NULL;
@@ -189,8 +182,10 @@ Display::svgToSurface(std::string file, Uint32 targetWidth, Uint32 targetHeight)
 void
 Display::initSurfaces()
 {
+	if ( ! sDisplay ) init();
+	
 	// Logo
-	SDL_Surface *icon = svgToSurface(DATADIR"/bomb-her-man.svg");
+	SDL_Surface *icon = svgToSurface(DATADIR"/graphics/bomb-her-man.svg");
 	//SDL_WM_SetIcon(icon, NULL);
 	SDL_FreeSurface(icon);
 	icon = NULL;
@@ -204,20 +199,20 @@ Display::initSurfaces()
 	
 	// gBomb
 	cleanSurface(gBomb);
-	gBomb = svgToSurface(DATADIR"/bomb.svg");
+	gBomb = svgToSurface(DATADIR"/graphics/bomb.svg");
 	
 	
 	// gWall
 	cleanSurface(gWall);
-	gWall = svgToSurface(DATADIR"/wall.svg");
+	gWall = svgToSurface(DATADIR"/graphics/wall.svg");
 	
 	// gBack
 	cleanSurface(gBack);
-	gBack = svgToSurface(DATADIR"/back.svg");
+	gBack = svgToSurface(DATADIR"/graphics/back.svg");
 	
 	// gBarrel
 	cleanSurface(gBarrel);
-	gBarrel = svgToSurface(DATADIR"/barrel.svg");
+	gBarrel = svgToSurface(DATADIR"/graphics/barrel.svg");
 	
 	
 	/*
@@ -232,15 +227,27 @@ Display::initSurfaces()
 			{
 				cleanSurface(gPlayers[p][i][j]);
 				std::ostringstream f;
-				f << DATADIR << "/players/" << (p+1) << '/' << i << '/' << j << ".svg";
+				f << DATADIR << "/graphics/players/" << (p+1) << '/' << i << '/' << j << ".svg";
 				gPlayers[p][i][j] = svgToSurface(f.str());
 			}
 		}
 	}
+	
+	
+	/*
+	 * Bonuses
+	 */
+	for ( unsigned int b = 0 ; b < NB_BONUSES ; ++b )
+	{
+		cleanSurface(gBonuses[b]);
+		std::ostringstream f;
+		f << DATADIR << "/graphics/bonuses/" << (b+1) << ".svg";
+		gBonuses[b] = svgToSurface(f.str());
+	}
 }
 
 void
-Display::cleanSurface(SDL_Surface *surf)
+Display::cleanSurface(SDL_Surface * &surf)
 {
 	if ( surf )
 	{
@@ -256,15 +263,21 @@ Display::cleanSurface(SDL_Surface *surf)
 }
 
 void
+Display::quitGame()
+{
+	cleanSurface(gMapLayer);
+	cleanSurface(gBarrelsLayer);
+	cleanSurface(gPlayersLayer);
+}
+
+void
 Display::quit()
 {
 	if ( ! sDisplay ) return;
 	
 	cleanSurface(sBackground);
 	
-	cleanSurface(gMapLayer);
-	cleanSurface(gBarrelsLayer);
-	cleanSurface(gPlayersLayer);
+	quitGame();
 	
 	cleanSurface(gBomb);
 	cleanSurface(gExplosion);
@@ -281,6 +294,8 @@ Display::quit()
 				cleanSurface(gPlayers[p][i][j]);
 		}
 	}
+	for ( unsigned int b = 0 ; b < NB_BONUSES ; ++b )
+		cleanSurface(gBonuses[b]);
 	
 	//SDL_LockMutex(mUpdate);
 	SDL_DestroyMutex(mUpdate);
@@ -346,14 +361,14 @@ Display::changeFullscreen()
 void
 Display::updateDisplay(SDL_Surface *s, Uint16 x, Uint16 y, Uint16 w, Uint16 h)
 {
-	SDL_Rect r;
-	r.x = x;
-	r.y = y;
-	r.w = w;
-	r.h = h;
+	if ( ! sDisplay ) init();
+	SDL_Rect r = { x, y, w, h };
 	SDL_LockMutex(mUpdate);
+	if ( SDL_MUSTLOCK(sDisplay) )
+		SDL_LockSurface(sDisplay);
 	SDL_BlitSurface(s, NULL, sDisplay, &r);
 	SDL_UpdateRect(sDisplay, x, y, w, h);
+	SDL_UnlockSurface(sDisplay);
 	SDL_UnlockMutex(mUpdate);
 }
 
@@ -412,73 +427,118 @@ Display::updateScores()
 	
 	if ( ( gZone.x == 0 ) && ( gZone.y == 0 ) ) return;
 	
-	SDL_Rect z;
-	z.x = 0;
-	z.y = 0;
-	z.w = gZone.x;
-	z.h = gZone.y;
+	SDL_Rect z = {0, 0, 0, 0}, dp = {0, 0, 0, 0}, dt = {0, 0, 0, 0};
 	
-	unsigned int nbPlayers = Config::getInt("nbPlayers"), nbAIs = Config::getInt("nbAIs");
-	unsigned int nbAll = ( nbPlayers + nbAIs );
+	Uint32 sSize = 0, nbAll = ( Config::getInt("nbPlayers") + Config::getInt("nbAIs") );
+	if ( nbAll < 1 ) return;
+	
+	TTF_Font *font = TTF_OpenFont(DATADIR"/"FONT_FILE, (gSize*2));
+	if ( ! font )
+	{
+		bherr << TTF_GetError() << bhendl;
+		throw exceptions::display::NoSDLException("Impossible d'ouvrir la police");
+	}
+	
+	Uint16 dx = 0, dy = 0;
+	int wText, hText;
+	TTF_SizeText(font, "00", &wText, &hText);
+	if ( width > height )
+	{	// Horizontal screen -> Vertical scores
+		z.w = gZone.x;
+		z.h = height;
+		dy = z.h / nbAll;
+		sSize = dy / 4;
+		dp.x = sSize / 2 - gSize / 2;
+		dp.y = 5 * sSize / 4;
+		if ( dy < z.w )
+		{
+			dt.x = dp.y;
+			dt.y = sSize / 2 - hText / 2;
+		}
+		else
+			dt.y = dp.y + sSize - hText / 2;
+	}
+	else
+	{	// Vertical screen -> Horizontal scores
+		z.w = width;
+		z.h = gZone.y;
+		dx = z.w / nbAll;
+		sSize = dx / 4;
+		dp.x = 5 * sSize / 4;
+		dp.y = sSize / 2 - gSize / 2;
+		if ( dy < z.w )
+		{
+			dt.x = sSize / 2 - wText / 2;
+			dt.y = dp.x;
+		}
+		else
+			dt.x = dp.x + sSize - wText / 2;
+	}
 	
 	cleanSurface(gScoresLayer);
 	gScoresLayer = SDL_CreateRGBSurface(flags, z.w, z.h, 32, 0, 0, 0, 0);
-	
-	SDL_Surface *s = SDL_CreateRGBSurface(flags, z.w, z.h, 32, 0, 0, 0, 0);
-	SDL_FillRect(s, NULL, 0x00FF00FF);
-	SDL_BlitSurface(s, NULL, gScoresLayer, NULL);
-	SDL_FreeSurface(s);
+	SDL_BlitSurface(sBackground, &z, gScoresLayer, NULL);
 	
 	Sint32 *scores = reinterpret_cast<Sint32 *>(malloc(nbAll * sizeof(Sint32)));
-	int max = -1;
+	Sint32 max = -10;
 	bool neutral = false;
-	std::vector< Player * > players = Player::getPlayers();
-	for ( std::vector< Player * >::iterator i = players.begin(), e = players.end() ; i != e ; ++i )
+	for ( std::vector< Player * >::iterator i = Player::players.begin(), e = Player::players.end() ; i != e ; ++i )
 	{
 		Sint32 s = (*i)->getScore();
 		if ( s > max ) max = s;
 		else if ( s == max ) neutral = true;
 		scores[(*i)->getId()-1] = s;
 	}
-	/*
-	std::vector< Player * > ais = AI::getAIs();
-	for ( std::vector< Player * >::iterator i = ais.begin(), e = ais.end() ; i != e ; ++i )
-	{
-		scores[(*i)->getId()-1] = (*i)->getScore();
-	}
-	*/
-	
-	Uint16 dx = 0, dy = 0;
-	if ( z.h < z.w )
-		dx = z.w / nbAll; // Horizontal
-	else
-		dy = z.h / nbAll; // Vertical
-	Uint32 sSize = ( dx + dy ) / 4;
 	
 	// Scores heads
-	SDL_Surface *sWin = svgToSurface(DATADIR"/scores/win.svg", sSize, sSize);
-	SDL_Surface *sLose = svgToSurface(DATADIR"/scores/lose.svg", sSize, sSize);
-	SDL_Surface *sEqual = svgToSurface(DATADIR"/scores/equal.svg", sSize, sSize);
-	
-	TTF_Font *font = TTF_OpenFont(DATADIR"/"FONT_FILE, (2));
-	
+	SDL_Surface *sWin = svgToSurface(DATADIR"/graphics/scores/win.svg", sSize, sSize);
+	SDL_Surface *sLose = svgToSurface(DATADIR"/graphics/scores/lose.svg", sSize, sSize);
+	SDL_Surface *sEqual = svgToSurface(DATADIR"/graphics/scores/equal.svg", sSize, sSize);
+		
 	for ( unsigned int i = 0 ; i < nbAll ; ++i )
 	{
 		int s = scores[i];
 		
-		SDL_Rect h, t;
-		
-		h.x = ( sSize / 2 ) + i * dx;
-		h.y = ( sSize / 2 ) + i * dy;
-		h.w = h.h = sSize;
-		
-		t.w = z.w - ( sSize / 2 );
-		t.h = z.h - ( sSize / 2 );
+		SDL_Rect
+			h = {
+				( 2 * sSize / 3 ) + ( i * dx ),
+				( 2 * sSize / 3 ) + ( i * dy ),
+				sSize,
+				sSize
+			},
+			p = {
+				h.x + dp.x,
+				h.y + dp.y,
+				sSize,
+				sSize
+			},
+			t = {
+				h.x + dt.x,
+				h.y + dt.y,
+				z.w - ( sSize / 2 ),
+				z.h - ( sSize / 2 )
+			};
 		
 		SDL_BlitSurface(( s == max ) ? ( ( neutral ) ? ( sEqual ) : ( sWin ) ) : ( sLose ), NULL, gScoresLayer, &h);
+		
+		SDL_BlitSurface(gPlayers[i][map::DOWN][0], NULL, gScoresLayer, &p);
+		
+		SDL_Surface *textSurface = NULL;
+		std::ostringstream ost;
+		ost << std::setw(2) << std::setfill('0') << s;
+		std::string st(ost.str());
+		const char *text = st.c_str();
+		if ( ! ( textSurface = TTF_RenderUTF8_Blended(font, text, textColor) ) )
+			bherr << "Can't display the line" << text << bhendl;
+		else
+		{
+			SDL_BlitSurface(textSurface, NULL, gScoresLayer, &t);
+			SDL_FreeSurface(textSurface);
+		}
 	}
 	
-	updateDisplay(gScoresLayer);
+	
+	updateDisplay(gScoresLayer, z);
 	
 	free(scores);
 	TTF_CloseFont(font);
@@ -489,18 +549,10 @@ Display::updateScores()
 }
 
 void
-Display::setMap(map::Map *map)
-{
-	if ( ! sDisplay ) init();
-	
-	gMap = map;
-	
-	updateMap();
-}
-
-void
 Display::updateMap()
 {
+	updateScores();
+	
 	if ( ( ! gWall ) || ( ! gBack ) ) initSurfaces();
 	
 	cleanSurface(gMapLayer);
@@ -516,7 +568,7 @@ Display::updateMap()
 	{
 		for(coords.x = 0 ; coords.x < gMapSize ; ++coords.x)
 		{
-			if ( gMap->get(coords) == map::INDESTRUCTIBLE )
+			if ( map::Map::get(coords) == map::INDESTRUCTIBLE )
 				SDL_BlitSurface(gWall, NULL, gMapLayer, &r);
 			else
 				SDL_BlitSurface(gBack, NULL, gMapLayer, &r);
@@ -532,11 +584,12 @@ Display::updateMap()
 void
 Display::updateBarrels()
 {
+	if ( ! gMapLayer ) return;
+	if ( ! gWall ) initSurfaces();
 	SDL_Rect r;
 	cleanSurface(gBarrelsLayer);
 	gBarrelsLayer = SDL_CreateRGBSurface(flags, gZone.w, gZone.h, 32, 0, 0, 0, 0);
 	SDL_BlitSurface(gMapLayer, NULL, gBarrelsLayer, NULL);
-	if ( ! gWall ) initSurfaces();
 	map::Coords coords;
 	r.y = 0;
 	for(coords.y = 0 ; coords.y < gMapSize ; ++coords.y)
@@ -544,16 +597,20 @@ Display::updateBarrels()
 		r.x = 0;
 		for(coords.x = 0 ; coords.x < gMapSize ; ++coords.x)
 		{
-			char c = gMap->get(coords);
+			char c = map::Map::get(coords);
 			if ( c == map::BARREL )
 				SDL_BlitSurface(gBarrel, NULL, gBarrelsLayer, &r);
 			else if ( ( c == map::BOMB ) || ( c == map::PLAYONBOMB ) )
 				SDL_BlitSurface(gBomb, NULL, gBarrelsLayer, &r);
+			else if ( ( c >= '1' ) && ( c <= '6' ) )
+				SDL_BlitSurface(gBonuses[c-'1'], NULL, gBarrelsLayer, &r);
 			r.x += gSize;
 		}
 		r.y += gSize;
 	}
 	
+	updateDisplay(gBarrelsLayer, gZone);
+
 	updatePlayers();
 }
 
@@ -562,134 +619,132 @@ Display::updatePlayers()
 {
 	if ( ! gPlayers[0][0][0] ) initSurfaces();
 	
-	SDL_Rect r;
-	r.w = gSize;
-	r.h = gSize;
-	cleanSurface(gPlayersLayer);
-	gPlayersLayer = SDL_CreateRGBSurface(flags, gZone.w, gZone.h, 32, 0, 0, 0, 0);
-	SDL_BlitSurface(gBarrelsLayer, NULL, gPlayersLayer, NULL);
+	SDL_Rect r = {
+			0,
+			0,
+			gSize,
+			gSize
+		};
 	map::Coords coords;
-	std::vector< Player * > players = Player::getPlayers();
-	for ( std::vector< Player * >::iterator i = players.begin(), e = players.end() ; i != e ; ++i )
+	for ( std::vector< Player * >::iterator i = Player::players.begin(), e = Player::players.end() ; i != e ; ++i )
 	{
-		map::Coords coords = (*i)->getCoords();
-		r.x = ( coords.x * gSize );
-		r.y = ( coords.y * gSize );
-		SDL_BlitSurface(gPlayers[(*i)->getId()-1][(*i)->getOrient()][0], NULL, gPlayersLayer, &r);
+		if ( ! (*i)->isAlive() ) continue;
+		
+		coords = (*i)->getCoords();
+		r.x = ( coords.x * gSize ) + gZone.x;
+		r.y = ( coords.y * gSize ) + gZone.y;
+		updateDisplay(gPlayers[(*i)->getId()-1][(*i)->getOrient()][0], r);
 	}
-	
-	updateDisplay(gPlayersLayer, gZone);
 }
 
 void
 Display::movePlayer(Player *player, map::Direction goTo)
 {
-	map::Direction was = player->getOrient();
-	if ( player->go(goTo) )
+	if ( ! sDisplay ) init();
+	map::MoveResult status = player->go(goTo);
+	if ( status == map::NOTHINGHAPPENED ) return;
+	int p = player->getId() - 1;
+	SDL_Surface *sPlayer = NULL;
+	map::Coords coords = player->getCoords();
+	SDL_Rect
+		r = {
+				coords.x * gSize,
+				coords.y * gSize,
+				gSize,
+				gSize
+			},
+		l = {
+				0,
+				0,
+				gSize,
+				gSize
+			};
+	switch ( status )
 	{
-		map::Coords coords = player->getCoords();
-		SDL_Rect
-			r = {
-					coords.x * gSize,
-					coords.y * gSize,
-					gSize,
-					gSize
-				},
-			d = {
-					0,
-					0,
-					gSize,
-					gSize
-				};
-		
-		switch ( goTo )
-		{
-			case map::DOWN:
-				r.y -= gSize;
-				#ifndef USE_ANIMATION
-				d.y = gSize;
-				#endif // ! USE_ANIMATION
-			case map::UP:
-				r.h += gSize;
-			break;
-			case map::RIGHT:
-				r.x -= gSize;
-				#ifndef USE_ANIMATION
-				d.x = gSize;
-				#endif // ! USE_ANIMATION
-			case map::LEFT:
-				r.w += gSize;
-			break;
-		}
-		
-		SDL_Surface *sPlayer = NULL;
-		unsigned int anim = 0;
-		#if USE_ANIMATION
-		const Sint16 part = (gSize+2) / ANIM_IMAGES;
-		const Sint16 cpart = (ANIM_IMAGES-1) * part;
-		while ( true )
-		{
+		case map::BONUSTAKEN:
+			SDL_BlitSurface(gMapLayer, &r, gBarrelsLayer, &r);
+		case map::MOVED:
 			switch ( goTo )
 			{
 				case map::DOWN:
-					d.y = (1+anim)*part;
-					if ( static_cast<Uint16>(d.y) >= gSize ) anim = ANIM_IMAGES-1;
-				break;
+					r.y -= gSize;
+					l.y = gSize;
 				case map::UP:
-					d.y = cpart-anim*part;
-					if ( d.y <= 0 ) anim = ANIM_IMAGES-1;
+					r.h += gSize;
 				break;
 				case map::RIGHT:
-					d.x = (1+anim)*part;
-					if ( static_cast<Uint16>(d.x) >= gSize ) anim = ANIM_IMAGES-1;
-				break;
+					r.x -= gSize;
+					l.x = gSize;
 				case map::LEFT:
-					d.x = cpart-anim*part;
-					if ( d.x <= 0 ) anim = ANIM_IMAGES-1;
+					r.w += gSize;
 				break;
 			}
-			#endif // USE_ANIMATION
-			sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
-			SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
-			SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][anim++], NULL, sPlayer, &d);
-			updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
-			SDL_FreeSurface(sPlayer);
-			#if USE_ANIMATION
-			if ( anim < ANIM_IMAGES )
-				SDL_Delay(ANIM_TIME/ANIM_IMAGES);
-			else break;
-		}
-		#endif // USE_ANIMATION
+			
+			#if ANIM_IMAGES > 1
+			unsigned int anim = 0;
+			const Sint16 part = gSize / ANIM_IMAGES;
+			const Sint16 cpart = (ANIM_IMAGES-1) * part;
+			while ( true )
+			{
+				SDL_Rect d = {
+						0,
+						0,
+						gSize,
+						gSize
+					};
+				switch ( goTo )
+				{
+					case map::DOWN:
+						d.y = (1+anim)*part;
+						if ( static_cast<Uint16>(d.y) >= gSize ) anim = ANIM_IMAGES-1;
+					break;
+					case map::UP:
+						d.y = cpart-anim*part;
+						if ( d.y <= 0 ) anim = ANIM_IMAGES-1;
+					break;
+					case map::RIGHT:
+						d.x = (1+anim)*part;
+						if ( static_cast<Uint16>(d.x) >= gSize ) anim = ANIM_IMAGES-1;
+					break;
+					case map::LEFT:
+						d.x = cpart-anim*part;
+						if ( d.x <= 0 ) anim = ANIM_IMAGES-1;
+					break;
+				}
+				sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
+				SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
+				SDL_BlitSurface(gPlayers[p][goTo][++anim%ANIM_IMAGES], NULL, sPlayer, &d);
+				updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
+				SDL_FreeSurface(sPlayer);
+				if ( anim < ANIM_IMAGES )
+					SDL_Delay(ANIM_TIME/ANIM_IMAGES);
+				else break;
+			}
+			#endif // ANIM_IMAGES > 1
+		break;
 	}
-	else if ( was != player->getOrient() )
-	{
-		map::Coords coords = player->getCoords();
-		SDL_Rect r = {
-					coords.x * gSize,
-					coords.y * gSize,
-					gSize,
-					gSize
-				};
-		SDL_Surface *sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
-		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
-		SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, NULL);
-		updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
-		SDL_FreeSurface(sPlayer);
-	}
+	sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
+	SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
+	SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &l);
+	updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
+	SDL_FreeSurface(sPlayer);
 }
 
 void
 Display::plantBomb(map::Coords coords)
 {
+	if ( ! sDisplay ) init();
 	SDL_Rect r = {
-	
-			gZone.x + coords.x * gSize,
-			gZone.y + coords.y * gSize,
+			coords.x * gSize,
+			coords.y * gSize,
 			gSize,
 			gSize
 		};
 	
 	SDL_BlitSurface(gBomb, NULL, gBarrelsLayer, &r);
+	r.x += gZone.x;
+	r.y += gZone.y;
+	updateDisplay(gBomb, r);
 	
 	updatePlayers();
 }

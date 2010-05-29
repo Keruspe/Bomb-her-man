@@ -17,30 +17,61 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#include "map/map-utils.hpp"
-#include "game/player.hpp"
-#include "map/map.hpp"
-#include <SDL.h>
-
-
 #ifndef _ATOMICCENTER_HPP
 #define	_ATOMICCENTER_HPP
 
+#include <ios>
+#include <iostream>
+#include <SDL.h>
+
+#include "display/display.hpp"
+#include "game/player.hpp"
+#include "map/map.hpp"
+#include "map/map-utils.hpp"
+#include "bomb.hpp"
+
 namespace bombherman
 {
-    namespace bomb
-    {
-        class AtomicCenter
-        {
-        public:
-            static void plantBomb (map::Coords &, int playerId);
-        private:
-            static int wait (void *);
-            static void explode (std::vector<int> *);
-            static std::vector<std::vector<int> > bombList;
-        };
-    }
+	namespace bomb
+	{
+		/// Class used to manage Bombs
+		class AtomicCenter
+		{
+		public:
+			/// Plant a bomb
+			/**
+			 * @param player The id of the player who planted the bomb (int)
+			 * @param c The coords where the bomb has been planted (map::Coords)
+			 *
+			 * @return True if a bomb has been planted
+			 */
+			static bool plantBomb (int player, map::Coords & c);
+			
+			/// Remove a bomb
+			/*
+			 * @param c The coords of the bomb to remove (map::Coords)
+			 */
+			static void removeBomb (map::Coords & c);
+			
+			/// Get a bomb by its coords
+			/*
+			 * @param c The coords where you're looking for a bomb (map::Coords)
+			 *
+			 * @return A pointer to the bomb (Bomb *)
+			 */
+			static Bomb * getBomb (map::Coords & c);
+			
+			/// Make everything explode
+			static void boum();
+
+			/// Decrease the number of bombs still alive
+			static void bombExploded() { --AtomicCenter::numberOfBombs; }
+		private:
+			static std::vector<std::vector<Bomb *> > bombs;
+			static int numberOfBombs;
+		};
+	}
 }
 
 #endif	/* _ATOMICCENTER_HPP */
+

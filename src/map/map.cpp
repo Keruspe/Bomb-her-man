@@ -19,57 +19,59 @@
 
 #include "map.hpp"
 #include "map-generator/map-generator.hpp"
+#include "bombherman.hpp"
 
 using namespace bombherman;
 using namespace bombherman::map;
-using namespace bombherman::exceptions;
 
 Grid Map::map;
 
-Map::Map()
+void
+Map::newMap()
 {
+	Map::map = Grid();
 	MapGenerator::generate(Map::map);
+	Map::map.exists = true;
+	Map::placePlayers();
 }
 
-Map::Map(Grid & model)
-{
-	for(int x(0) ; x < Map::map.size ; ++x)
-	{
-		for(int y(0) ; y < Map::map.size ; ++y)
-		{
-			Map::map[y][x] = model[y][x];
-		}
-	}
-}
-
-Map::Map(std::string path)
+void
+Map::newMap(std::string path)
 {
 	try
 	{
 		if (! MapParser::parse(path, Map::map))
 		{
-			std::cerr << "The file in which the program looked "
-				<< "for the map was malformed." << std::endl;
-			throw MalformedFileException(path);
+			bherr << "The file in which the program looked "
+				<< "for the map was malformed." << bhendl;
+			throw exceptions::map::MalformedFileException(path);
 		}
 	}
-	catch(BadElementException & e)
+	catch(exceptions::map::BadElementException & e)
 	{
-		std::cerr << "An error has been detected in " << path << std::endl;
+		bherr << "An error has been detected in " << path << bhendl;
 		throw e;
 	}
+	Map::map.exists = true;
+	Map::placePlayers();
 }
 
-Map::~Map()
+void
+Map::deleteMap()
 {
+	Map::map.exists = false;
+	for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
+		i_end = Map::map.grid.end() ; i != i_end ; ++i)
+			i->clear();
+	Map::map.grid.clear();
 }
 
 void
 Map::placePlayers()
 {
 	Coords c;
-	for(std::vector< Player * >::iterator i = Player::getPlayers().begin(),
-		i_end = Player::getPlayers().end() ; i != i_end ; ++i)
+	for(std::vector< Player * >::iterator i = Player::players.begin(),
+		i_end = Player::players.end() ; i != i_end ; ++i)
 	{
 		while (true)
 		{
@@ -98,165 +100,203 @@ Map::placePlayers()
 bool
 Map::plantBomb(Coords & c)
 {
-	if (0 > c.x || 0 > c.y || Map::map.size <= c.y
-		|| Map::map.size <= c.x || Map::get(c) != PLAYER)
-			return false;
+	if (! Map::exists() || ! c.validate() || Map::get(c) != PLAYER)
+		return false;
 	Map::map[c.y][c.x] = PLAYONBOMB;
 	return true;
 }
 
 char
-Map::get(Coords c)
+Map::get(Coords & c)
 {
-	if (0 > c.x || 0 > c.y || Map::map.size <= c.y || Map::map.size <= c.x)
+	if (! Map::exists() || ! c.validate())
 		return 0;
 	return Map::map[c.y][c.x];
 }
 
 char
-Map::get(int x, int y)
+Map::get(Uint32 x, Uint32 y)
 {
-	if (0 > x || 0 > y || Map::map.size <= y || Map::map.size <= x)
+	if (! Map::exists() || ! Coords(x, y).validate())
 		return 0;
 	return Map::map[y][x];
 }
 
-bool
-Map::movePlayer(Coords * coords, Direction & direction)
+MoveResult
+Map::movePlayer(Coords & c, Direction & direction)
 {
-	bool move;
+	if(! Map::exists())
+		return NOTHINGHAPPENED;
+	bool tmpBool;
 	switch(direction)
 	{
 	case UP:
-		move = Map::moveUp(coords);
+		tmpBool = Map::moveUp(c);
 		break;
 	case DOWN:
-		move = Map::moveDown(coords);
+		tmpBool = Map::moveDown(c);
 		break;
 	case LEFT:
-		move = Map::moveLeft(coords);
+		tmpBool = Map::moveLeft(c);
 		break;
 	case RIGHT:
-		move = Map::moveRight(coords);
+		tmpBool = Map::moveRight(c);
 		break;
 	}
-	if (! move)
-		return false;
-	if (Map::map[coords->y][coords->x] != BOMB)
+	if (! tmpBool)
+		return NOTHINGHAPPENED;
+	if (Map::map[c.y][c.x] != BOMB)
 	{
-		Map::applyBonus(coords);
-		Map::map[coords->y][coords->x] = PLAYER;
+		tmpBool = Map::applyBonus(c);
+		Map::map[c.y][c.x] = PLAYER;
+		if (tmpBool)
+			return BONUSTAKEN;
 	}
 	else
-		Map::map[coords->y][coords->x] = PLAYONBOMB;
+		Map::map[c.y][c.x] = PLAYONBOMB;
+	return MOVED;
+}
+
+bool
+Map::moveUp(Coords & c)
+{
+	if (c.y <= 0 || Map::map[c.y - 1][c.x] == BARREL
+		|| Map::map[c.y - 1][c.x] == INDESTRUCTIBLE
+		|| Map::map[c.y - 1][c.x] == PLAYONBOMB
+		|| Map::map[c.y - 1][c.x] == PLAYER)
+			return false;
+	Map::cleanOldSpot(c);
+	--c.y;
 	return true;
 }
 
 bool
-Map::moveUp(Coords * c)
+Map::moveDown(Coords & c)
 {
-	if (c->y <= 0 || Map::map[c->y - 1][c->x] == BARREL
-		|| Map::map[c->y - 1][c->x] == INDESTRUCTIBLE
-		|| Map::map[c->y - 1][c->x] == PLAYONBOMB
-		|| Map::map[c->y - 1][c->x] == PLAYER)
-		return false;
+	if (c.y >= (Map::map.size - 1) || Map::map[c.y + 1][c.x] == BARREL
+		|| Map::map[c.y + 1][c.x] == INDESTRUCTIBLE
+		|| Map::map[c.y + 1][c.x] == PLAYONBOMB
+		|| Map::map[c.y + 1][c.x] == PLAYER)
+			return false;
 	Map::cleanOldSpot(c);
-	--c->y;
+	++c.y;
 	return true;
 }
 
 bool
-Map::moveDown(Coords * c)
+Map::moveLeft(Coords & c)
 {
-	if (c->y >= (Map::map.size - 1) || Map::map[c->y + 1][c->x] == BARREL
-		|| Map::map[c->y + 1][c->x] == INDESTRUCTIBLE
-		|| Map::map[c->y + 1][c->x] == PLAYONBOMB
-		|| Map::map[c->y + 1][c->x] == PLAYER)
-		return false;
+	if (c.x <= 0 || Map::map[c.y][c.x - 1] == BARREL
+		|| Map::map[c.y][c.x - 1] == INDESTRUCTIBLE
+		|| Map::map[c.y][c.x - 1] == PLAYONBOMB
+		|| Map::map[c.y][c.x - 1] == PLAYER)
+			return false;
 	Map::cleanOldSpot(c);
-	++c->y;
+	--c.x;
 	return true;
 }
 
 bool
-Map::moveLeft(Coords * c)
+Map::moveRight(Coords & c)
 {
-	if (c->x <= 0 || Map::map[c->y][c->x - 1] == BARREL
-		|| Map::map[c->y][c->x - 1] == INDESTRUCTIBLE
-		|| Map::map[c->y][c->x - 1] == PLAYONBOMB
-		|| Map::map[c->y][c->x - 1] == PLAYER)
-		return false;
+	if (c.x >= (Map::map.size - 1) || Map::map[c.y][c.x + 1] == BARREL
+		|| Map::map[c.y][c.x + 1] == INDESTRUCTIBLE
+		|| Map::map[c.y][c.x + 1] == PLAYONBOMB
+		|| Map::map[c.y][c.x + 1] == PLAYER)
+			return false;
 	Map::cleanOldSpot(c);
-	--c->x;
-	return true;
-}
-
-bool
-Map::moveRight(Coords * c)
-{
-	if (c->x >= (Map::map.size - 1) || Map::map[c->y][c->x + 1] == BARREL
-		|| Map::map[c->y][c->x + 1] == INDESTRUCTIBLE
-		|| Map::map[c->y][c->x + 1] == PLAYONBOMB
-		|| Map::map[c->y][c->x + 1] == PLAYER)
-		return false;
-	Map::cleanOldSpot(c);
-	++c->x;
+	++c.x;
 	return true;
 }
 
 void
 Map::destroy(Coords & c)
 {
-	if (0 > c.x || 0 > c.y || Map::map.size <= c.y
-		|| Map::map.size <= c.x || Map::get(c) != BARREL)
-			return;
+	if (! Map::exists() || ! c.validate() || Map::get(c) != BARREL)
+		return;
 	if (MapGenerator::throwDice(Config::getInt("bonusApparitionProbability")))
-		Map::map[c.y][c.x] = BOMBUP + MapGenerator::random(0, NULLFIRE-BOMBUP);
+		Map::map[c.y][c.x] = FIRSTBONUS + MapGenerator::random(0, LASTBONUS-FIRSTBONUS);
 	else
 		Map::map[c.y][c.x] = NOTHING;
 }
 
 void
-Map::applyBonus(Coords * c)
+Map::removePlayer(Coords & c)
+{
+	if (! Map::exists() || ! c.validate())
+		return;
+	if (Map::get(c) == PLAYER)
+		Map::map[c.y][c.x] = NONE;
+	else if (Map::get(c) == PLAYONBOMB)
+		Map::map[c.y][c.x] = BOMB;
+	c.x = Config::getInt("mapSize");
+	c.y = Config::getInt("mapSize");
+}
+
+void
+Map::removeBomb(Coords & c)
+{
+	if (! Map::exists() || ! c.validate())
+		return;
+	if (Map::get(c) == BOMB)
+		Map::map[c.y][c.x] = NONE;
+	else if (Map::get(c) == PLAYONBOMB)
+		Map::map[c.y][c.x] = PLAYER;
+}
+
+void
+Map::removeBonus(Coords & c)
+{
+	if (! Map::exists() || ! c.validate())
+		return;
+	Map::map[c.y][c.x] = NONE;
+}
+
+bool
+Map::applyBonus(Coords & c)
 {
 	Player * player = Player::playerAt(c);
 	if (player == 0)
-		return;
+		return false;
 	int variation(1);
-	switch(static_cast<Bonus>(Map::map[c->y][c->x]))
+	switch(static_cast<Bonus>(Map::map[c.y][c.x]))
 	{
-	case NONE:
-		break;
-	case NULLFIRE:
-		variation *= 0; // will be minored by minRange
 	case FIREDOWN:
-		variation *= -1;
+		variation = -1;
 	case FIREUP:
 		player->addToRange(variation * Config::getInt("rangeVariation"));
+		break;
+	case NULLFIRE:
+		player->setRange(Config::getInt("minRange"));
 		break;
 	case FULLFIRE:
 		player->setRange(Config::getInt("maxRange"));
 		break;
 	case BOMBDOWN:
-		variation *= -1;
+		variation = -1;
 	case BOMBUP:
 		player->addToPlantableBombs(variation * Config::getInt("capacityVariation"));
 		break;
+	default:
+		return false;
 	}
+	return true;
 }
 
 void
-Map::cleanOldSpot(Coords * c)
+Map::cleanOldSpot(Coords & c)
 {
-	if (Map::map[c->y][c->x] == PLAYONBOMB)
-		Map::map[c->y][c->x] = BOMB;
-	else if (Map::map[c->y][c->x] != BOMB)
-		Map::map[c->y][c->x] = NOTHING;
+	if (Map::map[c.y][c.x] == PLAYONBOMB)
+		Map::map[c.y][c.x] = BOMB;
+	else if (Map::map[c.y][c.x] != BOMB)
+		Map::map[c.y][c.x] = NOTHING;
 }
 
 void
 Map::toString()
 {
+	if(! Map::exists())
+		return;
 	Coords c;
 	for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
 		i_end = Map::map.grid.end() ; i != i_end ; ++i)
@@ -266,7 +306,13 @@ Map::toString()
 		{
 			std::cout << '[' << *j << ']';
 		}
-		std::cout << std::endl;
+		std::cout << bhendl;
 	}
+}
+
+bool
+Map::exists()
+{
+	return Map::map.exists;
 }
 

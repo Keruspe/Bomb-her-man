@@ -153,6 +153,15 @@ Menu::action()
 }
 
 void
+Menu::quit()
+{
+	if ( this->type == INGAME)
+		Game::play();
+	else
+		Game::stop();
+}
+
+void
 Menu::up()
 {
 	if ( --(this->current) < 1 )
