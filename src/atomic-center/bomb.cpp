@@ -63,7 +63,11 @@ Bomb::explode()
 	Uint32 range = static_cast<Uint32>(p->getRange());
 	if ( map::Map::get(coords) == map::PLAYONBOMB )
 		if ( p->kill(Player::playerAt(coords)) )
+		{
+			Bomb::gameOver = true;
+			SDL_UnlockMutex(mutex);
 			return;
+		}
 	bool up(true), down(true), right(true), left(true);
 	for ( Uint32 i = 1 ; i <= range ; ++i )
 	{
@@ -79,7 +83,10 @@ Bomb::explode()
 			break;
 	}
 	if ( Bomb::gameOver )
+	{
+		SDL_UnlockMutex(mutex);
 		return;
+	}
 	p->bombHasExploded();
 	map::Map::removeBomb(coords);
 	Display::explode(coords, explodedCells);
@@ -120,12 +127,5 @@ Bomb::check(Uint32 x, Uint32 y)
 			map::Map::removeBonus(c);
 	}
 	return true;
-}
-
-void
-Bomb::newGame()
-{
-	SDL_UnlockMutex(mutex);
-	Bomb::gameOver = false;
 }
 
