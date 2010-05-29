@@ -103,6 +103,11 @@ Config::init()
 		config["maxCapacity"] = 5;
 		config["minCapacity"] = 1;
 		
+		config["suicideMalus"] = -2;
+		config["killBonus"] = 1;
+		config["minimumScore"] = -9;
+		config["maximumScore"] = 99;
+		
 		/*
 		 * Then read the file
 		 */

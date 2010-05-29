@@ -101,13 +101,9 @@ Player::kill(Player *killed)
 	if (! killed->alive)
 		return;
 	if ( killed == this )
-	{
-		if ( (this->score -= 2) < -9 )
-			this->score = -9;
-	}
+		this->addToScore(Config::getInt("suicideMalus"));
 	else
-		if( ++(this->score) > 99 )
-			this->score = 99;
+		this->addToScore(Config::getInt("killBonus"));
 	killed->die();
 }
 
@@ -172,7 +168,10 @@ Player::go(map::Direction & direction)
 void
 Player::addToScore(int score)
 {
-	this->score += score;
+	if ( (this->score += score) < Config::getInt("minimumScore") )
+		this->score = -9;
+	else if (this->score > Config::getInt("maximumScore"))
+		this->score = 99;
 }
 
 void
