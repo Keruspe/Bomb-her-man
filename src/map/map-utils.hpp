@@ -134,10 +134,10 @@ namespace bombherman
 		/// Summary of what happened in a move
 		typedef enum
 		{
-			ORIENTCHANGED, /** < OrientChanged (no move, only an orientation change) */
-			MOVED, /** < Moved (the player moved) */
-			BONUSTAKEN, /** < BonusTaken (the player moved and took a bonus) */
-			NOTHINGHAPPENED /** < NothingHappened */
+			ORIENTCHANGED = 4, /** < OrientChanged (no move, only an orientation change) */
+			MOVED = 5, /** < Moved (the player moved) */
+			BONUSTAKEN = 6, /** < BonusTaken (the player moved and took a bonus) */
+			NOTHINGHAPPENED = 7 /** < NothingHappened */
 		} MoveResult;
 	}
 }
