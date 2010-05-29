@@ -489,16 +489,6 @@ Display::updateScores()
 		else if ( s == max ) neutral = true;
 		scores[(*i)->getId()-1] = s;
 	}
-	/*
-	std::vector< Player * > ais = AI::getAIs();
-	for ( std::vector< Player * >::iterator i = ais.begin(), e = ais.end() ; i != e ; ++i )
-	{
-		Sint32 s = (*i)->getScore();
-		if ( s > max ) max = s;
-		else if ( s == max ) neutral = true;
-		scores[(*i)->getId()-1] = s;
-	}
-	*/
 	
 	// Scores heads
 	SDL_Surface *sWin = svgToSurface(DATADIR"/graphics/scores/win.svg", sSize, sSize);
