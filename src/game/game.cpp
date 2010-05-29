@@ -266,7 +266,7 @@ Game::quit()
 	delete(threads);
 	#endif // THREAD_EVENTS
 	
-	bomb::Bomb::deinit();
+	bomb::Bomb::newGame();
 	
 	currentMenu = NULL;
 	Menu::clear();

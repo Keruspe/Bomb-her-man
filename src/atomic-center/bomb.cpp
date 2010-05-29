@@ -14,12 +14,12 @@ using namespace bombherman;
 using namespace bombherman::bomb;
 
 SDL_mutex * Bomb::mutex = SDL_CreateMutex ();
+bool Bomb::gameOver = false;
 
 Bomb::Bomb (int player, map::Coords c) :
 	explosion(SDL_CreateSemaphore(0)),
 	player(player),
-	coords(c),
-	gameOver(false)
+	coords(c)
 {
 	Display::plantBomb(c);
 	if ( SDL_CreateThread(waitExplode, this) == NULL )
@@ -78,7 +78,7 @@ Bomb::explode()
 		if ( ( ! up ) && ( ! down ) && ( ! right ) && ( ! left ) )
 			break;
 	}
-	if ( gameOver )
+	if ( Bomb::gameOver )
 		return;
 	p->bombHasExploded();
 	map::Map::removeBomb(coords);
@@ -94,7 +94,7 @@ bool
 Bomb::check(Uint32 x, Uint32 y)
 {
 	map::Coords c(x, y);
-	if ( ( ! c.validate() ) || gameOver )
+	if ( ( ! c.validate() ) || Bomb::gameOver )
 		return false;
 	char item = map::Map::get(c);
 	switch ( item )
@@ -106,11 +106,11 @@ Bomb::check(Uint32 x, Uint32 y)
 		break;
 		case map::PLAYER :
 			if ( Player::getPlayer(this->player)->kill(Player::playerAt(c)) )
-				gameOver = true;
+				Bomb::gameOver = true;
 		break;
 		case map::PLAYONBOMB :
 			if ( Player::getPlayer(this->player)->kill(Player::playerAt(c)) )
-				gameOver = true;
+				Bomb::gameOver = true;
 		case map::BOMB :
 			chain.push_back(c);
 		break;
@@ -120,5 +120,12 @@ Bomb::check(Uint32 x, Uint32 y)
 			map::Map::removeBonus(c);
 	}
 	return true;
+}
+
+void
+Bomb::newGame()
+{
+	Bomb::gameOver = false;
+	Bomb::deInit();
 }
 

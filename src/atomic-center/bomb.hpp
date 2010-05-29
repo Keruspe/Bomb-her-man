@@ -37,7 +37,10 @@ namespace bombherman
 			static void doExplode(Bomb * b);
 			
 			/// Free the mutex
-			static void deinit() { SDL_DestroyMutex(mutex); }
+			static void deInit() { SDL_DestroyMutex(mutex); }
+
+			/// Start a new game
+			static void newGame();
 		private:
 			/// Destructor
 			virtual ~Bomb ();
@@ -50,7 +53,7 @@ namespace bombherman
 			map::Coords coords;
 			std::vector<map::Coords> explodedCells;
 			std::vector<map::Coords> chain;
-			bool gameOver;
+			static bool gameOver;
 		};
 	}
 }
