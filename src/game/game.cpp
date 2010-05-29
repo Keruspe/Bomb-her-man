@@ -127,6 +127,7 @@ Game::nextMap()
 		changeMenu(Menu::MAIN);
 	else
 	{
+		bomb::Bomb::newGame();
 		map::Map::newMap();
 		play();
 	}
@@ -266,7 +267,7 @@ Game::quit()
 	delete(threads);
 	#endif // THREAD_EVENTS
 	
-	bomb::Bomb::newGame();
+	bomb::Bomb::deInit();
 	
 	currentMenu = NULL;
 	Menu::clear();

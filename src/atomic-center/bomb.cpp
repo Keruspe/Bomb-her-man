@@ -122,10 +122,3 @@ Bomb::check(Uint32 x, Uint32 y)
 	return true;
 }
 
-void
-Bomb::newGame()
-{
-	Bomb::gameOver = false;
-	Bomb::deInit();
-}
-

@@ -40,7 +40,7 @@ namespace bombherman
 			static void deInit() { SDL_DestroyMutex(mutex); }
 
 			/// Start a new game
-			static void newGame();
+			static void newGame() { Bomb::gameOver = false; }
 		private:
 			/// Destructor
 			virtual ~Bomb ();
