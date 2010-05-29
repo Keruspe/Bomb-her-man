@@ -24,7 +24,7 @@
 #include "game/menu.hpp"
 #include "map/map.hpp"
 
-#define NB_BONUSES 6
+#define NB_BONUSES map::LASTBONUS - map::FIRSTBONUS + 1
 
 #include "exceptions/display/nosdl-exception.hpp"
 #include "exceptions/display/nosvg-exception.hpp"
