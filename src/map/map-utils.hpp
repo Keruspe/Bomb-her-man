@@ -131,8 +131,8 @@ namespace bombherman
 			FIREDOWN = '4', /** < FireDown (decrease the range of your bombs) */
 			FULLFIRE = '5', /** < FullFire (set the range of your bombs to the maximum allowed) */
 			NULLFIRE = '6', /** < NullFire (set the range of your bombs to the minimum allowed) */
-			FIRSTBONUS = BOMBUP,
-			LASTBONUS = NULLFIRE
+			FIRSTBONUS = BOMBUP, /** < FirstBonus (equals to the first bonus in the enum, to handle the number of bonuses) */
+			LASTBONUS = NULLFIRE /** < LastBonus (equals to the last bonus in the enum, to handle the number of bonuses) */
 		} Bonus;
 		
 		/// Summary of what happened in a move
