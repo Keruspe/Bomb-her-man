@@ -15,14 +15,13 @@ using namespace bombherman::bomb;
 
 SDL_mutex * Bomb::mutex = SDL_CreateMutex ();
 
-Bomb::Bomb (int player, map::Coords coords) :
+Bomb::Bomb (int player, map::Coords c) :
 	explosion(SDL_CreateSemaphore(0)),
-	player (player),
-	coords (coords),
+	player(player),
+	coords(c),
 	gameOver(false)
 {
-	Display::plantBomb(coords);
-	
+	Display::plantBomb(c);
 	if ( SDL_CreateThread(waitExplode, this) == NULL )
 		bherr <<  "Unable to create thread to manage a bomb : " << SDL_GetError();
 }
@@ -47,11 +46,10 @@ Bomb::waitExplode(void *p)
 void
 Bomb::doExplode(Bomb *b)
 {
-	if ( b )
-	{
-		bhout << "Bomb " << std::ios::hex << b <<  " will explode" << bhendl;
-		SDL_SemPost(b->explosion);
-	}
+	if ( ! b )
+		return;
+	bhout << "Bomb " << std::ios::hex << b <<  " will explode" << bhendl;
+	SDL_SemPost(b->explosion);
 }
 
 void
@@ -60,24 +58,28 @@ Bomb::explode()
 	SDL_LockMutex(mutex);
 	AtomicCenter::removeBomb(coords);
 	Player * p = NULL;
-	if ( ! ( p = Player::getPlayer(this->player) ) ) return;
-	
+	if ( ! ( p = Player::getPlayer(this->player) ) )
+		return;
 	Uint32 range = static_cast<Uint32>(p->getRange());
 	if ( map::Map::get(coords) == map::PLAYONBOMB )
-	{
 		if ( p->kill(Player::playerAt(coords)) )
 			return;
-	}
 	bool up(true), down(true), right(true), left(true);
 	for ( Uint32 i = 1 ; i <= range ; ++i )
 	{
-		if ( up )     up =    check(coords.x, coords.y - i);
-		if ( down )   down =  check(coords.x, coords.y + i);
-		if ( right )  right = check(coords.x - i, coords.y);
-		if ( left )   left =  check(coords.x + i, coords.y);
-		if ( ( ! up ) && ( ! down ) && ( ! right ) && ( ! left ) ) break;
+		if ( up )
+			up =    check(coords.x, coords.y - i);
+		if ( down )
+			down =  check(coords.x, coords.y + i);
+		if ( right )
+			right = check(coords.x - i, coords.y);
+		if ( left )
+			left =  check(coords.x + i, coords.y);
+		if ( ( ! up ) && ( ! down ) && ( ! right ) && ( ! left ) )
+			break;
 	}
-	if ( gameOver ) return;
+	if ( gameOver )
+		return;
 	p->bombHasExploded();
 	map::Map::removeBomb(coords);
 	Display::explode(coords, explodedCells);
@@ -92,14 +94,15 @@ bool
 Bomb::check(Uint32 x, Uint32 y)
 {
 	map::Coords c(x, y);
-	if ( ( ! c.validate() ) || gameOver ) return false;
+	if ( ( ! c.validate() ) || gameOver )
+		return false;
 	char item = map::Map::get(c);
 	switch ( item )
 	{
 		case map::INDESTRUCTIBLE :
 			return false;
 		case map::BARREL :
-			map::Map::destroy (c);
+			map::Map::destroy(c);
 		break;
 		case map::PLAYER :
 			if ( Player::getPlayer(this->player)->kill(Player::playerAt(c)) )
@@ -112,9 +115,10 @@ Bomb::check(Uint32 x, Uint32 y)
 			chain.push_back(c);
 		break;
 		case map::NOTHING :
-		break;
+			break;
 		default : // Bonuses
 			map::Map::removeBonus(c);
 	}
 	return true;
 }
+
