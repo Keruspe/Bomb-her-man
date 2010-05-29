@@ -215,7 +215,7 @@ Map::destroy(Coords & c)
 	if (! Map::exists() || ! c.validate() || Map::get(c) != BARREL)
 		return;
 	if (MapGenerator::throwDice(Config::getInt("bonusApparitionProbability")))
-		Map::map[c.y][c.x] = BOMBUP + MapGenerator::random(0, NULLFIRE-BOMBUP);
+		Map::map[c.y][c.x] = FIRSTBONUS + MapGenerator::random(0, LASTBONUS-FIRSTBONUS);
 	else
 		Map::map[c.y][c.x] = NOTHING;
 }
@@ -261,8 +261,6 @@ Map::applyBonus(Coords & c)
 	int variation(1);
 	switch(static_cast<Bonus>(Map::map[c.y][c.x]))
 	{
-	case NONE:
-		return false;
 	case FIREDOWN:
 		variation = -1;
 	case FIREUP:
@@ -279,6 +277,8 @@ Map::applyBonus(Coords & c)
 	case BOMBUP:
 		player->addToPlantableBombs(variation * Config::getInt("capacityVariation"));
 		break;
+	default:
+		return false;
 	}
 	return true;
 }
