@@ -23,7 +23,7 @@ using namespace bombherman;
 using namespace bombherman::map;
 
 void
-MapGenerator::generate(Grid& g)
+MapGenerator::generate(Grid & g)
 {
 	::srand(time(0));
 	int currentHorizontalElementSize, currentVerticalElementSize = 0;

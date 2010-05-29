@@ -26,14 +26,26 @@ namespace bombherman
 {
 	namespace exceptions
 	{
-		class MalformedFileException :
-			public Exception 
+		namespace map
 		{
-		public:
-			MalformedFileException(const std::string & elem) throw();
-			virtual ~MalformedFileException() throw ();
-		};
+			/// Exception thrown by the map parser when given an invalid file
+			class MalformedFileException :
+				public Exception 
+			{
+			public:
+				/// Constructor
+				/**
+				 * @param path The path of the malformed file (std::string)
+				 */
+				MalformedFileException(const std::string & path) throw() :
+					Exception("Malformed file : " + path) {}
+			
+				/// Destructor
+				virtual ~MalformedFileException() throw () {}
+			};
+		}
 	}
 }
 
 #endif // _MALFORMED_FILE_EXCEPTION_HPP_
+

@@ -27,6 +27,7 @@ namespace bombherman
 	{
 		namespace display
 		{
+			/// Exception thrown when SDL is not available
 			class NoSDLException :
 				public Exception
 			{
@@ -35,7 +36,9 @@ namespace bombherman
 				/**
 				 * @param m The message
 				 */
-				NoSDLException(const std::string &m) throw() : Exception("No SDL:" + m) {}
+				NoSDLException(const std::string & m) throw() :
+					Exception("No SDL:" + m) {}
+				
 				/// Destructor
 				virtual ~NoSDLException() throw() {}
 			};
@@ -44,3 +47,4 @@ namespace bombherman
 }
 
 #endif // _DISPLAY_NOSDL_EXCEPTION_HPP_
+

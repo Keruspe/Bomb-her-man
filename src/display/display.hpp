@@ -37,6 +37,7 @@
 
 namespace bombherman
 {
+	/// Class used to manage all the graphical things
 	class Display
 	{
 	public:

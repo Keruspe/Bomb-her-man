@@ -27,16 +27,25 @@ namespace bombherman
 {
 	namespace exceptions
 	{
+		/// Base Bomv-her-man exception
 		class Exception :
 			public std::exception
 		{
 		public:
+			/// Destructor
 			virtual ~Exception() throw();
+
+			/// Give you the message of the exception
+			/**
+			 * @return The message (std::string)
+			 */
 			const std::string & message() const throw();
-		
 		protected:
+			///Constructor
+			/**
+			 * @param message The message of the exception
+			 */
 			Exception(const std::string & message) throw();
-		
 		private:
 			const std::string _message;
 		};
@@ -44,3 +53,4 @@ namespace bombherman
 }
 
 #endif // _EXCEPTION_HPP_
+
