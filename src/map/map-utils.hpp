@@ -95,8 +95,7 @@ namespace bombherman
 			bool
 			validate()
 			{
-				return (this->x >=0 && this->y >= 0 &&
-					this->x <= this->max && this->y <= this->max);
+				return (this->x <= this->max && this->y <= this->max);
 			}
 		} Coords;
 		
