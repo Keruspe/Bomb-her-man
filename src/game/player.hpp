@@ -20,46 +20,46 @@ namespace bombherman
 		
 		/// Range getter
 		/**
-		  * @return The actual range of the player's bombs (int)
-		  */
+		 * @return The actual range of the player's bombs (int)
+		 */
 		int getRange();
 		
 		/// Coords getter
 		/**
-		  * @return The coords of the player (map::Coords)
-		  */
+		 * @return The coords of the player (map::Coords)
+		 */
 		map::Coords & getCoords();
 		
 		/// Orientation getter
 		/**
-		  * @return The orientation of the player (map::Direction)
-		  */
+		 * @return The orientation of the player (map::Direction)
+		 */
 		map::Direction & getOrient();
 		
 		/// Controlling if player can plant a bomb
 		/**
-		  * @return True if player can plant a bomb
-		  */
+		 * @return True if player can plant a bomb
+		 */
 		bool isAbleToPlantBomb();
 		
 		/// Score getter
 		/**
-		  * @return The score of the player
-		  */
+		 * @return The score of the player
+		 */
 		int getScore();
 		
 		/// Id getter
 		/**
-		  * @return The id of the player
-		  */
+		 * @return The id of the player
+		 */
 		int getId();
 		
 		/// To move
 		/**
-		  * @param direction The direction where player wants to go (map::Direction)
-		  * 
-		  * @return What did happen during the move (map::MoveResult)
-		  */
+		 * @param direction The direction where player wants to go (map::Direction)
+		 * 
+		 * @return What did happen during the move (map::MoveResult)
+		 */
 		map::MoveResult go(map::Direction & direction);
 		
 		/// List of all players
@@ -67,10 +67,10 @@ namespace bombherman
 		
 		/// Get a player by his id
 		/**
-		  * @param id The player's id (int)
-		  *
-		  * @return A pointer to the player (Player *)
-		  */
+		 * @param id The player's id (int)
+		 *
+		 * @return A pointer to the player (Player *)
+		 */
 		static Player * getPlayer(int id);
 		
 		/// Create a new player
@@ -87,14 +87,14 @@ namespace bombherman
 		
 		/// Range setter
 		/**
-		  * @param range The new range for the player (int)
-		  */
+		 * @param range The new range for the player (int)
+		 */
 		void setRange(int range);
 		
 		/// Range adder
 		/**
-		  * @param range The range to add to the player, make it negative to remove (int)
-		  */
+		 * @param range The range to add to the player, make it negative to remove (int)
+		 */
 		void addToRange(int range);
 		
 		/// Make the player plant a bomb
@@ -102,20 +102,20 @@ namespace bombherman
 		
 		/// Increase/decrease the player's score
 		/**
-		  * @param score New points gained (int)
-		  */
+		 * @param score New points gained (int)
+		 */
 		void addToScore(int score);
 		
 		/// Plantable bombs number setter
 		/**
-		  * @param plantableBombs The new number of bombs the player can drop (int)
-		  */
+		 * @param plantableBombs The new number of bombs the player can drop (int)
+		 */
 		void setPlantableBombs(int plantableBombs);
 		
 		/// Plantable bombs number adder
 		/**
-		  * @param plantableBombs The number to add to the number of bombs the player can carry (int)
-		  */
+		 * @param plantableBombs The number to add to the number of bombs the player can carry (int)
+		 */
 		void addToPlantableBombs(int plantableBombs);
 		
 		/// Reset the player to its default statistics
@@ -123,28 +123,28 @@ namespace bombherman
 		
 		/// Coords setter
 		/**
-		  * @param c The new coords of the player (map::Coords)
-		  */
+		 * @param c The new coords of the player (map::Coords)
+		 */
 		void setCoords(map::Coords & c);
 		
 		/// Which player is out there ?
 		/**
-		  * @param c The coords where to look for any player (map::Coords)
-		  *
-		  * @return The player if any, or 0 if none (map::Player*)
-		  */
+		 * @param c The coords where to look for any player (map::Coords)
+		 *
+		 * @return The player if any, or 0 if none (map::Player*)
+		 */
 		static Player * playerAt(map::Coords & c);
 		
 		/// Is this player still alive ?
 		/**
-		  * @return True if the player is alive
-		  */
+		 * @return True if the player is alive
+		 */
 		bool isAlive();
 		
 		/// Murder a poor player
 		/**
-		  * @param killed The player to kill (Player *)
-		  */
+		 * @param killed The player to kill (Player *)
+		 */
 		void kill(Player * killed);
 
 		/// Tells the player that his bomb has exploded (decreases planted bombs counter)
