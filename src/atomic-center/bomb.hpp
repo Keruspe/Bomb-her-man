@@ -32,9 +32,9 @@ namespace bombherman
 			
 			/// Make a bomb explode
 			/**
-			 * @param A pointer to the bomb which will explode (Bomb *)
+			 * @param b A pointer to the bomb which will explode (Bomb *)
 			 */
-			static void doExplode(Bomb *b);
+			static void doExplode(Bomb * b);
 			
 			/// Free the mutex
 			static void deinit() { SDL_DestroyMutex(mutex); }
