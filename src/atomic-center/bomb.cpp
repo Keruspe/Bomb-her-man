@@ -60,24 +60,21 @@ Bomb::explode()
 	if ( map::Map::get(coords) == map::PLAYONBOMB )
 		if ( p->kill(Player::playerAt(coords)) )
 			Bomb::gameOver = true;
-	if ( ! Bomb::gameOver )
+	bool up(true), down(true), right(true), left(true);
+	for ( Uint32 i = 1 ; i <= range ; ++i )
 	{
-		bool up(true), down(true), right(true), left(true);
-		for ( Uint32 i = 1 ; i <= range ; ++i )
-		{
-			if ( up )
-				up =    check(coords.x, coords.y - i);
-			if ( down )
-				down =  check(coords.x, coords.y + i);
-			if ( right )
-				right = check(coords.x - i, coords.y);
-			if ( left )
-				left =  check(coords.x + i, coords.y);
-			if ( ( ! up ) && ( ! down ) && ( ! right ) && ( ! left ) )
-				break;
-		}
+		if ( up )
+			up =    check(coords.x, coords.y - i);
+		if ( down )
+			down =  check(coords.x, coords.y + i);
+		if ( right )
+			right = check(coords.x - i, coords.y);
+		if ( left )
+			left =  check(coords.x + i, coords.y);
+		if ( ( ! up ) && ( ! down ) && ( ! right ) && ( ! left ) )
+			break;
 	}
-	else
+	if ( Bomb::gameOver )
 	{
 		SDL_UnlockMutex(mutex);
 		Bomb::newGame();
