@@ -37,6 +37,7 @@ Bomb::waitExplode(void *p)
 	Bomb *b = static_cast<Bomb * >(p);
 	SDL_SemWaitTimeout(b->explosion, 5000);
 	b->explode();
+	AtomicCenter::bombExploded();
 	delete(b);
 	return 0;
 }
@@ -55,7 +56,7 @@ Bomb::explode()
 	AtomicCenter::removeBomb(coords);
 	Player * p = NULL;
 	if ( ! ( p = Player::getPlayer(this->player) ) )
-		return;
+		Bomb::gameOver = true;
 	Uint32 range = static_cast<Uint32>(p->getRange());
 	if ( map::Map::get(coords) == map::PLAYONBOMB )
 		if ( p->kill(Player::playerAt(coords)) )

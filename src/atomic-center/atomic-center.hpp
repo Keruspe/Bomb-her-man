@@ -60,9 +60,13 @@ namespace bombherman
 			static Bomb * getBomb (map::Coords & c);
 			
 			/// Make everything explode
-			static void boum ();
+			static void boum();
+
+			/// Decrease the number of bombs still alive
+			static void bombExploded() { --AtomicCenter::numberOfBombs; }
 		private:
 			static std::vector<std::vector<Bomb *> > bombs;
+			static int numberOfBombs;
 		};
 	}
 }

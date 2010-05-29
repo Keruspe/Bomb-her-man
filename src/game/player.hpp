@@ -86,7 +86,12 @@ namespace bombherman
 		bool die();
 		
 		/// Reinitialize players and start a new game
-		static void reInit();
+		/**
+		 * @param dummy A void pointer to make SDL_Thread happy (void *)
+		 *
+		 * @return 0 to make SDL_Thread happy
+		 */
+		static int reInit(void * dummy);
 		
 		/// Range setter
 		/**
