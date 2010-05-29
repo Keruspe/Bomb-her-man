@@ -80,7 +80,10 @@ namespace bombherman
 		static void clean();
 		
 		/// Kill the player
-		void die();
+		/**
+		 * @return True if the game is over
+		 */
+		bool die();
 		
 		/// Reinitialize players and start a new game
 		static void reInit();
@@ -144,8 +147,10 @@ namespace bombherman
 		/// Murder a poor player
 		/**
 		 * @param killed The player to kill (Player *)
+		 *
+		 * @return True if the game is over
 		 */
-		void kill(Player * killed);
+		bool kill(Player * killed);
 
 		/// Tells the player that his bomb has exploded (decreases planted bombs counter)
 		void bombHasExploded();

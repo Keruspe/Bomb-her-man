@@ -94,29 +94,33 @@ Player::clean()
 	Player::players.clear();
 }
 
-void
+bool
 Player::kill(Player *killed)
 {
 	if (! killed->alive)
-		return;
+		return false;
 	if ( killed == this )
 		this->addToScore(Config::getInt("suicideMalus"));
 	else
 		this->addToScore(Config::getInt("killBonus"));
-	killed->die();
+	return killed->die();
 }
 
-void
+bool
 Player::die()
 {
 	this->alive = false;
 	if ( ( Player::players.size() - ++Player::icyDeadPeople ) > 1 )
 	{
 		map::Map::removePlayer(this->coords);
+		return false;
 	}
 	else if ( ( Player::players.size() - Player::icyDeadPeople ) == 1 )
 	// Don't reinit twice or more in a game, or weird things will happen :)
+	{
 		Player::reInit();
+		return true;
+	}
 }
 
 void
