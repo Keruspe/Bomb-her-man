@@ -100,7 +100,7 @@ Map::placePlayers()
 bool
 Map::plantBomb(Coords & c)
 {
-	if (! Map::map.exists || ! c.validate() || Map::get(c) != PLAYER)
+	if (! Map::exists() || ! c.validate() || Map::get(c) != PLAYER)
 		return false;
 	Map::map[c.y][c.x] = PLAYONBOMB;
 	return true;
@@ -109,7 +109,7 @@ Map::plantBomb(Coords & c)
 char
 Map::get(Coords c)
 {
-	if (! Map::map.exists || ! c.validate())
+	if (! Map::exists() || ! c.validate())
 		return 0;
 	return Map::map[c.y][c.x];
 }
@@ -117,7 +117,7 @@ Map::get(Coords c)
 char
 Map::get(Uint32 x, Uint32 y)
 {
-	if (! Map::map.exists || ! Coords(x, y).validate())
+	if (! Map::exists() || ! Coords(x, y).validate())
 		return 0;
 	return Map::map[y][x];
 }
@@ -125,7 +125,7 @@ Map::get(Uint32 x, Uint32 y)
 MoveResult
 Map::movePlayer(Coords & coords, Direction & direction)
 {
-	if(! Map::map.exists)
+	if(! Map::exists())
 		return NOTHINGHAPPENED;
 	bool tmpBool;
 	switch(direction)
@@ -212,7 +212,7 @@ Map::moveRight(Coords & c)
 void
 Map::destroy(Coords & c)
 {
-	if (! Map::map.exists || ! c.validate() || Map::get(c) != BARREL)
+	if (! Map::exists() || ! c.validate() || Map::get(c) != BARREL)
 		return;
 	if (MapGenerator::throwDice(Config::getInt("bonusApparitionProbability")))
 		Map::map[c.y][c.x] = BOMBUP + MapGenerator::random(0, NULLFIRE-BOMBUP);
@@ -223,7 +223,7 @@ Map::destroy(Coords & c)
 void
 Map::removePlayer(Coords & c)
 {
-	if (! Map::map.exists || ! c.validate())
+	if (! Map::exists() || ! c.validate())
 		return;
 	if (Map::get(c) == PLAYER)
 		Map::map[c.y][c.x] = NONE;
@@ -236,7 +236,7 @@ Map::removePlayer(Coords & c)
 void
 Map::removeBomb(Coords & c)
 {
-	if (! Map::map.exists || ! c.validate())
+	if (! Map::exists() || ! c.validate())
 		return;
 	if (Map::get(c) == BOMB)
 		Map::map[c.y][c.x] = NONE;
@@ -247,7 +247,7 @@ Map::removeBomb(Coords & c)
 void
 Map::removeBonus(Coords & c)
 {
-	if (! Map::map.exists || ! c.validate())
+	if (! Map::exists() || ! c.validate())
 		return;
 	Map::map[c.y][c.x] = NONE;
 }
@@ -295,7 +295,7 @@ Map::cleanOldSpot(Coords & c)
 void
 Map::toString()
 {
-	if(! Map::map.exists)
+	if(! Map::exists())
 		return;
 	Coords c;
 	for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
