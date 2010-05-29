@@ -117,7 +117,7 @@ Map::get(Coords c)
 char
 Map::get(Uint32 x, Uint32 y)
 {
-	if (! Map::map.exists || ! c.validate)
+	if (! Map::map.exists || ! Coords(x, y).validate())
 		return 0;
 	return Map::map[y][x];
 }
@@ -212,7 +212,7 @@ Map::moveRight(Coords & c)
 void
 Map::destroy(Coords & c)
 {
-	if (! Map::map.exists || ! c.validate || Map::get(c) != BARREL)
+	if (! Map::map.exists || ! c.validate() || Map::get(c) != BARREL)
 		return;
 	if (MapGenerator::throwDice(Config::getInt("bonusApparitionProbability")))
 		Map::map[c.y][c.x] = BOMBUP + MapGenerator::random(0, NULLFIRE-BOMBUP);
