@@ -109,9 +109,10 @@ Bomb::check (int x, int y)
 		case map::BOMB :
 			AtomicCenter::getBomb(x, y)->explode();
 		break;
+		case map::NOTHING :
+		break;
 		default : // Bonuses
 			map::Map::removeBonus (c);
-		break;
 	}
 	return true;
 }
