@@ -206,7 +206,7 @@ Player::resetToDefaultStats()
 void
 Player::plantBomb()
 {
-	if (this->plantableBombs <= this->plantedBombs)
+	if (! this->isAbleToPlantBomb())
 		return;
 	bomb::AtomicCenter::plantBomb(this->id, this->coords);
 	++this->plantedBombs;
