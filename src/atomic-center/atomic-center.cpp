@@ -11,6 +11,7 @@ using namespace bombherman;
 using namespace bombherman::bomb;
 
 std::vector<std::vector<Bomb *> > AtomicCenter::bombs;
+int AtomicCenter::numberOfBombs = 0;
 
 void
 AtomicCenter::boum ()
@@ -21,10 +22,11 @@ AtomicCenter::boum ()
 				jEnd = i->end(); j != jEnd; ++j )
 					if ( *j )
 						Bomb::doExplode(*j);
-	SDL_Delay(250);
+	while (AtomicCenter::numberOfBombs > 0)
+		SDL_Delay(250);
 }
 
-void
+bool
 AtomicCenter::plantBomb (int player, map::Coords & c)
 {
 	if ( bombs.empty() )
@@ -34,11 +36,12 @@ AtomicCenter::plantBomb (int player, map::Coords & c)
 		for (int i(0) ; i < size ; ++i)
 			bombs[i].resize(size);
 	}
-	if ( map::Map::plantBomb(c) )
-	{
-		Bomb * bomb = new Bomb(player, c);
-		bombs[c.x][c.y] = bomb;
-	}
+	if ( ! map::Map::plantBomb(c) )
+		return false;
+	Bomb * bomb = new Bomb(player, c);
+	bombs[c.x][c.y] = bomb;
+	++AtomicCenter::numberOfBombs;
+	return true;
 }
 
 void

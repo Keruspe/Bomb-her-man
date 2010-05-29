@@ -5,6 +5,8 @@
  * Created on May 24, 2010, 11:52 AM
  */
 
+#include <SDL_thread.h>
+
 #include "player.hpp"
 #include "game.hpp"
 #include "exceptions/too-many-players-exception.hpp"
@@ -95,7 +97,7 @@ Player::clean()
 }
 
 bool
-Player::kill(Player *killed)
+Player::kill(Player * killed)
 {
 	if (! killed->alive)
 		return false;
@@ -118,13 +120,13 @@ Player::die()
 	else if ( ( Player::players.size() - Player::icyDeadPeople ) == 1 )
 	// Don't reinit twice or more in a game, or weird things will happen :)
 	{
-		Player::reInit();
+		SDL_CreateThread(Player::reInit, NULL);
 		return true;
 	}
 }
 
-void
-Player::reInit()
+int
+Player::reInit(void * dummy)
 {
 	bomb::AtomicCenter::boum();
 	Player::icyDeadPeople = 0;
@@ -132,6 +134,7 @@ Player::reInit()
 		i_end = Player::players.end() ; i != i_end ; ++i)
 			(*i)->resetToDefaultStats();
 	Game::nextMap();
+	return 0;
 }
 
 void
@@ -208,8 +211,8 @@ Player::plantBomb()
 {
 	if (! this->isAbleToPlantBomb())
 		return;
-	bomb::AtomicCenter::plantBomb(this->id, this->coords);
-	++this->plantedBombs;
+	if ( bomb::AtomicCenter::plantBomb(this->id, this->coords) )
+		++this->plantedBombs;
 }
 
 void
@@ -223,10 +226,8 @@ Player::playerAt(map::Coords & c)
 {
 	for (std::vector< Player * >::iterator i = Player::players.begin(),
 		i_end = Player::players.end() ; i != i_end ; ++i)
-	{
-		if((*i)->getCoords().x == c.x && (*i)->getCoords().y == c.y)
-			return *i;
-	}
+			if((*i)->getCoords().x == c.x && (*i)->getCoords().y == c.y)
+				return *i;
 	return 0;
 }
 

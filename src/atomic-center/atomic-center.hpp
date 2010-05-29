@@ -42,8 +42,10 @@ namespace bombherman
 			/**
 			 * @param player The id of the player who planted the bomb (int)
 			 * @param c The coords where the bomb has been planted (map::Coords)
+			 *
+			 * @return True if a bomb has been planted
 			 */
-			static void plantBomb (int player, map::Coords & c);
+			static bool plantBomb (int player, map::Coords & c);
 			
 			/// Remove a bomb
 			/*
@@ -60,9 +62,13 @@ namespace bombherman
 			static Bomb * getBomb (map::Coords & c);
 			
 			/// Make everything explode
-			static void boum ();
+			static void boum();
+
+			/// Decrease the number of bombs still alive
+			static void bombExploded() { --AtomicCenter::numberOfBombs; }
 		private:
 			static std::vector<std::vector<Bomb *> > bombs;
+			static int numberOfBombs;
 		};
 	}
 }
