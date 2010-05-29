@@ -55,7 +55,9 @@ Bomb::doExplode(Bomb *b)
 void
 Bomb::explode()
 {
+	bhout << "LOL" << bhendl;
 	SDL_LockMutex(mutex);
+	bhout << "LOL" << bhendl;
 	AtomicCenter::removeBomb(coords);
 	Player * p = NULL;
 	if ( ! ( p = Player::getPlayer(this->player) ) )
@@ -79,10 +81,7 @@ Bomb::explode()
 			break;
 	}
 	if ( Bomb::gameOver )
-	{
-		SDL_UnlockMutex(mutex);
 		return;
-	}
 	p->bombHasExploded();
 	map::Map::removeBomb(coords);
 	Display::explode(coords, explodedCells);
@@ -123,5 +122,12 @@ Bomb::check(Uint32 x, Uint32 y)
 			map::Map::removeBonus(c);
 	}
 	return true;
+}
+
+void
+Bomb::newGame()
+{
+	SDL_UnlockMutex(mutex);
+	Bomb::gameOver = false;
 }
 
