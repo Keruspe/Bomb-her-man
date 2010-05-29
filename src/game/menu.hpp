@@ -24,6 +24,7 @@
 
 namespace bombherman
 {
+	/// Class used to manage the menus
 	class Menu
 	{
 	public:

@@ -26,6 +26,7 @@
 
 namespace bombherman
 {
+	/// Class used to manage the game
 	class Game
 	{
 	public:
