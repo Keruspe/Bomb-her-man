@@ -235,8 +235,8 @@ Map::removePlayer(Coords & c)
 		Map::map[c.y][c.x] = NONE;
 	else if (Map::get(c) == PLAYONBOMB)
 		Map::map[c.y][c.x] = BOMB;
-	c.x = -1;
-	c.y = -1;
+	c.x = Config::getInt("mapSize");
+	c.y = Config::getInt("mapSize");
 }
 
 void

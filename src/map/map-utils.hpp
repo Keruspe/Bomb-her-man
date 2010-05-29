@@ -71,8 +71,9 @@ namespace bombherman
 			/// The max value of x or y (Uint32)
 			Uint32 max;
 			
-			/// Coords default constructor (sets Coords to -1,-1)
-			Coords() : x(-1), y(-1),
+			/// Coords default constructor (sets Coords to mapSize,mapSize)
+			Coords() : x(Config::getInt("mapSize")),
+				y(Config::getInt("mapSize")),
 				max(static_cast<Uint32>(Config::getInt("mapSize") - 1))
 			{
 			}
