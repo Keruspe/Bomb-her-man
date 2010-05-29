@@ -20,25 +20,46 @@
 #ifndef _ATOMICCENTER_HPP
 #define	_ATOMICCENTER_HPP
 
-#include "map/map-utils.hpp"
-#include <iostream>
 #include <ios>
+#include <iostream>
+#include <SDL.h>
+
 #include "display/display.hpp"
 #include "game/player.hpp"
 #include "map/map.hpp"
+#include "map/map-utils.hpp"
 #include "bomb.hpp"
-#include <SDL.h>
 
 namespace bombherman
 {
 	namespace bomb
 	{
+		/// Class used to manage Bombs
 		class AtomicCenter
 		{
 		public:
-			static void plantBomb (int, map::Coords);
-			static void removeBomb (map::Coords);
-			static Bomb *getBomb (map::Coords);
+			/// Plant a bomb
+			/**
+			 * @param player The id of the player who planted the bomb (int)
+			 * @param c The coords where the bomb has been planted (map::Coords)
+			 */
+			static void plantBomb (int player, map::Coords & c);
+			
+			/// Remove a bomb
+			/*
+			 * @param c The coords of the bomb to remove (map::Coords)
+			 */
+			static void removeBomb (map::Coords & c);
+			
+			/// Get a bomb by its coords
+			/*
+			 * @param c The coords where you're looking for a bomb (map::Coords)
+			 *
+			 * @return A pointer to the bomb (Bomb *)
+			 */
+			static Bomb * getBomb (map::Coords & c);
+			
+			/// Make everything explode
 			static void boum ();
 		private:
 			static std::vector<std::vector<Bomb *> > bombs;
@@ -47,3 +68,4 @@ namespace bombherman
 }
 
 #endif	/* _ATOMICCENTER_HPP */
+
