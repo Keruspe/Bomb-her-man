@@ -79,7 +79,10 @@ Bomb::explode()
 			break;
 	}
 	if ( Bomb::gameOver )
+	{
+		SDL_UnlockMutex(mutex);
 		return;
+	}
 	p->bombHasExploded();
 	map::Map::removeBomb(coords);
 	Display::explode(coords, explodedCells);
