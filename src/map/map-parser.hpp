@@ -30,6 +30,7 @@ namespace bombherman
 {
 	namespace map
 	{
+		/// A parser to create a map from a file descriptor
 		class MapParser
 		{
 		public:

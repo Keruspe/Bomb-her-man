@@ -30,6 +30,7 @@ namespace bombherman
 {
 	namespace map
 	{
+		/// A random map generator
 		class MapGenerator
 		{
 		public:

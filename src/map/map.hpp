@@ -30,6 +30,7 @@ namespace bombherman
 {
 	namespace map
 	{	
+		/// The map
 		class Map
 		{
 		public:

@@ -12,6 +12,7 @@
 
 namespace bombherman
 {
+	/// A player
 	class Player
 	{
 	public:

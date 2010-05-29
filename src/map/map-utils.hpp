@@ -29,6 +29,7 @@ namespace bombherman
 {
 	namespace map
 	{
+		/// The grid used by the map
 		typedef struct Grid
 		{
 			/// The size of the Grid (Uint32)
@@ -60,6 +61,7 @@ namespace bombherman
 			}
 		} Grid;
 		
+		/// The coords of an element
 		typedef struct Coords
 		{
 			/// The abscisse of the cell (Uint32)
