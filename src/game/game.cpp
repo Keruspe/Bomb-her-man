@@ -36,7 +36,6 @@ Sint32 Game::mapCount = -1;
 void Game::init()
 {
 	Display::init();
-	bomb::AtomicCenter::init();
 	changeMenu(Menu::MAIN);
 	
 	SDL_EventState(SDL_ACTIVEEVENT, SDL_IGNORE);
@@ -128,6 +127,7 @@ Game::nextMap()
 		changeMenu(Menu::MAIN);
 	else
 	{
+		bomb::Bomb::newGame();
 		map::Map::newMap();
 		play();
 	}
@@ -267,7 +267,7 @@ Game::quit()
 	delete(threads);
 	#endif // THREAD_EVENTS
 	
-	bomb::Bomb::deinit();
+	bomb::Bomb::deInit();
 	
 	currentMenu = NULL;
 	Menu::clear();

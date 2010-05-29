@@ -14,105 +14,114 @@ using namespace bombherman;
 using namespace bombherman::bomb;
 
 SDL_mutex * Bomb::mutex = SDL_CreateMutex ();
+bool Bomb::gameOver = false;
 
-Bomb::Bomb (int player, map::Coords coords) : player (player),
-		coords (coords),
-		exploded (false)
+Bomb::Bomb (int player, map::Coords c) :
+	explosion(SDL_CreateSemaphore(0)),
+	player(player),
+	coords(c)
 {
-	Display::plantBomb (coords);
-	if (SDL_CreateThread(wait, this) == NULL)
+	Display::plantBomb(c);
+	if ( SDL_CreateThread(waitExplode, this) == NULL )
 		bherr <<  "Unable to create thread to manage a bomb : " << SDL_GetError();
 }
 
 Bomb::~Bomb ()
 {
+	bhout << "Sorry, bomb " << std::ios::hex << this << " is died" << bhendl;
+	SDL_DestroySemaphore(explosion);
 }
 
 int
-Bomb::wait (void * param)
+Bomb::waitExplode(void *p)
 {
-	SDL_Delay (5000);
-	static_cast<Bomb * >(param)->explode();
+	Bomb *b = static_cast<Bomb * >(p);
+	SDL_SemWaitTimeout(b->explosion, 5000);
+	bhout << "Bomb " << std::ios::hex << b <<  " will explode now !" << bhendl;
+	b->explode();
+	delete(b);
 	return 0;
+}
+
+void
+Bomb::doExplode(Bomb *b)
+{
+	if ( ! b )
+		return;
+	bhout << "Bomb " << std::ios::hex << b <<  " will explode" << bhendl;
+	SDL_SemPost(b->explosion);
 }
 
 void
 Bomb::explode()
 {
-	if ( this->exploded ) return;
-	this->exploded = true;
+	SDL_LockMutex(mutex);
 	AtomicCenter::removeBomb(coords);
 	Player * p = NULL;
-	if ( ! ( p = Player::getPlayer(this->player) ) ) return;
-	SDL_LockMutex (mutex);
-	std::vector<map::Coords> explodedCells;
-	int range = static_cast<Uint32>(p->getRange());
-	if (coords.x != 0)
+	if ( ! ( p = Player::getPlayer(this->player) ) )
+		return;
+	Uint32 range = static_cast<Uint32>(p->getRange());
+	if ( map::Map::get(coords) == map::PLAYONBOMB )
+		if ( p->kill(Player::playerAt(coords)) )
+			return;
+	bool up(true), down(true), right(true), left(true);
+	for ( Uint32 i = 1 ; i <= range ; ++i )
 	{
-		for(int x = coords.x -1, xFixed = coords.x; x >= (xFixed - range) && (x >= 0); -- x)
-		{
-			if (! check(x, coords.y))
-				break;
-			explodedCells.push_back (map::Coords(x, coords.y));
-		}
+		if ( up )
+			up =    check(coords.x, coords.y - i);
+		if ( down )
+			down =  check(coords.x, coords.y + i);
+		if ( right )
+			right = check(coords.x - i, coords.y);
+		if ( left )
+			left =  check(coords.x + i, coords.y);
+		if ( ( ! up ) && ( ! down ) && ( ! right ) && ( ! left ) )
+			break;
 	}
-	if (coords.x != coords.max)
+	if ( Bomb::gameOver )
 	{
-		for(int x = coords.x + 1, xFixed = coords.x; x <= (xFixed + range) && (x <= coords.max); ++ x)
-		{
-			if (! check(x, coords.y))
-				break;
-			explodedCells.push_back (map::Coords(x, coords.y));
-		}
-	}
-	if (coords.y != 0)
-	{
-		for(int y = coords.y - 1, yFixed = coords.y; y >= (yFixed - range) && (y >= 0); -- y)
-		{
-			if (! check(coords.x, y))
-				break;
-			explodedCells.push_back (map::Coords(coords.x, y));
-		}
-	}
-	if (coords.y != coords.max)
-	{
-		for(int y = coords.y + 1, yFixed = coords.y; y <= (yFixed + range) && (y <= coords.max); ++ y)
-		{
-			if (! check(coords.x, y))
-				break;
-			explodedCells.push_back (map::Coords(coords.x, y));
-		}
+		SDL_UnlockMutex(mutex);
+		return;
 	}
 	p->bombHasExploded();
-	map::Map::removeBomb (coords);
-	Display::explode (coords, explodedCells);
-	SDL_UnlockMutex (mutex);
+	map::Map::removeBomb(coords);
+	Display::explode(coords, explodedCells);
+	explodedCells.clear();
+	SDL_UnlockMutex(mutex);
+	for ( std::vector<map::Coords>::iterator i = chain.begin(), e = chain.end() ; i != e ; ++i )
+		doExplode(AtomicCenter::getBomb(*i));
+	chain.clear();
 }
 
 bool
-Bomb::check (int x, int y)
+Bomb::check(Uint32 x, Uint32 y)
 {
 	map::Coords c(x, y);
+	if ( ( ! c.validate() ) || Bomb::gameOver )
+		return false;
 	char item = map::Map::get(c);
 	switch ( item )
 	{
 		case map::INDESTRUCTIBLE :
 			return false;
 		case map::BARREL :
-			map::Map::destroy (c);
+			map::Map::destroy(c);
 		break;
 		case map::PLAYER :
-			Player::getPlayer(this->player)->kill(Player::playerAt(c));
+			if ( Player::getPlayer(this->player)->kill(Player::playerAt(c)) )
+				Bomb::gameOver = true;
 		break;
 		case map::PLAYONBOMB :
-			Player::getPlayer(this->player)->kill(Player::playerAt(c));
+			if ( Player::getPlayer(this->player)->kill(Player::playerAt(c)) )
+				Bomb::gameOver = true;
 		case map::BOMB :
-			AtomicCenter::getBomb(x, y)->explode();
+			chain.push_back(c);
 		break;
 		case map::NOTHING :
-		break;
+			break;
 		default : // Bonuses
-			map::Map::removeBonus (c);
+			map::Map::removeBonus(c);
 	}
 	return true;
 }
+
