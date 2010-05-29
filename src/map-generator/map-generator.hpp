@@ -56,9 +56,9 @@ namespace bombherman
 			
 			/// Throw a 100 faces dice to check random probabilities
 			/**
-			  * @Param percentage Percentage of chance to get True as a result (int)
+			  * @param percentage Percentage of chance to get True as a result (int)
 			  *
-			  *	@return 80% of chances to get true ig 80 was the parameter
+			  * @return 80% of chances to get true ig 80 was the parameter
 			  */
 			static bool throwDice(int percentage);
 		private:
