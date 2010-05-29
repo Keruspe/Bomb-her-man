@@ -55,9 +55,7 @@ Bomb::doExplode(Bomb *b)
 void
 Bomb::explode()
 {
-	bhout << "LOL" << bhendl;
 	SDL_LockMutex(mutex);
-	bhout << "LOL" << bhendl;
 	AtomicCenter::removeBomb(coords);
 	Player * p = NULL;
 	if ( ! ( p = Player::getPlayer(this->player) ) )
