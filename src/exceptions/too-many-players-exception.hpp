@@ -26,6 +26,7 @@ namespace bombherman
 {
 	namespace exceptions
 	{
+		/// Exception thrown when we want to add more players than we're allowed to
 		class TooManyPlayersException :
 			public Exception 
 		{

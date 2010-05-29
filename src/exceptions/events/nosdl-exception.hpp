@@ -27,6 +27,7 @@ namespace bombherman
 	{
 		namespace events
 		{
+			/// Exception thrown when the SDL backend is not available
 			class NoSDLException :
 				public BackendException
 			{

@@ -28,6 +28,7 @@ namespace bombherman
 	{
 		namespace map
 		{
+			/// Exception thrown by the map parser when a bad element is encountred
 			class BadElementException :
 				public Exception 
 			{

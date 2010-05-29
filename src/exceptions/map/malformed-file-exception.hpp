@@ -28,6 +28,7 @@ namespace bombherman
 	{
 		namespace map
 		{
+			/// Exception thrown by the map parser when given an invalid file
 			class MalformedFileException :
 				public Exception 
 			{

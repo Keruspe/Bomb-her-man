@@ -27,6 +27,7 @@ namespace bombherman
 	{
 		namespace display
 		{
+			/// Exception thrown when we cannot handle SVGs
 			class NoSVGException :
 				public Exception
 			{

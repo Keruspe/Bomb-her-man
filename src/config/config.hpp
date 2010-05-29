@@ -26,6 +26,7 @@
 
 namespace bombherman
 {
+	/// Class used to manage easily various configurations
 	class Config
 	{
 	public:

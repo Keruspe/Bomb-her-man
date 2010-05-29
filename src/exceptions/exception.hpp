@@ -27,6 +27,7 @@ namespace bombherman
 {
 	namespace exceptions
 	{
+		/// Base Bomv-her-man exception
 		class Exception :
 			public std::exception
 		{

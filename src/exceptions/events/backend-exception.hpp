@@ -27,6 +27,7 @@ namespace bombherman
 	{
 		namespace events
 		{
+			/// Generic exception for when a backend is not available
 			class BackendException :
 				public Exception
 			{

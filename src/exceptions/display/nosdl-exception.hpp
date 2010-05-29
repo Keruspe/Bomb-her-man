@@ -27,6 +27,7 @@ namespace bombherman
 	{
 		namespace display
 		{
+			/// Exception thrown when SDL is not available
 			class NoSDLException :
 				public Exception
 			{
