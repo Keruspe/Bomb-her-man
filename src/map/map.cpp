@@ -100,9 +100,8 @@ Map::placePlayers()
 bool
 Map::plantBomb(Coords & c)
 {
-	if (! Map::map.exists || 0 > c.x || 0 > c.y || Map::map.size <= c.y
-		|| Map::map.size <= c.x || Map::get(c) != PLAYER)
-			return false;
+	if (! Map::map.exists || ! c.validate() || Map::get(c) != PLAYER)
+		return false;
 	Map::map[c.y][c.x] = PLAYONBOMB;
 	return true;
 }
@@ -110,18 +109,16 @@ Map::plantBomb(Coords & c)
 char
 Map::get(Coords c)
 {
-	if (! Map::map.exists || 0 > c.x || 0 > c.y
-		|| Map::map.size <= c.y || Map::map.size <= c.x)
-			return 0;
+	if (! Map::map.exists || ! c.validate())
+		return 0;
 	return Map::map[c.y][c.x];
 }
 
 char
 Map::get(Uint32 x, Uint32 y)
 {
-	if (! Map::map.exists || 0 > x || 0 > y
-		|| Map::map.size <= y || Map::map.size <= x)
-			return 0;
+	if (! Map::map.exists || ! c.validate)
+		return 0;
 	return Map::map[y][x];
 }
 
@@ -215,9 +212,8 @@ Map::moveRight(Coords & c)
 void
 Map::destroy(Coords & c)
 {
-	if (0 > c.x || 0 > c.y || Map::map.size <= c.y
-		|| Map::map.size <= c.x || Map::get(c) != BARREL)
-			return;
+	if (! Map::map.exists || ! c.validate || Map::get(c) != BARREL)
+		return;
 	if (MapGenerator::throwDice(Config::getInt("bonusApparitionProbability")))
 		Map::map[c.y][c.x] = BOMBUP + MapGenerator::random(0, NULLFIRE-BOMBUP);
 	else
@@ -227,10 +223,8 @@ Map::destroy(Coords & c)
 void
 Map::removePlayer(Coords & c)
 {
-	if (! Map::map.exists 
-		|| 0 > c.x || 0 > c.y
-		|| Map::map.size <= c.y || Map::map.size <= c.x)
-			return;
+	if (! Map::map.exists || ! c.validate())
+		return;
 	if (Map::get(c) == PLAYER)
 		Map::map[c.y][c.x] = NONE;
 	else if (Map::get(c) == PLAYONBOMB)
@@ -242,10 +236,8 @@ Map::removePlayer(Coords & c)
 void
 Map::removeBomb(Coords & c)
 {
-	if (! Map::map.exists
-		|| 0 > c.x || 0 > c.y
-		|| Map::map.size <= c.y || Map::map.size <= c.x)
-			return;
+	if (! Map::map.exists || ! c.validate())
+		return;
 	if (Map::get(c) == BOMB)
 		Map::map[c.y][c.x] = NONE;
 	else if (Map::get(c) == PLAYONBOMB)
@@ -255,10 +247,8 @@ Map::removeBomb(Coords & c)
 void
 Map::removeBonus(Coords & c)
 {
-	if (! Map::map.exists
-		|| 0 > c.x || 0 > c.y
-		|| Map::map.size <= c.y || Map::map.size <= c.x)
-			return;
+	if (! Map::map.exists || ! c.validate())
+		return;
 	Map::map[c.y][c.x] = NONE;
 }
 
