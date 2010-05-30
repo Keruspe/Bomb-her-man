@@ -16,11 +16,12 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "display.hpp"
+
 #include <sstream>
 #include <librsvg/rsvg-cairo.h>
 #include <cairo.h>
 
-#include "display.hpp"
 #include "game/player.hpp"
 
 #define FONT_FILE "biolinum.ttf"
