@@ -9,13 +9,12 @@
 #define _BOMB_HPP
 
 #include <SDL.h>
+#include <vector>
 
 #include "bombherman.hpp"
 #include "map/map-utils.hpp"
 #include "game/player.hpp"
 #include "map/map.hpp"
-
-#include <vector>
 
 namespace bombherman
 {

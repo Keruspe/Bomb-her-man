@@ -19,24 +19,21 @@
 #ifndef _DISPLAY_HPP_
 #define _DISPLAY_HPP_
 
-#include "bombherman.hpp"
-
-#include "game/menu.hpp"
-#include "map/map.hpp"
-
-#define NB_BONUSES map::LASTBONUS - map::FIRSTBONUS + 1
-
-#include "exceptions/display/nosdl-exception.hpp"
-#include "exceptions/display/nosvg-exception.hpp"
-
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <librsvg/rsvg.h>
-
 #include <map>
+
+#include "bombherman.hpp"
+#include "game/menu.hpp"
+#include "map/map.hpp"
+#include "exceptions/display/nosdl-exception.hpp"
+#include "exceptions/display/nosvg-exception.hpp"
 
 namespace bombherman
 {
+	#define NB_BONUSES map::LASTBONUS - map::FIRSTBONUS + 1
+	
 	/// Class used to manage all the graphical things
 	class Display
 	{
