@@ -119,10 +119,8 @@ Player::die()
 	}
 	else if ( ( Player::players.size() - Player::icyDeadPeople ) == 1 )
 	// Don't reinit twice or more in a game, or weird things will happen :)
-	{
 		SDL_CreateThread(Player::reInit, NULL);
-		return true;
-	}
+	return true;
 }
 
 int
