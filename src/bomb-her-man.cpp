@@ -18,13 +18,21 @@
  */
 
 #include "bombherman.hpp"
-#include "exceptions/exception.hpp"
 #include "game/game.hpp"
 
 using namespace bombherman;
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif // __cplusplus
+
 int
+#ifdef __MINGW32__
+SDL_main(int argc, char **argv)
+#else
 main()
+#endif // __MINGW32__
 {
 	try
 	{
@@ -41,3 +49,7 @@ main()
 	}
 	return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
