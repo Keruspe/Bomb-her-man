@@ -47,7 +47,7 @@ DOCDIR=$(DESTDIR)/usr/share/doc
 endif
 
 INSTALL=install
-INSTALLBIN = -d -s -m 755
+INSTALLBIN = -s -m 755
 INSTALLDOC = -d -m 644
 
 RM=rm
