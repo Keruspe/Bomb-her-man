@@ -46,10 +46,14 @@ ifndef DOCDIR
 DOCDIR=$(DESTDIR)/usr/share/doc
 endif
 
+ifndef DATADIR
+DATADIR=$(DESTDIR)/usr/share
+endif
+
 INSTALL=install
 INSTALLBIN = -s -m 755
 INSTALLDIR = -d -m 755
-INSTALLDOC = -m 644
+INSTALLFILE = -m 644
 
 RM=rm
 ECHO=echo
@@ -76,16 +80,20 @@ clean-doc:
 	@ $(ECHO) Cleaning documentation
 	@ $(RM) -rf doc
 
-install: all
+install: all install-data
 	@ $(ECHO) Installing bomb-her-man in $(BINDIR)
 	@ $(INSTALL) $(INSTALLDIR) $(BINDIR)
 	@ $(INSTALL) $(INSTALLBIN) bomb-her-man $(BINDIR)/bomb-her-man
 
+install-data:
+	@ $(ECHO) Installing datas in $(DATADIR)/bomb-her-man
+	@ for i in $(shell find data -type d); do $(INSTALL) $(INSTALLDIR) $(DATADIR)/$${i/data/bomb-her-man}; done
+	@ for i in $(shell find data -type f); do $(INSTALL) $(INSTALLFILE) $$i $(DATADIR)/$${i/data/bomb-her-man}; done
+
 install-doc : doc
 	@ $(ECHO) Installing documentation in $(DOCDIR)/bomb-her-man
-	@ $(INSTALL) $(INSTALLDIR) $(DOCDIR)/bomb-her-man/html/search
-	@ $(INSTALL) $(INSTALLDIR) $(DOCDIR)/bomb-her-man/latex
-	@ for i in $(shell find doc -type f); do $(INSTALL) $(INSTALLDOC) $$i $(DOCDIR)/bomb-her-man/$${i/doc\/}; done
+	@ for i in $(shell find doc -type d); do $(INSTALL) $(INSTALLDIR) $$i $(DOCDIR)/$${i/doc/bomb-her-man}; done
+	@ for i in $(shell find doc -type f); do $(INSTALL) $(INSTALLFILE) $$i $(DOCDIR)/$${i/doc/bomb-her-man}; done
 
 .cpp.o:
 	@ $(ECHO) Compiling $<
