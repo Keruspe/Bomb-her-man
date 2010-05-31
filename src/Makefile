@@ -18,10 +18,8 @@ SVG_LDFLAGS=$(shell pkg-config --libs cairo librsvg-2.0)
 CXXFLAGS+=$(SVG_CXXFLAGS)
 LDFLAGS+=$(SVG_LDFLAGS)
 
-FLAC_CXXFLAGS=$(shell pkg-config --cflags flac++)
-FLAC_LDFLAGS=$(shell pkg-config --libs flac++)
-CXXFLAGS+=$(FLAC_CXXFLAGS)
-LDFLAGS+=$(FLAC_LDFLAGS)
+#FLAC_CXXFLAGS=$(shell pkg-config --cflags flac++)
+#FLAC_LDFLAGS=$(shell pkg-config --libs flac++)
 
 ifdef ANIM
 CXXFLAGS+=-DANIM_IMAGES=4 -DANIM_TIME=300
@@ -41,7 +39,7 @@ all: $(OBJECTS)
 
 clean:
 	@ $(ECHO) Cleaning temporary files
-	@ $(RM) -f $(shell find -name '*.o') 2>/dev/null
+	@ $(RM) -f bomb-her-man $(shell find -name '*.o') 2>/dev/null
 
 .cpp.o:
 	@ $(ECHO) Compiling $<

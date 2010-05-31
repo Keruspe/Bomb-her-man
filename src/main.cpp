@@ -18,15 +18,21 @@
  */
 
 #include "bombherman.hpp"
-#include "exceptions/exception.hpp"
 #include "game/game.hpp"
-#include "atomic-center/atomic-center.hpp"
-#include "map/map-utils.hpp"
 
 using namespace bombherman;
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif // __cplusplus
+
 int
+#ifdef MINGW32
+SDL_main(int argc, char **argv)
+#else
 main()
+#endif // MINGW32
 {
 	try
 	{
@@ -38,3 +44,7 @@ main()
 	}
 	return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
