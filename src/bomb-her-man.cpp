@@ -28,11 +28,11 @@ extern "C"
 #endif // __cplusplus
 
 int
-#ifdef MINGW32
+#ifdef __MINGW32__
 SDL_main(int argc, char **argv)
 #else
 main()
-#endif // MINGW32
+#endif // __MINGW32__
 {
 	try
 	{
