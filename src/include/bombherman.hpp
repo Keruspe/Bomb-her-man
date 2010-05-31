@@ -23,6 +23,7 @@
 #include <iomanip>
 
 #include "config/config.hpp"
+#include "exceptions/exception.hpp"
 #include "config.h"
 #include "nls.hpp"
 

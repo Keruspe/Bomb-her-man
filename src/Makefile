@@ -4,17 +4,22 @@ OBJECTS=$(SOURCES:.cpp=.o)
 
 CXXFLAGS+= -g -DGIT_ROOT=\"$(shell pwd)/..\" -I. -I./include
 LDFLAGS+=
+ifdef STATIC
+LDFLAGS+=-static
+static-sdl=static-
+static-pkg=--static
+endif
 
 WARNINGS_CFLAGS=-Wall -Wextra -Weffc++ -Wstrict-null-sentinel -Wno-non-template-friend -Wold-style-cast -Wno-pmf-conversions -Wsign-promo
 CXXFLAGS+=$(WARNING_CFLAGS)
 
 SDL_CXXFLAGS=$(shell sdl-config --cflags)
-SDL_LDFLAGS=-lSDL_ttf $(shell sdl-config --libs)
+SDL_LDFLAGS=-lSDL_ttf $(shell sdl-config --$(static-sdl)libs)
 CXXFLAGS+=$(SDL_CXXFLAGS)
 LDFLAGS+=$(SDL_LDFLAGS)
 
-SVG_CXXFLAGS=$(shell pkg-config --cflags cairo librsvg-2.0)
-SVG_LDFLAGS=$(shell pkg-config --libs cairo librsvg-2.0)
+SVG_CXXFLAGS=$(shell pkg-config --cflags $(static-pkg) cairo librsvg-2.0)
+SVG_LDFLAGS=$(shell pkg-config --libs $(static-pkg) cairo librsvg-2.0)
 CXXFLAGS+=$(SVG_CXXFLAGS)
 LDFLAGS+=$(SVG_LDFLAGS)
 
