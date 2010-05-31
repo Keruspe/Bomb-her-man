@@ -1,7 +1,7 @@
 SOURCES=$(shell find src -name '*.cpp')
 OBJECTS=$(SOURCES:.cpp=.o)
 
-CXXFLAGS+= -g -DGIT_ROOT=\"$(shell pwd)\" -Isrc -Isrc/include
+CXXFLAGS+= -g -Isrc -Isrc/include
 LDFLAGS+=
 ifdef STATIC
 LDFLAGS+=-static
@@ -48,6 +48,12 @@ endif
 
 ifndef DATADIR
 DATADIR=$(DESTDIR)/usr/share
+endif
+
+ifndef DEVEL
+CXXFLAGS+= -DDATADIR=\"$(DATADIR)\"
+else
+CXXFLAGS+= -DDATADIR=\"$(shell pwd)/data\"
 endif
 
 INSTALL=install
