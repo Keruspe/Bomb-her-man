@@ -38,6 +38,10 @@ ifndef DESTDIR
 DESTDIR=/usr/local
 endif
 
+ifndef ROOTDIR
+ROOTDIR=$(DESTDIR)
+endif
+
 ifndef BINDIR
 BINDIR=$(DESTDIR)/usr/bin
 endif
@@ -51,7 +55,7 @@ DATADIR=$(DESTDIR)/usr/share
 endif
 
 ifndef DEVEL
-CXXFLAGS+= -DDATADIR=\"$(DATADIR)/bomb-her-man\"
+CXXFLAGS+= -DDATADIR=\"$(ROOTDIR)/bomb-her-man\"
 else
 CXXFLAGS+= -DDATADIR=\"$(shell pwd)/data\"
 endif
