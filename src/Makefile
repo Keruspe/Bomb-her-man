@@ -1,4 +1,3 @@
-
 SOURCES=$(shell find -name '*.cpp')
 OBJECTS=$(SOURCES:.cpp=.o)
 
@@ -30,6 +29,22 @@ endif
 CXX=g++
 LD=g++
 
+ifndef DESTDIR
+DESTDIR=/usr/local
+endif
+
+ifndef BINDIR
+BINDIR=$(DESTDIR)/usr/bin
+endif
+
+ifndef DOCDIR
+DOCDIR=$(DESTDIR)/usr/share/doc
+endif
+
+INSTALL=install
+INSTALLBIN = -s -m 755
+INSTALLDOC = -d -m 644
+
 RM=rm
 ECHO=echo
 CD=cd
@@ -37,18 +52,36 @@ MKDIR=mkdir
 
 DOC_MAKER=doxygen
 
-all: $(OBJECTS)
+all: bomb-her-man
+
+doc: ../doc
+
+bomb-her-man: $(OBJECTS)
 	@ $(ECHO) Linking bomb-her-man
 	@ $(LD) -o bomb-her-man $(OBJECTS) $(LDFLAGS)
+
+../doc:
+	@ $(ECHO) Generating documentation in $(shell pwd)/../doc
+	@ $(CD) .. && $(MKDIR) -p doc && $(DOC_MAKER) > /dev/null
 
 clean:
 	@ $(ECHO) Cleaning temporary files
 	@ $(RM) -f bomb-her-man $(shell find -name '*.o') 2>/dev/null
 
+clean-doc:
+	@ $(ECHO) Cleaning documentation
+	@ $(RM) -rf ../doc
+
+install: all
+	@ $(ECHO) Installing bomb-her-man in $(BINDIR)
+	@ $(INSTALL) $(INSTALLBIN) bomb-her-man $(BINDIR)/bomb-her-man
+
+install-doc : doc
+	@ $(ECHO) Installing documentation in $(DOCDIR)/bomb-her-man
+	@ $(MKDIR) -p $(DOCDIR)/bomb-her-man/html $(DOCDIR)/bomb-her-man/latex
+	@ $(INSTALL) $(INSTALLDOC) ../doc $(DOCDIR)/bomb-her-man
+
 .cpp.o:
 	@ $(ECHO) Compiling $<
 	@ $(CXX) -c $< -o $@ $(CXXFLAGS)
 
-doc:
-	@ $(ECHO) Generating documentation in $(shell pwd)/../doc
-	@ $(CD) .. && $(MKDIR) -p doc && $(DOC_MAKER) > /dev/null
