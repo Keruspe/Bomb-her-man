@@ -54,17 +54,15 @@ Bomb::explode()
 {
 	SDL_LockMutex(mutex);
 	AtomicCenter::removeBomb(coords);
-	Player * p = NULL;
-	if ( ! ( p = Player::getPlayer(this->player) ) )
-		Bomb::gameOver = true;
-	else
+	Player * p = Player::getPlayer(this->player);
+	if ( p )
 	{
 		Uint32 range = static_cast<Uint32>(p->getRange());
-		if ( map::Map::get(coords) == map::PLAYONBOMB )
+		if ( map::Map::get(coords) == map::PLAYONBOMB && ! Bomb::gameOver )
 			if ( p->kill(Player::playerAt(coords)) )
 				Bomb::gameOver = true;
 		bool up(true), down(true), right(true), left(true);
-		for ( Uint32 i = 1 ; i <= range ; ++i )
+		for ( Uint32 i(1) ; i <= range ; ++i )
 		{
 			if ( up )
 				up =    check(coords.x, coords.y - i);
@@ -81,7 +79,6 @@ Bomb::explode()
 	if ( Bomb::gameOver )
 	{
 		SDL_UnlockMutex(mutex);
-		Bomb::newGame();
 		return;
 	}
 	p->bombHasExploded();
