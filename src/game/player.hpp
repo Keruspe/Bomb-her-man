@@ -16,43 +16,44 @@ namespace bombherman
 	class Player
 	{
 	public:
-		virtual ~Player();
+		/// Destructor
+		virtual ~Player() {}
 		
 		/// Range getter
 		/**
 		 * @return The actual range of the player's bombs (int)
 		 */
-		int getRange();
+		int getRange() { return this->range; }
 		
 		/// Coords getter
 		/**
 		 * @return The coords of the player (map::Coords)
 		 */
-		map::Coords & getCoords();
+		map::Coords & getCoords() { return this->coords; }
 		
 		/// Orientation getter
 		/**
 		 * @return The orientation of the player (map::Direction)
 		 */
-		map::Direction & getOrient();
+		map::Direction & getOrient() { return this->orient; }
 		
 		/// Controlling if player can plant a bomb
 		/**
-		 * @return True if player can plant a bomb
+		 * @return True if player can plant a bomb (bool)
 		 */
-		bool isAbleToPlantBomb();
+		bool isAbleToPlantBomb() { return (this->plantableBombs > this->plantedBombs); }
 		
 		/// Score getter
 		/**
-		 * @return The score of the player
+		 * @return The score of the player (int)
 		 */
-		int getScore();
+		int getScore() { return this->score; }
 		
 		/// Id getter
 		/**
-		 * @return The id of the player
+		 * @return The id of the player (int)
 		 */
-		int getId();
+		int getId() { return this->id; }
 		
 		/// To move
 		/**
@@ -103,7 +104,7 @@ namespace bombherman
 		/**
 		 * @param range The range to add to the player, make it negative to remove (int)
 		 */
-		void addToRange(int range);
+		void addToRange(int range) { this->setRange(this->range + range); }
 		
 		/// Make the player plant a bomb
 		void plantBomb();
@@ -124,7 +125,7 @@ namespace bombherman
 		/**
 		 * @param plantableBombs The number to add to the number of bombs the player can carry (int)
 		 */
-		void addToPlantableBombs(int plantableBombs);
+		void addToPlantableBombs(int plantableBombs) { this->setPlantableBombs(this->plantableBombs + plantableBombs); }
 		
 		/// Reset the player to its default statistics
 		void resetToDefaultStats();
@@ -133,7 +134,7 @@ namespace bombherman
 		/**
 		 * @param c The new coords of the player (map::Coords)
 		 */
-		void setCoords(map::Coords & c);
+		void setCoords(map::Coords & c) { this->coords = c; }
 		
 		/// Which player is out there ?
 		/**
@@ -147,7 +148,7 @@ namespace bombherman
 		/**
 		 * @return True if the player is alive
 		 */
-		bool isAlive();
+		bool isAlive() { return this->alive; }
 		
 		/// Murder a poor player
 		/**
@@ -158,7 +159,7 @@ namespace bombherman
 		bool kill(Player * killed);
 
 		/// Tells the player that his bomb has exploded (decreases planted bombs counter)
-		void bombHasExploded();
+		void bombHasExploded() { --this->plantedBombs; }
 	private:
 		/// Private constructor, please call static newPlayer instead
 		Player();

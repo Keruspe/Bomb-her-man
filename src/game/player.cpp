@@ -28,46 +28,6 @@ Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
 {
 }
 
-Player::~Player()
-{
-}
-
-int
-Player::getRange()
-{
-	return this->range;
-}
-
-map::Coords &
-Player::getCoords()
-{
-	return this->coords;
-}
-
-map::Direction &
-Player::getOrient()
-{
-	return this->orient;
-}
-
-bool
-Player::isAbleToPlantBomb()
-{
-	return (this->plantableBombs > this->plantedBombs);
-}
-
-int
-Player::getScore()
-{
-	return this->score;
-}
-
-int
-Player::getId ()
-{
-	return this->id;
-}
-
 Player *
 Player::getPlayer(int id)
 {
@@ -146,12 +106,6 @@ Player::setRange(int range)
 		this->range = range;
 }
 
-void
-Player::addToRange(int range)
-{
-	this->setRange(this->range + range);
-}
-
 map::MoveResult
 Player::go(map::Direction & direction)
 {
@@ -190,12 +144,6 @@ Player::setPlantableBombs(int plantableBombs)
 }
 
 void
-Player::addToPlantableBombs(int plantableBombs)
-{
-	this->setPlantableBombs(this->plantableBombs + plantableBombs);
-}
-
-void
 Player::resetToDefaultStats()
 {
 	this->plantableBombs = Config::getInt("defaultPlantableBombs");
@@ -213,12 +161,6 @@ Player::plantBomb()
 		++this->plantedBombs;
 }
 
-void
-Player::setCoords(map::Coords & c)
-{
-	this->coords = c;
-}
-
 Player *
 Player::playerAt(map::Coords & c)
 {
@@ -227,17 +169,5 @@ Player::playerAt(map::Coords & c)
 			if((*i)->getCoords().x == c.x && (*i)->getCoords().y == c.y)
 				return *i;
 	return 0;
-}
-
-bool
-Player::isAlive()
-{
-	return this->alive;
-}
-
-void
-Player::bombHasExploded()
-{
-	--this->plantedBombs;
 }
 

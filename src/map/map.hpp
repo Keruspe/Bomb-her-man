@@ -109,7 +109,7 @@ namespace bombherman
 			/**
 			 * @return True if the map exists
 			 */
-			static bool exists();
+			static bool exists() { return Map::map.exists; }
 		private:
 			static void placePlayers();
 			static bool moveUp(Coords &);

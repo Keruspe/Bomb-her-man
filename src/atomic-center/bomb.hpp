@@ -29,7 +29,7 @@ namespace bombherman
 			 * @param player The id of the player who planted the bomb (int)
 			 * @param c The coords where the bomb has been planted (map::Coords)
 			 */
-			Bomb (int player, map::Coords c);
+			Bomb(int player, map::Coords c);
 			
 			/// Make a bomb explode
 			/**
@@ -42,9 +42,10 @@ namespace bombherman
 
 			/// Start a new game
 			static void newGame() { Bomb::gameOver = false; }
-		private:
+			
 			/// Destructor
-			virtual ~Bomb ();
+			virtual ~Bomb () { SDL_DestroySemaphore(explosion); }
+		private:
 			static int waitExplode(void *);
 			void explode();
 			bool check(Uint32, Uint32);

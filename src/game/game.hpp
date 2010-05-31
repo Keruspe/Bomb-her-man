@@ -35,26 +35,31 @@ namespace bombherman
 		 * It initializes all the part of the game (display, sound, events)
 		 */
 		static void init();
+		
 		/// Main loop
 		/**
 		 * It launches the main loop, creating display and other
 		 */
 		static void main();
+		
 		/// Change the menu
 		/**
 		 * @param type The new menu type
 		 * @param stopGame Set it to true (default) to stop the current game (if any)
 		 */
 		static void changeMenu(Menu::Type type, bool stopGame = true);
+		
 		/// Launch a new game
 		static void newGame();
+		
 		/// Got to next map
 		static void nextMap();
+		
 		/// Play
 		static void play();
+		
 		/// Stop
 		static void stop() { playing = false; }
-	
 	private:
 		static bool isInit, playing;
 		
@@ -77,3 +82,4 @@ namespace bombherman
 }
 
 #endif // _GAME_HPP_
+

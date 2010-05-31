@@ -26,11 +26,6 @@ Bomb::Bomb (int player, map::Coords c) :
 		bherr <<  "Unable to create thread to manage a bomb : " << SDL_GetError();
 }
 
-Bomb::~Bomb()
-{
-	SDL_DestroySemaphore(explosion);
-}
-
 int
 Bomb::waitExplode(void *p)
 {
