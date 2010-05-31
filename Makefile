@@ -55,7 +55,7 @@ DATADIR=$(DESTDIR)/usr/share
 endif
 
 ifndef DEVEL
-CXXFLAGS+= -DDATADIR=\"$(ROOTDIR)/bomb-her-man\"
+CXXFLAGS+= -DDATADIR=\"$(ROOTDIR)/usr/share/bomb-her-man\"
 else
 CXXFLAGS+= -DDATADIR=\"$(shell pwd)/data\"
 endif
