@@ -48,7 +48,8 @@ endif
 
 INSTALL=install
 INSTALLBIN = -s -m 755
-INSTALLDOC = -d -m 644
+INSTALLDIR = -d -m 755
+INSTALLDOC = -m 644
 
 RM=rm
 ECHO=echo
@@ -77,11 +78,14 @@ clean-doc:
 
 install: all
 	@ $(ECHO) Installing bomb-her-man in $(BINDIR)
+	@ $(INSTALL) $(INSTALLDIR) $(BINDIR)
 	@ $(INSTALL) $(INSTALLBIN) bomb-her-man $(BINDIR)/bomb-her-man
 
 install-doc : doc
 	@ $(ECHO) Installing documentation in $(DOCDIR)/bomb-her-man
-	@ $(INSTALL) $(INSTALLDOC) doc $(DOCDIR)/bomb-her-man
+	@ $(INSTALL) $(INSTALLDIR) $(DOCDIR)/bomb-her-man/html/search
+	@ $(INSTALL) $(INSTALLDIR) $(DOCDIR)/bomb-her-man/latex
+	@ for i in $(shell find doc -type f); do $(INSTALL) $(INSTALLDOC) $$i $(DOCDIR)/bomb-her-man/$${i/doc\/}; done
 
 .cpp.o:
 	@ $(ECHO) Compiling $<
