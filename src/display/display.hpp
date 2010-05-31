@@ -40,49 +40,57 @@ namespace bombherman
 	public:
 		/// To initialize the video
 		static void init();
+		
 		/// Inform the display we quit the game (it can free some surfaces)
 		static void quitGame();
+		
 		/// To stop the video
 		static void quit();
+		
 		/// To make the video switch between fullscreen and windowed
 		static void changeFullscreen();
+		
 		/// Display the menu
 		/**
 		 * @param menu The pointer the menu to display
 		 */
 		static void displayMenu(Menu *menu);
+		
 		/// Update the map
 		static void updateMap();
+		
 		/// Move a player
 		/**
 		 * @param player Pointer to the player who move
 		 * @param goTo The direction of the move
 		 */
 		static void movePlayer(Player *player, map::Direction goTo);
+		
 		/// Plant a bomb
 		/**
 		 * @param coords Coordonates where to plant the bomb
 		 */
 		static void plantBomb(map::Coords coords);
+		
 		/// Show the bomb explosing
 		/**
 		 * @param coords Where the bomb was placed
 		 * @param cells Which cells (a vector of Coords) the bomb destroyed
 		 */
 		static void explode(map::Coords coords, std::vector<map::Coords> cells) { updateBarrels(); }
-	
 	private:
 		static SDL_Surface *svgToSurface(std::string, Uint32 = gSize, Uint32 = gSize);
 		static void initSurfaces();
 		static void cleanSurface(SDL_Surface * &);
-		
 		static void updateDisplay(SDL_Surface *s, SDL_Rect z) { updateDisplay(s, z.x, z.y, z.w, z.h); }
 		static void updateDisplay(SDL_Surface *, Uint16 = 0, Uint16 = 0, Uint16 = 0, Uint16 = 0);
 		
 		/// Update the scores "panel"
 		static void updateScores();
+		
 		/// Update the barrels
 		static void updateBarrels();
+		
 		/// Update the players
 		static void updatePlayers();
 		
@@ -98,6 +106,7 @@ namespace bombherman
 		
 		// Max Width and Height of the display
 		static int widthMax, heightMax;
+		
 		// Width and Height of the display
 		static int width, height;
 		
@@ -124,3 +133,4 @@ namespace bombherman
 }
 
 #endif // _DISPLAY_HPP_
+

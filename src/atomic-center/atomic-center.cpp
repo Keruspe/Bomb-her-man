@@ -45,15 +45,3 @@ AtomicCenter::plantBomb (int player, map::Coords & c)
 	return true;
 }
 
-void
-AtomicCenter::removeBomb (map::Coords & c)
-{
-	bombs[c.x][c.y] = NULL;
-}
-
-Bomb *
-AtomicCenter::getBomb(map::Coords & c)
-{
-	return bombs[c.x][c.y];
-}
-

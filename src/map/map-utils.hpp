@@ -48,7 +48,6 @@ namespace bombherman
 			{
 			}
 			
-			
 			/// Operator[] to allow you using grid[a][b] instead of grid.grid[a][b]
 			/**
 			 * @param y The number of the line, the first one being 0 (Uint32)
@@ -59,6 +58,9 @@ namespace bombherman
 			{
 				return grid[y];
 			}
+
+			/// Destructor
+			~Grid() {}
 		} Grid;
 		
 		/// The coords of an element
@@ -99,6 +101,9 @@ namespace bombherman
 			{
 				return (this->x <= this->max && this->y <= this->max);
 			}
+
+			/// Destructor
+			~Coords() {}
 		} Coords;
 		
 		/// Different directions
@@ -147,4 +152,4 @@ namespace bombherman
 }
 
 #endif // _MAP_UTILS_HPP_
- 
+

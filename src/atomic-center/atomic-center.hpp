@@ -51,7 +51,7 @@ namespace bombherman
 			/*
 			 * @param c The coords of the bomb to remove (map::Coords)
 			 */
-			static void removeBomb (map::Coords & c);
+			static void removeBomb (map::Coords & c) { bombs[c.x][c.y] = NULL; }
 			
 			/// Get a bomb by its coords
 			/*
@@ -59,7 +59,7 @@ namespace bombherman
 			 *
 			 * @return A pointer to the bomb (Bomb *)
 			 */
-			static Bomb * getBomb (map::Coords & c);
+			static Bomb * getBomb (map::Coords & c) { return bombs[c.x][c.y]; }
 			
 			/// Make everything explode
 			static void boum();

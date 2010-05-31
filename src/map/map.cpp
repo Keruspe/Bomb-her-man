@@ -310,9 +310,3 @@ Map::toString()
 	}
 }
 
-bool
-Map::exists()
-{
-	return Map::map.exists;
-}
-

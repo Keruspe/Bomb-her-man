@@ -43,6 +43,7 @@ namespace bombherman
 		 * @return The value of the key (a string)
 		 */
 		static std::string get(std::string key);
+		
 		/// To get a parameter
 		/**
 		 * @param key The name of the value you want to get
@@ -50,19 +51,23 @@ namespace bombherman
 		 * @return The value of the key (an int)
 		 */
 		static int getInt(std::string key);
+		
 		/// To set a parameter
 		/**
 		 * @param key The name of the value you want to set
 		 * @param value The value of the key (an int)
 		 */
 		static void set(std::string key, int value);
+		
 		/// To set a parameter
 		/**
 		 * @param key The name of the value you want to set
 		 * @param value The value of the key (a string)
 		 */
 		static void set(std::string key, std::string value);
-	
+		
+		/// Destructor
+		~Config() {}
 	private:
 		/// To set the new value (string)
 		Config &operator=(std::string);
