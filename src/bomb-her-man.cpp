@@ -30,9 +30,14 @@ main()
 	{
 		Game::main();
 	}
-	catch ( exceptions::Exception &e )
+	catch ( exceptions::Exception & e )
 	{
 		bherr << "Exception: " << e.message() << bhendl;
+	}
+	catch ( std::exception & e )
+	{
+		bherr << "Ouch, an unknown exception was thrown, please report this as a bug : "
+			<< bhendl << e.what() << bhendl;
 	}
 	return 0;
 }
