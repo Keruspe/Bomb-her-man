@@ -2,9 +2,9 @@ SOURCES=$(shell find src -name '*.cpp')
 OBJECTS=$(SOURCES:.cpp=.o)
 
 CXXFLAGS+= -g -Isrc -Isrc/include
-LDFLAGS+=
+LDFLAGS+= --as-needed
 ifdef STATIC
-LDFLAGS+=-static
+LDFLAGS+= -static
 static-sdl=static-
 static-pkg=--static
 endif
