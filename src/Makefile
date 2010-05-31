@@ -32,6 +32,10 @@ LD=g++
 
 RM=rm
 ECHO=echo
+CD=cd
+MKDIR=mkdir
+
+DOC_MAKER=doxygen
 
 all: $(OBJECTS)
 	@ $(ECHO) Linking bomb-her-man
@@ -44,3 +48,7 @@ clean:
 .cpp.o:
 	@ $(ECHO) Compiling $<
 	@ $(CXX) -c $< -o $@ $(CXXFLAGS)
+
+doc:
+	@ $(ECHO) Generating documentation in $(shell pwd)/../doc
+	@ $(CD) .. && $(MKDIR) -p doc && $(DOC_MAKER) > /dev/null
