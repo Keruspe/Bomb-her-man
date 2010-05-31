@@ -24,6 +24,7 @@ AtomicCenter::boum ()
 						Bomb::doExplode(*j);
 	while (AtomicCenter::numberOfBombs > 0)
 		SDL_Delay(250);
+	Bomb::newGame();
 }
 
 bool

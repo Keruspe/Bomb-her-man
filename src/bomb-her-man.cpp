@@ -20,8 +20,6 @@
 #include "bombherman.hpp"
 #include "exceptions/exception.hpp"
 #include "game/game.hpp"
-#include "atomic-center/atomic-center.hpp"
-#include "map/map-utils.hpp"
 
 using namespace bombherman;
 
