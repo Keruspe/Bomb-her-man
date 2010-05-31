@@ -1,7 +1,7 @@
-SOURCES=$(shell find -name '*.cpp')
+SOURCES=$(shell find src -name '*.cpp')
 OBJECTS=$(SOURCES:.cpp=.o)
 
-CXXFLAGS+= -g -DGIT_ROOT=\"$(shell pwd)/..\" -I. -I./include
+CXXFLAGS+= -g -DGIT_ROOT=\"$(shell pwd)\" -Isrc -Isrc/include
 LDFLAGS+=
 ifdef STATIC
 LDFLAGS+=-static
@@ -59,15 +59,13 @@ DOC_MAKER=doxygen
 
 all: bomb-her-man
 
-doc: ../doc
-
 bomb-her-man: $(OBJECTS)
 	@ $(ECHO) Linking bomb-her-man
 	@ $(LD) -o bomb-her-man $(OBJECTS) $(LDFLAGS)
 
-../doc:
-	@ $(ECHO) Generating documentation in $(shell pwd)/../doc
-	@ $(CD) .. && $(MKDIR) -p doc && $(DOC_MAKER) > /dev/null
+doc:
+	@ $(ECHO) Generating documentation in $(shell pwd)/doc
+	@ $(MKDIR) -p doc && $(DOC_MAKER) > /dev/null
 
 clean:
 	@ $(ECHO) Cleaning temporary files
@@ -75,7 +73,7 @@ clean:
 
 clean-doc:
 	@ $(ECHO) Cleaning documentation
-	@ $(RM) -rf ../doc
+	@ $(RM) -rf doc
 
 install: all
 	@ $(ECHO) Installing bomb-her-man in $(BINDIR)
@@ -83,8 +81,7 @@ install: all
 
 install-doc : doc
 	@ $(ECHO) Installing documentation in $(DOCDIR)/bomb-her-man
-	@ $(MKDIR) -p $(DOCDIR)/bomb-her-man/html $(DOCDIR)/bomb-her-man/latex
-	@ $(INSTALL) $(INSTALLDOC) ../doc $(DOCDIR)/bomb-her-man
+	@ $(INSTALL) $(INSTALLDOC) doc $(DOCDIR)/bomb-her-man
 
 .cpp.o:
 	@ $(ECHO) Compiling $<
