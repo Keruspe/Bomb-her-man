@@ -170,7 +170,7 @@ Game::eventMenu(void *event)
 		break;
 	}
 	
-	Game::threadClean(SDL_ThreadID());
+	//Game::threadClean(SDL_ThreadID());
 	
 	return 0;
 }
@@ -222,7 +222,7 @@ Game::eventGame(void *event)
 		break;
 	}
 	
-	Game::threadClean(SDL_ThreadID());
+	//Game::threadClean(SDL_ThreadID());
 	
 	return 0;
 }
