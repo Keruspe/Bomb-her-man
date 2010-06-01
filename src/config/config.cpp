@@ -107,6 +107,8 @@ Config::init()
 		config["killBonus"] = 1;
 		config["minimumScore"] = -9;
 		config["maximumScore"] = 99;
+
+		config["timeBeforeExplosion"] = 5000;
 		
 		/*
 		 * Then read the file
