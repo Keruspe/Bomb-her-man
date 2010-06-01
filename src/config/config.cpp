@@ -106,7 +106,7 @@ Config::init()
 		
 		config["bonusApparitionProbability"] = 100 - config["mgInsertionProbabilityBarrel"].iValue;
 		config["rangeVariation"] = config["mapSize"].iValue / 10;
-		config["maxRange"] = getInt["mapSize"].iValue / 3;
+		config["maxRange"] = config["mapSize"].iValue / 3;
 		config["minRange"] = 1;
 		config["capacityVariation"] = 1;
 		config["maxCapacity"] = 5;
