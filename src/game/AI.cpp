@@ -25,7 +25,7 @@ AI::AI () : Player ()
 }
 
 void
-AI::newPlayer ()
+AI::newAI()
 {
 	if (Player::players.size() >= static_cast<unsigned>(Config::getInt("maxPlayers")))
 		throw exceptions::TooManyPlayersException();

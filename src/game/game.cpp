@@ -108,7 +108,7 @@ Game::newGame()
 		Player::newPlayer();
 	// Create AIs
 	for ( int i = 0, e = Config::getInt("nbAIs") ; i < e ; ++i )
-		AI::newPlayer();
+		AI::newAI();
 	
 	// Start the game !
 	Game::mapCount = Config::getInt("nbMaps");

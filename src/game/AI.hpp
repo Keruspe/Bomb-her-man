@@ -35,7 +35,8 @@ namespace bombherman
 		public Player
 	{
 	public:
-		static void newPlayer ();
+		// Create a new AI
+		static void newAI();
 	private:
 		AI ();
 		void init ();
