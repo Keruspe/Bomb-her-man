@@ -28,17 +28,29 @@ using namespace bombherman::map;
 bool
 MapParser::parse(std::string path, Grid & map)
 {
+	// Open the file
 	std::fstream file(path.c_str(), std::ios::in);
+	
+	// Current line of the file
 	std::string line;
+	
+	// Current element
 	char c;
+	
+	// Current line of the map
 	std::vector<char> *current_line;
+	
+	// Read the lines of the file
 	for(int y(0) ; std::getline(file, line) && y < map.size ; ++y)
 	{
 		current_line = new std::vector<char>();
+		
+		// Read the cols of the file
 		for(int x(0) ; x < map.size ; ++x)
 		{
 			try
 			{
+				// Check if the element is correct
 				switch(c = line.at(x))
 				{
 					case NOTHING:
