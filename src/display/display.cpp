@@ -1,6 +1,7 @@
 /*
  * Bomb-her-man
  * Copyright (C) Sardem FF7 2010 <sardemff7.pub@gmail.com>
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -640,13 +641,13 @@ Display::updatePlayers()
 }
 
 void
-Display::movePlayer(Player *player, map::Direction goTo)
+Display::movePlayer(Player * player, map::MoveResult moveResult)
 {
-	if ( ! sDisplay ) init();
-	map::MoveResult status = player->go(goTo);
-	if ( status == map::NOTHINGHAPPENED ) return;
-	int p = player->getId() - 1;
+	if ( ! sDisplay )
+		init();
 	SDL_Surface *sPlayer = NULL;
+	int p = player->getId() - 1;
+	map::Direction goTo = player->getOrient();
 	map::Coords coords = player->getCoords();
 	SDL_Rect
 		r = {
@@ -661,7 +662,7 @@ Display::movePlayer(Player *player, map::Direction goTo)
 				gSize,
 				gSize
 			};
-	switch ( status )
+	switch ( moveResult )
 	{
 		case map::BONUSTAKEN:
 			SDL_BlitSurface(gMapLayer, &r, gBarrelsLayer, &r);

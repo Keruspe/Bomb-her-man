@@ -1,6 +1,7 @@
 /*
  * Bomb-her-man
  * Copyright (C) Sardem FF7 2010 <sardemff7.pub@gmail.com>
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -61,10 +62,10 @@ namespace bombherman
 		
 		/// Move a player
 		/**
-		 * @param player Pointer to the player who move
-		 * @param goTo The direction of the move
+		 * @param player The player who moves (Player *)
+		 * @param moveResult The result of the move (map::MoveResult)
 		 */
-		static void movePlayer(Player *player, map::Direction goTo);
+		static void movePlayer(Player * player, map::MoveResult moveResult);
 		
 		/// Plant a bomb
 		/**

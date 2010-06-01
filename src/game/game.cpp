@@ -1,6 +1,7 @@
 /*
  * Bomb-her-man
  * Copyright (C) Sardem FF7 2010 <sardemff7.pub@gmail.com>
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -202,16 +203,16 @@ Game::eventGame(void *event)
 		
 		// Player 1
 		case SDLK_UP:		// Up
-			Display::movePlayer(Player::getPlayer(1), map::UP);
+			Player::getPlayer(1)->go(map::UP);
 		break;
 		case SDLK_DOWN:		// Down
-			Display::movePlayer(Player::getPlayer(1), map::DOWN);
+			Player::getPlayer(1)->go(map::DOWN);
 		break;
 		case SDLK_RIGHT:	// Right
-			Display::movePlayer(Player::getPlayer(1), map::RIGHT);
+			Player::getPlayer(1)->go(map::RIGHT);
 		break;
 		case SDLK_LEFT:		// Left
-			Display::movePlayer(Player::getPlayer(1), map::LEFT);
+			Player::getPlayer(1)->go(map::LEFT);
 		break;
 		case SDLK_RSHIFT:	// Bomb
 			Player::getPlayer(1)->plantBomb();
@@ -219,16 +220,16 @@ Game::eventGame(void *event)
 		
 		// Player 2
 		case SDLK_e:		// Up
-			Display::movePlayer(Player::getPlayer(2), map::UP);
+			Player::getPlayer(2)->go(map::UP);
 		break;
 		case SDLK_d:		// Down
-			Display::movePlayer(Player::getPlayer(2), map::DOWN);
+			Player::getPlayer(2)->go(map::DOWN);
 		break;
 		case SDLK_f:		// Right
-			Display::movePlayer(Player::getPlayer(2), map::RIGHT);
+			Player::getPlayer(2)->go(map::RIGHT);
 		break;
 		case SDLK_s:		// Left
-			Display::movePlayer(Player::getPlayer(2), map::LEFT);
+			Player::getPlayer(2)->go(map::LEFT);
 		break;
 		case SDLK_SPACE:	// Bomb
 			Player::getPlayer(2)->plantBomb();
