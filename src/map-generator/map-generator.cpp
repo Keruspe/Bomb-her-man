@@ -2,6 +2,7 @@
 /*
  * Bomb-her-man
  * Copyright (C) mogzor 2010 <mogzor@gmail.com>
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
  *
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -88,12 +89,14 @@ MapGenerator::generate(Grid & g)
 int
 MapGenerator::random(int min, int max)
 {
+	// Random number between min and max
 	return rand() % (max - min + 1) + min;
 }
 
 bool
 MapGenerator::throwDice(int percentage)
 {
+	// percentage % to return true
 	return (percentage > rand() % 100);
 }
 
@@ -101,6 +104,7 @@ bool
 MapGenerator::testCellFull(Grid & grid, Coords & coords)
 {
 	if (coords.x == 0)
+		// Don't care about first column
 		return true;
 	bool result = grid[coords.y][coords.x - 1] != INDESTRUCTIBLE;
 	if (coords.y > 0)
@@ -108,12 +112,14 @@ MapGenerator::testCellFull(Grid & grid, Coords & coords)
 			grid[coords.y - 1][coords.x] != INDESTRUCTIBLE;
 	if (coords.y < grid.size - 1)
 		result = result && grid[coords.y+1][coords.x-1] != INDESTRUCTIBLE;
+	// We'll return false if a nearby cell is INDESTRUCTIBLE (strict north and all west)
 	return result;
 }
 
 bool
 MapGenerator::testCellLimited(Grid & grid, Coords & coords)
 {
+	// Return true if the south west cell is INDESTRUCTIBLE or out of map
 	return (coords.y == grid.size - 1 || coords.x == 0 ||
 		grid[coords.y + 1][coords.x - 1] != INDESTRUCTIBLE);
 }
@@ -124,12 +130,14 @@ MapGenerator::horizontalScan(Grid & grid, Coords & coords)
 	int i;
 	for (i = 0 ; coords.x - i != 0
 		&& grid[coords.y][coords.x - i - 1] == INDESTRUCTIBLE ; ++i);
+	// Return the number of cell before next INDESTRUCTIBLE on the left
 	return i;
 }
 
 Coords
 MapGenerator::getRandomCoords()
 {
+	// Return random coords
 	Coords c;
 	c.x = static_cast<Uint32>(MapGenerator::random(0, c.max));
 	c.y = static_cast<Uint32>(MapGenerator::random(0, c.max));
