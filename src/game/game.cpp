@@ -122,8 +122,7 @@ Game::nextMap()
 	Game::waitThreads();
 	map::Map::deleteMap();
 	if ( --Game::mapCount < 0 )
-		// Goodbye !
-		Game::changeMenu(Menu::MAIN);
+		Display::updateMap();
 	else
 	{
 		// We still have maps to play on !
