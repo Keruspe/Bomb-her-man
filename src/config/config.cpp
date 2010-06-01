@@ -25,7 +25,7 @@
 #define CONFIG_FILE /tmp/config.ini
 #else
 #include <cstdlib>
-#define CONFIG_FILE (std::string().assign(getenv("HOME")) + std::string().assign("/.bomb-her-man")).c_str()
+#define CONFIG_FILE (std::string(getenv("HOME")) + std::string("/.bomb-her-man")).c_str()
 #endif // __MINGW32__
 
 using namespace bombherman;
