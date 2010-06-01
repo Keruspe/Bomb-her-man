@@ -90,6 +90,8 @@ namespace bombherman
 		
 		/// The configuration map
 		static std::map<std::string, Config> config;
+
+		static bool isInit;
 	};
 }
 

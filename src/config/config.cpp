@@ -76,67 +76,71 @@ Config::stringValue()
 
 // Initialize statics
 std::map<std::string, Config> Config::config;
+bool Config::isInit = false;
 
 void
 Config::init()
 {
-	if ( config.empty() )
-	{
-		/*
-		 * Initializing defaults values
-		 */
-		config["mapSize"] = 15;
-		
-		config["maxPlayers"] = 2;
-		config["maxMaps"] = 10;
-		
-		config["defaultPlantableBombs"] = 3;
-		config["defaultRange"] = 2;
-		
-		config["mgInsertionProbabilityBase"] = 100;
-		config["mgInsertionProbabilityBaseHorizontal"] = 50;
-		config["mgInsertionProbabilityBaseVertical"] = 50;
-		config["mgInsertionProbabilityRegressionHorizontal"] = 10;
-		config["mgInsertionProbabilityRegressionVertical"] = 10;
-		config["mgInsertionProbabilityBarrel"] = 42 * 2;
-		config["mgInsertionElementSizeMaxHorizontal"] = 3;
-		config["mgInsertionElementSizeMaxVertical"] = 3;
-		
-		config["nbAIs"] = 0;
-		
-		config["bonusApparitionProbability"] = 100 - config["mgInsertionProbabilityBarrel"].iValue;
-		config["rangeVariation"] = config["mapSize"].iValue / 10;
-		config["maxRange"] = config["mapSize"].iValue / 3;
-		config["minRange"] = 1;
-		config["capacityVariation"] = 1;
-		config["maxCapacity"] = 5;
-		config["minCapacity"] = 1;
-		
-		config["suicideMalus"] = -2;
-		config["killBonus"] = 1;
-		config["minimumScore"] = -9;
-		config["maximumScore"] = 99;
+	if ( Config::isInit )
+		// Don't initialize twice
+		return;
+	
+	/*
+	 * Initializing defaults values
+	 */
+	config["mapSize"] = 15;
+	
+	config["maxPlayers"] = 2;
+	config["maxMaps"] = 10;
+	
+	config["defaultPlantableBombs"] = 3;
+	config["defaultRange"] = 2;
+	
+	config["mgInsertionProbabilityBase"] = 100;
+	config["mgInsertionProbabilityBaseHorizontal"] = 50;
+	config["mgInsertionProbabilityBaseVertical"] = 50;
+	config["mgInsertionProbabilityRegressionHorizontal"] = 10;
+	config["mgInsertionProbabilityRegressionVertical"] = 10;
+	config["mgInsertionProbabilityBarrel"] = 42 * 2;
+	config["mgInsertionElementSizeMaxHorizontal"] = 3;
+	config["mgInsertionElementSizeMaxVertical"] = 3;
+	
+	config["nbAIs"] = 0;
+	
+	config["bonusApparitionProbability"] = 100 - config["mgInsertionProbabilityBarrel"].iValue;
+	config["rangeVariation"] = config["mapSize"].iValue / 10;
+	config["maxRange"] = config["mapSize"].iValue / 3;
+	config["minRange"] = 1;
+	config["capacityVariation"] = 1;
+	config["maxCapacity"] = 5;
+	config["minCapacity"] = 1;
+	
+	config["suicideMalus"] = -2;
+	config["killBonus"] = 1;
+	config["minimumScore"] = -9;
+	config["maximumScore"] = 99;
 
-		config["timeBeforeExplosion"] = 5;
-		
-		/*
-		 * Then read the file
-		 */
-		read();
-		
-		/*
-		 * And force some minimals
-		 */
-		if ( config["nbPlayers"].iValue < 1 )
-		{
-			config["nbPlayers"] = config["maxPlayers"];
-			config["nbAIs"] = 0;
-		}
-		if ( config["nbMaps"].iValue < 1 )
-			config["nbMaps"] = config["maxMaps"];
-		if ( config["mapSize"].iValue < 15 )
-			config["mapSize"] = 15;
+	config["timeBeforeExplosion"] = 5;
+	
+	/*
+	 * Then read the file
+	 */
+	read();
+	
+	/*
+	 * And force some minimals
+	 */
+	if ( config["nbPlayers"].iValue < 1 )
+	{
+		config["nbPlayers"] = config["maxPlayers"];
+		config["nbAIs"] = 0;
 	}
+	if ( config["nbMaps"].iValue < 1 )
+		config["nbMaps"] = config["maxMaps"];
+	if ( config["mapSize"].iValue < 15 )
+		config["mapSize"] = 15;
+	
+	Config::isInit = true;
 }
 
 void
