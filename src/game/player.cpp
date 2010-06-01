@@ -1,8 +1,20 @@
-/* 
- * File:   Player.cpp
- * Author: mogzor
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
+/*
+ * Bomb-her-man
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
  * 
- * Created on May 24, 2010, 11:52 AM
+ * Bomb-her-man is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Bomb-her-man is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <SDL_thread.h>
@@ -14,6 +26,7 @@
 
 using namespace bombherman;
 
+// Initialize statics
 std::vector<Player * > Player::players;
 unsigned Player::icyDeadPeople = 0;
 
@@ -31,9 +44,8 @@ Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
 Player *
 Player::getPlayer(int id)
 {
-	if (Player::players.size() < static_cast<unsigned>(id)
-		|| 0 >= id)
-			return 0;
+	if (Player::players.size() < static_cast<unsigned>(id) || 0 >= id)
+		return 0;
 	return Player::players[id - 1];
 }
 
@@ -78,7 +90,7 @@ Player::die()
 		return false;
 	}
 	else if ( ( Player::players.size() - Player::icyDeadPeople ) == 1 )
-	// Don't reinit twice or more in a game, or weird things will happen :)
+		// Don't reinit twice or more in a game, or weird things will happen :)
 		SDL_CreateThread(Player::reInit, NULL);
 	return true;
 }
@@ -86,11 +98,18 @@ Player::die()
 int
 Player::reInit(void * dummy)
 {
+	// Make everything explode
 	bomb::AtomicCenter::boum();
+	
+	// Noone's dead anymore
 	Player::icyDeadPeople = 0;
+	
+	// Reset players' defaults
 	for (std::vector< Player * > ::iterator i = Player::players.begin(),
 		i_end = Player::players.end() ; i != i_end ; ++i)
 			(*i)->resetToDefaultStats();
+	
+	// Go to next map
 	Game::nextMap();
 	return 0;
 }
@@ -110,15 +129,14 @@ map::MoveResult
 Player::go(map::Direction & direction)
 {
 	if (! this || ! this->alive)
+		// If we don't exist (new Game) or we're die, nothing'll happen
 		return map::NOTHINGHAPPENED;
-	bool orientChanged(false);
-	if (this->orient != direction)
-	{
-		orientChanged = true;
+	bool orientChanged = (this->orient != direction);
+	if (orientChanged)
 		this->orient = direction;
-	}
 	map::MoveResult moveResult = map::Map::movePlayer(this->coords, direction);
 	if (moveResult == map::NOTHINGHAPPENED && orientChanged)
+		// Only orient has changed
 		return map::ORIENTCHANGED;
 	return moveResult;
 }
@@ -158,14 +176,17 @@ Player::plantBomb()
 	if (! this->isAbleToPlantBomb())
 		return;
 	if ( bomb::AtomicCenter::plantBomb(this->id, this->coords) )
+		// The bomb has been planted !
 		++this->plantedBombs;
 }
 
 Player *
 Player::playerAt(map::Coords & c)
 {
+	// We read all players
 	for (std::vector< Player * >::iterator i = Player::players.begin(),
 		i_end = Player::players.end() ; i != i_end ; ++i)
+			// Coords are equal ? That's the one we're looking for !
 			if((*i)->getCoords().x == c.x && (*i)->getCoords().y == c.y)
 				return *i;
 	return 0;
