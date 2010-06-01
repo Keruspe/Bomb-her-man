@@ -171,17 +171,35 @@ namespace bombherman
 		/// Tells the player that his bomb has exploded (decreases planted bombs counter)
 		void bombHasExploded() { --this->plantedBombs; }
 	protected:
+		/// Number of bombs the player can plant (int)
+		int plantableBombs;
+		
+		/// Current range (int)
+		int range;
+		
+		/// Number of planted bombs (int)
+		int plantedBombs;
+		
+		/// Current score (int)
+		int score;
+		
+		/// Id of the player (int)
+		int id;
+		
+		/// Is the player alive ? (bool)
+		bool alive;
+		
+		/// Coords of the player (map::Coords)
+		map::Coords coords;
+		
+		/// Orientation of the player (map::Direction)
+		map::Direction orient;
+		
+		/// Number of dead people (unsigned)
+		static unsigned icyDeadPeople;
+	private:
 		/// Private constructor, please call static newPlayer instead
 		Player();
-		int plantableBombs;
-		int range;
-		int plantedBombs;
-		int score;
-		int id;
-		bool alive;
-		map::Coords coords;
-		map::Direction orient;
-		static unsigned icyDeadPeople;
 	};
 };
 
