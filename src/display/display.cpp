@@ -719,7 +719,7 @@ Display::movePlayer(Player * player, map::MoveResult moveResult)
 				SDL_BlitSurface(gPlayers[p][goTo][++anim%ANIM_IMAGES], NULL, sPlayer, &d);
 				updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
 				SDL_FreeSurface(sPlayer);
-				if ( anim < ANIM_IMAGES && player->isAlive() )
+				if ( anim < ANIM_IMAGES )
 					SDL_Delay(ANIM_TIME/ANIM_IMAGES);
 				else break;
 			}
@@ -727,7 +727,8 @@ Display::movePlayer(Player * player, map::MoveResult moveResult)
 		break;
 	}
 	sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
-	SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
+	if (player->isAlive())
+		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
 	SDL_BlitSurface(gPlayers[p][goTo][0], NULL, sPlayer, &l);
 	updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
 	SDL_FreeSurface(sPlayer);
