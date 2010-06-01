@@ -20,6 +20,8 @@
 #ifndef _PLAYER_HPP_
 #define	_PLAYER_HPP_
 
+#include <SDL_mutex.h>
+
 #include "map/map.hpp"
 
 namespace bombherman
@@ -200,6 +202,9 @@ namespace bombherman
 		
 		/// Number of dead people (unsigned)
 		static unsigned icyDeadPeople;
+		
+		/// Mutex for handling moves
+		SDL_mutex * move_mutex;
 	};
 };
 
