@@ -719,7 +719,7 @@ Display::movePlayer(Player * player, map::MoveResult moveResult)
 				SDL_BlitSurface(gPlayers[p][goTo][++anim%ANIM_IMAGES], NULL, sPlayer, &d);
 				updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
 				SDL_FreeSurface(sPlayer);
-				if ( anim < ANIM_IMAGES )
+				if ( anim < ANIM_IMAGES || ! player->isAlive() )
 					SDL_Delay(ANIM_TIME/ANIM_IMAGES);
 				else break;
 			}
