@@ -31,10 +31,6 @@ else
 CXXFLAGS+= -DANIM_IMAGES=1
 endif
 
-ifdef THREAD_EVENTS
-CXXFLAGS+= -DTHREAD_EVENTS
-endif
-
 CXX=g++
 LD=g++
 

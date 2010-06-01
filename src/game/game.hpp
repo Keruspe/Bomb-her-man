@@ -66,10 +66,8 @@ namespace bombherman
 		/// Quit
 		static void quit();
 		
-		#ifdef THREAD_EVENTS
 		static std::vector< SDL_Thread * > *threads;
 		static void threadClean(Uint32 id);
-		#endif // THREAD_EVENTS
 		
 		static int eventMenu(void *);
 		static int eventGame(void *);
