@@ -31,7 +31,7 @@ namespace bombherman
 	{
 	public:
 		/// Destructor
-		virtual ~Player() {}
+		virtual ~Player() { SDL_DestroyMutex(move_mutex); }
 		
 		/// Range getter
 		/**
