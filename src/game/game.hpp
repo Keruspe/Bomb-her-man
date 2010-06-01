@@ -63,6 +63,9 @@ namespace bombherman
 	private:
 		static bool isInit, playing;
 		
+		// Wait threads (before going to next map)
+		static void waitThreads();
+		
 		/// Quit
 		static void quit();
 		

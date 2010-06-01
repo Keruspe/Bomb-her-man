@@ -110,6 +110,7 @@ Game::newGame()
 void
 Game::nextMap()
 {
+	Game::waitThreads();
 	map::Map::deleteMap();
 	if ( --mapCount < 0 )
 		changeMenu(Menu::MAIN);
@@ -240,10 +241,7 @@ Game::quit()
 	
 	map::Map::deleteMap();
 	
-	for ( std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end() ; i != e ; ++i )
-	{
-		SDL_WaitThread((*i), NULL);
-	}
+	Game::waitThreads();
 	delete(threads);
 	
 	bomb::Bomb::deInit();
@@ -253,3 +251,13 @@ Game::quit()
 	
 	Config::write();
 }
+
+void
+Game::waitThreads()
+{
+	for ( std::vector< SDL_Thread * >::iterator i = Game::threads->begin(),
+		e = Game::threads->end() ; i != e ; ++i )
+			SDL_WaitThread((*i), NULL);
+	threads->clear();
+}
+
