@@ -69,14 +69,14 @@ namespace bombherman
 		/// Quit
 		static void quit();
 		
-		static std::vector< SDL_Thread * > *threads;
+		static std::vector< SDL_Thread * > threads;
 		static void threadClean(Uint32 id);
 		
 		static int eventMenu(void *);
 		static int eventGame(void *);
 		
 		// To store the actual menu
-		static Menu *currentMenu;
+		static Menu * currentMenu;
 		
 		static Sint32 mapCount;
 	};

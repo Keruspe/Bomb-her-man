@@ -25,8 +25,8 @@
 
 using namespace bombherman;
 
-Menu *Game::currentMenu = NULL;
-std::vector< SDL_Thread * > *Game::threads = new std::vector< SDL_Thread * >();
+Menu * Game::currentMenu = NULL;
+std::vector< SDL_Thread * > Game::threads;
 bool Game::isInit = false;
 bool Game::playing = true;
 
@@ -72,7 +72,7 @@ Game::main()
 				if ( currentMenu )
 					SDL_CreateThread(&bombherman::Game::eventMenu, &event.key);
 				else
-					threads->push_back(SDL_CreateThread(&bombherman::Game::eventGame, &event.key));
+					threads.push_back(SDL_CreateThread(&bombherman::Game::eventGame, &event.key));
 			break;
 			default:
 			break;
@@ -131,11 +131,12 @@ Game::play()
 void
 Game::threadClean(Uint32 id)
 {
-	for ( std::vector< SDL_Thread * >::iterator i = threads->begin(), e = threads->end() ; i != e ; ++i )
+	for ( std::vector< SDL_Thread * >::iterator i = threads.begin(),
+		e = threads.end() ; i != e ; ++i )
 	{
 		if ( id == SDL_GetThreadID(*i) )
 		{
-			threads->erase(i);
+			threads.erase(i);
 			break;
 		}
 	}
@@ -238,12 +239,8 @@ Game::quit()
 	}
 	
 	Display::quit();
-	
 	map::Map::deleteMap();
-	
 	Game::waitThreads();
-	delete(threads);
-	
 	bomb::Bomb::deInit();
 	
 	currentMenu = NULL;
@@ -255,9 +252,9 @@ Game::quit()
 void
 Game::waitThreads()
 {
-	for ( std::vector< SDL_Thread * >::iterator i = Game::threads->begin(),
-		e = Game::threads->end() ; i != e ; ++i )
+	for ( std::vector< SDL_Thread * >::iterator i = Game::threads.begin(),
+		e = Game::threads.end() ; i != e ; ++i )
 			SDL_WaitThread((*i), NULL);
-	threads->clear();
+	threads.clear();
 }
 
