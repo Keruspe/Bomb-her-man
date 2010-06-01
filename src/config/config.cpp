@@ -20,6 +20,14 @@
 #include "bombherman.hpp"
 #include "config.hpp"
 
+// TODO DYNAMIC FILE FOR WINDOWS
+#ifdef __MINGW32__
+#define CONFIG_FILE /tmp/config.ini
+#else
+#include <cstdlib>
+#define CONFIG_FILE (std::string().assign(getenv("HOME")) + std::string().assign("/.bomb-her-man")).c_str()
+#endif // __MINGW32__
+
 using namespace bombherman;
 
 /*
@@ -147,7 +155,7 @@ void
 Config::read()
 {
 	// Do open the file
-	std::ifstream file("/tmp/config.ini", std::ios::in); //TODO: dynamic file
+	std::ifstream file(CONFIG_FILE, std::ios::in);
 	std::string line;
 	std::string::size_type separator;
 	
@@ -171,7 +179,7 @@ void
 Config::write()
 {
 	// Open the file
-	std::ofstream file("/tmp/config.ini", std::ios::out | std::ios::trunc); //TODO: dynamic file
+	std::ofstream file(CONFIG_FILE, std::ios::out | std::ios::trunc);
 	
 	if ( file.is_open() )
 	{
