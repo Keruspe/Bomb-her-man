@@ -727,7 +727,7 @@ Display::movePlayer(Player *player, map::Direction goTo)
 	}
 	sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
 	SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
-	SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &l);
+	SDL_BlitSurface(gPlayers[p][goTo][0], NULL, sPlayer, &l);
 	updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
 	SDL_FreeSurface(sPlayer);
 }
