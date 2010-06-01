@@ -1,8 +1,22 @@
-/* 
- * File:   Bomb.cpp
- * Author: mogzor
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
+/*
+ * Bomb-her-man
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
+ * Copyright (C) Hugo Mougard 2010 <mogzor@gmail.com>
+ * Copyright (C) Sardem FF7 2010 <sardemff7.pub@gmail.com>
  * 
- * Created on May 25, 2010, 8:15 PM
+ * Bomb-her-man is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Bomb-her-man is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <iostream>
@@ -13,6 +27,7 @@
 using namespace bombherman;
 using namespace bombherman::bomb;
 
+// Initialize statics
 SDL_mutex * Bomb::mutex = SDL_CreateMutex ();
 bool Bomb::gameOver = false;
 
@@ -29,6 +44,7 @@ Bomb::Bomb (int player, map::Coords c) :
 int
 Bomb::waitExplode(void *p)
 {
+	// Delay the explosion
 	Bomb *b = static_cast<Bomb * >(p);
 	SDL_SemWaitTimeout(b->explosion, 5000);
 	b->explode();
@@ -40,6 +56,7 @@ Bomb::waitExplode(void *p)
 void
 Bomb::doExplode(Bomb *b)
 {
+	// Force explosion
 	if ( b )
 		SDL_SemPost(b->explosion);
 }
@@ -47,10 +64,11 @@ Bomb::doExplode(Bomb *b)
 void
 Bomb::explode()
 {
+	// The actual real explosion
 	SDL_LockMutex(mutex);
 	AtomicCenter::removeBomb(coords);
 	Player * p = Player::getPlayer(this->player);
-	if ( p )
+	if ( p ) // The player still exists (new Game ...)
 	{
 		Uint32 range = static_cast<Uint32>(p->getRange());
 		if ( map::Map::get(coords) == map::PLAYONBOMB && ! Bomb::gameOver )
@@ -73,16 +91,24 @@ Bomb::explode()
 	}
 	if ( Bomb::gameOver )
 	{
+		// Game over, nothing to do
 		SDL_UnlockMutex(mutex);
 		return;
 	}
+	
+	// Tell the player that his bomb has exploded
 	p->bombHasExploded();
 	map::Map::removeBomb(coords);
 	Display::explode(coords, explodedCells);
+	
+	// Reinitialize explodedCells
 	explodedCells.clear();
 	SDL_UnlockMutex(mutex);
-	for ( std::vector<map::Coords>::iterator i = chain.begin(), e = chain.end() ; i != e ; ++i )
-		doExplode(AtomicCenter::getBomb(*i));
+	
+	// Make the bombs which were hit explode
+	for ( std::vector<map::Coords>::iterator i = chain.begin(),
+		e = chain.end() ; i != e ; ++i )
+			doExplode(AtomicCenter::getBomb(*i));
 	chain.clear();
 }
 
@@ -92,6 +118,8 @@ Bomb::check(Uint32 x, Uint32 y)
 	map::Coords c(x, y);
 	if ( ( ! c.validate() ) || Bomb::gameOver )
 		return false;
+	
+	// Get element on cell
 	char item = map::Map::get(c);
 	switch ( item )
 	{
@@ -115,6 +143,9 @@ Bomb::check(Uint32 x, Uint32 y)
 		default : // Bonuses
 			map::Map::removeBonus(c);
 	}
+	
+	// Add Coords to explodedCells (for Display)
 	explodedCells.push_back(c);
 	return true;
 }
+
