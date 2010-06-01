@@ -1,6 +1,7 @@
 /*
  * Bomb-her-man
  * Copyright (C) Sardem FF7 2010 <sardemff7.pub@gmail.com>
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -70,7 +71,6 @@ namespace bombherman
 		static void quit();
 		
 		static std::vector< SDL_Thread * > threads;
-		static void threadClean(Uint32 id);
 		
 		static int eventMenu(void *);
 		static int eventGame(void *);

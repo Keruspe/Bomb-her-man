@@ -22,21 +22,23 @@
 #include "map/map-utils.hpp"
 #include "atomic-center/atomic-center.hpp"
 #include "atomic-center/bomb.hpp"
+#include "AI.hpp"
 
 using namespace bombherman;
 
+// Initialize statics
 Menu * Game::currentMenu = NULL;
 std::vector< SDL_Thread * > Game::threads;
 bool Game::isInit = false;
 bool Game::playing = true;
-
 Sint32 Game::mapCount = -1;
 
 void Game::init()
 {
 	Display::init();
-	changeMenu(Menu::MAIN);
+	Game::changeMenu(Menu::MAIN);
 	
+	// Ignore some various events
 	SDL_EventState(SDL_ACTIVEEVENT, SDL_IGNORE);
 	SDL_EventState(SDL_KEYUP, SDL_IGNORE);
 	SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
@@ -52,192 +54,188 @@ void Game::init()
 	SDL_EventState(SDL_USEREVENT, SDL_IGNORE);
 	SDL_EventState(SDL_SYSWMEVENT, SDL_IGNORE);
 	
-	isInit = true;
+	Game::isInit = true;
 }
 
 void
 Game::main()
 {
-	if ( ! isInit ) init();
+	if ( ! Game::isInit ) init();
 	
 	SDL_Event event;
-	while ( ( playing ) && ( SDL_WaitEvent(&event) ) )
+	while ( Game::playing && SDL_WaitEvent(&event) )
 	{
+		// Handle the events we want
 		switch ( event.type )
 		{
-			case SDL_QUIT:
-				playing = false;
+		case SDL_QUIT:
+			Game::playing = false;
 			break;
-			case SDL_KEYDOWN:
-				if ( currentMenu )
-					SDL_CreateThread(&bombherman::Game::eventMenu, &event.key);
-				else
-					threads.push_back(SDL_CreateThread(&bombherman::Game::eventGame, &event.key));
+		case SDL_KEYDOWN:
+			if ( Game::currentMenu )
+				SDL_CreateThread(&bombherman::Game::eventMenu, &event.key);
+			else
+				Game::threads.push_back(SDL_CreateThread(&bombherman::Game::eventGame, &event.key));
 			break;
-			default:
+		default:
 			break;
 		}
 	}
-	quit();
+	Game::quit();
 }
 
 void
 Game::changeMenu(Menu::Type type, bool stopGame)
 {
-	if ( ( stopGame ) )
+	if ( stopGame )
 	{
+		// If we're stopping the game, we have to clean things
 		map::Map::deleteMap();
 		Player::clean();
 		Display::quitGame();
 		bomb::AtomicCenter::boum();
 	}
-	currentMenu = Menu::getMenu(type);
+	// Do change the menu
+	Game::currentMenu = Menu::getMenu(type);
 	Display::displayMenu(currentMenu);
 }
 
 void
 Game::newGame()
 {
+	// Create players
 	for ( int i = 0, e = Config::getInt("nbPlayers") ; i < e ; ++i )
 		Player::newPlayer();
-	//for ( int i = 0, e = Config::getInt("nbAIs") ; i < e ; ++i )
-	//	AI::newAI();
+	// Create AIs
+	for ( int i = 0, e = Config::getInt("nbAIs") ; i < e ; ++i )
+		AI::newPlayer();
 	
-	mapCount = Config::getInt("nbMaps");
-	nextMap();
+	// Start the game !
+	Game::mapCount = Config::getInt("nbMaps");
+	Game::nextMap();
 }
 
 void
 Game::nextMap()
 {
+	// Wait for everything to exit
 	Game::waitThreads();
 	map::Map::deleteMap();
-	if ( --mapCount < 0 )
-		changeMenu(Menu::MAIN);
+	if ( --Game::mapCount < 0 )
+		// Goodbye !
+		Game::changeMenu(Menu::MAIN);
 	else
 	{
+		// We still have maps to play on !
 		map::Map::newMap();
-		play();
+		Game::play();
 	}
 }
 
 void
 Game::play()
 {
+	// No menu there
 	currentMenu = NULL;
+
+	// Juste update the display for the map
 	Display::updateMap();
 }
 
-void
-Game::threadClean(Uint32 id)
-{
-	for ( std::vector< SDL_Thread * >::iterator i = threads.begin(),
-		e = threads.end() ; i != e ; ++i )
-	{
-		if ( id == SDL_GetThreadID(*i) )
-		{
-			threads.erase(i);
-			break;
-		}
-	}
-}
-
 int
-Game::eventMenu(void *event)
+Game::eventMenu(void * event)
 {
+	// Handle events in menus
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
-		case SDLK_ESCAPE:
-			currentMenu->quit();
+	case SDLK_ESCAPE:
+		currentMenu->quit();
 		break;
-		case SDLK_UP:
-			currentMenu->up();
+	case SDLK_UP:
+		currentMenu->up();
 		break;
-		case SDLK_DOWN:
-			currentMenu->down();
+	case SDLK_DOWN:
+		currentMenu->down();
 		break;
-		case SDLK_KP_ENTER:
-		case SDLK_SPACE:
-		case SDLK_RETURN:
-			currentMenu->action();
+	case SDLK_KP_ENTER:
+	case SDLK_SPACE:
+	case SDLK_RETURN:
+		currentMenu->action();
 		break;
-		case SDLK_LEFT:
-			currentMenu->left();
+	case SDLK_LEFT:
+		currentMenu->left();
 		break;
-		case SDLK_RIGHT:
-			currentMenu->right();
+	case SDLK_RIGHT:
+		currentMenu->right();
 		break;
-		default:
+	default:
 		break;
 	}
-	
-	//Game::threadClean(SDL_ThreadID());
-	
 	return 0;
 }
 
 int
-Game::eventGame(void *event)
+Game::eventGame(void * event)
 {
+	// Handle events in game (moves, bomb planting ...)
 	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
 	{
-		case SDLK_ESCAPE:
-			changeMenu(Menu::MAIN);
+	case SDLK_ESCAPE:
+		changeMenu(Menu::MAIN);
 		break;
-		
-		// Player 1
-		case SDLK_UP:		// Up
-			Player::getPlayer(1)->go(map::UP);
+	
+	// Player 1
+	case SDLK_UP:		// Up
+		Player::getPlayer(1)->go(map::UP);
 		break;
-		case SDLK_DOWN:		// Down
-			Player::getPlayer(1)->go(map::DOWN);
+	case SDLK_DOWN:		// Down
+		Player::getPlayer(1)->go(map::DOWN);
 		break;
-		case SDLK_RIGHT:	// Right
-			Player::getPlayer(1)->go(map::RIGHT);
+	case SDLK_RIGHT:	// Right
+		Player::getPlayer(1)->go(map::RIGHT);
 		break;
-		case SDLK_LEFT:		// Left
-			Player::getPlayer(1)->go(map::LEFT);
+	case SDLK_LEFT:		// Left
+		Player::getPlayer(1)->go(map::LEFT);
 		break;
-		case SDLK_RSHIFT:	// Bomb
-			Player::getPlayer(1)->plantBomb();
+	case SDLK_RSHIFT:	// Bomb
+		Player::getPlayer(1)->plantBomb();
 		break;
-		
-		// Player 2
-		case SDLK_e:		// Up
-			Player::getPlayer(2)->go(map::UP);
+	
+	// Player 2
+	case SDLK_e:		// Up
+		Player::getPlayer(2)->go(map::UP);
 		break;
-		case SDLK_d:		// Down
-			Player::getPlayer(2)->go(map::DOWN);
+	case SDLK_d:		// Down
+		Player::getPlayer(2)->go(map::DOWN);
 		break;
-		case SDLK_f:		// Right
-			Player::getPlayer(2)->go(map::RIGHT);
+	case SDLK_f:		// Right
+		Player::getPlayer(2)->go(map::RIGHT);
 		break;
-		case SDLK_s:		// Left
-			Player::getPlayer(2)->go(map::LEFT);
+	case SDLK_s:		// Left
+		Player::getPlayer(2)->go(map::LEFT);
 		break;
-		case SDLK_SPACE:	// Bomb
-			Player::getPlayer(2)->plantBomb();
+	case SDLK_SPACE:	// Bomb
+		Player::getPlayer(2)->plantBomb();
 		break;
-		
-		default:
+	
+	default:
 		break;
 	}
-	
-	//Game::threadClean(SDL_ThreadID());
-	
 	return 0;
 }
 
 void
 Game::quit()
 {
-	if ( ! isInit ) return;
+	if ( ! isInit )
+		return;
 	if ( playing )
 	{
 		playing = false;
 		return;
 	}
 	
+	// Clean everything before quitting
 	Display::quit();
 	map::Map::deleteMap();
 	Game::waitThreads();
@@ -246,12 +244,14 @@ Game::quit()
 	currentMenu = NULL;
 	Menu::clear();
 	
+	// Write the new config file
 	Config::write();
 }
 
 void
 Game::waitThreads()
 {
+	// Wait for all threads launched by Game to exit
 	for ( std::vector< SDL_Thread * >::iterator i = Game::threads.begin(),
 		e = Game::threads.end() ; i != e ; ++i )
 			SDL_WaitThread((*i), NULL);
