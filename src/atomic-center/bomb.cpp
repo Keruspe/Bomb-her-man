@@ -46,7 +46,7 @@ Bomb::waitExplode(void *p)
 {
 	// Delay the explosion
 	Bomb *b = static_cast<Bomb * >(p);
-	SDL_SemWaitTimeout(b->explosion, 5000);
+	SDL_SemWaitTimeout(b->explosion, Config::getInt("timeBeforeExplosion") * 1000);
 	b->explode();
 	AtomicCenter::bombExploded();
 	delete(b);
