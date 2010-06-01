@@ -22,6 +22,8 @@
 
 using namespace bombherman;
 
+// Those defines are tricks to try supporting minGW
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -36,14 +38,17 @@ main()
 {
 	try
 	{
+		// Launch the Game
 		Game::main();
 	}
 	catch ( exceptions::Exception & e )
 	{
+		// Catch our home made exceptions
 		bherr << "Exception: " << e.message() << bhendl;
 	}
 	catch ( std::exception & e )
 	{
+		// We should never go there
 		bherr << "Ouch, an unknown exception was thrown, please report this as a bug : "
 			<< bhendl << e.what() << bhendl;
 	}
@@ -53,3 +58,4 @@ main()
 #ifdef __cplusplus
 }
 #endif // __cplusplus
+

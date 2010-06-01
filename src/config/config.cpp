@@ -1,6 +1,7 @@
 /*
  * Bomb-her-man
  * Copyright (C) Sardem FF7 2010 <sardemff7.pub@gmail.com>
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -31,8 +32,12 @@ Config::Config() :
 {
 }
 
-Config &Config::operator=(std::string value)
+// Both those operator= return a reference to stock the Config in the map
+// Note that sValue and intValue are always synchronised
+
+Config & Config::operator=(std::string value)
 {
+	// This is used for a string configuration
 	this->sValue = value;
 	this->intValue();
 	
@@ -41,6 +46,7 @@ Config &Config::operator=(std::string value)
 
 Config &Config::operator=(int value)
 {
+	// This is used for an int configuration
 	this->iValue = value;
 	this->stringValue();
 	
@@ -50,6 +56,7 @@ Config &Config::operator=(int value)
 void
 Config::intValue()
 {
+	// Try to transform the stringValue to an int
 	std::istringstream s(this->sValue);
 	s >> this->iValue;
 }
@@ -57,6 +64,7 @@ Config::intValue()
 void
 Config::stringValue()
 {
+	// Transform the int to a string
 	std::ostringstream s("");
 	s << this->iValue;
 	this->sValue = s.str();
@@ -66,7 +74,8 @@ Config::stringValue()
  * Class space
  */
 
-std::map<std::string, Config> Config::config = std::map<std::string, Config>();
+// Initialize statics
+std::map<std::string, Config> Config::config;
 
 void
 Config::init()
@@ -95,9 +104,9 @@ Config::init()
 		
 		config["nbAIs"] = 0;
 		
-		config["bonusApparitionProbability"] = 100 - getInt("mgInsertionProbabilityBarrel");
-		config["rangeVariation"] = getInt("mapSize")/10;
-		config["maxRange"] = getInt("mapSize")/3;
+		config["bonusApparitionProbability"] = 100 - config["mgInsertionProbabilityBarrel"].iValue;
+		config["rangeVariation"] = config["mapSize"].iValue / 10;
+		config["maxRange"] = getInt["mapSize"].iValue / 3;
 		config["minRange"] = 1;
 		config["capacityVariation"] = 1;
 		config["maxCapacity"] = 5;
@@ -133,6 +142,7 @@ Config::init()
 void
 Config::read()
 {
+	// Do open the file
 	std::ifstream file("/tmp/config.ini", std::ios::in); //TODO: dynamic file
 	std::string line;
 	std::string::size_type separator;
@@ -141,6 +151,7 @@ Config::read()
 	{
 		while ( ! file.eof() )
 		{
+			// If the line is correct, set the corresponding configurations
 			file >> line;
 			separator = line.find_first_of('=');
 			if ( separator != std::string::npos )
@@ -155,12 +166,14 @@ Config::read()
 void
 Config::write()
 {
+	// Open the file
 	std::ofstream file("/tmp/config.ini", std::ios::out | std::ios::trunc); //TODO: dynamic file
 	
 	if ( file.is_open() )
 	{
 		for ( std::map<std::string, Config>::iterator i = Config::config.begin(), e = Config::config.end() ; i != e ; ++i )
 		{
+			// Write the configurations to the file
 			if ( ! (i->second).sValue.empty() )
 				file << i->first << '=' << (i->second).sValue << std::endl;
 		}

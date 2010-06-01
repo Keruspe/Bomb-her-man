@@ -1,6 +1,7 @@
 /*
  * Bomb-her-man
  * Copyright (C) Sardem FF7 2010 <sardemff7.pub@gmail.com>
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -70,9 +71,9 @@ namespace bombherman
 		~Config() {}
 	private:
 		/// To set the new value (string)
-		Config &operator=(std::string);
+		Config & operator=(std::string);
 		/// To set the new value (int)
-		Config &operator=(int);
+		Config & operator=(int);
 		
 		void intValue();
 		void stringValue();
@@ -89,7 +90,6 @@ namespace bombherman
 		
 		/// The configuration map
 		static std::map<std::string, Config> config;
-	
 	};
 }
 
