@@ -172,7 +172,7 @@ namespace bombherman
 
 		/// Tells the player that his bomb has exploded (decreases planted bombs counter)
 		void bombHasExploded() { --this->plantedBombs; }
-	private:
+	protected:
 		/// Private constructor, please call static newPlayer instead
 		Player();
 		int plantableBombs;
