@@ -237,7 +237,7 @@ Map::cleanOldSpot(Coords & c)
 }
 
 void
-Map::destroy(Coords & c)
+Map::destroyBarrel(Coords & c)
 {
 	if (! Map::exists() || ! c.validate() || Map::get(c) != BARREL)
 		return;

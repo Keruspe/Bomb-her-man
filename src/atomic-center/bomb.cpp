@@ -98,7 +98,7 @@ Bomb::check(Uint32 x, Uint32 y)
 		case map::INDESTRUCTIBLE :
 			return false;
 		case map::BARREL :
-			map::Map::destroy(c);
+			map::Map::destroyBarrel(c);
 		break;
 		case map::PLAYER :
 			if ( Player::getPlayer(this->player)->kill(Player::playerAt(c)) )

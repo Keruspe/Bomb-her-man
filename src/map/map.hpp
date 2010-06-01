@@ -82,7 +82,7 @@ namespace bombherman
 			/**
 			 * @param c The coords of the barrel (map::coords)
 			 */
-			static void destroy(Coords & c);
+			static void destroyBarrel(Coords & c);
 			
 			/// Display the map
 			static void toString();
