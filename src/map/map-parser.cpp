@@ -31,6 +31,10 @@ MapParser::parse(std::string path, Grid & map)
 	// Open the file
 	std::fstream file(path.c_str(), std::ios::in);
 	
+	// Exit if the file fails to open
+	if (! file.is_open())
+		return false;
+	
 	// Current line of the file
 	std::string line;
 	
@@ -39,7 +43,7 @@ MapParser::parse(std::string path, Grid & map)
 	
 	// Current line of the map
 	std::vector<char> *current_line;
-	
+
 	// Read the lines of the file
 	for(int y(0) ; std::getline(file, line) && y < map.size ; ++y)
 	{
