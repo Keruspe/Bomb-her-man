@@ -70,10 +70,8 @@ namespace bombherman
 		/// To move
 		/**
 		 * @param direction The direction where player wants to go (map::Direction)
-		 * 
-		 * @return What did happen during the move (map::MoveResult)
 		 */
-		map::MoveResult go(map::Direction & direction);
+		void go(map::Direction direction);
 		
 		/// List of all players
 		static std::vector< Player * > players;

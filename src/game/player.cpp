@@ -23,6 +23,7 @@
 #include "game.hpp"
 #include "exceptions/too-many-players-exception.hpp"
 #include "atomic-center/atomic-center.hpp"
+#include "display/display.hpp"
 
 using namespace bombherman;
 
@@ -125,20 +126,19 @@ Player::setRange(int range)
 		this->range = range;
 }
 
-map::MoveResult
-Player::go(map::Direction & direction)
+void
+Player::go(map::Direction direction)
 {
 	if (! this || ! this->alive)
 		// If we don't exist (new Game) or we're die, nothing'll happen
-		return map::NOTHINGHAPPENED;
+		return;
 	bool orientChanged = (this->orient != direction);
 	if (orientChanged)
 		this->orient = direction;
 	map::MoveResult moveResult = map::Map::movePlayer(this->coords, direction);
 	if (moveResult == map::NOTHINGHAPPENED && orientChanged)
-		// Only orient has changed
-		return map::ORIENTCHANGED;
-	return moveResult;
+		Display::movePlayer(this, map::ORIENTCHANGED);
+	Display::movePlayer(this, moveResult);
 }
 
 void
