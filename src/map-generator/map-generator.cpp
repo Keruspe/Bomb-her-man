@@ -29,8 +29,7 @@ bool MapGenerator::isInit = false;
 void
 MapGenerator::generate(Grid & g)
 {
-	if (! MapGenerator::isInit)
-		MapGenerator::init();
+	MapGenerator::init();
 	
 	// Stock config things to avoid multiple callings to Config
 	int insertionProbabilityBaseHorizontal = Config::getInt("mgInsertionProbabilityBaseHorizontal");
@@ -113,8 +112,7 @@ MapGenerator::generate(Grid & g)
 int
 MapGenerator::random(int min, int max)
 {
-	if (! MapGenerator::isInit)
-		MapGenerator::init();
+	MapGenerator::init();
 	
 	// Random number between min and max
 	return rand() % (max - min + 1) + min;
@@ -123,8 +121,7 @@ MapGenerator::random(int min, int max)
 bool
 MapGenerator::throwDice(int percentage)
 {
-	if (! MapGenerator::isInit)
-		MapGenerator::init();
+	MapGenerator::init();
 	
 	// percentage % to return true
 	return (percentage > rand() % 100);
@@ -167,8 +164,7 @@ MapGenerator::horizontalScan(Grid & grid, Coords & coords)
 Coords
 MapGenerator::getRandomCoords()
 {
-	if (! MapGenerator::isInit)
-		MapGenerator::init();
+	MapGenerator::init();
 	
 	// Return random coords
 	Coords c;
