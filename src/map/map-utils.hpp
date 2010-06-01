@@ -101,7 +101,17 @@ namespace bombherman
 			{
 				return (this->x <= this->max && this->y <= this->max);
 			}
-
+			
+			/// Operator ==
+			/**
+			 * @return True if both Coords are equal
+			 */
+			bool
+			operator== (const Coords & other)
+			{
+				return (this->x == other.x && this->y == other.y);
+			}
+			
 			/// Destructor
 			~Coords() {}
 		} Coords;

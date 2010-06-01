@@ -187,7 +187,7 @@ Player::playerAt(map::Coords & c)
 	for (std::vector< Player * >::iterator i = Player::players.begin(),
 		i_end = Player::players.end() ; i != i_end ; ++i)
 			// Coords are equal ? That's the one we're looking for !
-			if((*i)->getCoords().x == c.x && (*i)->getCoords().y == c.y)
+			if((*i)->getCoords() == c)
 				return *i;
 	return 0;
 }
