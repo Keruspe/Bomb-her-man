@@ -171,6 +171,9 @@ namespace bombherman
 		/// Tells the player that his bomb has exploded (decreases planted bombs counter)
 		void bombHasExploded() { --this->plantedBombs; }
 	protected:
+		/// Private constructor, please call static newPlayer instead
+		Player();
+		
 		/// Number of bombs the player can plant (int)
 		int plantableBombs;
 		
@@ -197,9 +200,6 @@ namespace bombherman
 		
 		/// Number of dead people (unsigned)
 		static unsigned icyDeadPeople;
-	private:
-		/// Private constructor, please call static newPlayer instead
-		Player();
 	};
 };
 
