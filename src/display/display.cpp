@@ -445,21 +445,21 @@ Display::updateScores()
 		z = {0, 0, gZone.x, gZone.y},
 		dh = {0, 0, gZone.x, gZone.y},
 		dp = {0, 0, 2, 2};
+	SDL_Surface *sScoreBack = NULL;
 	if ( width > height )
 	{	// Horizontal screen -> Vertical scores
 		z.h = height;
 		dh.y = dh.h = z.h / nbAll;
 		sSize = z.w;
+		sScoreBack = svgToSurface(DATADIR"/graphics/scores/background-vertical.svg", sSize, sSize);
 	}
 	else
 	{	// Vertical screen -> Horizontal scores
 		z.w = width;
 		dh.x = dh.w = z.w / nbAll;
 		sSize = z.h;
+		sScoreBack = svgToSurface(DATADIR"/graphics/scores/background-horizontal.svg", sSize, sSize);
 	}
-	
-	SDL_Surface *sScoreBack = svgToSurface(DATADIR"/graphics/scores/background.svg", sSize, sSize);
-	
 	if ( dh.w > dh.h )
 	{
 		sSize /= 1.5;
