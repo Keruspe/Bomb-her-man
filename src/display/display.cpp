@@ -457,6 +457,9 @@ Display::updateScores()
 		dh.x = dh.w = z.w / nbAll;
 		sSize = z.h;
 	}
+	
+	SDL_Surface *sScoreBack = svgToSurface(DATADIR"/graphics/scores/background.svg", sSize, sSize);
+	
 	if ( dh.w > dh.h )
 	{
 		sSize /= 1.5;
@@ -474,11 +477,15 @@ Display::updateScores()
 	
 	cleanSurface(gScoresLayer);
 	gScoresLayer = SDL_CreateRGBSurface(flags, z.w, z.h, 32, 0, 0, 0, 0);
-	SDL_BlitSurface(sBackground, &z, gScoresLayer, NULL);
 	
-	SDL_Surface *gScoreBack = svgToSurface(DATADIR"/graphics/scores/background.svg");
+	SDL_Rect b = {0, 0, 0, 0};
+	for ( Uint32 i = 0 ; b.y < z.h ; ++i )
+	{
+		SDL_BlitSurface(sScoreBack, NULL, gScoresLayer, &b);
+		b.y = (i*sSize);
+	}
 	
-	SDL_FreeSurface(gScoreBack);
+	SDL_FreeSurface(sScoreBack);
 	
 	Sint32 *scores = reinterpret_cast<Sint32 *>(malloc(nbAll * sizeof(Sint32)));
 	Sint32 max = -10;
