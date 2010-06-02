@@ -434,52 +434,25 @@ Display::updateScores()
 	
 	if ( ( gZone.x == 0 ) && ( gZone.y == 0 ) ) return;
 	
-	SDL_Rect z = {0, 0, 0, 0}, dp = {0, 0, 0, 0}, dt = {0, 0, 0, 0};
 	
 	Uint32 sSize = 0, nbAll = ( Config::getInt("nbPlayers") + Config::getInt("nbAIs") );
 	if ( nbAll < 1 ) return;
 	
-	TTF_Font *font = TTF_OpenFont(DATADIR"/"FONT_FILE, (gSize*2));
-	if ( ! font )
-	{
-		bherr << TTF_GetError() << bhendl;
-		throw exceptions::display::NoSDLException("Impossible d'ouvrir la police");
-	}
 	
-	Uint16 dx = 0, dy = 0;
-	int wText, hText;
-	TTF_SizeText(font, "00", &wText, &hText);
+	SDL_Rect
+		z = {0, 0, gZone.x, gZone.y},
+		c = {0, 0, gZone.x, gZone.y};
 	if ( width > height )
 	{	// Horizontal screen -> Vertical scores
-		z.w = gZone.x;
 		z.h = height;
-		dy = z.h / nbAll;
-		sSize = dy / 4;
-		dp.x = sSize / 2 - gSize / 2;
-		dp.y = 5 * sSize / 4;
-		if ( dy < z.w )
-		{
-			dt.x = dp.y;
-			dt.y = sSize / 2 - hText / 2;
-		}
-		else
-			dt.y = dp.y + sSize - hText / 2;
+		c.y = c.h = z.h / nbAll;
+		sSize = z.w / 3;
 	}
 	else
 	{	// Vertical screen -> Horizontal scores
 		z.w = width;
-		z.h = gZone.y;
-		dx = z.w / nbAll;
-		sSize = dx / 4;
-		dp.x = 5 * sSize / 4;
-		dp.y = sSize / 2 - gSize / 2;
-		if ( dy < z.w )
-		{
-			dt.x = sSize / 2 - wText / 2;
-			dt.y = dp.x;
-		}
-		else
-			dt.x = dp.x + sSize - wText / 2;
+		c.x = c.w = z.w / nbAll;
+		sSize = z.h / 3;
 	}
 	
 	cleanSurface(gScoresLayer);
@@ -510,29 +483,31 @@ Display::updateScores()
 			svgToSurface(DATADIR"/graphics/scores/1/equal.svg", sSize, sSize),
 			svgToSurface(DATADIR"/graphics/scores/2/equal.svg", sSize, sSize)
 		};
-		
+	
+	TTF_Font *font = TTF_OpenFont(DATADIR"/"FONT_FILE, (sSize / 3));
+	if ( ! font )
+	{
+		bherr << TTF_GetError() << bhendl;
+		throw exceptions::display::NoSDLException("Impossible d'ouvrir la police");
+	}
+	
+	
 	for ( unsigned int i = 0 ; i < nbAll ; ++i )
 	{
 		int s = scores[i];
 		
 		SDL_Rect
 			h = {
-				( 2 * sSize / 3 ) + ( i * dx ),
-				( 2 * sSize / 3 ) + ( i * dy ),
+				( ( c.w - sSize ) / 4 ) + ( i * c.x ),
+				( ( c.h - sSize ) / 2 ) + ( i * c.y ),
 				sSize,
 				sSize
 			},
 			p = {
-				h.x + dp.x,
-				h.y + dp.y,
-				sSize,
-				sSize
-			},
-			t = {
-				h.x + dt.x,
-				h.y + dt.y,
-				z.w - ( sSize / 2 ),
-				z.h - ( sSize / 2 )
+				h.x + 4 * sSize / 3,
+				h.y + ( sSize - gSize ) / 2,
+				gSize,
+				gSize
 			};
 		
 		SDL_BlitSurface(( s == max ) ? ( ( neutral ) ? ( sEqual[i%2] ) : ( sWin[i%2] ) ) : ( sLose[i%2] ), NULL, gScoresLayer, &h);
@@ -541,13 +516,21 @@ Display::updateScores()
 		
 		SDL_Surface *textSurface = NULL;
 		std::ostringstream ost;
-		ost << std::setw(2) << std::setfill('0') << s;
+		ost << s;
 		std::string st(ost.str());
 		const char *text = st.c_str();
 		if ( ! ( textSurface = TTF_RenderUTF8_Blended(font, text, textColor) ) )
 			bherr << "Can't display the line" << text << bhendl;
 		else
 		{
+			int wText, hText;
+			TTF_SizeText(font, text, &wText, &hText);
+			SDL_Rect t = {
+					h.x + ( sSize - wText ) / 2,
+					h.y - hText + sSize / 3,
+					wText,
+					hText
+				};
 			SDL_BlitSurface(textSurface, NULL, gScoresLayer, &t);
 			SDL_FreeSurface(textSurface);
 		}
