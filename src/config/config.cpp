@@ -22,10 +22,10 @@
 
 // TODO DYNAMIC FILE FOR WINDOWS
 #ifdef __MINGW32__
-#define CONFIG_FILE /tmp/config.ini
+	#define CONFIG_FILE (std::string(getenv("AppData")) + std::string("/bomb-her-man/config.init")).c_str()
 #else
-#include <cstdlib>
-#define CONFIG_FILE (std::string(getenv("HOME")) + std::string("/.bomb-her-man")).c_str()
+	#include <cstdlib>
+	#define CONFIG_FILE (std::string(getenv("HOME")) + std::string("/.config/bomb-her-man/config")).c_str()
 #endif // __MINGW32__
 
 using namespace bombherman;
