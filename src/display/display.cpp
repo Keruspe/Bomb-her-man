@@ -444,7 +444,8 @@ Display::updateScores()
 	SDL_Rect
 		z = {0, 0, gZone.x, gZone.y},
 		dh = {0, 0, gZone.x, gZone.y},
-		dp = {0, 0, 2, 2};
+		dp = {0, 0, 2, 2},
+		db = {0, 0, 0, 0};
 	SDL_Surface *sScoreBack = NULL;
 	if ( width > height )
 	{	// Horizontal screen -> Vertical scores
@@ -452,6 +453,7 @@ Display::updateScores()
 		dh.y = dh.h = z.h / nbAll;
 		sSize = z.w;
 		sScoreBack = svgToSurface(DATADIR"/graphics/scores/background-vertical.svg", sSize, sSize);
+		db.y = sSize;
 	}
 	else
 	{	// Vertical screen -> Horizontal scores
@@ -459,6 +461,7 @@ Display::updateScores()
 		dh.x = dh.w = z.w / nbAll;
 		sSize = z.h;
 		sScoreBack = svgToSurface(DATADIR"/graphics/scores/background-horizontal.svg", sSize, sSize);
+		db.x = sSize;
 	}
 	if ( dh.w > dh.h )
 	{
@@ -482,7 +485,8 @@ Display::updateScores()
 	for ( Uint32 i = 0 ; b.y < z.h ; ++i )
 	{
 		SDL_BlitSurface(sScoreBack, NULL, gScoresLayer, &b);
-		b.y = (i*sSize);
+		b.x = (i*db.x);
+		b.y = (i*db.y);
 	}
 	
 	SDL_FreeSurface(sScoreBack);
