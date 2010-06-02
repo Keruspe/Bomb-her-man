@@ -39,7 +39,8 @@ Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
 		coords (map::Coords()),
 		orient(map::DOWN),
 		alive(true),
-		move_mutex(SDL_CreateMutex())
+		move_mutex(SDL_CreateMutex()),
+		currentMoves(0)
 {
 }
 
@@ -133,6 +134,10 @@ Player::go(map::Direction direction)
 	if (! this || ! this->alive)
 		// If we don't exist (new Game) or we're die, nothing'll happen
 		return;
+	if ( currentMoves < 2 )
+		++currentMoves;
+	else
+		return;
 	SDL_LockMutex(move_mutex);
 	bool orientChanged = (this->orient != direction);
 	if (orientChanged)
@@ -142,6 +147,7 @@ Player::go(map::Direction direction)
 		Display::movePlayer(this, map::ORIENTCHANGED);
 	Display::movePlayer(this, moveResult);
 	SDL_UnlockMutex(move_mutex);
+	--currentMoves;
 }
 
 void

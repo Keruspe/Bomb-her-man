@@ -205,6 +205,8 @@ namespace bombherman
 		
 		/// Mutex for handling moves
 		SDL_mutex * move_mutex;
+		/// Current number of moves move
+		Uint8 currentMoves;
 	};
 };
 
