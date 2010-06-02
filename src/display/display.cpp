@@ -56,8 +56,8 @@ SDL_Surface *Display::gBonuses[NB_BONUSES];
 SDL_Surface *Display::gBomb = NULL;
 SDL_Surface *Display::gExplosion = NULL;
 SDL_Surface *Display::gBarrel = NULL;
-SDL_Surface *Display::gWall = NULL;
-SDL_Surface *Display::gBack = NULL;
+SDL_Surface *Display::gTomb[2] = {NULL, NULL};
+SDL_Surface *Display::gFloor = NULL;
 
 
 int Display::gMapSize = 0;
@@ -187,9 +187,10 @@ Display::initSurfaces()
 {
 	if ( ! sDisplay ) init();
 	
+	
 	// Logo
 	SDL_Surface *icon = svgToSurface(DATADIR"/graphics/bomb-her-man.svg");
-	//SDL_WM_SetIcon(icon, NULL);
+	SDL_WM_SetIcon(icon, NULL);
 	SDL_FreeSurface(icon);
 	icon = NULL;
 	
@@ -205,13 +206,15 @@ Display::initSurfaces()
 	gBomb = svgToSurface(DATADIR"/graphics/bomb.svg");
 	
 	
-	// gWall
-	cleanSurface(gWall);
-	gWall = svgToSurface(DATADIR"/graphics/wall.svg");
+	// gTombs
+	cleanSurface(gTomb[0]);
+	cleanSurface(gTomb[1]);
+	gTomb[0] = svgToSurface(DATADIR"/graphics/tomb1.svg");
+	gTomb[1] = svgToSurface(DATADIR"/graphics/tomb2.svg");
 	
-	// gBack
-	cleanSurface(gBack);
-	gBack = svgToSurface(DATADIR"/graphics/back.svg");
+	// gFloor
+	cleanSurface(gFloor);
+	gFloor = svgToSurface(DATADIR"/graphics/floor.svg");
 	
 	// gBarrel
 	cleanSurface(gBarrel);
@@ -285,8 +288,9 @@ Display::quit()
 	cleanSurface(gBomb);
 	cleanSurface(gExplosion);
 	cleanSurface(gBarrel);
-	cleanSurface(gWall);
-	cleanSurface(gBack);
+	cleanSurface(gTomb[0]);
+	cleanSurface(gTomb[1]);
+	cleanSurface(gFloor);
 	
 	unsigned int max = Config::getInt("maxPlayers");
 	for ( unsigned int p = 0 ; p < max ; ++p )
@@ -494,9 +498,18 @@ Display::updateScores()
 	}
 	
 	// Scores heads
-	SDL_Surface *sWin = svgToSurface(DATADIR"/graphics/scores/win.svg", sSize, sSize);
-	SDL_Surface *sLose = svgToSurface(DATADIR"/graphics/scores/lose.svg", sSize, sSize);
-	SDL_Surface *sEqual = svgToSurface(DATADIR"/graphics/scores/equal.svg", sSize, sSize);
+	SDL_Surface *sWin[] = {
+			svgToSurface(DATADIR"/graphics/scores/1/win.svg", sSize, sSize),
+			svgToSurface(DATADIR"/graphics/scores/2/win.svg", sSize, sSize)
+		};
+	SDL_Surface *sLose[] = {
+			svgToSurface(DATADIR"/graphics/scores/1/lose.svg", sSize, sSize),
+			svgToSurface(DATADIR"/graphics/scores/2/lose.svg", sSize, sSize)
+		};
+	SDL_Surface *sEqual[] = {
+			svgToSurface(DATADIR"/graphics/scores/1/equal.svg", sSize, sSize),
+			svgToSurface(DATADIR"/graphics/scores/2/equal.svg", sSize, sSize)
+		};
 		
 	for ( unsigned int i = 0 ; i < nbAll ; ++i )
 	{
@@ -522,7 +535,7 @@ Display::updateScores()
 				z.h - ( sSize / 2 )
 			};
 		
-		SDL_BlitSurface(( s == max ) ? ( ( neutral ) ? ( sEqual ) : ( sWin ) ) : ( sLose ), NULL, gScoresLayer, &h);
+		SDL_BlitSurface(( s == max ) ? ( ( neutral ) ? ( sEqual[i%2] ) : ( sWin[i%2] ) ) : ( sLose[i%2] ), NULL, gScoresLayer, &h);
 		
 		SDL_BlitSurface(gPlayers[i][map::DOWN][0], NULL, gScoresLayer, &p);
 		
@@ -540,15 +553,17 @@ Display::updateScores()
 		}
 	}
 	
-	
 	updateDisplay(gScoresLayer, z);
 	
 	free(scores);
 	TTF_CloseFont(font);
 	
-	SDL_FreeSurface(sWin);
-	SDL_FreeSurface(sLose);
-	SDL_FreeSurface(sEqual);
+	SDL_FreeSurface(sWin[0]);
+	SDL_FreeSurface(sWin[1]);
+	SDL_FreeSurface(sLose[0]);
+	SDL_FreeSurface(sLose[1]);
+	SDL_FreeSurface(sEqual[0]);
+	SDL_FreeSurface(sEqual[1]);
 }
 
 void
@@ -556,7 +571,7 @@ Display::updateMap()
 {
 	updateScores();
 	
-	if ( ( ! gWall ) || ( ! gBack ) ) initSurfaces();
+	if ( ( ! gTomb[0] ) || ( ! gTomb[1] ) || ( ! gFloor ) ) initSurfaces();
 	
 	cleanSurface(gMapLayer);
 	gMapLayer = SDL_CreateRGBSurface(flags, gZone.w, gZone.h, 32, 0, 0, 0, 0);
@@ -572,9 +587,9 @@ Display::updateMap()
 		for(coords.x = 0 ; coords.x < gMapSize ; ++coords.x)
 		{
 			if ( map::Map::get(coords) == map::INDESTRUCTIBLE )
-				SDL_BlitSurface(gWall, NULL, gMapLayer, &r);
+				SDL_BlitSurface(gTomb[(coords.x+coords.y)%2], NULL, gMapLayer, &r);
 			else
-				SDL_BlitSurface(gBack, NULL, gMapLayer, &r);
+				SDL_BlitSurface(gFloor, NULL, gMapLayer, &r);
 			r.x += gSize;
 		}
 		r.x = 0;
@@ -588,7 +603,7 @@ void
 Display::updateBarrels()
 {
 	if ( ! gMapLayer ) return;
-	if ( ! gWall ) initSurfaces();
+	if ( ( ! gTomb[0] ) || ( ! gTomb[1] ) ) initSurfaces();
 	SDL_Rect r;
 	cleanSurface(gBarrelsLayer);
 	gBarrelsLayer = SDL_CreateRGBSurface(flags, gZone.w, gZone.h, 32, 0, 0, 0, 0);
