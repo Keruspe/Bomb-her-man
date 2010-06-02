@@ -214,7 +214,7 @@ Display::initSurfaces()
 	
 	// gFloor
 	cleanSurface(gFloor);
-	gFloor = svgToSurface(DATADIR"/graphics/floor.svg");
+	gFloor = svgToSurface(DATADIR"/graphics/floor.svg", gZone.w, gZone.h);
 	
 	// gBarrel
 	cleanSurface(gBarrel);
@@ -576,6 +576,8 @@ Display::updateMap()
 	cleanSurface(gMapLayer);
 	gMapLayer = SDL_CreateRGBSurface(flags, gZone.w, gZone.h, 32, 0, 0, 0, 0);
 	
+	SDL_BlitSurface(gFloor, NULL, gMapLayer, NULL);
+
 	map::Coords coords;
 	SDL_Rect r;
 	r.x = 0;
@@ -588,8 +590,6 @@ Display::updateMap()
 		{
 			if ( map::Map::get(coords) == map::INDESTRUCTIBLE )
 				SDL_BlitSurface(gTomb[(coords.x+coords.y)%2], NULL, gMapLayer, &r);
-			else
-				SDL_BlitSurface(gFloor, NULL, gMapLayer, &r);
 			r.x += gSize;
 		}
 		r.x = 0;
