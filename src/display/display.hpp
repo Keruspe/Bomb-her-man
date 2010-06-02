@@ -104,6 +104,7 @@ namespace bombherman
 		// To store the SDL text color
 		static SDL_Color textColor;
 		static SDL_Color highlightColor;
+		static SDL_Color scoreColor;
 		
 		// Max Width and Height of the display
 		static int widthMax, heightMax;
