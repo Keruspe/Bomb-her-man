@@ -69,6 +69,7 @@ RM=rm
 ECHO=echo
 CD=cd
 MKDIR=mkdir
+EXIT=exit
 
 DOC_MAKER=doxygen
 
@@ -92,18 +93,18 @@ clean-doc:
 
 install: all install-data
 	@ $(ECHO) Installing bomb-her-man in $(BINDIR)
-	@ $(INSTALL) $(INSTALLDIR) $(BINDIR)
-	@ $(INSTALL) $(INSTALLBIN) bomb-her-man $(BINDIR)/bomb-her-man
+	@ $(INSTALL) $(INSTALLDIR) $(BINDIR) 2>/dev/null
+	@ $(INSTALL) $(INSTALLBIN) bomb-her-man $(BINDIR)/bomb-her-man 2>/dev/null || ($(ECHO) "You must be root to install the game" && $(EXIT) -1)
 
 install-data:
 	@ $(ECHO) Installing datas in $(DATADIR)/bomb-her-man
-	@ for i in $(shell find data -type d); do $(INSTALL) $(INSTALLDIR) $(DATADIR)/$${i/data/bomb-her-man}; done
-	@ for i in $(shell find data -type f); do $(INSTALL) $(INSTALLFILE) $$i $(DATADIR)/$${i/data/bomb-her-man}; done
+	@ for i in $(shell find data -type d); do $(INSTALL) $(INSTALLDIR) $(DATADIR)/$${i/data/bomb-her-man}; done 2>/dev/null
+	@ for i in $(shell find data -type f); do $(INSTALL) $(INSTALLFILE) $$i $(DATADIR)/$${i/data/bomb-her-man}; done 2>/dev/null || ($(ECHO) "You must be root to install datas" && $(EXIT) -1)
 
 install-doc : doc
 	@ $(ECHO) Installing documentation in $(DOCDIR)/bomb-her-man
-	@ for i in $(shell find doc -type d); do $(INSTALL) $(INSTALLDIR) $$i $(DOCDIR)/$${i/doc/bomb-her-man}; done
-	@ for i in $(shell find doc -type f); do $(INSTALL) $(INSTALLFILE) $$i $(DOCDIR)/$${i/doc/bomb-her-man}; done
+	@ for i in $(shell find doc -type d); do $(INSTALL) $(INSTALLDIR) $$i $(DOCDIR)/$${i/doc/bomb-her-man}; done 2>/dev/null
+	@ for i in $(shell find doc -type f); do $(INSTALL) $(INSTALLFILE) $$i $(DOCDIR)/$${i/doc/bomb-her-man}; done 2>/dev/null || ($(ECHO) "You must be root to install documentation" && $(EXIT) -1)
 
 .cpp.o:
 	@ $(ECHO) Compiling $<
