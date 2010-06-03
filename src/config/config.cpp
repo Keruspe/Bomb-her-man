@@ -151,8 +151,8 @@ Config::init()
 	config["maxCapacity"] = 5;
 	config["minCapacity"] = 1;
 	
-	config["defaultPlantableBombs"] = config["maxCapacity"].iValue / 2;
-	config["defaultRange"] = config["rangeVariation"].iValue;
+	config["defaultPlantableBombs"] = config["maxCapacity"].iValue / 2.0;
+	config["defaultRange"] = config["rangeVariation"].iValue + 1;
 	
 	config["minimumScore"] = -99;
 	config["maximumScore"] = config["maxMaps"].iValue;
