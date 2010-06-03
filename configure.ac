@@ -23,7 +23,7 @@ AC_ARG_ENABLE([anim],
 #	[build_doc=no
 #	AC_MSG_RESULT([no])])
 
-AC_MSG_CHECKING([whether to activate anim])
+AC_MSG_CHECKING([whether to activate debug])
 AC_ARG_ENABLE([debug],
 	AS_HELP_STRING([--enable-debug], [Activate debug]),
 	[debug=$enableval
