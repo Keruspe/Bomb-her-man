@@ -430,25 +430,45 @@ Display::displayMenu(Menu *menu)
 }
 
 void
-Display::updateScores()
+Display::displayScores()
+{
+	updateScores(true);
+}
+
+void
+Display::updateScores(bool final)
 {
 	if ( ! sDisplay ) init();
-	
-	if ( ( gZone.x == 0 ) && ( gZone.y == 0 ) ) return;
-	
 	
 	Uint32 sSize = 0, nbAll = ( Config::getInt("nbPlayers") + Config::getInt("nbAIs") );
 	if ( nbAll < 1 ) return;
 	
 	
 	SDL_Rect
-		z = {0, 0, gZone.x, gZone.y},
-		dh = {0, 0, gZone.x, gZone.y},
+		z = {0, 0, 0, 0},
+		dh = {0, 0, 0, 0},
 		dp = {0, 0, 2, 2},
 		db = {0, 0, 0, 0};
 	SDL_Surface *sScoreBack = NULL;
-	if ( width > height )
-	{	// Horizontal screen -> Vertical scores
+	bool vertical(true);
+	if ( final )
+	{
+		dh.w = z.w = width;
+		dh.h = z.h = height;
+		if ( height < width )
+			vertical = false;
+	}
+	else
+	{
+		if ( ( gZone.x == 0 ) && ( gZone.y == 0 ) ) return;
+		dh.w = z.w = gZone.x;
+		dh.h = z.h = gZone.y;
+		if ( z.w == 0 )
+			vertical = true;
+	}
+	
+	if ( vertical )
+	{	// Vertical scores
 		z.h = height;
 		dh.y = dh.h = z.h / nbAll;
 		sSize = z.w;
@@ -456,33 +476,35 @@ Display::updateScores()
 		db.y = sSize;
 	}
 	else
-	{	// Vertical screen -> Horizontal scores
+	{	// Horizontal scores
 		z.w = width;
 		dh.x = dh.w = z.w / nbAll;
 		sSize = z.h;
 		sScoreBack = svgToSurface(DATADIR"/graphics/scores/background-horizontal.svg", sSize, sSize);
 		db.x = sSize;
 	}
+	
+	sSize /= 1.5;
 	if ( dh.w > dh.h )
 	{
-		sSize /= 1.5;
 		dp.x = sSize;
 		dp.y = ( sSize - gSize ) / 2;
 		dp.w = 4;
 	}
 	else
 	{
-		sSize /= 1;
 		dp.x = ( sSize - gSize ) / 2;
 		dp.y = sSize;
 		dp.h = 4;
 	}
 	
+	
 	cleanSurface(gScoresLayer);
 	gScoresLayer = SDL_CreateRGBSurface(flags, z.w, z.h, 32, 0, 0, 0, 0);
 	
+	
 	SDL_Rect b = {0, 0, 0, 0};
-	for ( Uint32 i = 0 ; b.y < z.h ; ++i )
+	for ( Uint32 i = 0 ; ( b.x < z.w ) && ( b.y < z.h ) ; ++i )
 	{
 		SDL_BlitSurface(sScoreBack, NULL, gScoresLayer, &b);
 		b.x = (i*db.x);
@@ -493,7 +515,7 @@ Display::updateScores()
 	
 	Sint32 *scores = reinterpret_cast<Sint32 *>(malloc(nbAll * sizeof(Sint32)));
 	Sint32 max = -10;
-	bool neutral = false;
+	bool neutral(false);
 	for ( std::vector< Player * >::iterator i = Player::players.begin(), e = Player::players.end() ; i != e ; ++i )
 	{
 		Sint32 s = (*i)->getScore();
@@ -528,23 +550,15 @@ Display::updateScores()
 	{
 		int s = scores[i];
 		
-		SDL_Rect
-			h = {
+		SDL_Rect h = {
 				( ( dh.w - sSize ) / dp.w ) + ( i * dh.x ),
 				( ( dh.h - sSize ) / dp.h ) + ( i * dh.y ),
 				sSize,
 				sSize
-			},
-			p = {
-				h.x + dp.x,
-				h.y + dp.y,
-				gSize,
-				gSize
 			};
 		
 		SDL_BlitSurface(( s == max ) ? ( ( neutral ) ? ( sEqual[i%2] ) : ( sWin[i%2] ) ) : ( sLose[i%2] ), NULL, gScoresLayer, &h);
 		
-		SDL_BlitSurface(gPlayers[i][map::DOWN][0], NULL, gScoresLayer, &p);
 		
 		SDL_Surface *textSurface = NULL;
 		std::ostringstream ost;
@@ -552,7 +566,7 @@ Display::updateScores()
 		std::string st(ost.str());
 		const char *text = st.c_str();
 		if ( ! ( textSurface = TTF_RenderUTF8_Blended(font, text, scoreColor) ) )
-			bherr << "Can't display the line" << text << bhendl;
+			bherr << "Can't display the line" << st << bhendl;
 		else
 		{
 			int wText, hText;
@@ -565,6 +579,15 @@ Display::updateScores()
 				};
 			SDL_BlitSurface(textSurface, NULL, gScoresLayer, &t);
 			SDL_FreeSurface(textSurface);
+		}
+		if ( ! final )
+			SDL_Rect p = {
+					h.x + dp.x,
+					h.y + dp.y,
+					gSize,
+					gSize
+				};
+			SDL_BlitSurface(gPlayers[i][map::DOWN][0], NULL, gScoresLayer, &p);
 		}
 	}
 	
@@ -782,4 +805,3 @@ Display::plantBomb(map::Coords coords)
 	
 	updatePlayers();
 }
-
