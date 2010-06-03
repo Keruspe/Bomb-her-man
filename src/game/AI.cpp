@@ -19,10 +19,7 @@
 
 #include "AI.hpp"
 
-AI::AI () : Player ()
-{
-	this->init();
-}
+using namespace bombherman;
 
 void
 AI::newAI()
@@ -33,14 +30,14 @@ AI::newAI()
 }
 
 void
-AI::init ()
+AI::init()
 {
 	if ( SDL_CreateThread(doThings, this) == NULL )
 		bherr <<  "Unable to create thread to manage an AI player : " << SDL_GetError();
 }
 
 int
-AI::doThings (void * param)
+AI::doThings(void * param)
 {
 	AI * ai = static_cast<AI *>(param);
 }

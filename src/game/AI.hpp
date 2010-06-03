@@ -26,8 +26,6 @@
 #include "player.hpp"
 #include "bombherman.hpp"
 
-using namespace bombherman;
-
 namespace bombherman
 {
 	/// A player controlled by AI
@@ -35,12 +33,12 @@ namespace bombherman
 		public Player
 	{
 	public:
-		// Create a new AI
+		/// Create a new AI
 		static void newAI();
 	private:
-		AI ();
-		void init ();
-		static int doThings (void *);
+		AI() : Player() { this->init(); }
+		void init();
+		static int doThings(void *);
 	};
 }
 
