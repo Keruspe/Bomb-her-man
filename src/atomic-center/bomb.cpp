@@ -44,6 +44,16 @@ Bomb::Bomb (int player, map::Coords c, Uint32 _range) :
 		bherr <<  "Unable to create thread to manage a bomb : " << SDL_GetError();
 }
 
+Bomb::Bomb (const Bomb & other) :
+	explosion(other.explosion),
+	player(other.player),
+	range(other.range),
+	coords(other.coords),
+	explodedCells(other.explodedCells),
+	chain(other.chain)
+{
+}
+
 int
 Bomb::waitExplode(void *p)
 {
