@@ -1,5 +1,5 @@
-AC_PREREQ([2.65])
-AC_INIT(bomb-her-man, 0.1, "")
+AC_PREREQ(2.65)
+AC_INIT([bomb-her-man],[0.1],[""])
 
 AC_CONFIG_SRCDIR([src/bomb-her-man.cpp])
 AC_CONFIG_HEADERS([src/include/config.h])
@@ -65,9 +65,10 @@ fi
 
 AM_CONDITIONAL(ANIMATION, [test "x$build_anim" = "xyes"])
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 	Makefile
 	src/Makefile
 	data/Makefile
 	data/graphics/Makefile
 ])
+AC_OUTPUT
