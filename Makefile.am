@@ -1,8 +1,7 @@
 EXTRA_DIST = \
 		AUTHORS \
-		VERSION \
 		NEWS \
+		README \
 		COPYING
 
 SUBDIRS = src data
-

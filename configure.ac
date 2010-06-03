@@ -48,8 +48,14 @@ PKG_CHECK_MODULES(LIBRSVG, librsvg-2.0)
 AC_SUBST(LIBRSVG_CFLAGS)
 AC_SUBST(LIBRSVG_LIBS)
 
-#if test "x$build_doc" = "x"; then
-#	AC_PROGS_DOXYGEN
+#if test "x$build_doc" = "xyes"; then
+#	AC_ARG_VAR([DOXYGEN],[the 'doxygen' program used to build documentation])
+#	AC_PATH_PROG([DOXYGEN],[doxygen],[])
+#	if test "x$DOXYGEN" = "x"; then
+#		AC_MSG_NOTICE([==> doxygen command not found!])
+#		AC_MSG_NOTICE([==> Set DOXYGEN variable if present in non-standard path!])
+#		AC_MSG_ERROR([doxygen is mandatory to build documentation : will stop here!])
+#	fi
 #fi
 
 if test "x$debug" = "xyes"; then
