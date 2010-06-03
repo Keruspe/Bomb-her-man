@@ -581,6 +581,7 @@ Display::updateScores(bool final)
 			SDL_FreeSurface(textSurface);
 		}
 		if ( ! final )
+		{
 			SDL_Rect p = {
 					h.x + dp.x,
 					h.y + dp.y,
