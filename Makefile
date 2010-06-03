@@ -25,10 +25,10 @@ LDFLAGS+=$(SVG_LDFLAGS)
 #FLAC_CXXFLAGS=$(shell pkg-config --cflags flac++)
 #FLAC_LDFLAGS=$(shell pkg-config --libs flac++)
 
-ifdef ANIM
-CXXFLAGS+= -DANIM_IMAGES=4 -DANIM_TIME=400
-else
+ifdef NOANIM
 CXXFLAGS+= -DANIM_IMAGES=1
+else
+CXXFLAGS+= -DANIM_IMAGES=4 -DANIM_TIME=400
 endif
 
 CXX=g++
