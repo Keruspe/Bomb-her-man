@@ -1,2 +1,16 @@
 doc
 bomb-her-man
+aclocal.m4
+autom4te.cache
+config.log
+config.status
+configure
+depcomp
+install-sh
+Makefile
+Makefile.in
+missing
+config.h
+config.h.in
+stamp-h1
+.deps
