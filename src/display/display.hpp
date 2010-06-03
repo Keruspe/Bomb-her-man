@@ -131,7 +131,7 @@ namespace bombherman
 		static SDL_Surface *gTomb[2];
 		static SDL_Surface *gFloor;
 		
-		static int gMapSize;
+		static Uint32 gMapSize;
 		static Uint16 gSize;
 		static SDL_Rect gZone;
 	};

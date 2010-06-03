@@ -246,7 +246,7 @@ void
 Menu::right()
 {
 	// see Menu::left() for comments
-	int n, m, p;
+	int n, m;
 	bool update = true;
 	switch ( this->type )
 	{
