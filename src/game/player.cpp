@@ -131,14 +131,20 @@ Player::setRange(Uint32 range)
 void
 Player::go(map::Direction direction)
 {
-	if (! this || ! this->alive)
-		// If we don't exist (new Game) or we're die, nothing'll happen
+	if (! this)
+		// If we don't exist (new Game), nothing'll happen
 		return;
-	if ( currentMoves < 2 )
-		++currentMoves;
+	if ( this->currentMoves < 2 )
+		++this->currentMoves;
 	else
 		return;
 	SDL_LockMutex(move_mutex);
+	if (! this->alive)
+	{
+		// We-re dead
+		SDL_UnlockMutex(this->move_mutex);
+		return;
+	}
 	bool orientChanged = (this->orient != direction);
 	if (orientChanged)
 		this->orient = direction;
@@ -146,8 +152,8 @@ Player::go(map::Direction direction)
 	if (moveResult == map::NOTHINGHAPPENED && orientChanged)
 		Display::movePlayer(this, map::ORIENTCHANGED);
 	Display::movePlayer(this, moveResult);
-	SDL_UnlockMutex(move_mutex);
-	--currentMoves;
+	SDL_UnlockMutex(this->move_mutex);
+	--this->currentMoves;
 }
 
 void
