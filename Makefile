@@ -9,7 +9,7 @@ static-sdl=static-
 static-pkg=--static
 endif
 
-WARNINGS_CFLAGS=-Wall -Wextra -Weffc++ -Wstrict-null-sentinel -Wno-non-template-friend -Wold-style-cast -Wno-pmf-conversions -Wsign-promo
+WARNINGS_CFLAGS=-Wall -Wextra -Weffc++ -Wstrict-null-sentinel -Wno-non-template-friend -Wold-style-cast -Wno-pmf-conversions -Wsign-promo -Werr
 CXXFLAGS+=$(WARNING_CFLAGS)
 
 SDL_CXXFLAGS=$(shell sdl-config --cflags)
