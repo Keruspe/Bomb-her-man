@@ -70,15 +70,17 @@ Game::main()
 		{
 		case SDL_QUIT:
 			Game::playing = false;
-			break;
+		break;
 		case SDL_KEYDOWN:
 			if ( Game::currentMenu )
-				SDL_CreateThread(&bombherman::Game::eventMenu, &event.key);
+				Game::eventMenu(&event.key);
+			else if ( Game::mapCount < 0 )
+				Game::changeMenu(Menu::MAIN);
 			else
-				Game::threads.push_back(SDL_CreateThread(&bombherman::Game::eventGame, &event.key));
-			break;
+				Game::threads.push_back(SDL_CreateThread(Game::eventGame, &event.key));
+		break;
 		default:
-			break;
+		break;
 		}
 	}
 	Game::quit();
@@ -122,7 +124,9 @@ Game::nextMap()
 	Game::waitThreads();
 	map::Map::deleteMap();
 	if ( --Game::mapCount < 0 )
-		changeMenu(Menu::MAIN);
+	{
+		Display::displayScores();
+	}
 	else
 	{
 		// We still have maps to play on !

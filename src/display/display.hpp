@@ -79,6 +79,9 @@ namespace bombherman
 		 * @param cells Which cells (a vector of Coords) the bomb destroyed
 		 */
 		static void explode(map::Coords coords, std::vector<map::Coords> cells) { updateBarrels(); }
+		
+		/// Show the final scores screen
+		static void displayScores();
 	private:
 		static SDL_Surface *svgToSurface(std::string, Uint32 = gSize, Uint32 = gSize);
 		static void initSurfaces();
@@ -87,7 +90,7 @@ namespace bombherman
 		static void updateDisplay(SDL_Surface *, Uint16 = 0, Uint16 = 0, Uint16 = 0, Uint16 = 0);
 		
 		/// Update the scores "panel"
-		static void updateScores();
+		static void updateScores(bool = false);
 		
 		/// Update the barrels
 		static void updateBarrels();
