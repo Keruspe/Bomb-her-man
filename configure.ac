@@ -28,8 +28,8 @@ AC_ARG_ENABLE([debug],
 	AS_HELP_STRING([--enable-debug], [Activate debug]),
 	[debug=$enableval
 	AC_MSG_RESULT([$enableval])],
-	[debug=yes
-	AC_MSG_RESULT([yes])])
+	[debug=no
+	AC_MSG_RESULT([no])])
 
 AC_PROG_CXX
 AC_PROG_INSTALL
