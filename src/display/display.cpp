@@ -825,21 +825,25 @@ Display::plantBomb(map::Coords coords)
 }
 
 void
-Display::explode(map::Coords, std::vector<map::Coords> cells)
+Display::explode(map::Coords bomb, std::vector<map::Coords> cells)
 {
 	#if ANIM_IMAGES > 1
 	Uint32 size = cells.size();
+	SDL_Rect r = {
+		gZone.x + bomb.x * gSize,
+		gZone.y + bomb.y * gSize,
+		gSize,
+		gSize
+	};
+	updateDisplay(gExplosion, r);
+	SDL_Delay(ANIM_TIME/(2*size));
 	for ( std::vector<map::Coords>::iterator i = cells.begin(),
 			e = cells.end() ; i != e ; ++i )
 	{
-		SDL_Rect r = {
-			gZone.x + i->x * gSize,
-			gZone.y + i->y * gSize,
-			gSize,
-			gSize
-		};
+		r.x = gZone.x + i->x * gSize;
+		r.y = gZone.y + i->y * gSize;
 		updateDisplay(gExplosion, r);
-		SDL_Delay(ANIM_TIME/size);
+		SDL_Delay(ANIM_TIME/(2*size));
 	}
 	#endif
 	updateBarrels();
