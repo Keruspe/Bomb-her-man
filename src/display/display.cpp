@@ -837,6 +837,8 @@ Display::explode(map::Coords, std::vector<map::Coords> cells)
 			gSize
 		};
 		updateDisplay(gExplosion, r);
+		SDL_Delay(100);
 	}
+	SDL_Delay(100);
 	updateBarrels();
 }
