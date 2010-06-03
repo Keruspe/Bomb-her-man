@@ -806,3 +806,9 @@ Display::plantBomb(map::Coords coords)
 	
 	updatePlayers();
 }
+
+void
+Display::explode(map::Coords, std::vector<map::Coords>)
+{
+	updateBarrels();
+}

@@ -78,7 +78,7 @@ namespace bombherman
 		 * @param coords Where the bomb was placed
 		 * @param cells Which cells (a vector of Coords) the bomb destroyed
 		 */
-		static void explode(map::Coords coords, std::vector<map::Coords> cells) { updateBarrels(); }
+		inline static void explode(map::Coords coords, std::vector<map::Coords> cells);
 		
 		/// Show the final scores screen
 		static void displayScores();
