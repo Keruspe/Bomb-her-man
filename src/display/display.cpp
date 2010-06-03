@@ -199,8 +199,17 @@ Display::initSurfaces()
 	// sBackground
 	cleanSurface(sBackground);
 	sBackground = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
-	SDL_FillRect(sBackground, NULL, 0x00444444);
-	
+	SDL_FillRect(sBackground, NULL, 0x00d2995a);
+	Uint32 sBackSize = 0;
+	if ( width > height )
+		sBackSize = height / 2;
+	else if ( height > ( width * 2 ) )
+		sBackSize = width;
+	else
+		sBackSize = width / 2;
+	SDL_Surface *sBackTemp = svgToSurface(DATADIR"/graphics/background.svg", sBackSize, sBackSize * 2);
+	SDL_BlitSurface(sBackTemp, NULL, sBackground, NULL);
+	SDL_FreeSurface(sBackTemp);
 	
 	
 	// gBomb
