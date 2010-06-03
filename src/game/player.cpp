@@ -37,9 +37,9 @@ Player::Player() :
 	plantedBombs (0),
 	score (0),
 	id (Player::players.size() + 1),
+	alive(true),
 	coords (map::Coords()),
 	orient(map::DOWN),
-	alive(true),
 	move_mutex(SDL_CreateMutex()),
 	currentMoves(0)
 {
