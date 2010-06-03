@@ -101,10 +101,7 @@ Config::init()
 	config["mapSize"] = 15;
 	
 	config["maxPlayers"] = 2;
-	config["maxMaps"] = 10;
-	
-	config["defaultPlantableBombs"] = 3;
-	config["defaultRange"] = 2;
+	config["maxMaps"] = 999;
 	
 	config["mgInsertionProbabilityBase"] = 100;
 	config["mgInsertionProbabilityBaseHorizontal"] = 50;
@@ -118,22 +115,15 @@ Config::init()
 	config["nbAIs"] = 0;
 	
 	config["bonusApparitionProbability"] = 100 - config["mgInsertionProbabilityBarrel"].iValue;
-	config["rangeVariation"] = config["mapSize"].iValue / 10;
-	config["maxRange"] = config["mapSize"].iValue / 3;
-	config["minRange"] = 1;
-	config["capacityVariation"] = 1;
-	config["maxCapacity"] = 5;
-	config["minCapacity"] = 1;
 	
 	config["suicideMalus"] = -2;
 	config["killBonus"] = 1;
-	config["minimumScore"] = -9;
-	config["maximumScore"] = 99;
-
+	
 	config["timeBeforeExplosion"] = 5;
 	
 	/*
-	 * Then read the file
+	 * Then read the file for *some* things
+	 * (others will be overriden)
 	 */
 	read();
 	
@@ -149,6 +139,24 @@ Config::init()
 		config["nbMaps"] = config["maxMaps"];
 	if ( config["mapSize"].iValue < 15 )
 		config["mapSize"] = 15;
+	
+	/*
+	 * Set some relative stuff
+	 */
+	config["maxRange"] = config["mapSize"].iValue / 3;
+	config["minRange"] = 1;
+	config["rangeVariation"] = config["mapSize"].iValue / 10;
+	
+	config["capacityVariation"] = 1;
+	config["maxCapacity"] = 5;
+	config["minCapacity"] = 1;
+	
+	config["defaultPlantableBombs"] = config["maxCapacity"].iValue / 2;
+	config["defaultRange"] = config["rangeVariation"].iValue;
+	
+	config["minimumScore"] = -99;
+	config["maximumScore"] = config["maxMaps"].iValue;
+	
 	
 	Config::isInit = true;
 }
