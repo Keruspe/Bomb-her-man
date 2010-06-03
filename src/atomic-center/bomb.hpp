@@ -42,8 +42,9 @@ namespace bombherman
 			/**
 			 * @param player The id of the player who planted the bomb (int)
 			 * @param c The coords where the bomb has been planted (map::Coords)
+			 * @param _range The range of the explosion (Uint32)
 			 */
-			Bomb(int player, map::Coords c);
+			Bomb(int player, map::Coords c, Uint32 _range);
 			
 			/// Make a bomb explode
 			/**
@@ -66,6 +67,7 @@ namespace bombherman
 			static SDL_mutex * mutex;
 			SDL_sem *explosion;
 			int player;
+			Uint32 range;
 			map::Coords coords;
 			std::vector<map::Coords> explodedCells;
 			std::vector<map::Coords> chain;

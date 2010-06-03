@@ -35,9 +35,9 @@ namespace bombherman
 		
 		/// Range getter
 		/**
-		 * @return The actual range of the player's bombs (int)
+		 * @return The actual range of the player's bombs (Uint32)
 		 */
-		int getRange() { return this->range; }
+		Uint32 getRange() { return this->range; }
 		
 		/// Coords getter
 		/**
@@ -108,15 +108,15 @@ namespace bombherman
 		
 		/// Range setter
 		/**
-		 * @param range The new range for the player (int)
+		 * @param range The new range for the player (Uint32)
 		 */
-		void setRange(int range);
+		void setRange(Uint32 range);
 		
 		/// Range adder
 		/**
-		 * @param range The range to add to the player, make it negative to remove (int)
+		 * @param range The range to add to the player, make it negative to remove (Uint32)
 		 */
-		void addToRange(int range) { this->setRange(this->range + range); }
+		void addToRange(Uint32 range) { this->setRange(this->range + range); }
 		
 		/// Make the player plant a bomb
 		void plantBomb();
@@ -179,8 +179,8 @@ namespace bombherman
 		/// Number of bombs the player can plant (int)
 		int plantableBombs;
 		
-		/// Current range (int)
-		int range;
+		/// Current range (Uint32)
+		Uint32 range;
 		
 		/// Number of planted bombs (int)
 		int plantedBombs;

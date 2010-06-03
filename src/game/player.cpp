@@ -118,7 +118,7 @@ Player::reInit(void * dummy)
 }
 
 void
-Player::setRange(int range)
+Player::setRange(Uint32 range)
 {
 	if (range < Config::getInt("minRange"))
 		this->range = Config::getInt("minRange");
@@ -184,7 +184,7 @@ Player::plantBomb()
 {
 	if (! this->isAbleToPlantBomb())
 		return;
-	if ( bomb::AtomicCenter::plantBomb(this->id, this->coords) )
+	if ( bomb::AtomicCenter::plantBomb(this->id, this->coords, this->range) )
 		// The bomb has been planted !
 		++this->plantedBombs;
 }

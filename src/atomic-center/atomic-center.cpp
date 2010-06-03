@@ -29,7 +29,7 @@ std::vector<std::vector<Bomb *> > AtomicCenter::bombs;
 int AtomicCenter::numberOfBombs = 0;
 
 void
-AtomicCenter::boum ()
+AtomicCenter::boum()
 {
 	// Make all bombs explode
 	for ( std::vector<std::vector<Bomb *> >::iterator i = bombs.begin(),
@@ -46,7 +46,7 @@ AtomicCenter::boum ()
 }
 
 bool
-AtomicCenter::plantBomb (int player, map::Coords & c)
+AtomicCenter::plantBomb(int player, map::Coords & c, Uint32 range)
 {
 	if ( bombs.empty() )
 	{
@@ -59,7 +59,7 @@ AtomicCenter::plantBomb (int player, map::Coords & c)
 		return false;
 	
 	// The bomb has been planted
-	Bomb * bomb = new Bomb(player, c);
+	Bomb * bomb = new Bomb(player, c, range);
 	bombs[c.x][c.y] = bomb;
 	++AtomicCenter::numberOfBombs;
 	return true;

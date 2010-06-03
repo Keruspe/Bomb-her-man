@@ -31,10 +31,11 @@ using namespace bombherman::bomb;
 SDL_mutex * Bomb::mutex = SDL_CreateMutex ();
 bool Bomb::gameOver = false;
 
-Bomb::Bomb (int player, map::Coords c) :
+Bomb::Bomb (int player, map::Coords c, Uint32 _range) :
 	explosion(SDL_CreateSemaphore(0)),
 	player(player),
-	coords(c)
+	coords(c),
+	range(_range)
 {
 	Display::plantBomb(c);
 	if ( SDL_CreateThread(waitExplode, this) == NULL )
@@ -70,12 +71,11 @@ Bomb::explode()
 	Player * p = Player::getPlayer(this->player);
 	if ( p ) // The player still exists (new Game ...)
 	{
-		Uint32 range = static_cast<Uint32>(p->getRange());
 		if ( map::Map::get(coords) == map::PLAYONBOMB && ! Bomb::gameOver )
 			if ( p->kill(Player::playerAt(coords)) )
 				Bomb::gameOver = true;
 		bool up(true), down(true), right(true), left(true);
-		for ( Uint32 i(1) ; i <= range ; ++i )
+		for ( Uint32 i(1) ; i <= this->range ; ++i )
 		{
 			if ( up )
 				up =    check(coords.x, coords.y - i);
