@@ -138,7 +138,7 @@ Config::init()
 		config["nbAIs"] = 0;
 	}
 	if ( config["nbMaps"].iValue < 1 )
-		config["nbMaps"] = config["maxMaps"];
+		config["nbMaps"] = 6;
 	if ( config["mapSize"].iValue < 15 )
 		config["mapSize"] = 15;
 	
