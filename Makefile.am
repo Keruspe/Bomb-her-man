@@ -8,7 +8,9 @@ EXTRA_DIST = \
 
 SUBDIRS = src
 
-pkgdata_DATA = \
+graphicsdir = $(pkgdatadir)/graphics
+
+nobase_graphics_DATA = \
 	data/graphics/players/1/0/2.svg \
 	data/graphics/players/1/0/3.svg \
 	data/graphics/players/1/0/1.svg \
@@ -41,18 +43,12 @@ pkgdata_DATA = \
 	data/graphics/players/2/2/3.svg \
 	data/graphics/players/2/2/1.svg \
 	data/graphics/players/2/2/0.svg \
-	data/graphics/bomb.svg \
 	data/graphics/bonuses/2.svg \
 	data/graphics/bonuses/3.svg \
 	data/graphics/bonuses/5.svg \
 	data/graphics/bonuses/6.svg \
 	data/graphics/bonuses/4.svg \
 	data/graphics/bonuses/1.svg \
-	data/graphics/tomb2.svg \
-	data/graphics/explo.svg \
-	data/graphics/tomb1.svg \
-	data/graphics/floor.svg \
-	data/graphics/barrel.svg \
 	data/graphics/scores/background-vertical.svg \
 	data/graphics/scores/background-horizontal.svg \
 	data/graphics/scores/1/lose.svg \
@@ -62,5 +58,11 @@ pkgdata_DATA = \
 	data/graphics/scores/2/win.svg \
 	data/graphics/scores/2/equal.svg \
 	data/graphics/background.svg \
+	data/graphics/bomb.svg \
+	data/graphics/tomb1.svg \
+	data/graphics/tomb2.svg \
+	data/graphics/explo.svg \
+	data/graphics/floor.svg \
+	data/graphics/barrel.svg \
 	data/graphics/bomb-her-man.svg
 
