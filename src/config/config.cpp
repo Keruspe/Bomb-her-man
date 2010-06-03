@@ -25,7 +25,9 @@
 	#define CONFIG_FILE (std::string(getenv("AppData")) + std::string("/bomb-her-man/config.init")).c_str()
 #else
 	#include <cstdlib>
-	#define CONFIG_FILE (std::string(getenv("HOME")) + std::string("/.config/bomb-her-man/config")).c_str()
+	#include <sys/stat.h>
+	#define CONFIG_DIR (std::string(getenv("HOME")) + std::string("/.config/bomb-her-man/")).c_str()
+	#define CONFIG_FILE (std::string(CONFIG_DIR) + std::string("config")).c_str()
 #endif // __MINGW32__
 
 using namespace bombherman;
@@ -178,6 +180,11 @@ Config::read()
 void
 Config::write()
 {
+	#ifndef __MINGW32__
+	// Create the directory
+	mkdir(CONFIG_DIR, 0755);
+	#endif  // __MINGW32__
+
 	// Open the file
 	std::ofstream file(CONFIG_FILE, std::ios::out | std::ios::trunc);
 	
