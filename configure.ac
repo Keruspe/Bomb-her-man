@@ -53,7 +53,7 @@ AC_SUBST(LIBRSVG_LIBS)
 #fi
 
 if test "x$debug" = "xyes"; then
-	DEBUG_CXXFLAGS="-g -Wall -Wextra -Weffc++ -Wstrict-null-sentinel -Wno-non-template-friend -Wold-style-cast -Wno-pmf-conversions -Wsign-promo"
+	DEBUG_CXXFLAGS="-g -Wall -Wextra -Weffc++ -Wstrict-null-sentinel -Wno-non-template-friend -Wold-style-cast -Wno-pmf-conversions -Wsign-promo -Werror"
 	AC_SUBST(DEBUG_CXXFLAGS)
 fi
 
