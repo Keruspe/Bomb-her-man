@@ -62,5 +62,4 @@ AM_CONDITIONAL(ANIMATION, [test "x$build_anim" = "xyes"])
 AC_OUTPUT([
 	Makefile
 	src/Makefile
-	data/Makefile
 ])

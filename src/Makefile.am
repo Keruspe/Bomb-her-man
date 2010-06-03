@@ -40,7 +40,7 @@ bomb_her_man_SOURCES = \
 bomb_her_man_LDADD = \
 	$(LIBRSVG_LIBS) \
 	$(CAIRO_LIBS) \
-	-lSDL_ttf $(SDL_LIBS)
+	$(SDL_LIBS)
 
 
 ACLOCAL_AMFLAGS = -I m4
@@ -55,7 +55,7 @@ endif
 
 AM_CPPFLAGS = \
 	-Iinclude/ \
-	-DDATADIR=\"$(datadir)\" \
+	-DDATADIR=\"$(pkgdatadir)\" \
 	$(ANIM_CXXFLAGS) \
 	$(CAIRO_CFLAGS) \
 	$(LIBRSVG_CFLAGS) \

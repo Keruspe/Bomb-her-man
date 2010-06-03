@@ -1,2 +1,0 @@
-data_EXTRA = \
-	graphics
