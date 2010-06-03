@@ -1,7 +1,8 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * Bomb-her-man
- * Copyright (C) Hugo Mougard 2010 <mogzor@gmail.com>
+ * Copyright (C) Hugo Mougard 2011 <mogzor@gmail.com>
+ * Copyright (C) Kevin Decherf 2010 <kdecherf@gmail.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -21,6 +22,13 @@
 
 using namespace bombherman;
 
+AI::AI() :
+	Player(),
+	playerMap(std::vector<map::Coords>())
+{
+	this->init();
+}
+
 void
 AI::newAI()
 {
@@ -32,12 +40,52 @@ AI::newAI()
 void
 AI::init()
 {
-	if ( SDL_CreateThread(doThings, this) == NULL )
+	if ( SDL_CreateThread(run, this) == NULL )
 		bherr <<  "Unable to create thread to manage an AI player : " << SDL_GetError();
 }
 
 int
-AI::doThings(void * param)
+AI::run(void * param)
 {
 	AI * ai = static_cast<AI *>(param);
+	
+	// Keep alive the thread during entire game
+	while (true)
+	{
+		while(ai->isAlive())
+		{
+			// Prepare map for AI
+			ai->findPath();
+		}
+		SDL_Delay(300);
+	}
+	return 0;
 }
+
+void
+AI::findPath()
+{
+	Uint32 maxRange = static_cast<Uint32>(Config::getInt("maxRange"));
+	//Uint32 maxItems = maxRange*maxRange*4;
+	
+	// Max points with setting maxRange
+	Uint32 maxLeft = this->coords.x - maxRange;
+	Uint32 maxRight = this->coords.x + maxRange;
+	Uint32 maxTop = this->coords.y + maxRange;
+	Uint32 maxBottom = this->coords.y - maxRange;
+	
+	//int depth = 1;
+	// Prepare the array checker
+	//map::Coords array[maxItems];
+	
+	map::Coords current = this->coords;
+	
+	while (current.x > maxLeft && current.x < maxRight && current.y > maxTop && current.y < maxBottom)
+	{
+		// A* algorithm
+		
+		// Left point
+		
+	}
+}
+

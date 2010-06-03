@@ -2,6 +2,7 @@
 /*
  * Bomb-her-man
  * Copyright (C) Hugo Mougard 2010 <mogzor@gmail.com>
+ * Copyright (C) Kevin Decherf 2010 <kdecherf@gmail.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -36,9 +37,11 @@ namespace bombherman
 		/// Create a new AI
 		static void newAI();
 	private:
-		AI() : Player() { this->init(); }
+		AI();
 		void init();
-		static int doThings(void *);
+		static int run(void *);
+		void findPath();
+		std::vector<map::Coords> playerMap;
 	};
 }
 

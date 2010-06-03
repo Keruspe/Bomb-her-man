@@ -61,6 +61,9 @@ namespace bombherman
 		
 		/// Stop
 		static void stop() { playing = false; }
+		
+		/// Game Over ?
+		static bool gameOver() { return Game::mapCount < 0; }
 	private:
 		static bool isInit, playing;
 		

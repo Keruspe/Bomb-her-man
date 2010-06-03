@@ -31,17 +31,48 @@ using namespace bombherman;
 std::vector<Player * > Player::players;
 unsigned Player::icyDeadPeople = 0;
 
-Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
-		range (Config::getInt("defaultRange")),
-		plantedBombs (0),
-		score (0),
-		id (Player::players.size() + 1),
-		coords (map::Coords()),
-		orient(map::DOWN),
-		alive(true),
-		move_mutex(SDL_CreateMutex()),
-		currentMoves(0)
+Player::Player() : 
+	plantableBombs (Config::getInt("defaultPlantableBombs")),
+	range (Config::getInt("defaultRange")),
+	plantedBombs (0),
+	score (0),
+	id (Player::players.size() + 1),
+	alive(true),
+	coords (map::Coords()),
+	orient(map::DOWN),
+	move_mutex(SDL_CreateMutex()),
+	currentMoves(0)
 {
+}
+
+Player::Player(const Player & other) :
+	plantableBombs(other.plantableBombs),
+	range(other.range),
+	plantedBombs(other.plantedBombs),
+	score(other.score),
+	id(other.id),
+	alive(other.alive),
+	coords(other.coords),
+	orient(other.orient),
+	move_mutex(other.move_mutex),
+	currentMoves(other.currentMoves)
+{
+}
+
+Player &
+Player::operator=(const Player & other)
+{
+	this->plantableBombs = other.plantableBombs;
+	this->range = other.range;
+	this->plantedBombs = other.plantedBombs;
+	this->score = other.score;
+	this->id = other.id;
+	this->alive = other.alive;
+	this->coords = other.coords;
+	this->orient = other.orient;
+	this->move_mutex = other.move_mutex;
+	this->currentMoves = other.currentMoves;
+	return *this;
 }
 
 Player *
@@ -99,7 +130,7 @@ Player::die()
 }
 
 int
-Player::reInit(void * dummy)
+Player::reInit(void *)
 {
 	// Make everything explode
 	bomb::AtomicCenter::boum();
@@ -120,10 +151,10 @@ Player::reInit(void * dummy)
 void
 Player::setRange(Uint32 range)
 {
-	if (range < Config::getInt("minRange"))
-		this->range = Config::getInt("minRange");
-	else if (range > Config::getInt("maxRange"))
-		this->range = Config::getInt("maxRange");
+	if (range < static_cast<Uint32>(Config::getInt("minRange")))
+		this->range = static_cast<Uint32>(Config::getInt("minRange"));
+	else if (range > static_cast<Uint32>(Config::getInt("maxRange")))
+		this->range = static_cast<Uint32>(Config::getInt("maxRange"));
 	else
 		this->range = range;
 }
@@ -131,14 +162,20 @@ Player::setRange(Uint32 range)
 void
 Player::go(map::Direction direction)
 {
-	if (! this || ! this->alive)
-		// If we don't exist (new Game) or we're die, nothing'll happen
+	if (! this)
+		// If we don't exist (new Game), nothing'll happen
 		return;
-	if ( currentMoves < 2 )
-		++currentMoves;
+	if ( this->currentMoves < 2 )
+		++this->currentMoves;
 	else
 		return;
 	SDL_LockMutex(move_mutex);
+	if (! this->alive)
+	{
+		// We-re dead
+		SDL_UnlockMutex(this->move_mutex);
+		return;
+	}
 	bool orientChanged = (this->orient != direction);
 	if (orientChanged)
 		this->orient = direction;
@@ -146,8 +183,8 @@ Player::go(map::Direction direction)
 	if (moveResult == map::NOTHINGHAPPENED && orientChanged)
 		Display::movePlayer(this, map::ORIENTCHANGED);
 	Display::movePlayer(this, moveResult);
-	SDL_UnlockMutex(move_mutex);
-	--currentMoves;
+	SDL_UnlockMutex(this->move_mutex);
+	--this->currentMoves;
 }
 
 void

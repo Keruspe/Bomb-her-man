@@ -61,7 +61,7 @@ SDL_Surface *Display::gTomb[2] = {NULL, NULL};
 SDL_Surface *Display::gFloor = NULL;
 
 
-int Display::gMapSize = 0;
+Uint32 Display::gMapSize = 0;
 Uint16 Display::gSize = 0;
 SDL_Rect Display::gZone;
 
@@ -493,7 +493,7 @@ Display::updateScores(bool final)
 		db.x = sSize;
 	}
 	
-	sSize /= 1.5;
+	sSize /= 1.7;
 	if ( dh.w > dh.h )
 	{
 		dp.x = sSize;
@@ -590,6 +590,7 @@ Display::updateScores(bool final)
 			SDL_FreeSurface(textSurface);
 		}
 		if ( ! final )
+		{
 			SDL_Rect p = {
 					h.x + dp.x,
 					h.y + dp.y,
@@ -724,6 +725,11 @@ Display::movePlayer(Player * player, map::MoveResult moveResult)
 				gSize,
 				gSize
 			};
+	#if ANIM_IMAGES > 1
+	unsigned int anim = 0;
+	const Sint16 part = gSize / ANIM_IMAGES;;
+	const Sint16 cpart = (ANIM_IMAGES-1) * part;
+	#endif // ANIM_IMAGES > 1
 	switch ( moveResult )
 	{
 		case map::BONUSTAKEN:
@@ -746,9 +752,6 @@ Display::movePlayer(Player * player, map::MoveResult moveResult)
 			}
 			
 			#if ANIM_IMAGES > 1
-			unsigned int anim = 0;
-			const Sint16 part = gSize / ANIM_IMAGES;
-			const Sint16 cpart = (ANIM_IMAGES-1) * part;
 			while ( true )
 			{
 				SDL_Rect d = {
@@ -787,6 +790,8 @@ Display::movePlayer(Player * player, map::MoveResult moveResult)
 			}
 			#endif // ANIM_IMAGES > 1
 		break;
+		default:
+		break;
 	}
 	sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
 	if (player->isAlive())
@@ -813,4 +818,10 @@ Display::plantBomb(map::Coords coords)
 	updateDisplay(gBomb, r);
 	
 	updatePlayers();
+}
+
+void
+Display::explode(map::Coords, std::vector<map::Coords>)
+{
+	updateBarrels();
 }

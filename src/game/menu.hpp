@@ -32,9 +32,7 @@ namespace bombherman
 		typedef enum
 		{
 			MAIN = 0, /**< main menu */
-			GAME, /**< game menu */
 			SETTINGS, /**< settings menu */
-			INGAME, /**< in-game menu */
 		} Type;
 		
 		/// For the display backend to get the menu

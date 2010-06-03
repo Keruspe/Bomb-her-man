@@ -110,6 +110,12 @@ namespace bombherman
 			 * @return True if the map exists
 			 */
 			static bool exists() { return Map::map.exists; }
+			
+			/// Map getter
+			/**
+			 * @return The map (map::Grid)
+			 */
+			static Grid & getMap() { return Map::map; }
 		private:
 			static void placePlayers();
 			static bool moveUp(Coords &);
