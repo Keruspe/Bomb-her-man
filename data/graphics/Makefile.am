@@ -51,7 +51,7 @@ nobase_graphics_DATA = \
 	bomb.svg \
 	tomb1.svg \
 	tomb2.svg \
-	explo.svg \
+	explosion.svg \
 	floor.svg \
 	barrel.svg \
 	bomb-her-man.svg

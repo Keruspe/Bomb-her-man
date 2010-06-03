@@ -216,6 +216,10 @@ Display::initSurfaces()
 	cleanSurface(gBomb);
 	gBomb = svgToSurface(DATADIR"/graphics/bomb.svg");
 	
+	// gExplosion
+	cleanSurface(gExplosion);
+	gExplosion = svgToSurface(DATADIR"/graphics/explosion.svg");
+	
 	
 	// gTombs
 	cleanSurface(gTomb[0]);
@@ -821,7 +825,22 @@ Display::plantBomb(map::Coords coords)
 }
 
 void
-Display::explode(map::Coords, std::vector<map::Coords>)
+Display::explode(map::Coords, std::vector<map::Coords> cells)
 {
+	#if ANIM_IMAGES > 1
+	Uint32 size = cells.size();
+	for ( std::vector<map::Coords>::iterator i = cells.begin(),
+			e = cells.end() ; i != e ; ++i )
+	{
+		SDL_Rect r = {
+			gZone.x + i->x * gSize,
+			gZone.y + i->y * gSize,
+			gSize,
+			gSize
+		};
+		updateDisplay(gExplosion, r);
+		SDL_Delay(ANIM_TIME/size);
+	}
+	#endif
 	updateBarrels();
 }
