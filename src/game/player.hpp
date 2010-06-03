@@ -178,6 +178,12 @@ namespace bombherman
 		 * @param other The player to copy
 		 */
 		Player(const Player & other);
+		
+		/// Operator=
+		/**
+		 * @param other The player to copy
+		 */
+		Player & operator=(const Player & other);
 	protected:
 		/// Private constructor, please call static newPlayer instead
 		Player();

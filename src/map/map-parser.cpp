@@ -21,6 +21,7 @@
 #include <string>
 
 #include "map-parser.hpp"
+#include "SDL_types.h"
 
 using namespace bombherman;
 using namespace bombherman::map;
@@ -45,12 +46,12 @@ MapParser::parse(std::string path, Grid & map)
 	std::vector<char> *current_line;
 
 	// Read the lines of the file
-	for(int y(0) ; std::getline(file, line) && y < map.size ; ++y)
+	for(Uint32 y(0) ; std::getline(file, line) && y < map.size ; ++y)
 	{
 		current_line = new std::vector<char>();
 		
 		// Read the cols of the file
-		for(int x(0) ; x < map.size ; ++x)
+		for(Uint32 x(0) ; x < map.size ; ++x)
 		{
 			try
 			{

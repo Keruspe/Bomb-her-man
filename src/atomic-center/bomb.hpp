@@ -52,6 +52,12 @@ namespace bombherman
 			 */
 			Bomb(const Bomb & other);
 			
+			/// Operator=
+			/**
+			 * @return other The bomb to copy
+			 */
+			Bomb & operator=(const Bomb & other);
+			
 			/// Make a bomb explode
 			/**
 			 * @param b A pointer to the bomb which will explode (Bomb *)

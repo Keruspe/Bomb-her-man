@@ -54,6 +54,18 @@ Bomb::Bomb (const Bomb & other) :
 {
 }
 
+Bomb &
+Bomb::operator=(const Bomb & other)
+{
+	this->explosion = other.explosion;
+	this->player = other.player;
+	this->range = other.range;
+	this->coords = other.coords;
+	this->explodedCells = other.explodedCells;
+	this->chain = other.chain;
+	return *this;
+}
+
 int
 Bomb::waitExplode(void *p)
 {

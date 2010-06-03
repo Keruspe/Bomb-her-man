@@ -31,30 +31,48 @@ using namespace bombherman;
 std::vector<Player * > Player::players;
 unsigned Player::icyDeadPeople = 0;
 
-Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
-		range (Config::getInt("defaultRange")),
-		plantedBombs (0),
-		score (0),
-		id (Player::players.size() + 1),
-		coords (map::Coords()),
-		orient(map::DOWN),
-		alive(true),
-		move_mutex(SDL_CreateMutex()),
-		currentMoves(0)
+Player::Player() : 
+	plantableBombs (Config::getInt("defaultPlantableBombs")),
+	range (Config::getInt("defaultRange")),
+	plantedBombs (0),
+	score (0),
+	id (Player::players.size() + 1),
+	coords (map::Coords()),
+	orient(map::DOWN),
+	alive(true),
+	move_mutex(SDL_CreateMutex()),
+	currentMoves(0)
 {
 }
 
-Player::Player(const Player & other) : plantableBombs(other.plantableBombs),
-		range(other.range),
-		plantedBombs(other.plantedBombs),
-		score(other.score),
-		id(other.id),
-		coords(other.coords),
-		orient(other.orient),
-		alive(other.alive),
-		move_mutex(other.move_mutex),
-		currentMoves(other.currentMoves)
+Player::Player(const Player & other) :
+	plantableBombs(other.plantableBombs),
+	range(other.range),
+	plantedBombs(other.plantedBombs),
+	score(other.score),
+	id(other.id),
+	alive(other.alive),
+	coords(other.coords),
+	orient(other.orient),
+	move_mutex(other.move_mutex),
+	currentMoves(other.currentMoves)
 {
+}
+
+Player &
+Player::operator=(const Player & other)
+{
+	this->plantableBombs = other.plantableBombs;
+	this->range = other.range;
+	this->plantedBombs = other.plantedBombs;
+	this->score = other.score;
+	this->id = other.id;
+	this->alive = other.alive;
+	this->coords = other.coords;
+	this->orient = other.orient;
+	this->move_mutex = other.move_mutex;
+	this->currentMoves = other.currentMoves;
+	return *this;
 }
 
 Player *
@@ -112,7 +130,7 @@ Player::die()
 }
 
 int
-Player::reInit(void * dummy)
+Player::reInit(void *)
 {
 	// Make everything explode
 	bomb::AtomicCenter::boum();
@@ -133,10 +151,10 @@ Player::reInit(void * dummy)
 void
 Player::setRange(Uint32 range)
 {
-	if (range < Config::getInt("minRange"))
-		this->range = Config::getInt("minRange");
-	else if (range > Config::getInt("maxRange"))
-		this->range = Config::getInt("maxRange");
+	if (range < static_cast<Uint32>(Config::getInt("minRange")))
+		this->range = static_cast<Uint32>(Config::getInt("minRange"));
+	else if (range > static_cast<Uint32>(Config::getInt("maxRange")))
+		this->range = static_cast<Uint32>(Config::getInt("maxRange"));
 	else
 		this->range = range;
 }
