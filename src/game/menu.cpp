@@ -49,26 +49,16 @@ Menu::setContent()
 		this->content.push_back(_("Play"));
 		this->content.push_back(_("Settings"));
 		this->content.push_back(_("Quit"));
-		break;
-	case GAME:
-		this->content.push_back(_("Game"));
-		this->content.push_back(_("Play"));
-		this->content.push_back(_("Players: ") + Config::get("nbPlayers"));
-		this->content.push_back(_("AIs: ") + Config::get("nbAIs"));
-		this->content.push_back(_("Maps: ") + Config::get("nbMaps"));
-		this->content.push_back(_("Back"));
-		break;
+	break;
 	case SETTINGS:
 		this->content.push_back(_("Settings"));
 		this->content.push_back(std::string(_("Go to ")) + ( ( Config::getInt("fullscreen") ) ? _("Windowed") : _("Fullscreen") ));
 		//this->content.push_back(_("Maximum number of players: ") + Config::get("maxPlayers"));
+		this->content.push_back(_("Players: ") + Config::get("nbPlayers"));
+		this->content.push_back(_("AIs: ") + Config::get("nbAIs"));
+		this->content.push_back(_("Maps: ") + Config::get("nbMaps"));
 		this->content.push_back(_("Back"));
-		break;
-	case INGAME:
-		this->content.push_back(_("Pause"));
-		this->content.push_back(_("Back to game"));
-		this->content.push_back(_("Back to main menu"));
-		break;
+	break;
 	}
 }
 
@@ -106,7 +96,7 @@ Menu::action()
 		switch ( this->current )
 		{
 		case 1: // Play
-			Game::changeMenu(GAME);
+			Game::newGame();
 			break;
 		case 2: // Settings
 			Game::changeMenu(SETTINGS);
@@ -115,22 +105,7 @@ Menu::action()
 			Game::stop();
 			break;
 		}
-		break;
-	case GAME:
-		switch ( this->current )
-		{
-		case 1: // Play
-			Game::newGame();
-			break;
-		case 2: // Players
-		case 3: // AIs
-		case 4: // Maps
-			break;
-		default: // Back
-			Game::changeMenu(MAIN);
-			break;
-		}
-		break;
+	break;
 	case SETTINGS:
 		switch ( this->current )
 		{
@@ -144,22 +119,15 @@ Menu::action()
 		//	Config::set("maxPlayers", 2);
 		//	update = true;
 		//break;
+		case 2: // Players
+		case 3: // AIs
+		case 4: // Maps
+			break;
 		default: // Back
 			Game::changeMenu(MAIN);
 		break;
 		}
-		break;
-	case INGAME: // Disactivated for now
-		switch ( this->current )
-		{
-			case 1:
-				Game::play();
-				break;
-			default:
-				Game::changeMenu(MAIN, false);
-				break;
-		}
-		break;
+	break;
 	}
 
 	if ( update )
@@ -175,15 +143,12 @@ Menu::quit()
 {
 	switch (this->type)
 	{
-	case INGAME: // Disabled for now
-		Game::play();
-		break;
 	case MAIN: // Exit the application
 		Game::stop();
-		break;
+	break;
 	default: // Go back to main menu
 		Game::changeMenu(MAIN);
-		break;
+	break;
 	}
 }
 
@@ -216,9 +181,23 @@ Menu::left()
 	// Detect the kind of menu we're in
 	switch ( this->type )
 	{
-	case GAME:
+	case SETTINGS:
 		switch ( this->current )
 		{
+		case 1: // Fullscreen / Windowed
+			n = ( Config::getInt("fullscreen") + 1 ) % 2;
+			Config::set("fullscreen", n);
+			Display::changeFullscreen();
+		break;
+		/*
+		case 2: // Maximum number of players
+			n = Config::getInt("maxPlayers") - 1;
+			if ( n < 2 )
+				update = false;
+			else
+				Config::set("maxPlayers", n);
+		break;
+		*/
 		case 2: // Players
 			n = Config::getInt("nbPlayers") - 1;
 			if ( n > 0 ) // There is at least 1 player
@@ -245,28 +224,6 @@ Menu::left()
 				// At least 1 map
 				Config::set("nbMaps", n);
 		break;
-		default:
-			update = false;
-		break;
-		}
-	break;
-	case SETTINGS:
-		switch ( this->current )
-		{
-		case 1: // Fullscreen / Windowed
-			n = ( Config::getInt("fullscreen") + 1 ) % 2;
-			Config::set("fullscreen", n);
-			Display::changeFullscreen();
-		break;
-		/*
-		case 2: // Maximum number of players
-			n = Config::getInt("maxPlayers") - 1;
-			if ( n < 2 )
-				update = false;
-			else
-				Config::set("maxPlayers", n);
-		break;
-		*/
 		default: // Back
 			update = false;
 		break;
@@ -293,9 +250,19 @@ Menu::right()
 	bool update = true;
 	switch ( this->type )
 	{
-	case GAME:
+	case SETTINGS:
 		switch ( this->current )
 		{
+		case 1:
+			n = ( Config::getInt("fullscreen") + 1 ) % 2;
+			Config::set("fullscreen", n);
+			Display::changeFullscreen();
+		break;
+		/*
+		case 2:
+			Config::set("maxPlayers", Config::getInt("maxPlayers") + 1);
+			break;
+		*/
 		case 2:
 			n = Config::getInt("nbPlayers") + 1;
 			if ( n <= 2 )
@@ -321,24 +288,6 @@ Menu::right()
 			if ( n <= Config::getInt("maxMaps") )
 				Config::set("nbMaps", n);
 		break;
-		default:
-			update = false;
-		break;
-		}
-	break;
-	case SETTINGS:
-		switch ( this->current )
-		{
-		case 1:
-			n = ( Config::getInt("fullscreen") + 1 ) % 2;
-			Config::set("fullscreen", n);
-			Display::changeFullscreen();
-		break;
-		/*
-		case 2:
-			Config::set("maxPlayers", Config::getInt("maxPlayers") + 1);
-			break;
-		*/
 		default:
 			update = false;
 		break;
