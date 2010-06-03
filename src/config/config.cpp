@@ -22,7 +22,9 @@
 
 // TODO DYNAMIC FILE FOR WINDOWS
 #ifdef __MINGW32__
-	#define CONFIG_FILE (std::string(getenv("AppData")) + std::string("/bomb-her-man/config.init")).c_str()
+	#include <direct.h>
+	#define CONFIG_DIR (std::string(getenv("AppData")) + std::string("\\bomb-her-man\\")).c_str()
+	#define CONFIG_FILE (std::string(CONFIG_DIR) + std::string("config.init")).c_str()
 #else
 	#include <cstdlib>
 	#include <sys/stat.h>
@@ -188,9 +190,11 @@ Config::read()
 void
 Config::write()
 {
-	#ifndef __MINGW32__
 	// Create the directory
-	mkdir(CONFIG_DIR, 0700);
+	#ifdef __MINGW32__
+		_mkdir(CONFIG_DIR);
+	#else
+		mkdir(CONFIG_DIR, 0700);
 	#endif  // __MINGW32__
 
 	// Open the file
