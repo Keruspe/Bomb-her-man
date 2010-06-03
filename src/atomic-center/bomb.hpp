@@ -58,6 +58,12 @@ namespace bombherman
 			/// Start a new game
 			static void newGame() { Bomb::gameOver = false; }
 			
+			/// Range getter
+			/**
+			 * @return The range of the explosion (Uint32)
+			 */
+			Uint32 getRange() { return this->range; }
+			
 			/// Destructor
 			virtual ~Bomb () { SDL_DestroySemaphore(explosion); }
 		private:
