@@ -42,22 +42,13 @@ AI::run(void * param)
 {
 	AI * ai = static_cast<AI *>(param);
 	
-	map::Coords _current;
-	map::Direction _direction;
-
 	// Keep alive the thread during entire game
 	while (true)
 	{
 		while(ai->isAlive())
 		{
-			map::Coords current = ai->getCoords();
-			map::Direction direction = ai->getOrient();
-			
-			int maxRange = Config::getInt("maxRange");
-			int maxItems = (_maxRange*2)*(_maxRange*2);
-			
 			// Prepare map for AI
-			findPath(maxRange,current);
+			ai->findPath();
 		}
 		SDL_Delay(300);
 	}
@@ -65,26 +56,29 @@ AI::run(void * param)
 }
 
 void
-AI::findPath(int _maxRange, map::Coords _ppoint)
+AI::findPath()
 {
-	int _maxItems = (_maxRange*2)*(_maxRange*2);
-
+	int maxRange = Config::getInt("maxRange");
+	int maxItems = maxRange*maxRange*4;
+	
 	// Max points with setting maxRange
-	int _maxLeft = _current.x - _maxRange;
-	int _maxRight = _current.x + _maxRange;
-	int _maxTop = _current.y + _maxRange;
-	int _maxBottom = _current.y - _maxRange;
-
-	Coords _current = _ppoint;
+	int maxLeft = this->coords.x - maxRange;
+	int maxRight = this->coords.x + maxRange;
+	int maxTop = this->coords.y + maxRange;
+	int maxBottom = this->coords.y - maxRange;
+	
 	int _depth = 1;
 	// Prepare the array checker
-	Coords[_maxItems] _array;
+	map::Coords array[maxItems];
 	
-	while ((_current.x > _maxLeft && _current.x < _maxRight) && (_current.y > _maxTop && _current.y < _maxBottom))
+	map::Coords current = this->coords;
+	
+	while (current.x > maxLeft && current.x < maxRight && current.y > maxTop && current.y < maxBottom)
 	{
 		// A* algorithm
-
+		
 		// Left point
 		
 	}
 }
+

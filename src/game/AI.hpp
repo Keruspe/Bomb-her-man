@@ -40,7 +40,7 @@ namespace bombherman
 		AI() : Player() { this->init(); }
 		void init();
 		static int run(void *);
-		void findPath(int _maxRange, map::Coords _ppoint);
+		void findPath();
 		std::vector<map::Coords> playerMap;
 	};
 }
