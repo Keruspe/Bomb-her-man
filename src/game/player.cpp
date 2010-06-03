@@ -44,6 +44,19 @@ Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
 {
 }
 
+Player::Player(const Player & other) : plantableBombs(other.plantableBombs),
+		range(other.range),
+		plantedBombs(other.plantedBombs),
+		score(other.score),
+		id(other.id),
+		coords(other.coords),
+		orient(other.orient),
+		alive(other.alive),
+		move_mutex(other.move_mutex),
+		currentMoves(other.currentMoves)
+{
+}
+
 Player *
 Player::getPlayer(int id)
 {

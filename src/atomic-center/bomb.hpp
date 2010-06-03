@@ -46,6 +46,12 @@ namespace bombherman
 			 */
 			Bomb(int player, map::Coords c, Uint32 _range);
 			
+			/// Copy constructor
+			/**
+			 * @param other The bomb to copy
+			 */
+			Bomb(const Bomb & other);
+			
 			/// Make a bomb explode
 			/**
 			 * @param b A pointer to the bomb which will explode (Bomb *)

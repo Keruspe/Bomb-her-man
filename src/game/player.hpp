@@ -172,6 +172,12 @@ namespace bombherman
 
 		/// Tells the player that his bomb has exploded (decreases planted bombs counter)
 		void bombHasExploded() { --this->plantedBombs; }
+		
+		/// Copy constructor
+		/**
+		 * @param other The player to copy
+		 */
+		Player(const Player & other);
 	protected:
 		/// Private constructor, please call static newPlayer instead
 		Player();

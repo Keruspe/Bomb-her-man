@@ -34,12 +34,24 @@ bool Bomb::gameOver = false;
 Bomb::Bomb (int player, map::Coords c, Uint32 _range) :
 	explosion(SDL_CreateSemaphore(0)),
 	player(player),
+	range(_range),
 	coords(c),
-	range(_range)
+	explodedCells(std::vector<map::Coords>()),
+	chain(std::vector<map::Coords>())
 {
 	Display::plantBomb(c);
 	if ( SDL_CreateThread(waitExplode, this) == NULL )
 		bherr <<  "Unable to create thread to manage a bomb : " << SDL_GetError();
+}
+
+Bomb::Bomb (const Bomb & other) :
+	explosion(other.explosion),
+	player(other.player),
+	range(other.range),
+	coords(other.coords),
+	explodedCells(other.explodedCells),
+	chain(other.chain)
+{
 }
 
 int
