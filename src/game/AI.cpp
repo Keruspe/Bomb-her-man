@@ -22,6 +22,13 @@
 
 using namespace bombherman;
 
+AI::AI() :
+	Player(),
+	playerMap(std::vector<map::Coords>())
+{
+	this->init();
+}
+
 void
 AI::newAI()
 {
@@ -52,24 +59,24 @@ AI::run(void * param)
 		}
 		SDL_Delay(300);
 	}
-
+	return 0;
 }
 
 void
 AI::findPath()
 {
-	int maxRange = Config::getInt("maxRange");
-	int maxItems = maxRange*maxRange*4;
+	Uint32 maxRange = static_cast<Uint32>(Config::getInt("maxRange"));
+	Uint32 maxItems = maxRange*maxRange*4;
 	
 	// Max points with setting maxRange
-	int maxLeft = this->coords.x - maxRange;
-	int maxRight = this->coords.x + maxRange;
-	int maxTop = this->coords.y + maxRange;
-	int maxBottom = this->coords.y - maxRange;
+	Uint32 maxLeft = this->coords.x - maxRange;
+	Uint32 maxRight = this->coords.x + maxRange;
+	Uint32 maxTop = this->coords.y + maxRange;
+	Uint32 maxBottom = this->coords.y - maxRange;
 	
-	int _depth = 1;
+	//int depth = 1;
 	// Prepare the array checker
-	map::Coords array[maxItems];
+	//map::Coords array[maxItems];
 	
 	map::Coords current = this->coords;
 	
