@@ -182,7 +182,7 @@ Config::write()
 {
 	#ifndef __MINGW32__
 	// Create the directory
-	mkdir(CONFIG_DIR, 0755);
+	mkdir(CONFIG_DIR, 0700);
 	#endif  // __MINGW32__
 
 	// Open the file
