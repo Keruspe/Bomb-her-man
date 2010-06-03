@@ -209,7 +209,7 @@ Display::initSurfaces()
 		sBackSize = width / 2;
 	SDL_Surface *sBackTemp = svgToSurface(DATADIR"/graphics/background.svg", sBackSize, sBackSize * 2);
 	SDL_BlitSurface(sBackTemp, NULL, sBackground, NULL);
-	SDL_FreeSurface(sBackTemp);
+	cleanSurface(sBackTemp);
 	
 	
 	// gBomb
@@ -433,7 +433,7 @@ Display::displayMenu(Menu *menu)
 		}
 	}
 	updateDisplay(sMenu);
-	SDL_FreeSurface(sMenu);
+	cleanSurface(sMenu);
 	TTF_CloseFont(fontTitle);
 	TTF_CloseFont(fontNormal);
 }
@@ -520,7 +520,7 @@ Display::updateScores(bool final)
 		b.y = (i*db.y);
 	}
 	
-	SDL_FreeSurface(sScoreBack);
+	cleanSurface(sScoreBack);
 	
 	Sint32 *scores = reinterpret_cast<Sint32 *>(malloc(nbAll * sizeof(Sint32)));
 	Sint32 max = -10;
@@ -606,12 +606,12 @@ Display::updateScores(bool final)
 	free(scores);
 	TTF_CloseFont(font);
 	
-	SDL_FreeSurface(sWin[0]);
-	SDL_FreeSurface(sWin[1]);
-	SDL_FreeSurface(sLose[0]);
-	SDL_FreeSurface(sLose[1]);
-	SDL_FreeSurface(sEqual[0]);
-	SDL_FreeSurface(sEqual[1]);
+	cleanSurface(sWin[0]);
+	cleanSurface(sWin[1]);
+	cleanSurface(sLose[0]);
+	cleanSurface(sLose[1]);
+	cleanSurface(sEqual[0]);
+	cleanSurface(sEqual[1]);
 }
 
 void
