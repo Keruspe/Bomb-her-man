@@ -66,7 +66,7 @@ void
 AI::findPath()
 {
 	Uint32 maxRange = static_cast<Uint32>(Config::getInt("maxRange"));
-	Uint32 maxItems = maxRange*maxRange*4;
+	//Uint32 maxItems = maxRange*maxRange*4;
 	
 	// Max points with setting maxRange
 	Uint32 maxLeft = this->coords.x - maxRange;
