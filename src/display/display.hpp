@@ -78,7 +78,7 @@ namespace bombherman
 		 * @param coords Where the bomb was placed
 		 * @param cells Which cells (a vector of Coords) the bomb destroyed
 		 */
-		static void explode(map::Coords coords, std::vector<map::Coords> cells) { updateBarrels(); }
+		static void explode(map::Coords coords, std::vector<map::Coords> cells);
 		
 		/// Show the final scores screen
 		static void displayScores();
@@ -131,7 +131,7 @@ namespace bombherman
 		static SDL_Surface *gTomb[2];
 		static SDL_Surface *gFloor;
 		
-		static int gMapSize;
+		static Uint32 gMapSize;
 		static Uint16 gSize;
 		static SDL_Rect gZone;
 	};
