@@ -484,7 +484,7 @@ Display::updateScores(bool final)
 		db.x = sSize;
 	}
 	
-	sSize /= 1.5;
+	sSize /= 1.7;
 	if ( dh.w > dh.h )
 	{
 		dp.x = sSize;

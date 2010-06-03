@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link rel="stylesheet" type="text/css" media="all" href="css/screen.css" />
+        <title>Bomb-Her-Man | Manuel de l'utilisateur</title>
+        <script type="text/javascript" src="js/mootools-1.2.4-core-nc.js"></script>
+        <script type="text/javascript" src="js/mootools-1.2.4.4-more.js"></script>
+        <script type="text/javascript">
+            window.addEvent('domready', function() {
+                new Accordion($('content'), 'div.toggler', 'div.element', {
+                    display: 1,
+                    onActive: function(toggler){
+                        toggler.getElement('img').src = 'img/arrow1.png';
+                    },
+                    onBackground: function(toggler){
+                        toggler.getElement('img').src = 'img/arrow0.png';
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <h1>
+                Manuel de l'utilisateur
+            </h1>
+            <div id="content">
+                <div class="toggler">
+                    <img src="img/arrow0.png" alt="flèche" />
+                    Installation de Bomb-Her-Man
+                </div>
+                <div class="element">
+                    <p>
+                        Tout d'abord, il vous faudra installer les paquets
+                        suivants sur votre syst&egrave;me avec votre
+                        gestionnaire de paquets pr&eacute;f&eacute;r&eacute; :
+                        SDL_ttf, cairo et rsvg.
+                    </p>
+                    <p>
+                        Ensuite, il faut d&eacute;compresser l'archive du jeu
+                        (tar -xf Bomb-her-man.tar.gz) puis se rendre dans
+                        le dossier d&eacute;compress&eacute; 
+                        (cd Bomb-her-man/).
+                    </p>
+                    <p>
+                        Il suffit alors de lancer le make et make install en
+                        root pour r&eacute;aliser la compilation et
+                        l'installation (make &amp;&amp; sudo make install).
+                    </p>
+                    <p>
+                        Vous pouvez &agrave; ce stade supprimer le tar.gz du jeu
+                        ainsi que le dossier d&eacute;compress&eacute;
+                        (cd ..; rm -rf Bomb-her-man/; rm Bomb-her-man.tar.gz)
+                    </p>
+                    <p>
+                        Le jeu est maintenant accessible dans votre dossier bin
+                        local (/usr/local/usr/bin/bomb-her-man). Have fun :-)
+                    </p>
+                </div>
+                <div class="toggler">
+                    <img src="img/arrow0.png" alt="flèche" />
+                    D&eacute;marrage et configuration d'une partie
+                </div>
+                <div class="element">
+                    Salut lol
+                </div>
+                <div class="toggler">
+                    <img src="img/arrow0.png" alt="flèche" />
+                    D&eacute;roulement d'une partie
+                </div>
+                <div class="element">
+                    Une fois la partie lanc&eacute;e, les r&egrave;gles sont
+                    simples : le dernier en vie a gagn&eacute;. Pour tuer son
+                    adversaire, il faut que celui-ci se trouve pris dans le
+                    rayon d'explosion d'une bombe (la votre, la sienne, ou celle
+                    d'un ordinateur, peu importe).
+                    <br />
+                    Les bombes ont, avec les param&egrave;tres de base, une
+                    port&eacute;e de 2. C'est &agrave; dire qu'elles explosent
+                    sur une croix comprenant la case de la bombe et deux cases
+                    dans chaque direction (pas d'explosion en diagonale) en s'
+                    arr&ecirc;tant toutefois si elle recontre une tombe sur son
+                    passage (celles-ci étant indestructibles). De
+                    plus et toujours avec les param&egrave;tres de base, vous
+                    pouvez poser jusqu'&agrave; trois bombes sur le terrain.
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
