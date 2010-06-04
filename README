@@ -5,3 +5,8 @@ sudo make install
 
 By default, it will be installed into /usr/local.
 If you want it to be installed into /usr, just pass --prefix=/usr to autogen.bash
+
+Player 1 : use the arrows to move, right shift to plant bomb
+Player 2 : use esdf to move, space to plant bomb
+
+The AI doesn't do anything for now
