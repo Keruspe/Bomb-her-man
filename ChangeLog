@@ -14,7 +14,7 @@ Jro Mog (6):
 Kevin Decherf (1):
       AI Commit
 
-Marc-Antoine Perennou (356):
+Marc-Antoine Perennou (363):
       initial commit
       map-utils : various typedefs
       Refactor
@@ -371,6 +371,13 @@ Marc-Antoine Perennou (356):
       Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
       fix default capacity
       update default number of maps
+      Release 0.1
+      fix configure.ac
+      refactor
+      fix
+      add autogen
+      update README
+      lower autoconf dep
 
 Mogzor (66):
       Fix de MapGenerator::getRandomCoords et ajout d'un attribut à Coords pour rendre le tout plus clean
