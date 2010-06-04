@@ -18,7 +18,7 @@
  */
 
 #include "map.hpp"
-#include "map-generator/map-generator.hpp"
+#include "map-generator.hpp"
 #include "bombherman.hpp"
 
 using namespace bombherman;

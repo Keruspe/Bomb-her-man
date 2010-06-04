@@ -27,12 +27,12 @@ bomb_her_man_SOURCES = \
 	map/map.hpp \
 	map/map-parser.cpp \
 	map/map-utils.hpp \
+	map/map-generator.hpp \
+	map/map-generator.cpp \
 	config/config.hpp \
 	config/config.cpp \
 	include/bombherman.hpp \
 	include/nls.hpp \
-	map-generator/map-generator.hpp \
-	map-generator/map-generator.cpp \
 	display/display.hpp \
 	display/display.cpp \
 	bomb-her-man.cpp
