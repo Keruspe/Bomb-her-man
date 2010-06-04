@@ -1,0 +1,7 @@
+To build Bomb-her-man :
+./autogen.bash
+make
+sudo make install
+
+By default, it will be installed into /usr/local.
+If you want it to be installed into /usr, just pass --prefix=/usr to autogen.bash
