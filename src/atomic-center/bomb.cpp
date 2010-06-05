@@ -113,12 +113,6 @@ Bomb::explode()
 				break;
 		}
 	}
-	if ( Bomb::gameOver )
-	{
-		// Game over, nothing to do
-		SDL_UnlockMutex(mutex);
-		return;
-	}
 	
 	// Tell the player that his bomb has exploded
 	p->bombHasExploded();
@@ -128,6 +122,9 @@ Bomb::explode()
 	// Reinitialize explodedCells
 	explodedCells.clear();
 	SDL_UnlockMutex(mutex);
+	
+	if ( Bomb::gameOver )
+		return;
 	
 	// Make the bombs which were hit explode
 	for ( std::vector<map::Coords>::iterator i = chain.begin(),
