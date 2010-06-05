@@ -222,8 +222,10 @@ Player::plantBomb()
 	if (! this->isAbleToPlantBomb())
 		return;
 	if ( bomb::AtomicCenter::plantBomb(this->id, this->coords, this->range) )
-		// The bomb has been planted !
+	{	// The bomb has been planted !
 		++this->plantedBombs;
+		Display::plantBomb(this);
+	}
 }
 
 Player *

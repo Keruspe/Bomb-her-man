@@ -711,24 +711,6 @@ Display::updatePlayers()
 }
 
 void
-Display::updatePlayer(Player * player)
-{
-	if ( ! gPlayers[0][0][0] )
-		initSurfaces();
-	
-	if (! player->isAlive())
-		return;
-	map::Coords coords = player->getCoords();
-	SDL_Rect r = {
-			coords.x * gSize + gZone.x,
-			coords.y * gSize + gZone.y,
-			gSize,
-			gSize
-		};
-	updateDisplay(gPlayers[player->getId() - 1][player->getOrient()][0], r);
-}
-
-void
 Display::movePlayer(Player * player, map::MoveResult moveResult)
 {
 	if ( ! sDisplay )
@@ -827,9 +809,13 @@ Display::movePlayer(Player * player, map::MoveResult moveResult)
 }
 
 void
-Display::plantBomb(map::Coords coords)
+Display::plantBomb(Player *player)
 {
-	if ( ! sDisplay ) init();
+	if ( ! gBomb )
+		initSurfaces();
+	
+	map::Coords coords = player->getCoords();
+	
 	SDL_Rect r = {
 			coords.x * gSize,
 			coords.y * gSize,
@@ -842,7 +828,7 @@ Display::plantBomb(map::Coords coords)
 	r.y += gZone.y;
 	updateDisplay(gBomb, r);
 	
-	updatePlayer(Player::playerAt(coords));
+	updateDisplay(gPlayers[player->getId() - 1][player->getOrient()][0], r);
 }
 
 void
@@ -850,23 +836,24 @@ Display::explode(map::Coords bomb, std::vector<map::Coords> cells)
 {
 	#if ANIM_IMAGES > 1
 	Uint32 size = cells.size();
-	if (size < 1)
-		size = 1;
-	SDL_Rect r = {
-		gZone.x + bomb.x * gSize,
-		gZone.y + bomb.y * gSize,
-		gSize,
-		gSize
-	};
-	updateDisplay(gExplosion, r);
-	SDL_Delay(ANIM_TIME/(2*size));
-	for ( std::vector<map::Coords>::iterator i = cells.begin(),
-			e = cells.end() ; i != e ; ++i )
+	if (size > 0)
 	{
-		r.x = gZone.x + i->x * gSize;
-		r.y = gZone.y + i->y * gSize;
+		SDL_Rect r = {
+			gZone.x + bomb.x * gSize,
+			gZone.y + bomb.y * gSize,
+			gSize,
+			gSize
+		};
 		updateDisplay(gExplosion, r);
 		SDL_Delay(ANIM_TIME/(2*size));
+		for ( std::vector<map::Coords>::iterator i = cells.begin(),
+				e = cells.end() ; i != e ; ++i )
+		{
+			r.x = gZone.x + i->x * gSize;
+			r.y = gZone.y + i->y * gSize;
+			updateDisplay(gExplosion, r);
+			SDL_Delay(ANIM_TIME/(2*size));
+		}
 	}
 	#endif
 	updateBarrels();

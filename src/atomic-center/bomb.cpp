@@ -39,7 +39,6 @@ Bomb::Bomb (int player, map::Coords c, Uint32 _range) :
 	explodedCells(std::vector<map::Coords>()),
 	chain(std::vector<map::Coords>())
 {
-	Display::plantBomb(c);
 	if ( SDL_CreateThread(waitExplode, this) == NULL )
 		bherr <<  "Unable to create thread to manage a bomb : " << SDL_GetError();
 }

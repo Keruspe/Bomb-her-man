@@ -69,9 +69,9 @@ namespace bombherman
 		
 		/// Plant a bomb
 		/**
-		 * @param coords Coordonates where to plant the bomb
+		 * @param player (Pointer to the) Player who plant the bomb
 		 */
-		static void plantBomb(map::Coords coords);
+		static void plantBomb(Player *player);
 		
 		/// Show the bomb explosing
 		/**
@@ -89,21 +89,15 @@ namespace bombherman
 		static void updateDisplay(SDL_Surface *s, SDL_Rect z) { updateDisplay(s, z.x, z.y, z.w, z.h); }
 		static void updateDisplay(SDL_Surface *, Uint16 = 0, Uint16 = 0, Uint16 = 0, Uint16 = 0);
 		
-		/// Update the scores "panel"
+		// Update the scores "panel"
 		static void updateScores(bool = false);
 		
-		/// Update the barrels
+		// Update the barrels
 		static void updateBarrels();
 		
-		/// Update the players
+		// Update the players
 		static void updatePlayers();
 		
-		// Update a player
-		/**
-		 * @param player A pointer to the player to update (Player *)
-		 */
-		static void updatePlayer(Player * player);
-
 		// To store the SDL display surface
 		static SDL_Surface *sDisplay;
 		static Uint32 flags;
