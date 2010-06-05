@@ -687,7 +687,8 @@ Display::updateBarrels()
 void
 Display::updatePlayers()
 {
-	if ( ! gPlayers[0][0][0] ) initSurfaces();
+	if ( ! gPlayers[0][0][0] )
+		initSurfaces();
 	
 	SDL_Rect r = {
 			0,
@@ -696,15 +697,35 @@ Display::updatePlayers()
 			gSize
 		};
 	map::Coords coords;
-	for ( std::vector< Player * >::iterator i = Player::players.begin(), e = Player::players.end() ; i != e ; ++i )
+	for ( std::vector< Player * >::iterator i = Player::players.begin(),
+		e = Player::players.end() ; i != e ; ++i )
 	{
-		if ( ! (*i)->isAlive() ) continue;
+		if ( ! (*i)->isAlive() )
+			continue;
 		
 		coords = (*i)->getCoords();
 		r.x = ( coords.x * gSize ) + gZone.x;
 		r.y = ( coords.y * gSize ) + gZone.y;
 		updateDisplay(gPlayers[(*i)->getId()-1][(*i)->getOrient()][0], r);
 	}
+}
+
+void
+Display::updatePlayer(Player * player)
+{
+	if ( ! gPlayers[0][0][0] )
+		initSurfaces();
+	
+	if (! player->isAlive())
+		return;
+	map::Coords coords = player->getCoords();
+	SDL_Rect r = {
+			coords.x * gSize + gZone.x,
+			coords.y * gSize + gZone.y,
+			gSize,
+			gSize
+		};
+	updateDisplay(gPlayers[player->getId() - 1][player->getOrient()][0], r);
 }
 
 void
@@ -821,7 +842,7 @@ Display::plantBomb(map::Coords coords)
 	r.y += gZone.y;
 	updateDisplay(gBomb, r);
 	
-	updatePlayers();
+	updatePlayer(Player::playerAt(coords));
 }
 
 void

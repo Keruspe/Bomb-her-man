@@ -98,6 +98,12 @@ namespace bombherman
 		/// Update the players
 		static void updatePlayers();
 		
+		// Update a player
+		/**
+		 * @param player A pointer to the player to update (Player *)
+		 */
+		static void updatePlayer(Player * player);
+
 		// To store the SDL display surface
 		static SDL_Surface *sDisplay;
 		static Uint32 flags;
