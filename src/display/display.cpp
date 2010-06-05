@@ -829,6 +829,8 @@ Display::explode(map::Coords bomb, std::vector<map::Coords> cells)
 {
 	#if ANIM_IMAGES > 1
 	Uint32 size = cells.size();
+	if (size < 1)
+		size = 1;
 	SDL_Rect r = {
 		gZone.x + bomb.x * gSize,
 		gZone.y + bomb.y * gSize,
