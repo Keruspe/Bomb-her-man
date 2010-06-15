@@ -1,4 +1,4 @@
-AC_PREREQ(2.63)
+AC_PREREQ(2.65)
 AC_INIT([bomb-her-man],[0.1],[""])
 
 AC_CONFIG_SRCDIR([src/bomb-her-man.cpp])
@@ -6,6 +6,12 @@ AC_CONFIG_HEADERS([src/include/config.h])
 
 AM_INIT_AUTOMAKE(bomb-her-man, 0.1)
 AC_LANG([C++])
+
+IT_PROG_INTLTOOL
+GETTEXT_PACKAGE=bomb-her-man
+AC_SUBST(GETTEXT_PACKAGE)
+ALL_LINGUAS="fr"
+AM_GNU_GETTEXT
 
 AC_MSG_CHECKING([whether to activate anim])
 AC_ARG_ENABLE([anim],
@@ -70,5 +76,6 @@ AC_CONFIG_FILES([
 	src/Makefile
 	data/Makefile
 	data/graphics/Makefile
+	po/Makefile.in
 ])
 AC_OUTPUT
