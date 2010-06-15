@@ -4,4 +4,4 @@ EXTRA_DIST = \
 		README \
 		COPYING
 
-SUBDIRS = src data
+SUBDIRS = src data po
