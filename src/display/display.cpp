@@ -68,8 +68,6 @@ SDL_Rect Display::gZone;
 void
 Display::init()
 {
-	width = Config::getInt("screenWidth");
-	height = Config::getInt("screenHeight");
 	gMapSize = Config::getInt("mapSize");
 	
 	unsigned int max = Config::getInt("maxPlayers");
@@ -103,34 +101,11 @@ Display::init()
 	if ( modes == reinterpret_cast<SDL_Rect**>(0) )
 		throw exceptions::display::NoSDLException("No modes available!");
 	
-	bool ok = false;
 	if ( modes == reinterpret_cast<SDL_Rect**>(-1) )
-	{
-		if ( ( width == 0 ) || ( height == 0 ) )
-			throw exceptions::display::NoSDLException("Can't choice the resolution");
-	}
-	else
-	{
-		for ( int i = 0 ; modes[i] ; ++i )
-		{
-			if ( ( width == modes[i]->w ) && ( height == modes[i]->h ) )
-			{
-				ok = true;
-				break;
-			}
-		}
-	}
-	
-	if ( ok )
-	{
-		heightMax = height;
-		widthMax = width;
-	}
-	else
-	{
-		widthMax = modes[0]->w;
-		heightMax = modes[0]->h;
-	}
+		throw exceptions::display::NoSDLException("Can't choice the resolution");
+		
+	widthMax = modes[0]->w;
+	heightMax = modes[0]->h;
 	
 	if ( TTF_Init() == -1 )
 	{
@@ -343,8 +318,14 @@ Display::changeFullscreen()
 	}
 	else
 	{
-		width = widthMax * 0.9;
-		height = heightMax * 0.9;
+		width = Config::getInt("screenWidth");
+		height = Config::getInt("screenHeight");
+		
+		if ( ( width == 0 ) || ( height == 0 ) )
+		{
+			width = widthMax * 0.9;
+			height = heightMax * 0.9;
+		}
 	}
 	SDL_LockMutex(mUpdate);
 	
