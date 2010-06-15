@@ -52,7 +52,7 @@ Menu::setContent()
 	break;
 	case SETTINGS:
 		this->content.push_back(_("Settings"));
-		this->content.push_back(std::string(_("Go to ")) + ( ( Config::getInt("fullscreen") ) ? _("Windowed") : _("Fullscreen") ));
+		this->content.push_back(( Config::getInt("fullscreen") ) ? _("Go to Windowed") : _("Go to Fullscreen"));
 		//this->content.push_back(_("Maximum number of players: ") + Config::get("maxPlayers"));
 		this->content.push_back(_("Players: ") + Config::get("nbPlayers"));
 		this->content.push_back(_("AIs: ") + Config::get("nbAIs"));

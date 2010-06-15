@@ -36,6 +36,10 @@ SDL_main(int argc, char **argv)
 main()
 #endif // __MINGW32__
 {
+	#ifdef ENABLE_NLS
+		bindtextdomain(PACKAGE, LOCALEDIR);
+		bind_textdomain_codeset(PACKAGE, "UTF-8");
+	#endif
 	try
 	{
 		// Launch the Game

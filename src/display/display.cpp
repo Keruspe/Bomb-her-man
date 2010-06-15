@@ -306,7 +306,7 @@ Display::quit()
 void
 Display::changeFullscreen()
 {
-	bool beFullscreen = ( Config::getInt("fullscreen") == 1 );
+	bool beFullscreen( Config::getInt("fullscreen") == 1 );
 	if ( ( sDisplay ) && ( beFullscreen == isFullscreen ) ) return;
 	Uint32 adds = 0;
 	if ( beFullscreen )
