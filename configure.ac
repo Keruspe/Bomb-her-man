@@ -16,7 +16,7 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
 	[The prefix for our gettext translation domains.])
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION(0.18.1)
+AM_GNU_GETTEXT_VERSION([0.18.1])
 
 AC_MSG_CHECKING([whether to activate anim])
 AC_ARG_ENABLE([anim],

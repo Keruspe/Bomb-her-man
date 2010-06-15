@@ -5,3 +5,5 @@ EXTRA_DIST = \
 		COPYING
 
 SUBDIRS = src data po
+
+ACLOCAL_AMFLAGS = -I m4
