@@ -1,6 +1,6 @@
 #!/bin/sh
 
 autoreconf -i -Wall
-intltoolize
+gettextize --symlink --no-changelog
 ./configure $@
 exit 0
