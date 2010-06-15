@@ -7,11 +7,17 @@ AC_CONFIG_HEADERS([src/include/config.h])
 AM_INIT_AUTOMAKE(bomb-her-man, 0.1)
 AC_LANG([C++])
 
+
+AC_PROG_CXX
+AC_USE_SYSTEM_EXTENSIONS
+AC_PROG_INSTALL
+
 IT_PROG_INTLTOOL
 GETTEXT_PACKAGE=bomb-her-man
 AC_SUBST(GETTEXT_PACKAGE)
 ALL_LINGUAS="fr"
-AM_GNU_GETTEXT
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION
 
 AC_MSG_CHECKING([whether to activate anim])
 AC_ARG_ENABLE([anim],
@@ -36,9 +42,6 @@ AC_ARG_ENABLE([debug],
 	AC_MSG_RESULT([$enableval])],
 	[debug=no
 	AC_MSG_RESULT([no])])
-
-AC_PROG_CXX
-AC_PROG_INSTALL
 
 AC_SEARCH_LIBS([TTF_OpenFont], [SDL_ttf], [], [AC_MSG_ERROR(SDL_ttf lib required)])
 
