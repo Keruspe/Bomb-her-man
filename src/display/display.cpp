@@ -115,7 +115,6 @@ Display::init()
 	
 	rsvg_init();
 	
-	
 	changeFullscreen();
 }
 
@@ -177,12 +176,12 @@ Display::initSurfaces()
 	SDL_FillRect(sBackground, NULL, 0x00d2995a);
 	Uint32 sBackSize = 0;
 	if ( width > height )
-		sBackSize = height / 2;
-	else if ( height > ( width * 2 ) )
+		sBackSize = width / 4;
+	else if ( height > ( width * 3 ) )
 		sBackSize = width;
 	else
-		sBackSize = width / 2;
-	SDL_Surface *sBackTemp = svgToSurface(DATADIR"/graphics/background.svg", sBackSize, sBackSize * 2);
+		sBackSize = height / 3;
+	SDL_Surface *sBackTemp = svgToSurface(DATADIR"/graphics/background.svg", sBackSize, sBackSize * 3);
 	SDL_BlitSurface(sBackTemp, NULL, sBackground, NULL);
 	cleanSurface(sBackTemp);
 	

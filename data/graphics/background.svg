@@ -13,9 +13,9 @@
    version="1.1"
    x="0px"
    y="0px"
-   width="800"
-   height="1600"
-   viewBox="-11 -7 800 1600"
+   width="1000"
+   height="3000"
+   viewBox="-11 -7 1000 3000"
    enable-background="new -11 -7 800 800"
    xml:space="preserve"
    id="svg3134"
@@ -23,7 +23,7 @@
    sodipodi:docname="background.svg"><metadata
    id="metadata3406"><rdf:RDF><cc:Work
        rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><sodipodi:namedview
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><sodipodi:namedview
    pagecolor="#ffffff"
    bordercolor="#666666"
    borderopacity="1"
@@ -33,14 +33,14 @@
    inkscape:pageopacity="0"
    inkscape:pageshadow="2"
    inkscape:window-width="1280"
-   inkscape:window-height="761"
+   inkscape:window-height="755"
    id="namedview3404"
    showgrid="false"
    inkscape:zoom="0.22308885"
-   inkscape:cx="66.978545"
-   inkscape:cy="590.95759"
+   inkscape:cx="-807.11268"
+   inkscape:cy="2025.3637"
    inkscape:window-x="0"
-   inkscape:window-y="20"
+   inkscape:window-y="26"
    inkscape:window-maximized="1"
    inkscape:current-layer="svg3134"
    showguides="true"
@@ -65,20 +65,20 @@
    xlink:href="#linearGradient4273"
    id="linearGradient4279"
    x1="-974.74158"
-   y1="819.76547"
+   y1="819.76544"
    x2="-91.685364"
-   y2="819.76547"
+   y2="819.76544"
    gradientUnits="userSpaceOnUse"
-   gradientTransform="matrix(0.90594459,0,0,0.9833118,872.06186,-13.085)" /></defs>
+   gradientTransform="matrix(1.1324307,0,0,1.8437102,1092.8273,-18.4096)" /></defs>
 <rect
    style="fill:url(#linearGradient4279);fill-opacity:1;fill-rule:nonzero;stroke:none"
    id="rect3481"
-   width="800"
-   height="1600"
+   width="1000"
+   height="3000"
    x="-11"
-   y="-7" /><g
+   y="-7.0002441" /><g
    id="g3138"
-   transform="translate(0,6.594159)">
+   transform="translate(4.4825189,7.0065274)">
 	
 		<image
    overflow="visible"
@@ -140,7 +140,7 @@
    id="polygon3167"
    style="fill:#b3b3b3" />
 					<polygon
-   points="506.821,569.241 511.888,561.441 706.901,561.441 507.276,569.545 "
+   points="511.888,561.441 706.901,561.441 507.276,569.545 506.821,569.241 "
    id="polygon3169"
    style="fill:#b3b3b3" />
 					<path
