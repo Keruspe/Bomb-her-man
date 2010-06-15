@@ -458,7 +458,7 @@ Display::updateScores(bool final)
 		dh.w = z.w = gZone.x;
 		dh.h = z.h = gZone.y;
 		if ( z.w == 0 )
-			vertical = true;
+			vertical = false;
 	}
 	
 	if ( vertical )
