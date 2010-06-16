@@ -11,6 +11,10 @@ AC_LANG([C++])
 
 
 AC_PROG_CXX
+AC_PROG_CC
+AC_HEADER_STDBOOL.
+AC_FUNC_MALLOC
+AC_CHECK_FUNCS([mkdir])
 
 GETTEXT_PACKAGE=bomb-her-man
 AC_SUBST(GETTEXT_PACKAGE)
@@ -18,6 +22,7 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
 	[The prefix for our gettext translation domains.])
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.18])
+AC_CHECK_HEADERS([libintl.h])
 
 AC_MSG_CHECKING([whether to activate anim])
 AC_ARG_ENABLE([anim],
