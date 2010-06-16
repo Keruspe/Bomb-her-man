@@ -320,10 +320,12 @@ Display::changeFullscreen()
 		width = Config::getInt("screenWidth");
 		height = Config::getInt("screenHeight");
 		
-		if ( ( width == 0 ) || ( height == 0 ) )
+		if	( ( width == 0 ) || ( height == 0 )
+			||
+			( width > widthMax*0.9 ) || ( height > heightMax*0.9 ) )
 		{
-			width = widthMax * 0.9;
-			height = heightMax * 0.9;
+			width = widthMax*0.9;
+			height = heightMax*0.9;
 		}
 	}
 	SDL_LockMutex(mUpdate);
