@@ -6,7 +6,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: bomb-her-man 0.1\n"
+"Project-Id-Version: bomb-her-man 0.1.1\n"
 "Report-Msgid-Bugs-To: \"\"\n"
 "POT-Creation-Date: 2010-06-15 23:34+0200\n"
 "PO-Revision-Date: 2010-06-15 18:02+0200\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: src/display/display.cpp:97
 msgid "Bomb-her-man"
-msgstr ""
+msgstr "Bomb-her-man"
 
 #: src/game/menu.cpp:48
 msgid "Main menu"
