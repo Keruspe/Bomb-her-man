@@ -38,9 +38,9 @@ main()
 {
 	#if ENABLE_NLS
 		if ( ! bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR) )
-			bherr << "Gettext error, we won't have i18n" << bhendl;
+			bherr << "Gettext error, won't have i18n" << bhendl;
 		if ( ! bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8") )
-			bherr << "Gettext error, we won't have i18n" << bhendl;
+			bherr << "Gettext error, maybe won't have i18n" << bhendl;
 	#endif
 	try
 	{

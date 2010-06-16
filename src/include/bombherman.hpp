@@ -23,9 +23,9 @@
 #include <iomanip>
 
 #include "config.h"
+#include "nls.hpp"
 #include "config/config.hpp"
 #include "exceptions/exception.hpp"
-#include "nls.hpp"
 
 namespace bombherman
 {
