@@ -37,7 +37,7 @@ namespace bombherman
 				 * @param m The message
 				 */
 				NoSDLException(const std::string & m) throw() :
-					Exception("No SDL:" + m) {}
+					Exception("No SDL: " + m) {}
 				
 				/// Destructor
 				virtual ~NoSDLException() throw() {}
