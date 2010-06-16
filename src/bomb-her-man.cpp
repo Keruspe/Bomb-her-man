@@ -36,9 +36,11 @@ SDL_main(int argc, char **argv)
 main()
 #endif // __MINGW32__
 {
-	#ifdef ENABLE_NLS
-		bindtextdomain(PACKAGE, LOCALEDIR);
-		bind_textdomain_codeset(PACKAGE, "UTF-8");
+	#if ENABLE_NLS
+		if ( ! bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR) )
+			bherr << "Gettext error, we won't have i18n" << bhendl;
+		if ( ! bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8") )
+			bherr << "Gettext error, we won't have i18n" << bhendl;
 	#endif
 	try
 	{
