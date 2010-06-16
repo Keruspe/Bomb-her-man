@@ -20,7 +20,6 @@
 #define _NLS_HPP_
 
 #if ENABLE_NLS
-	#include <locale.h>
 	#include <libintl.h>
 	#define _(x) dgettext(PACKAGE, x)
 	#ifdef dgettext_noop
@@ -29,7 +28,6 @@
 		#define N_(x) (x)
 	#endif
 #else
-	#include <locale.h>
 	#define _(x) (x)
 	#define ngettext(s, p, n) ((n == 1) ? (s) : (p))
 	#define N_(x) (x)
