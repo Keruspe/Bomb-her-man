@@ -14,5 +14,10 @@ config.h
 config.h.in
 stamp-h1
 .deps
+.aux/
+ABOUT-NLS
+INSTALL
+m4/
+po/
 *.o
 *~

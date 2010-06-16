@@ -111,10 +111,12 @@ Bomb::explode()
 			if ( ( ! up ) && ( ! down ) && ( ! right ) && ( ! left ) )
 				break;
 		}
+
+		// Tell the player that his bomb has exploded
+		p->bombHasExploded();
 	}
 	
-	// Tell the player that his bomb has exploded
-	p->bombHasExploded();
+	// Do remove the bomb
 	map::Map::removeBomb(coords);
 	Display::explode(coords, explodedCells);
 	
