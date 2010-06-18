@@ -6,7 +6,7 @@ AC_CONFIG_HEADERS([src/include/config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([.aux])
 
-AM_INIT_AUTOMAKE(bomb-her-man, 0.1)
+AM_INIT_AUTOMAKE
 AC_LANG([C++])
 
 
@@ -16,10 +16,6 @@ AC_HEADER_STDBOOL
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([mkdir])
 
-GETTEXT_PACKAGE=bomb-her-man
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
-	[The prefix for our gettext translation domains.])
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.18])
 AC_CHECK_HEADERS([libintl.h])

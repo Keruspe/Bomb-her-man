@@ -39,11 +39,11 @@ main()
 	#if ENABLE_NLS
 		if ( ! setlocale (LC_ALL, "") )
 			bherr << "Locale error, won't have i18n" << bhendl;
-		else if ( ! bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR) )
+		else if ( ! bindtextdomain(PACKAGE, LOCALEDIR) )
 			bherr << "Gettext error, won't have i18n" << bhendl;
-		else if ( ! textdomain(GETTEXT_PACKAGE) )
+		else if ( ! textdomain(PACKAGE) )
 			bherr << "Gettext error, won't have i18n" << bhendl;
-		else if ( ! bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8") )
+		else if ( ! bind_textdomain_codeset(PACKAGE, "UTF-8") )
 			bherr << "Gettext error, maybe won't have i18n" << bhendl;
 	#endif
 	try
