@@ -1,5 +1,5 @@
 To build Bomb-her-man :
-./autogen.bash
+./autogen.sh
 make
 sudo make install
 
