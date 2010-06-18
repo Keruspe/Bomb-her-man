@@ -1,12 +1,26 @@
-/* 
- * File:   Player.hpp
- * Author: mogzor
- *
- * Created on May 24, 2010, 11:52 AM
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
+/*
+ * Bomb-her-man
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
+ * 
+ * Bomb-her-man is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Bomb-her-man is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _PLAYER_HPP_
 #define	_PLAYER_HPP_
+
+#include <SDL_mutex.h>
 
 #include "map/map.hpp"
 
@@ -16,51 +30,50 @@ namespace bombherman
 	class Player
 	{
 	public:
-		virtual ~Player();
+		/// Destructor
+		virtual ~Player() { SDL_DestroyMutex(move_mutex); }
 		
 		/// Range getter
 		/**
-		 * @return The actual range of the player's bombs (int)
+		 * @return The actual range of the player's bombs (Uint32)
 		 */
-		int getRange();
+		Uint32 getRange() { return this->range; }
 		
 		/// Coords getter
 		/**
 		 * @return The coords of the player (map::Coords)
 		 */
-		map::Coords & getCoords();
+		map::Coords & getCoords() { return this->coords; }
 		
 		/// Orientation getter
 		/**
 		 * @return The orientation of the player (map::Direction)
 		 */
-		map::Direction & getOrient();
+		map::Direction & getOrient() { return this->orient; }
 		
 		/// Controlling if player can plant a bomb
 		/**
-		 * @return True if player can plant a bomb
+		 * @return True if player can plant a bomb (bool)
 		 */
-		bool isAbleToPlantBomb();
+		bool isAbleToPlantBomb() { return (this->plantableBombs > this->plantedBombs); }
 		
 		/// Score getter
 		/**
-		 * @return The score of the player
+		 * @return The score of the player (int)
 		 */
-		int getScore();
+		int getScore() { return this->score; }
 		
 		/// Id getter
 		/**
-		 * @return The id of the player
+		 * @return The id of the player (int)
 		 */
-		int getId();
+		int getId() { return this->id; }
 		
 		/// To move
 		/**
 		 * @param direction The direction where player wants to go (map::Direction)
-		 * 
-		 * @return What did happen during the move (map::MoveResult)
 		 */
-		map::MoveResult go(map::Direction & direction);
+		void go(map::Direction direction);
 		
 		/// List of all players
 		static std::vector< Player * > players;
@@ -95,15 +108,15 @@ namespace bombherman
 		
 		/// Range setter
 		/**
-		 * @param range The new range for the player (int)
+		 * @param range The new range for the player (Uint32)
 		 */
-		void setRange(int range);
+		void setRange(Uint32 range);
 		
 		/// Range adder
 		/**
-		 * @param range The range to add to the player, make it negative to remove (int)
+		 * @param range The range to add to the player, make it negative to remove (Uint32)
 		 */
-		void addToRange(int range);
+		void addToRange(Uint32 range) { this->setRange(this->range + range); }
 		
 		/// Make the player plant a bomb
 		void plantBomb();
@@ -124,7 +137,7 @@ namespace bombherman
 		/**
 		 * @param plantableBombs The number to add to the number of bombs the player can carry (int)
 		 */
-		void addToPlantableBombs(int plantableBombs);
+		void addToPlantableBombs(int plantableBombs) { this->setPlantableBombs(this->plantableBombs + plantableBombs); }
 		
 		/// Reset the player to its default statistics
 		void resetToDefaultStats();
@@ -133,7 +146,7 @@ namespace bombherman
 		/**
 		 * @param c The new coords of the player (map::Coords)
 		 */
-		void setCoords(map::Coords & c);
+		void setCoords(map::Coords & c) { this->coords = c; }
 		
 		/// Which player is out there ?
 		/**
@@ -147,7 +160,7 @@ namespace bombherman
 		/**
 		 * @return True if the player is alive
 		 */
-		bool isAlive();
+		bool isAlive() { return this->alive; }
 		
 		/// Murder a poor player
 		/**
@@ -158,19 +171,54 @@ namespace bombherman
 		bool kill(Player * killed);
 
 		/// Tells the player that his bomb has exploded (decreases planted bombs counter)
-		void bombHasExploded();
-	private:
+		void bombHasExploded() { --this->plantedBombs; }
+		
+		/// Copy constructor
+		/**
+		 * @param other The player to copy
+		 */
+		Player(const Player & other);
+		
+		/// Operator=
+		/**
+		 * @param other The player to copy
+		 */
+		Player & operator=(const Player & other);
+	protected:
 		/// Private constructor, please call static newPlayer instead
 		Player();
+		
+		/// Number of bombs the player can plant (int)
 		int plantableBombs;
-		int range;
+		
+		/// Current range (Uint32)
+		Uint32 range;
+		
+		/// Number of planted bombs (int)
 		int plantedBombs;
+		
+		/// Current score (int)
 		int score;
+		
+		/// Id of the player (int)
 		int id;
+		
+		/// Is the player alive ? (bool)
 		bool alive;
+		
+		/// Coords of the player (map::Coords)
 		map::Coords coords;
+		
+		/// Orientation of the player (map::Direction)
 		map::Direction orient;
+		
+		/// Number of dead people (unsigned)
 		static unsigned icyDeadPeople;
+		
+		/// Mutex for handling moves
+		SDL_mutex * move_mutex;
+		/// Current number of moves move
+		Uint8 currentMoves;
 	};
 };
 

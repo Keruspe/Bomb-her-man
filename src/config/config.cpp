@@ -1,6 +1,7 @@
 /*
  * Bomb-her-man
  * Copyright (C) Sardem FF7 2010 <sardemff7.pub@gmail.com>
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -19,6 +20,18 @@
 #include "bombherman.hpp"
 #include "config.hpp"
 
+// TODO DYNAMIC FILE FOR WINDOWS
+#ifdef __MINGW32__
+	#include <direct.h>
+	#define CONFIG_DIR (std::string(getenv("AppData")) + std::string("\\bomb-her-man\\"))
+	#define CONFIG_FILE (CONFIG_DIR + std::string("config.init")).c_str()
+#else
+	#include <cstdlib>
+	#include <sys/stat.h>
+	#define CONFIG_DIR (std::string(getenv("HOME")) + std::string("/.config/bomb-her-man/"))
+	#define CONFIG_FILE (CONFIG_DIR + std::string("config")).c_str()
+#endif // __MINGW32__
+
 using namespace bombherman;
 
 /*
@@ -31,8 +44,12 @@ Config::Config() :
 {
 }
 
-Config &Config::operator=(std::string value)
+// Both those operator= return a reference to stock the Config in the map
+// Note that sValue and intValue are always synchronised
+
+Config & Config::operator=(std::string value)
 {
+	// This is used for a string configuration
 	this->sValue = value;
 	this->intValue();
 	
@@ -41,6 +58,7 @@ Config &Config::operator=(std::string value)
 
 Config &Config::operator=(int value)
 {
+	// This is used for an int configuration
 	this->iValue = value;
 	this->stringValue();
 	
@@ -50,6 +68,7 @@ Config &Config::operator=(int value)
 void
 Config::intValue()
 {
+	// Try to transform the stringValue to an int
 	std::istringstream s(this->sValue);
 	s >> this->iValue;
 }
@@ -57,6 +76,7 @@ Config::intValue()
 void
 Config::stringValue()
 {
+	// Transform the int to a string
 	std::ostringstream s("");
 	s << this->iValue;
 	this->sValue = s.str();
@@ -66,72 +86,88 @@ Config::stringValue()
  * Class space
  */
 
-std::map<std::string, Config> Config::config = std::map<std::string, Config>();
+// Initialize statics
+std::map<std::string, Config> Config::config;
+bool Config::isInit = false;
 
 void
 Config::init()
 {
-	if ( config.empty() )
+	if ( Config::isInit )
+		// Don't initialize twice
+		return;
+	
+	/*
+	 * Initializing defaults values
+	 */
+	config["mapSize"] = 15;
+	
+	config["maxPlayers"] = 2;
+	config["maxMaps"] = 999;
+	
+	config["mgInsertionProbabilityBase"] = 100;
+	config["mgInsertionProbabilityBaseHorizontal"] = 50;
+	config["mgInsertionProbabilityBaseVertical"] = 50;
+	config["mgInsertionProbabilityRegressionHorizontal"] = 10;
+	config["mgInsertionProbabilityRegressionVertical"] = 10;
+	config["mgInsertionProbabilityBarrel"] = 42 * 2;
+	config["mgInsertionElementSizeMaxHorizontal"] = 3;
+	config["mgInsertionElementSizeMaxVertical"] = 3;
+	
+	config["nbAIs"] = 0;
+	
+	config["bonusApparitionProbability"] = 100 - config["mgInsertionProbabilityBarrel"].iValue;
+	
+	config["suicideMalus"] = -2;
+	config["killBonus"] = 1;
+	
+	config["timeBeforeExplosion"] = 5;
+	
+	/*
+	 * Then read the file for *some* things
+	 * (others will be overriden)
+	 */
+	read();
+	
+	/*
+	 * And force some minimals
+	 */
+	if ( config["nbPlayers"].iValue < 1 )
 	{
-		/*
-		 * Initializing defaults values
-		 */
-		config["mapSize"] = 15;
-		
-		config["maxPlayers"] = 2;
-		config["maxMaps"] = 10;
-		
-		config["defaultPlantableBombs"] = 3;
-		config["defaultRange"] = 2;
-		
-		config["mgInsertionProbabilityBase"] = 100;
-		config["mgInsertionProbabilityBaseHorizontal"] = 50;
-		config["mgInsertionProbabilityBaseVertical"] = 50;
-		config["mgInsertionProbabilityRegressionHorizontal"] = 10;
-		config["mgInsertionProbabilityRegressionVertical"] = 10;
-		config["mgInsertionProbabilityBarrel"] = 42 * 2;
-		config["mgInsertionElementSizeMaxHorizontal"] = 3;
-		config["mgInsertionElementSizeMaxVertical"] = 3;
-		
+		config["nbPlayers"] = config["maxPlayers"];
 		config["nbAIs"] = 0;
-		
-		config["bonusApparitionProbability"] = 100 - getInt("mgInsertionProbabilityBarrel");
-		config["rangeVariation"] = getInt("mapSize")/10;
-		config["maxRange"] = getInt("mapSize")/3;
-		config["minRange"] = 1;
-		config["capacityVariation"] = 1;
-		config["maxCapacity"] = 5;
-		config["minCapacity"] = 1;
-		
-		config["suicideMalus"] = -2;
-		config["killBonus"] = 1;
-		config["minimumScore"] = -9;
-		config["maximumScore"] = 99;
-		
-		/*
-		 * Then read the file
-		 */
-		read();
-		
-		/*
-		 * And force some minimals
-		 */
-		if ( config["nbPlayers"].iValue < 1 )
-		{
-			config["nbPlayers"] = config["maxPlayers"];
-			config["nbAIs"] = 0;
-		}
-		if ( config["nbMaps"].iValue < 1 )
-			config["nbMaps"] = config["maxMaps"];
-		if ( config["mapSize"].iValue < 15 )
-			config["mapSize"] = 15;
 	}
+	if ( config["nbMaps"].iValue < 1 )
+		config["nbMaps"] = 6;
+	if ( config["mapSize"].iValue < 15 )
+		config["mapSize"] = 15;
+	
+	/*
+	 * Set some relative stuff
+	 */
+	config["maxRange"] = config["mapSize"].iValue / 3;
+	config["minRange"] = 1;
+	config["rangeVariation"] = config["mapSize"].iValue / 10;
+	
+	config["capacityVariation"] = 1;
+	config["maxCapacity"] = 5;
+	config["minCapacity"] = 1;
+	
+	config["defaultPlantableBombs"] = config["maxCapacity"].iValue / 2 + 1;
+	config["defaultRange"] = config["rangeVariation"].iValue + 1;
+	
+	config["minimumScore"] = -99;
+	config["maximumScore"] = config["maxMaps"].iValue;
+	
+	
+	Config::isInit = true;
 }
 
 void
 Config::read()
 {
-	std::ifstream file("/tmp/config.ini", std::ios::in); //TODO: dynamic file
+	// Do open the file
+	std::ifstream file(CONFIG_FILE, std::ios::in);
 	std::string line;
 	std::string::size_type separator;
 	
@@ -139,6 +175,7 @@ Config::read()
 	{
 		while ( ! file.eof() )
 		{
+			// If the line is correct, set the corresponding configurations
 			file >> line;
 			separator = line.find_first_of('=');
 			if ( separator != std::string::npos )
@@ -153,12 +190,21 @@ Config::read()
 void
 Config::write()
 {
-	std::ofstream file("/tmp/config.ini", std::ios::out | std::ios::trunc); //TODO: dynamic file
+	// Create the directory
+	#ifdef __MINGW32__
+		_mkdir(CONFIG_DIR.c_str());
+	#else
+		mkdir(CONFIG_DIR.c_str(), 0700);
+	#endif  // __MINGW32__
+
+	// Open the file
+	std::ofstream file(CONFIG_FILE, std::ios::out | std::ios::trunc);
 	
 	if ( file.is_open() )
 	{
 		for ( std::map<std::string, Config>::iterator i = Config::config.begin(), e = Config::config.end() ; i != e ; ++i )
 		{
+			// Write the configurations to the file
 			if ( ! (i->second).sValue.empty() )
 				file << i->first << '=' << (i->second).sValue << std::endl;
 		}

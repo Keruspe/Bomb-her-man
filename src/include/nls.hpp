@@ -19,20 +19,19 @@
 #ifndef _NLS_HPP_
 #define _NLS_HPP_
 
-#ifdef ENABLE_NLS
-	#include <locale.h>
+#if ENABLE_NLS
 	#include <libintl.h>
-	#define _(x) dgettext(PACKAGE, x)
-	#ifdef dgettext_noop
-		#define N_(x) dgettext_noop(PACKAGE, x)
+	#define _(x) gettext(x)
+	#ifdef gettext_noop
+		#define N_(x) gettext_noop(x)
 	#else
 		#define N_(x) (x)
 	#endif
 #else
-	#include <locale.h>
 	#define _(x) (x)
 	#define ngettext(s, p, n) ((n == 1) ? (s) : (p))
 	#define N_(x) (x)
 #endif // ENABLE_NLS
 
 #endif // _NLS_HPP_
+

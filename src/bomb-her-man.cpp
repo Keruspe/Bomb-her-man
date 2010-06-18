@@ -18,26 +18,54 @@
  */
 
 #include "bombherman.hpp"
-#include "exceptions/exception.hpp"
 #include "game/game.hpp"
-#include "atomic-center/atomic-center.hpp"
-#include "map/map-utils.hpp"
-#include "audio/audio.hpp"
 
 using namespace bombherman;
 
-int
-main()
+// Those defines are tricks to try supporting minGW
+
+#ifdef __cplusplus
+extern "C"
 {
-	Audio::init();
+#endif // __cplusplus
+
+int
+#ifdef __MINGW32__
+SDL_main(int argc, char **argv)
+#else
+main()
+#endif // __MINGW32__
+{
+	#if ENABLE_NLS
+		if ( ! setlocale (LC_ALL, "") )
+			bherr << "Locale error, won't have i18n" << bhendl;
+		else if ( ! bindtextdomain(PACKAGE, LOCALEDIR) )
+			bherr << "Gettext error, won't have i18n" << bhendl;
+		else if ( ! textdomain(PACKAGE) )
+			bherr << "Gettext error, won't have i18n" << bhendl;
+		else if ( ! bind_textdomain_codeset(PACKAGE, "UTF-8") )
+			bherr << "Gettext error, maybe won't have i18n" << bhendl;
+	#endif
 	try
 	{
+		// Launch the Game
 		Game::main();
 	}
-	catch ( exceptions::Exception &e )
+	catch ( exceptions::Exception & e )
 	{
+		// Catch our home made exceptions
 		bherr << "Exception: " << e.message() << bhendl;
 	}
-	Audio::quit();
+	catch ( std::exception & e )
+	{
+		// We should never go there
+		bherr << "Ouch, an unknown exception was thrown, please report this as a bug : "
+			<< bhendl << e.what() << bhendl;
+	}
 	return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
+

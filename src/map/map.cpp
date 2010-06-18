@@ -18,18 +18,21 @@
  */
 
 #include "map.hpp"
-#include "map-generator/map-generator.hpp"
+#include "map-generator.hpp"
 #include "bombherman.hpp"
 
 using namespace bombherman;
 using namespace bombherman::map;
 
+// Initialize statics
 Grid Map::map;
 
 void
 Map::newMap()
 {
 	Map::map = Grid();
+	
+	// The default map creator calls the MapGenerator
 	MapGenerator::generate(Map::map);
 	Map::map.exists = true;
 	Map::placePlayers();
@@ -40,6 +43,7 @@ Map::newMap(std::string path)
 {
 	try
 	{
+		// This map creator calls the MapParser
 		if (! MapParser::parse(path, Map::map))
 		{
 			bherr << "The file in which the program looked "
@@ -75,13 +79,18 @@ Map::placePlayers()
 	{
 		while (true)
 		{
+			// We get random coords from MapGenerator
 			c = MapGenerator::getRandomCoords();
+			
+			// We check that we are not on a cell stuck at another player
 			if((Map::map[c.y][c.x] == PLAYER)
 				|| (c.y != 0 && Map::map[c.y - 1][c.x] == PLAYER)
 				|| (c.y != Map::map.size - 1 && Map::map[c.y+1][c.x] == PLAYER)
 				|| (c.x != 0 && Map::map[c.y][c.x-1] == PLAYER)
 				|| (c.x != Map::map.size - 1 && Map::map[c.y][c.x+1] == PLAYER))
 					continue;
+			
+			// We clear the map around the player
 			if (c.y != 0)
 				Map::map[c.y - 1][c.x] = NOTHING;
 			if (c.y != Map::map.size - 1)
@@ -90,6 +99,8 @@ Map::placePlayers()
 				Map::map[c.y][c.x - 1] = NOTHING;
 			if (c.x != Map::map.size - 1)
 				Map::map[c.y][c.x + 1] = NOTHING;
+			
+			// We tell the player where he is
 			(*i)->setCoords(c);
 			Map::map[c.y][c.x] = PLAYER;
 			break;
@@ -101,8 +112,11 @@ bool
 Map::plantBomb(Coords & c)
 {
 	if (! Map::exists() || ! c.validate() || Map::get(c) != PLAYER)
+		// Ok that's weird, only a valid player should be able to do that
 		return false;
 	Map::map[c.y][c.x] = PLAYONBOMB;
+	
+	// The bomb has been planted !
 	return true;
 }
 
@@ -127,6 +141,8 @@ Map::movePlayer(Coords & c, Direction & direction)
 {
 	if(! Map::exists())
 		return NOTHINGHAPPENED;
+	
+	// Used to stock whether we moved or not
 	bool tmpBool;
 	switch(direction)
 	{
@@ -147,12 +163,14 @@ Map::movePlayer(Coords & c, Direction & direction)
 		return NOTHINGHAPPENED;
 	if (Map::map[c.y][c.x] != BOMB)
 	{
+		// Now used to stock if we took a bonus
 		tmpBool = Map::applyBonus(c);
 		Map::map[c.y][c.x] = PLAYER;
 		if (tmpBool)
 			return BONUSTAKEN;
 	}
 	else
+		// We're on a bomb, we'd better run
 		Map::map[c.y][c.x] = PLAYONBOMB;
 	return MOVED;
 }
@@ -210,10 +228,21 @@ Map::moveRight(Coords & c)
 }
 
 void
-Map::destroy(Coords & c)
+Map::cleanOldSpot(Coords & c)
+{
+	if (Map::map[c.y][c.x] == PLAYONBOMB)
+		Map::map[c.y][c.x] = BOMB;
+	else if (Map::map[c.y][c.x] != BOMB)
+		Map::map[c.y][c.x] = NOTHING;
+}
+
+void
+Map::destroyBarrel(Coords & c)
 {
 	if (! Map::exists() || ! c.validate() || Map::get(c) != BARREL)
 		return;
+	
+	// Was there a bonus in this one ? :-)
 	if (MapGenerator::throwDice(Config::getInt("bonusApparitionProbability")))
 		Map::map[c.y][c.x] = FIRSTBONUS + MapGenerator::random(0, LASTBONUS-FIRSTBONUS);
 	else
@@ -229,6 +258,8 @@ Map::removePlayer(Coords & c)
 		Map::map[c.y][c.x] = NONE;
 	else if (Map::get(c) == PLAYONBOMB)
 		Map::map[c.y][c.x] = BOMB;
+	
+	// Set coords to any invalid thing
 	c.x = Config::getInt("mapSize");
 	c.y = Config::getInt("mapSize");
 }
@@ -257,11 +288,13 @@ Map::applyBonus(Coords & c)
 {
 	Player * player = Player::playerAt(c);
 	if (player == 0)
+		// No player there, weird...
 		return false;
 	int variation(1);
 	switch(static_cast<Bonus>(Map::map[c.y][c.x]))
 	{
 	case FIREDOWN:
+		// Will be negative
 		variation = -1;
 	case FIREUP:
 		player->addToRange(variation * Config::getInt("rangeVariation"));
@@ -273,6 +306,7 @@ Map::applyBonus(Coords & c)
 		player->setRange(Config::getInt("maxRange"));
 		break;
 	case BOMBDOWN:
+		// Will ve negative
 		variation = -1;
 	case BOMBUP:
 		player->addToPlantableBombs(variation * Config::getInt("capacityVariation"));
@@ -284,35 +318,22 @@ Map::applyBonus(Coords & c)
 }
 
 void
-Map::cleanOldSpot(Coords & c)
-{
-	if (Map::map[c.y][c.x] == PLAYONBOMB)
-		Map::map[c.y][c.x] = BOMB;
-	else if (Map::map[c.y][c.x] != BOMB)
-		Map::map[c.y][c.x] = NOTHING;
-}
-
-void
 Map::toString()
 {
 	if(! Map::exists())
 		return;
-	Coords c;
+	// Read the lines
 	for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
 		i_end = Map::map.grid.end() ; i != i_end ; ++i)
 	{
+		// Read the cols
 		for (std::vector< char >::iterator j = i->begin(), j_end = i->end() ;
 			j != j_end ; ++j)
 		{
+			// Print the current cell
 			std::cout << '[' << *j << ']';
 		}
 		std::cout << bhendl;
 	}
-}
-
-bool
-Map::exists()
-{
-	return Map::map.exists;
 }
 

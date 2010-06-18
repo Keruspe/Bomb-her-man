@@ -1,6 +1,7 @@
 /*
  * Bomb-her-man
  * Copyright (C) Sardem FF7 2010 <sardemff7.pub@gmail.com>
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -17,10 +18,12 @@
  */
 
 #include "display.hpp"
-#include "game/player.hpp"
+
 #include <sstream>
 #include <librsvg/rsvg-cairo.h>
 #include <cairo.h>
+
+#include "game/player.hpp"
 
 #define FONT_FILE "biolinum.ttf"
 
@@ -33,6 +36,7 @@ SDL_mutex *Display::mUpdate = SDL_CreateMutex();
 
 SDL_Color Display::textColor = {255, 255, 255, 0};
 SDL_Color Display::highlightColor = {255, 0, 0, 0};
+SDL_Color Display::scoreColor = {0, 0, 0, 0};
 
 int Display::widthMax = 0;
 int Display::heightMax = 0;
@@ -53,19 +57,17 @@ SDL_Surface *Display::gBonuses[NB_BONUSES];
 SDL_Surface *Display::gBomb = NULL;
 SDL_Surface *Display::gExplosion = NULL;
 SDL_Surface *Display::gBarrel = NULL;
-SDL_Surface *Display::gWall = NULL;
-SDL_Surface *Display::gBack = NULL;
+SDL_Surface *Display::gTomb[2] = {NULL, NULL};
+SDL_Surface *Display::gFloor = NULL;
 
 
-int Display::gMapSize = 0;
+Uint32 Display::gMapSize = 0;
 Uint16 Display::gSize = 0;
 SDL_Rect Display::gZone;
 
 void
 Display::init()
 {
-	width = Config::getInt("screenWidth");
-	height = Config::getInt("screenHeight");
 	gMapSize = Config::getInt("mapSize");
 	
 	unsigned int max = Config::getInt("maxPlayers");
@@ -99,34 +101,11 @@ Display::init()
 	if ( modes == reinterpret_cast<SDL_Rect**>(0) )
 		throw exceptions::display::NoSDLException("No modes available!");
 	
-	bool ok = false;
 	if ( modes == reinterpret_cast<SDL_Rect**>(-1) )
-	{
-		if ( ( width == 0 ) || ( height == 0 ) )
-			throw exceptions::display::NoSDLException("Can't choice the resolution");
-	}
-	else
-	{
-		for ( int i = 0 ; modes[i] ; ++i )
-		{
-			if ( ( width == modes[i]->w ) && ( height == modes[i]->h ) )
-			{
-				ok = true;
-				break;
-			}
-		}
-	}
-	
-	if ( ok )
-	{
-		heightMax = height;
-		widthMax = width;
-	}
-	else
-	{
-		widthMax = modes[0]->w;
-		heightMax = modes[0]->h;
-	}
+		throw exceptions::display::NoSDLException("Can't choice the resolution");
+		
+	widthMax = modes[0]->w;
+	heightMax = modes[0]->h;
 	
 	if ( TTF_Init() == -1 )
 	{
@@ -136,19 +115,18 @@ Display::init()
 	
 	rsvg_init();
 	
-	
 	changeFullscreen();
 }
 
 SDL_Surface *
 Display::svgToSurface(std::string file, Uint32 targetWidth, Uint32 targetHeight)
 {
-	GError **err = NULL;
+	GError *err = NULL;
 	
-	RsvgHandle *rsvg = rsvg_handle_new_from_file(file.c_str(), err);
+	RsvgHandle *rsvg = rsvg_handle_new_from_file(file.c_str(), &err);
 	
-	if ( err )
-		throw exceptions::display::NoSVGException("Can't read the file");
+	if ( ! rsvg )
+		throw exceptions::display::NoSVGException("Can't read the file: " + file);
 	
 	RsvgDimensionData dims;
 	
@@ -184,9 +162,10 @@ Display::initSurfaces()
 {
 	if ( ! sDisplay ) init();
 	
+	
 	// Logo
 	SDL_Surface *icon = svgToSurface(DATADIR"/graphics/bomb-her-man.svg");
-	//SDL_WM_SetIcon(icon, NULL);
+	SDL_WM_SetIcon(icon, NULL);
 	SDL_FreeSurface(icon);
 	icon = NULL;
 	
@@ -194,21 +173,37 @@ Display::initSurfaces()
 	// sBackground
 	cleanSurface(sBackground);
 	sBackground = SDL_CreateRGBSurface(flags, width, height, 32, 0, 0, 0, 0);
-	SDL_FillRect(sBackground, NULL, 0x00444444);
+	SDL_FillRect(sBackground, NULL, 0x00d2995a);
+	Uint32 sBackSize = 0;
+	if ( width > height )
+		sBackSize = width / 4;
+	else if ( height > ( width * 3 ) )
+		sBackSize = width;
+	else
+		sBackSize = height / 3;
+	SDL_Surface *sBackTemp = svgToSurface(DATADIR"/graphics/background.svg", sBackSize, sBackSize * 3);
+	SDL_BlitSurface(sBackTemp, NULL, sBackground, NULL);
+	cleanSurface(sBackTemp);
 	
 	
 	// gBomb
 	cleanSurface(gBomb);
 	gBomb = svgToSurface(DATADIR"/graphics/bomb.svg");
 	
+	// gExplosion
+	cleanSurface(gExplosion);
+	gExplosion = svgToSurface(DATADIR"/graphics/explosion.svg");
 	
-	// gWall
-	cleanSurface(gWall);
-	gWall = svgToSurface(DATADIR"/graphics/wall.svg");
 	
-	// gBack
-	cleanSurface(gBack);
-	gBack = svgToSurface(DATADIR"/graphics/back.svg");
+	// gTombs
+	cleanSurface(gTomb[0]);
+	cleanSurface(gTomb[1]);
+	gTomb[0] = svgToSurface(DATADIR"/graphics/tomb1.svg");
+	gTomb[1] = svgToSurface(DATADIR"/graphics/tomb2.svg");
+	
+	// gFloor
+	cleanSurface(gFloor);
+	gFloor = svgToSurface(DATADIR"/graphics/floor.svg", gZone.w, gZone.h);
 	
 	// gBarrel
 	cleanSurface(gBarrel);
@@ -282,8 +277,9 @@ Display::quit()
 	cleanSurface(gBomb);
 	cleanSurface(gExplosion);
 	cleanSurface(gBarrel);
-	cleanSurface(gWall);
-	cleanSurface(gBack);
+	cleanSurface(gTomb[0]);
+	cleanSurface(gTomb[1]);
+	cleanSurface(gFloor);
 	
 	unsigned int max = Config::getInt("maxPlayers");
 	for ( unsigned int p = 0 ; p < max ; ++p )
@@ -310,7 +306,7 @@ Display::quit()
 void
 Display::changeFullscreen()
 {
-	bool beFullscreen = ( Config::getInt("fullscreen") == 1 );
+	bool beFullscreen( Config::getInt("fullscreen") == 1 );
 	if ( ( sDisplay ) && ( beFullscreen == isFullscreen ) ) return;
 	Uint32 adds = 0;
 	if ( beFullscreen )
@@ -321,8 +317,16 @@ Display::changeFullscreen()
 	}
 	else
 	{
-		width = widthMax * 0.9;
-		height = heightMax * 0.9;
+		width = Config::getInt("screenWidth");
+		height = Config::getInt("screenHeight");
+		
+		if	( ( width == 0 ) || ( height == 0 )
+			||
+			( width > widthMax*0.9 ) || ( height > heightMax*0.9 ) )
+		{
+			width = widthMax*0.9;
+			height = heightMax*0.9;
+		}
 	}
 	SDL_LockMutex(mUpdate);
 	
@@ -415,73 +419,98 @@ Display::displayMenu(Menu *menu)
 		}
 	}
 	updateDisplay(sMenu);
-	SDL_FreeSurface(sMenu);
+	cleanSurface(sMenu);
 	TTF_CloseFont(fontTitle);
 	TTF_CloseFont(fontNormal);
 }
 
 void
-Display::updateScores()
+Display::displayScores()
+{
+	updateScores(true);
+}
+
+void
+Display::updateScores(bool final)
 {
 	if ( ! sDisplay ) init();
-	
-	if ( ( gZone.x == 0 ) && ( gZone.y == 0 ) ) return;
-	
-	SDL_Rect z = {0, 0, 0, 0}, dp = {0, 0, 0, 0}, dt = {0, 0, 0, 0};
 	
 	Uint32 sSize = 0, nbAll = ( Config::getInt("nbPlayers") + Config::getInt("nbAIs") );
 	if ( nbAll < 1 ) return;
 	
-	TTF_Font *font = TTF_OpenFont(DATADIR"/"FONT_FILE, (gSize*2));
-	if ( ! font )
-	{
-		bherr << TTF_GetError() << bhendl;
-		throw exceptions::display::NoSDLException("Impossible d'ouvrir la police");
-	}
 	
-	Uint16 dx = 0, dy = 0;
-	int wText, hText;
-	TTF_SizeText(font, "00", &wText, &hText);
-	if ( width > height )
-	{	// Horizontal screen -> Vertical scores
-		z.w = gZone.x;
-		z.h = height;
-		dy = z.h / nbAll;
-		sSize = dy / 4;
-		dp.x = sSize / 2 - gSize / 2;
-		dp.y = 5 * sSize / 4;
-		if ( dy < z.w )
-		{
-			dt.x = dp.y;
-			dt.y = sSize / 2 - hText / 2;
-		}
-		else
-			dt.y = dp.y + sSize - hText / 2;
+	SDL_Rect
+		z = {0, 0, 0, 0},
+		dh = {0, 0, 0, 0},
+		dp = {0, 0, 2, 2},
+		db = {0, 0, 0, 0};
+	SDL_Surface *sScoreBack = NULL;
+	bool vertical(true);
+	if ( final )
+	{
+		dh.w = z.w = width;
+		dh.h = z.h = height;
+		if ( height < width )
+			vertical = false;
 	}
 	else
-	{	// Vertical screen -> Horizontal scores
-		z.w = width;
-		z.h = gZone.y;
-		dx = z.w / nbAll;
-		sSize = dx / 4;
-		dp.x = 5 * sSize / 4;
-		dp.y = sSize / 2 - gSize / 2;
-		if ( dy < z.w )
-		{
-			dt.x = sSize / 2 - wText / 2;
-			dt.y = dp.x;
-		}
-		else
-			dt.x = dp.x + sSize - wText / 2;
+	{
+		if ( ( gZone.x == 0 ) && ( gZone.y == 0 ) ) return;
+		dh.w = z.w = gZone.x;
+		dh.h = z.h = gZone.y;
+		if ( z.w == 0 )
+			vertical = false;
 	}
+	
+	if ( vertical )
+	{	// Vertical scores
+		z.h = height;
+		dh.y = dh.h = z.h / nbAll;
+		sSize = z.w;
+		sScoreBack = svgToSurface(DATADIR"/graphics/scores/background-vertical.svg", sSize, sSize);
+		db.y = sSize;
+	}
+	else
+	{	// Horizontal scores
+		z.w = width;
+		dh.x = dh.w = z.w / nbAll;
+		sSize = z.h;
+		sScoreBack = svgToSurface(DATADIR"/graphics/scores/background-horizontal.svg", sSize, sSize);
+		db.x = sSize;
+	}
+	
+	sSize /= 1.7;
+	if ( dh.w > dh.h )
+	{
+		dp.x = sSize;
+		dp.y = ( sSize - gSize ) / 2;
+		dp.w = 4;
+	}
+	else
+	{
+		dp.x = ( sSize - gSize ) / 2;
+		dp.y = sSize;
+		dp.h = 4;
+	}
+	
 	
 	cleanSurface(gScoresLayer);
 	gScoresLayer = SDL_CreateRGBSurface(flags, z.w, z.h, 32, 0, 0, 0, 0);
-	SDL_BlitSurface(sBackground, &z, gScoresLayer, NULL);
+	
+	
+	SDL_Rect b = {0, 0, 0, 0};
+	for ( Uint32 i = 0 ; ( b.x < z.w ) && ( b.y < z.h ) ; ++i )
+	{
+		SDL_BlitSurface(sScoreBack, NULL, gScoresLayer, &b);
+		b.x = (i*db.x);
+		b.y = (i*db.y);
+	}
+	
+	cleanSurface(sScoreBack);
 	
 	Sint32 *scores = reinterpret_cast<Sint32 *>(malloc(nbAll * sizeof(Sint32)));
 	Sint32 max = -10;
-	bool neutral = false;
+	bool neutral(false);
 	for ( std::vector< Player * >::iterator i = Player::players.begin(), e = Player::players.end() ; i != e ; ++i )
 	{
 		Sint32 s = (*i)->getScore();
@@ -491,61 +520,84 @@ Display::updateScores()
 	}
 	
 	// Scores heads
-	SDL_Surface *sWin = svgToSurface(DATADIR"/graphics/scores/win.svg", sSize, sSize);
-	SDL_Surface *sLose = svgToSurface(DATADIR"/graphics/scores/lose.svg", sSize, sSize);
-	SDL_Surface *sEqual = svgToSurface(DATADIR"/graphics/scores/equal.svg", sSize, sSize);
-		
+	SDL_Surface *sWin[] = {
+			svgToSurface(DATADIR"/graphics/scores/1/win.svg", sSize, sSize),
+			svgToSurface(DATADIR"/graphics/scores/2/win.svg", sSize, sSize)
+		};
+	SDL_Surface *sLose[] = {
+			svgToSurface(DATADIR"/graphics/scores/1/lose.svg", sSize, sSize),
+			svgToSurface(DATADIR"/graphics/scores/2/lose.svg", sSize, sSize)
+		};
+	SDL_Surface *sEqual[] = {
+			svgToSurface(DATADIR"/graphics/scores/1/equal.svg", sSize, sSize),
+			svgToSurface(DATADIR"/graphics/scores/2/equal.svg", sSize, sSize)
+		};
+	
+	TTF_Font *font = TTF_OpenFont(DATADIR"/"FONT_FILE, (sSize / 6));
+	if ( ! font )
+	{
+		bherr << TTF_GetError() << bhendl;
+		throw exceptions::display::NoSDLException("Impossible d'ouvrir la police");
+	}
+	
+	
 	for ( unsigned int i = 0 ; i < nbAll ; ++i )
 	{
 		int s = scores[i];
 		
-		SDL_Rect
-			h = {
-				( 2 * sSize / 3 ) + ( i * dx ),
-				( 2 * sSize / 3 ) + ( i * dy ),
+		SDL_Rect h = {
+				( ( dh.w - sSize ) / dp.w ) + ( i * dh.x ),
+				( ( dh.h - sSize ) / dp.h ) + ( i * dh.y ),
 				sSize,
 				sSize
-			},
-			p = {
-				h.x + dp.x,
-				h.y + dp.y,
-				sSize,
-				sSize
-			},
-			t = {
-				h.x + dt.x,
-				h.y + dt.y,
-				z.w - ( sSize / 2 ),
-				z.h - ( sSize / 2 )
 			};
 		
-		SDL_BlitSurface(( s == max ) ? ( ( neutral ) ? ( sEqual ) : ( sWin ) ) : ( sLose ), NULL, gScoresLayer, &h);
+		SDL_BlitSurface(( s == max ) ? ( ( neutral ) ? ( sEqual[i%2] ) : ( sWin[i%2] ) ) : ( sLose[i%2] ), NULL, gScoresLayer, &h);
 		
-		SDL_BlitSurface(gPlayers[i][map::DOWN][0], NULL, gScoresLayer, &p);
 		
 		SDL_Surface *textSurface = NULL;
 		std::ostringstream ost;
-		ost << std::setw(2) << std::setfill('0') << s;
+		ost << s;
 		std::string st(ost.str());
 		const char *text = st.c_str();
-		if ( ! ( textSurface = TTF_RenderUTF8_Blended(font, text, textColor) ) )
-			bherr << "Can't display the line" << text << bhendl;
+		if ( ! ( textSurface = TTF_RenderUTF8_Blended(font, text, scoreColor) ) )
+			bherr << "Can't display the line" << st << bhendl;
 		else
 		{
+			int wText, hText;
+			TTF_SizeText(font, text, &wText, &hText);
+			SDL_Rect t = {
+					h.x + ( sSize - wText ) / 2,
+					h.y + sSize * 0.68,
+					wText,
+					hText
+				};
 			SDL_BlitSurface(textSurface, NULL, gScoresLayer, &t);
 			SDL_FreeSurface(textSurface);
 		}
+		if ( ! final )
+		{
+			SDL_Rect p = {
+					h.x + dp.x,
+					h.y + dp.y,
+					gSize,
+					gSize
+				};
+			SDL_BlitSurface(gPlayers[i][map::DOWN][0], NULL, gScoresLayer, &p);
+		}
 	}
-	
 	
 	updateDisplay(gScoresLayer, z);
 	
 	free(scores);
 	TTF_CloseFont(font);
 	
-	SDL_FreeSurface(sWin);
-	SDL_FreeSurface(sLose);
-	SDL_FreeSurface(sEqual);
+	cleanSurface(sWin[0]);
+	cleanSurface(sWin[1]);
+	cleanSurface(sLose[0]);
+	cleanSurface(sLose[1]);
+	cleanSurface(sEqual[0]);
+	cleanSurface(sEqual[1]);
 }
 
 void
@@ -553,11 +605,13 @@ Display::updateMap()
 {
 	updateScores();
 	
-	if ( ( ! gWall ) || ( ! gBack ) ) initSurfaces();
+	if ( ( ! gTomb[0] ) || ( ! gTomb[1] ) || ( ! gFloor ) ) initSurfaces();
 	
 	cleanSurface(gMapLayer);
 	gMapLayer = SDL_CreateRGBSurface(flags, gZone.w, gZone.h, 32, 0, 0, 0, 0);
 	
+	SDL_BlitSurface(gFloor, NULL, gMapLayer, NULL);
+
 	map::Coords coords;
 	SDL_Rect r;
 	r.x = 0;
@@ -569,9 +623,7 @@ Display::updateMap()
 		for(coords.x = 0 ; coords.x < gMapSize ; ++coords.x)
 		{
 			if ( map::Map::get(coords) == map::INDESTRUCTIBLE )
-				SDL_BlitSurface(gWall, NULL, gMapLayer, &r);
-			else
-				SDL_BlitSurface(gBack, NULL, gMapLayer, &r);
+				SDL_BlitSurface(gTomb[(coords.x+coords.y)%2], NULL, gMapLayer, &r);
 			r.x += gSize;
 		}
 		r.x = 0;
@@ -585,7 +637,7 @@ void
 Display::updateBarrels()
 {
 	if ( ! gMapLayer ) return;
-	if ( ! gWall ) initSurfaces();
+	if ( ( ! gTomb[0] ) || ( ! gTomb[1] ) ) initSurfaces();
 	SDL_Rect r;
 	cleanSurface(gBarrelsLayer);
 	gBarrelsLayer = SDL_CreateRGBSurface(flags, gZone.w, gZone.h, 32, 0, 0, 0, 0);
@@ -617,7 +669,8 @@ Display::updateBarrels()
 void
 Display::updatePlayers()
 {
-	if ( ! gPlayers[0][0][0] ) initSurfaces();
+	if ( ! gPlayers[0][0][0] )
+		initSurfaces();
 	
 	SDL_Rect r = {
 			0,
@@ -626,9 +679,11 @@ Display::updatePlayers()
 			gSize
 		};
 	map::Coords coords;
-	for ( std::vector< Player * >::iterator i = Player::players.begin(), e = Player::players.end() ; i != e ; ++i )
+	for ( std::vector< Player * >::iterator i = Player::players.begin(),
+		e = Player::players.end() ; i != e ; ++i )
 	{
-		if ( ! (*i)->isAlive() ) continue;
+		if ( ! (*i)->isAlive() )
+			continue;
 		
 		coords = (*i)->getCoords();
 		r.x = ( coords.x * gSize ) + gZone.x;
@@ -638,13 +693,13 @@ Display::updatePlayers()
 }
 
 void
-Display::movePlayer(Player *player, map::Direction goTo)
+Display::movePlayer(Player * player, map::MoveResult moveResult)
 {
-	if ( ! sDisplay ) init();
-	map::MoveResult status = player->go(goTo);
-	if ( status == map::NOTHINGHAPPENED ) return;
-	int p = player->getId() - 1;
+	if ( ! sDisplay )
+		init();
 	SDL_Surface *sPlayer = NULL;
+	int p = player->getId() - 1;
+	map::Direction goTo = player->getOrient();
 	map::Coords coords = player->getCoords();
 	SDL_Rect
 		r = {
@@ -659,7 +714,12 @@ Display::movePlayer(Player *player, map::Direction goTo)
 				gSize,
 				gSize
 			};
-	switch ( status )
+	#if ANIM_IMAGES > 1
+	unsigned int anim = 0;
+	const Sint16 part = gSize / ANIM_IMAGES;;
+	const Sint16 cpart = (ANIM_IMAGES-1) * part;
+	#endif // ANIM_IMAGES > 1
+	switch ( moveResult )
 	{
 		case map::BONUSTAKEN:
 			SDL_BlitSurface(gMapLayer, &r, gBarrelsLayer, &r);
@@ -681,9 +741,6 @@ Display::movePlayer(Player *player, map::Direction goTo)
 			}
 			
 			#if ANIM_IMAGES > 1
-			unsigned int anim = 0;
-			const Sint16 part = gSize / ANIM_IMAGES;
-			const Sint16 cpart = (ANIM_IMAGES-1) * part;
 			while ( true )
 			{
 				SDL_Rect d = {
@@ -722,18 +779,25 @@ Display::movePlayer(Player *player, map::Direction goTo)
 			}
 			#endif // ANIM_IMAGES > 1
 		break;
+		default:
+		break;
 	}
 	sPlayer = SDL_CreateRGBSurface(flags, r.w, r.h, 32, 0, 0, 0, 0);
-	SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
-	SDL_BlitSurface(gPlayers[player->getId()-1][player->getOrient()][0], NULL, sPlayer, &l);
+	if (player->isAlive())
+		SDL_BlitSurface(gBarrelsLayer, &r, sPlayer, NULL);
+	SDL_BlitSurface(gPlayers[p][goTo][0], NULL, sPlayer, &l);
 	updateDisplay(sPlayer, gZone.x + r.x, gZone.y + r.y, r.w, r.h);
 	SDL_FreeSurface(sPlayer);
 }
 
 void
-Display::plantBomb(map::Coords coords)
+Display::plantBomb(Player *player)
 {
-	if ( ! sDisplay ) init();
+	if ( ! gBomb )
+		initSurfaces();
+	
+	map::Coords coords = player->getCoords();
+	
 	SDL_Rect r = {
 			coords.x * gSize,
 			coords.y * gSize,
@@ -746,6 +810,33 @@ Display::plantBomb(map::Coords coords)
 	r.y += gZone.y;
 	updateDisplay(gBomb, r);
 	
-	updatePlayers();
+	updateDisplay(gPlayers[player->getId() - 1][player->getOrient()][0], r);
 }
 
+void
+Display::explode(map::Coords bomb, std::vector<map::Coords> cells)
+{
+	#if ANIM_IMAGES > 1
+	Uint32 size = cells.size();
+	if (size > 0)
+	{
+		SDL_Rect r = {
+			gZone.x + bomb.x * gSize,
+			gZone.y + bomb.y * gSize,
+			gSize,
+			gSize
+		};
+		updateDisplay(gExplosion, r);
+		SDL_Delay(ANIM_TIME/(2*size));
+		for ( std::vector<map::Coords>::iterator i = cells.begin(),
+				e = cells.end() ; i != e ; ++i )
+		{
+			r.x = gZone.x + i->x * gSize;
+			r.y = gZone.y + i->y * gSize;
+			updateDisplay(gExplosion, r);
+			SDL_Delay(ANIM_TIME/(2*size));
+		}
+	}
+	#endif
+	updateBarrels();
+}

@@ -1,0 +1,686 @@
+Hugo Mougard (3):
+      map-generator first commit
+      map generator v0.1, ne génère que les blocs indéstructibles, mais les génère sans possibilité de bloquer les joueurs normalement : ]
+      version clean avec génération des indestructibles only
+
+Jro Mog (6):
+      cleanage de map-generator
+      Ajout des players
+      correction erreur de c/c
+      correction Player + transfert move de map à player
+      Completageation des players
+      correction typo
+
+Kevin Decherf (1):
+      AI Commit
+
+Marc-Antoine Perennou (363):
+      initial commit
+      map-utils : various typedefs
+      Refactor
+      first exceptions
+      base map + map-parser
+      use a col/row grid
+      use grid.size instead of SIZE
+      implement bonus
+      cleaner Grid.size
+      dummy classes for objects
+      use cerr for errors
+      comment undefined reference in config.cpp
+      initial main.cpp
+      pebkac, readd include in config.cpp
+      oops
+      use namespace
+      start reworking map
+      update parser to use new map model
+      detect malformed files
+      correctly use namespaces for map-generator
+      start using new map model for generator (segfaults for now)
+      refactor
+      add test main.cpp
+      add test main.cpp
+      Merge branch 'map' of git://github.com/Keruspe/Bomb-her-man into map
+      add Map default constructor with generator
+      use default Map constructor
+      typso
+      add malformed file exception
+      fix leftovers
+      use MalformedFileException
+      update inscludes
+      update include for bomberman.hpp
+      Merge branch 'master' into map
+      fix map-generator
+      quiet gcc warning
+      silent a few more warnings
+      add a few more gcc warnings
+      make gcc happy
+      cast to unsigned
+      use an iterator
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      fix indent
+      yet another indent fix
+      fix compile warinigs
+      fix some warnings
+      remove sully CFLAG
+      fix segfault
+      use rm -f to clean
+      Merge branch 'master' into map
+      simplify notation
+      Merge branch 'display' into map
+      delete buiolinum.ttf symlink
+      Merge branch 'map'
+      Merge branch 'display' into map
+      enable -Wextra
+      hability to put a player
+      silent gcc warnings
+      Merge branch 'map'
+      just a little check
+      Merge branch 'map'
+      add getRandomCoords
+      put -> newPlayer
+      Merge branch 'map'
+      add biolinum symlink
+      Merge branch 'master' into map
+      little cleanage
+      rewrok newPlayer
+      fix leftovers
+      getCoords(playerNo)
+      create players
+      rework player creation
+      Merge branch 'master' into map
+      set coords in Player constructor
+      silent gcc warnings
+      use config for maxPlayers
+      simplify config settings
+      rework playerId handling
+      fix merge
+      clean player
+      fix players
+      switch players handling from Map to Player
+      oops
+      fix leftovers
+      fix player
+      make it compiles
+      Merge branch 'display' into map
+      add clean() to Player
+      start implementing moves
+      implement moves
+      fix newPlayer
+      fix TooManyPlayersException throwing
+      remove debug output
+      add player orientation
+      Merge branch 'master' into map
+      initialise orient
+      update player coords
+      add some debug output
+      trying to debug
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      keep debugging
+      oops
+      make Map::get static
+      add get(x,y)
+      return null if invalid playerNo
+      cleanage
+      add plantBomb to map
+      map does not handle player anymore
+      fix segfault
+      give values to bonuses
+      fix segfault
+      destroy barrel
+      throwDice wants an int now
+      fix
+      implement bonuses
+      make some map-generator thingies public
+      update move restrictions
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      update orientation when moving
+      dummy handling bonuses and fixes for moves
+      Merge branch 'map'
+      only pass coords to move
+      Merge branch 'map'
+      oops
+      coding style fixes
+      simplify throwdic
+      shorten testCellLimited
+      shorten HorizontalScan
+      simplify a little testCellFull
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      NONE is now NOTHING
+      executable is now bomb-her-man
+      Merge branch 'map'
+      preparation for making bonuses effective
+      make bonuses effective
+      merge branch map into master for bonuses
+      add toString to map
+      toString is not static
+      fix interaction with bombs
+      fix superposition
+      factorise a little
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      player is still on his spot when planting bomb
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      pretty output for Makefile
+      Makefile: also remove old .o files
+      Merge branch 'map'
+      fix segfault ?
+      Merge branch 'master' into map
+      use Uint32
+      make map fully static
+      add deleteMap()
+      remove unused method
+      check if map exists
+      add another constructor to Grid
+      modif probablility of bonuses
+      fix
+      prepare player death
+      start implementing death
+      handle PLAYONBOMB in removePlayer
+      player.plantBomb
+      clean includes
+      make player go outside the map when dying
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      remove bomb
+      player.isAlive
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      make Player no longer alive when dying
+      fix nullfire
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      change ranges
+      fix
+      add operator== for Coords
+      operator< for Coords
+      fix
+      tryin to add a Comparator
+      implement moveResults
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      useless at last
+      start implementing end of game
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      make Player alive again when new map
+      removeBonus
+      fix
+      improve a little end of game
+      fix linkage failure
+      reInit has its own method
+      move some pointers to references
+      move the 'move' stack to references
+      move 'remove' stack to references
+      reinit bonuses
+      fix dumb segfault
+      typso
+      start documenting player
+      simplify stupid thing
+      finish documenting player
+      oops
+      a little cleaning in player + implementation of planted bombs count
+      typso
+      correctly decrease plantedBombs
+      start with capitals
+      remove unused things
+      document the map
+      try to fix failure in end of game
+      Revert "try to fix failure in end of game"
+      fix little tweak
+      little cleanage in map
+      don't kill dead people !
+      really, don't kill dead people please, that's weird and dirty, naughty boy !
+      document the map-parser
+      Map::exists()
+      document map-utils
+      fix javadoc
+      retry and success to fix failures in end of game with all people dying
+      comment out solution
+      document the map-generator
+      fix segfault when no player
+      don't set negative values to an Uint32 :)
+      little change in score handling
+      coords.validate()
+      Uint32 cannot be nagative
+      use c.validate()
+      fix
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      add default value to enum to avoid potential strange things
+      use Map::exists()
+      remove useless includes
+      codinf style in exceptions
+      add copy of the GPL
+      make doxygen happy
+      fix exceptions documentation
+      typso
+      document the classes
+      document other classes (exceptions)
+      now only atomic-center is missing from documentation
+      fix indent
+      player.kill return true if the game is over
+      use isAbleToPlantBomb
+      add dummy bonuses to better handle random bonuses
+      better handling of NB_BONUSES in display
+      document new enum members
+      document + clean atomic-center
+      document + clean bomb
+      Merge branch 'master' into atomic
+      fix documentation, no more doxygen warnings, yay \o/
+      set gameOver to false when starting new game and make it static
+      fix
+      make the documentation being generated in English and gitignore it
+      fix explosions after first game
+      remove debug messages
+      cleaner but still buggy
+      problem solved ?
+      remove debug messages
+      revert unwanted commit
+      bombs no longer explode in the next map :)
+      delete bomb when quitting game and fix segfault when doing it
+      fix bug when flooding plant bomb
+      simplify code
+      make player.die always return anything
+      reorder includes
+      oops
+      little fix + refactor
+      people don't die anymore after the end of a game :)
+      also catch unknown exceptions
+      make really small methods inline
+      Merge branch 'master' into map
+      add makefile cible for doc
+      add rules to install and rework others a bit
+      fix Makefile
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Revert "fix Makefile"
+      put Makefile on top
+      create directory if it doesn't exist
+      Revert "create directory if it doesn't exist"
+      fix Makefile
+      install data
+      redefine DATADIR (compile defining DEVEL now for developping)
+      fix
+      little trick
+      temporary fix
+      force --as-needed
+      update gitignore
+      comment map/
+      refactor
+      comment player
+      use Coords.operator==
+      comment atomic-center/
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      rework move stack
+      Merge branch 'map'
+      document protected things
+      fix
+      mutex for moves
+      allow THREAD_EVENTS in Makefile
+      fix mutex
+      make THREAD_EVENTS default
+      try to fix duplication with ANIM
+      fix
+      cleaner
+      timeBeforeExplosion in Config
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      fix
+      wait threads before nextMap
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      LOLZ
+      try to avoid freezes
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      don't use a pointer
+      comment game
+      comment menu, coding style fixes + little reworking of a few behaviours in menus
+      comment main and config
+      add some checks to mapParser
+      fix
+      simplify config.init
+      start making config file dynamic, probably needs cleaning
+      simplify a little
+      allow users to see their scores at the end of game (fugly for now)
+      start to comment map-generator
+      comment map-generator, create and use init()
+      don't double check
+      refactor
+      fix documentation errors in AI
+      add -Werr
+      mkdir
+      ANIM by default
+      rework bomb's range
+      bomb.getRange()
+      warn if not allowed to install
+      change access rights for the config dir
+      Map::getMap()
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Revert "ajout doc user"
+      check if player's alive in mutex
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      trying to start a configure.ac
+      fix compile and optimize
+      fix
+      add game::gameover
+      fix warnings
+      fix other warnings
+      yet other compile warnings shutdown
+      silent warnings
+      Merge branch 'AI'
+      fix AI
+      Merge branch 'master' into AI
+      fix last warning
+      update gitignore
+      merge gitignores
+      add -Werror
+      mkdir for windows
+      simplify a bit
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      add myself to authors
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      fix default capacity
+      update default number of maps
+      Release 0.1
+      fix configure.ac
+      refactor
+      fix
+      add autogen
+      update README
+      lower autoconf dep
+
+Mogzor (66):
+      Fix de MapGenerator::getRandomCoords et ajout d'un attribut à Coords pour rendre le tout plus clean
+      amélioration de Player
+      Merge branch 'master' of github.com:Keruspe/Bomb-her-man
+      fix index dangereux
+      Merge branch 'master' of github.com:Keruspe/Bomb-her-man
+      ajout barrels sur map generator + entrageation des paramètres de l'algo dans la classe config
+      ajout de l'atomic center
+      ajout conf à map gen
+      fix segfault const
+      Atomic Center construction in progress, beware.
+      fix player pointer
+      Merge branch 'master' of github.com:Keruspe/Bomb-her-man
+      ajout classe Bomb
+      Merge branch 'master' into atomic
+      still segfaulting
+      merge master
+      Merge branch 'master' into atomic
+      Merge branch 'master' into atomic
+      prémerge
+      Merge branch 'master' into atomic
+      Merge branch 'master' into atomic
+      prepull
+      Merge branch 'master' into atomic
+      Merge branch 'master' into atomic
+      Merge branch 'master' into atomic
+      Merge branch 'master' into atomic
+      Merge branch 'master' into atomic
+      Merge branch 'master' into atomic
+      Merge branch 'master' into atomic
+      Merge branch 'master' into atomic
+      Merge branch 'master' into atomic
+      Merge branch 'master' into atomic
+      Merge branch 'master' into atomic
+      segfault + deletion mystery resolved
+      fix pointeurs players dans bomb (fin vitef kk)
+      tkt
+      FONCTION BOUM, CA NE RIGOLE PLUS :(
+      Merge branch 'master' into atomic
+      Merge branch 'master' of github.com:Keruspe/Bomb-her-man
+      tentative de fix de boum à l'aveugle
+      ajout destruction bonus + fix death de player quand il est sur une bombe
+      fix switch bomb
+      Merge branch 'master' of github.com:Keruspe/Bomb-her-man
+      Privacy issues
+      sayésépouch
+      Merge branch 'master' of github.com:Keruspe/Bomb-her-man
+      imagezors
+      Merge branch 'master' of github.com:Keruspe/Bomb-her-man
+      Let's put some iron brain into that
+      Merge branch 'master' of github.com:Keruspe/Bomb-her-man
+      ajout tonneau
+      add tombs
+      ajout partiel des bonus
+      ajout faces keutan pakeutan neutres
+      ajout bonus et perso 2
+      nouveau background
+      background scores
+      add des anims pour le player 1 + modif background score
+      Merge branch 'master' of github.com:Keruspe/Bomb-her-man
+      fonds score
+      anim player 2
+      ajout logo
+      ajout picto explosion + image de fond pour les menus
+      ajout doc user
+      ajout de moua aux auteurs tkt
+      Merge branch 'master' of github.com:Keruspe/Bomb-her-man
+
+Sardem FF7 (235):
+      Move source code to src : we will have datas
+      Creates classes for display
+      Add gorgotten Backend interface (not an interface yet) and fixes
+      Add Logger
+      Add displayMenu and displayMap. Add NCurses backend.
+      Typo
+      Add Doxyfile for Doxygen
+      Merge branch 'map' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Improve logger; Add menu; Log to stdout/err; Fix the compile-time choise of backend
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man into display
+      Revert "Improve logger; Add menu; Log to stdout/err; Fix the compile-time choise of backend"
+      Better resolution support; Remove Logger
+      Merge branch 'map'
+      Verry little clean
+      Fix typo
+      Add missing nls.hpp
+      Now use exceptions to determine the better usable display backend
+      Add Config class
+      Add Makefile; Use DATADIR
+      Fix makefile for portability
+      Merge branch 'display'
+      With Makefile, remove include/ for bombherman.hpp
+      Add data; Improve documentation; Add Game and Events class
+      Merge branch 'display'
+      Add Game usage to main
+      Fix some warnings; Remove -Werror due to SDLmm
+      Merge branch 'master' into display
+      Clean init line
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man into display
+      Remove backends and SDLmm to use only SDL
+      Merge master
+      Fix compile-time errors
+      Merge branch 'master' into display
+      Merge branch 'display'
+      Add destructor to Game
+      Merge branch 'display'
+      Fix link-time errors
+      Merge branch 'display'
+      Make menus work
+      Merge branch 'display'
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      (Branch error) Add a game screen; Improves menus; Now can write configuration (not working ?)
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Remove some threading; Prepare game-time display
+      Merge branch 'display'
+      Add SVG use; Move map cout display at creation (when we laucnh game)
+      Merge master
+      Move defaults config to Config class
+      Merge branch 'display'
+      Type; Add again -Weffc++
+      Merge display
+      Hide mouse cursor; Temp fix for config.ini
+      Real fix for config.ini
+      Begin layers use
+      Merge branch 'master' into display
+      Add grey background; Create cascaded layers to display game
+      Make more memory freeing; Make update of barrels and players public
+      Add In-Game menu
+      Remove map cout display
+      Merge branch 'master' into display
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Check mapSize to be 15 at minimum; Use the future getPlayers en Player class
+      Prepare menus to the set of some config; Go further to the future player management
+      Fix segfault on play; Improves menus
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Improve menus
+      Merge branch 'display'
+      Now move player
+      Merge branch 'master' into display
+      Merge branch 'master' into display
+      Merge branch 'master' into display
+      Create the needed number of players
+      Merge branch 'master' into display
+      nbPlayers fix
+      Merge branch 'master' into display
+      I hope the updte part for players will work
+      Merge branch 'master' into display
+      Merge branch 'master' into display
+      Update only a part of the display on palyer move
+      Merge branch 'master' into display
+      Improve the player re-display of the player (will in a not so far future just what it needs)
+      Now display just the needed stuff on player move
+      Merge branch 'master' into display
+      Make players circles and add a line for orientation
+      Merge branch 'master' into display
+      Fix
+      Make font included; Fix players faces; Fix display of orient
+      Merge branch 'display'
+      Improve menus settings
+      Add max players setting in menu
+      Add quit game on escape in menu
+      Fix memory leaks in SVG->SDL_Surface operations
+      Merge branch 'display'
+      Allow to plant a bomb graphically
+      Temp (?) fix
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Use oriented SVGs for (non-used) anims images
+      Process int<->string at attribution
+      Prepare for (not working now) score display
+      Try/Catch all BHM exceptions in main()
+      First make of anims on player move
+      Backport some changes that was commit to anim branch
+      I hope it will be a little more performant
+      Anim is now more fluid (4 images, was 2); It's now quite easy to choose anim at compile-time
+      Little fix
+      Add scores SVGs
+      Some color changes
+      Merge branch 'display'
+      Use map::Element enum to check the map
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Merge display
+      Little improvements
+      Merge display
+      Very little improvement
+      Merge branch 'display' into anim
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Merge branch 'display' into anim
+      Fix
+      Merge branch 'display' into anim
+      Prepare to be safely merged into master
+      Merge branch 'display'
+      Yeah
+      Clean
+      Chance color of player for anim, to view what is changing; Move defines to Makefile
+      Remove debug output
+      Clean&Fix
+      VLI
+      Clean&Fix
+      Somes fixes in scores display
+      Merge branch 'master' into display
+      Map is static now
+      Somes fixes in score display
+      Merge branch 'display'
+      Fix
+      Prepare the explode animation
+      Merge branch 'display'
+      Make more things private
+      Merge branch 'master' into display
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man into display
+      Don't display out-siders
+      Move graphics to … graphics
+      Make the bomb a real circle
+      Improve the initial display of players
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Prepare use of future function
+      Merge branch 'display'
+      Fix
+      Make the bombs appear now
+      Add bonuses     Add bonuses graphics     Make the escape in game go back to main menu     Waiting for a way to erase bonuses on getting
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Use the new way to check what happened on player move !     So, now we erase bonuses when the player move.
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Some small changes to Player     Add kill() to Player (sorry Keruspe !)     Make score head displayed properly when negative points     Manage the number of wanted maps in Game (will make a resume score screen soon)     Wait a little after explode all bombs     Move some static methods to intance ones in Bomb (easier to get the bomber woman this way)     Remove isEploded: check the exploded state in explode itself (safer)
+      Don't need the pointer to coords
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Fix Valgrind errors
+      Change keys to plant bomb
+      Create methods to clean game layers
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Little changes     Use new init of Atomic center
+      Modify Bomb and AtomicCenter to be more thread-safe     Now, bombs are deleted only on the final "boum"     To permit check on the player existence, we now use user ID     So we must use direct coords to be a little more efficient     Use Uint32 when using coords, to avoid some strange reaction on 64bit system     AtomicCenter now make the bomb explode only on the big "boum"     Remove unused getters in Bomb and AtomicCenter     Sorry Mogzor !
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Change some names to avoid confusion     [Fix] Missing "-1" on x, in the first for loop
+      Temp commit to wait some incoming features
+      Merge branch 'master' into display
+      New way to do
+      Merge branch 'master' into atomic
+      Fix missing Mutex unlock
+      Merge branch 'master' into display
+      Merge branch 'atomic'
+      AIs will be Players
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Merge master
+      Missing merge stuff
+      Small changes to make MinGW-based compile work
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Fix MinGW
+      Add needed stuff for static link
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Use the same image for anim of player 1
+      Try to avoid too much threads for player move
+      Prepare the future graphics
+      Remove the choice of max players
+      Small change to tomb2 to see the diff
+      Merge branch 'display'
+      Prepare big back floor
+      Make scores cleaner; Use 'future' graphics
+      Merge branch 'master' into display
+      Use the portrait belt to display the score !
+      Merge branch 'master' into display
+      Use score background image
+      Use vertical and horizontal versions of score background
+      Rotate the back of the score background
+      Little fix
+      Back to main menu at end of game
+      Change a little config file places
+      Make effective the scores resume screen
+      Merge branch 'display'
+      Fix
+      Temp fix
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Remove some menus
+      Small changes
+      Autotools
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Fix warning
+      Fix warnings
+      Remove inline (will not still that way)
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Autotools now compile fine; Must fix data install
+      Fix
+      Fix data install
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Fix data install
+      Add font in Makefile.am
+      Prepare doc build
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Default to debug disabled
+      Test commit
+      Merge branch 'master' into display
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Add me to AUTHORS
+      Fix some meory leaks
+      Merge branch 'display'
+      Temp commit for explosion
+      Fix
+      Temp fix
+      Sleep depends on cells size
+      Merge branch 'display'
+      Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
+      Change a little explosion animation
+

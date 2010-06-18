@@ -32,9 +32,7 @@ namespace bombherman
 		typedef enum
 		{
 			MAIN = 0, /**< main menu */
-			GAME, /**< game menu */
 			SETTINGS, /**< settings menu */
-			INGAME, /**< in-game menu */
 		} Type;
 		
 		/// For the display backend to get the menu
@@ -44,6 +42,7 @@ namespace bombherman
 		 * @return A menu
 		 */
 		static Menu * getMenu(Type type);
+		
 		/// Clear menus
 		static void clear();
 		
@@ -52,6 +51,7 @@ namespace bombherman
 		 * @return The vector of the content of the menu
 		 */
 		std::vector<std::string> getContent() { return this->content; }
+		
 		/// To get the current item of the menu
 		/**
 		 * @return The place of the current item of the menu
@@ -60,24 +60,27 @@ namespace bombherman
 		
 		/// Make the action
 		void action();
+		
 		/// Make the quit action
 		void quit();
+		
 		/// Up in the menu
 		void up();
+		
 		/// Down in the menu
 		void down();
+		
 		/// Go left (change a value)
 		void left();
+		
 		/// Go right (change value)
 		void right();
 		
 		/// Destructor
 		virtual ~Menu() {}
-	
 	private:
 		Menu(Type type);
 		void setContent();
-		
 		static std::map<Type, Menu *> menus;
 		Type type;
 		std::vector<std::string> content;
@@ -88,3 +91,4 @@ namespace bombherman
 
 
 #endif // _DISPLAY_ELEMENTS_MENU_HPP_
+

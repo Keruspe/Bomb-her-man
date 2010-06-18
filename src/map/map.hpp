@@ -82,7 +82,7 @@ namespace bombherman
 			/**
 			 * @param c The coords of the barrel (map::coords)
 			 */
-			static void destroy(Coords & c);
+			static void destroyBarrel(Coords & c);
 			
 			/// Display the map
 			static void toString();
@@ -109,7 +109,13 @@ namespace bombherman
 			/**
 			 * @return True if the map exists
 			 */
-			static bool exists();
+			static bool exists() { return Map::map.exists; }
+			
+			/// Map getter
+			/**
+			 * @return The map (map::Grid)
+			 */
+			static Grid & getMap() { return Map::map; }
 		private:
 			static void placePlayers();
 			static bool moveUp(Coords &);

@@ -1,6 +1,7 @@
 /*
  * Bomb-her-man
  * Copyright (C) Sardem FF7 2010 <sardemff7.pub@gmail.com>
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -35,45 +36,54 @@ namespace bombherman
 		 * It initializes all the part of the game (display, sound, events)
 		 */
 		static void init();
+		
 		/// Main loop
 		/**
 		 * It launches the main loop, creating display and other
 		 */
 		static void main();
+		
 		/// Change the menu
 		/**
 		 * @param type The new menu type
 		 * @param stopGame Set it to true (default) to stop the current game (if any)
 		 */
 		static void changeMenu(Menu::Type type, bool stopGame = true);
+		
 		/// Launch a new game
 		static void newGame();
+		
 		/// Got to next map
 		static void nextMap();
+		
 		/// Play
 		static void play();
+		
 		/// Stop
 		static void stop() { playing = false; }
-	
+		
+		/// Game Over ?
+		static bool gameOver() { return Game::mapCount < 0; }
 	private:
 		static bool isInit, playing;
+		
+		// Wait threads (before going to next map)
+		static void waitThreads();
 		
 		/// Quit
 		static void quit();
 		
-		#ifdef THREAD_EVENTS
-		static std::vector< SDL_Thread * > *threads;
-		static void threadClean(Uint32 id);
-		#endif // THREAD_EVENTS
+		static std::vector< SDL_Thread * > threads;
 		
 		static int eventMenu(void *);
 		static int eventGame(void *);
 		
 		// To store the actual menu
-		static Menu *currentMenu;
+		static Menu * currentMenu;
 		
 		static Sint32 mapCount;
 	};
 }
 
 #endif // _GAME_HPP_
+

@@ -1,7 +1,8 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * Bomb-her-man
- * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
+ * Copyright (C) Hugo Mougard 2010 <mogzor@gmail.com>
+ * Copyright (C) Kevin Decherf 2010 <kdecherf@gmail.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -17,23 +18,32 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "exception.hpp"
+#ifndef _AI_HPP
+#define	_AI_HPP
 
-using namespace bombherman;
-using namespace bombherman::exceptions;
+#include <SDL.h>
 
-Exception::Exception(const std::string & m) throw() :
-	_message(m)
+#include "exceptions/too-many-players-exception.hpp"
+#include "player.hpp"
+#include "bombherman.hpp"
+
+namespace bombherman
 {
+	/// A player controlled by AI
+	class AI :
+		public Player
+	{
+	public:
+		/// Create a new AI
+		static void newAI();
+	private:
+		AI();
+		void init();
+		static int run(void *);
+		void findPath();
+		std::vector<map::Coords> playerMap;
+	};
 }
 
-Exception::~Exception() throw()
-{
-}
-
-const std::string &
-Exception::message() const throw()
-{
-	return _message;
-}
+#endif	/* _AI_HPP */
 

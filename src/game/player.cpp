@@ -1,8 +1,20 @@
-/* 
- * File:   Player.cpp
- * Author: mogzor
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
+/*
+ * Bomb-her-man
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
  * 
- * Created on May 24, 2010, 11:52 AM
+ * Bomb-her-man is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Bomb-her-man is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <SDL_thread.h>
@@ -11,69 +23,63 @@
 #include "game.hpp"
 #include "exceptions/too-many-players-exception.hpp"
 #include "atomic-center/atomic-center.hpp"
+#include "display/display.hpp"
 
 using namespace bombherman;
 
+// Initialize statics
 std::vector<Player * > Player::players;
 unsigned Player::icyDeadPeople = 0;
 
-Player::Player() : plantableBombs (Config::getInt("defaultPlantableBombs")),
-		range (Config::getInt("defaultRange")),
-		plantedBombs (0),
-		score (0),
-		id (Player::players.size() + 1),
-		coords (map::Coords()),
-		orient(map::DOWN),
-		alive(true)
+Player::Player() : 
+	plantableBombs (Config::getInt("defaultPlantableBombs")),
+	range (Config::getInt("defaultRange")),
+	plantedBombs (0),
+	score (0),
+	id (Player::players.size() + 1),
+	alive(true),
+	coords (map::Coords()),
+	orient(map::DOWN),
+	move_mutex(SDL_CreateMutex()),
+	currentMoves(0)
 {
 }
 
-Player::~Player()
+Player::Player(const Player & other) :
+	plantableBombs(other.plantableBombs),
+	range(other.range),
+	plantedBombs(other.plantedBombs),
+	score(other.score),
+	id(other.id),
+	alive(other.alive),
+	coords(other.coords),
+	orient(other.orient),
+	move_mutex(other.move_mutex),
+	currentMoves(other.currentMoves)
 {
 }
 
-int
-Player::getRange()
+Player &
+Player::operator=(const Player & other)
 {
-	return this->range;
-}
-
-map::Coords &
-Player::getCoords()
-{
-	return this->coords;
-}
-
-map::Direction &
-Player::getOrient()
-{
-	return this->orient;
-}
-
-bool
-Player::isAbleToPlantBomb()
-{
-	return (this->plantableBombs > this->plantedBombs);
-}
-
-int
-Player::getScore()
-{
-	return this->score;
-}
-
-int
-Player::getId ()
-{
-	return this->id;
+	this->plantableBombs = other.plantableBombs;
+	this->range = other.range;
+	this->plantedBombs = other.plantedBombs;
+	this->score = other.score;
+	this->id = other.id;
+	this->alive = other.alive;
+	this->coords = other.coords;
+	this->orient = other.orient;
+	this->move_mutex = other.move_mutex;
+	this->currentMoves = other.currentMoves;
+	return *this;
 }
 
 Player *
 Player::getPlayer(int id)
 {
-	if (Player::players.size() < static_cast<unsigned>(id)
-		|| 0 >= id)
-			return 0;
+	if (Player::players.size() < static_cast<unsigned>(id) || 0 >= id)
+		return 0;
 	return Player::players[id - 1];
 }
 
@@ -118,57 +124,67 @@ Player::die()
 		return false;
 	}
 	else if ( ( Player::players.size() - Player::icyDeadPeople ) == 1 )
-	// Don't reinit twice or more in a game, or weird things will happen :)
-	{
+		// Don't reinit twice or more in a game, or weird things will happen :)
 		SDL_CreateThread(Player::reInit, NULL);
-		return true;
-	}
+	return true;
 }
 
 int
-Player::reInit(void * dummy)
+Player::reInit(void *)
 {
+	// Make everything explode
 	bomb::AtomicCenter::boum();
+	
+	// Noone's dead anymore
 	Player::icyDeadPeople = 0;
+	
+	// Reset players' defaults
 	for (std::vector< Player * > ::iterator i = Player::players.begin(),
 		i_end = Player::players.end() ; i != i_end ; ++i)
 			(*i)->resetToDefaultStats();
+	
+	// Go to next map
 	Game::nextMap();
 	return 0;
 }
 
 void
-Player::setRange(int range)
+Player::setRange(Uint32 range)
 {
-	if (range < Config::getInt("minRange"))
-		this->range = Config::getInt("minRange");
-	else if (range > Config::getInt("maxRange"))
-		this->range = Config::getInt("maxRange");
+	if (range < static_cast<Uint32>(Config::getInt("minRange")))
+		this->range = static_cast<Uint32>(Config::getInt("minRange"));
+	else if (range > static_cast<Uint32>(Config::getInt("maxRange")))
+		this->range = static_cast<Uint32>(Config::getInt("maxRange"));
 	else
 		this->range = range;
 }
 
 void
-Player::addToRange(int range)
+Player::go(map::Direction direction)
 {
-	this->setRange(this->range + range);
-}
-
-map::MoveResult
-Player::go(map::Direction & direction)
-{
-	if (! this || ! this->alive)
-		return map::NOTHINGHAPPENED;
-	bool orientChanged(false);
-	if (this->orient != direction)
+	if (! this)
+		// If we don't exist (new Game), nothing'll happen
+		return;
+	if ( this->currentMoves < 2 )
+		++this->currentMoves;
+	else
+		return;
+	SDL_LockMutex(move_mutex);
+	if (! this->alive)
 	{
-		orientChanged = true;
-		this->orient = direction;
+		// We-re dead
+		SDL_UnlockMutex(this->move_mutex);
+		return;
 	}
+	bool orientChanged = (this->orient != direction);
+	if (orientChanged)
+		this->orient = direction;
 	map::MoveResult moveResult = map::Map::movePlayer(this->coords, direction);
 	if (moveResult == map::NOTHINGHAPPENED && orientChanged)
-		return map::ORIENTCHANGED;
-	return moveResult;
+		Display::movePlayer(this, map::ORIENTCHANGED);
+	Display::movePlayer(this, moveResult);
+	SDL_UnlockMutex(this->move_mutex);
+	--this->currentMoves;
 }
 
 void
@@ -192,12 +208,6 @@ Player::setPlantableBombs(int plantableBombs)
 }
 
 void
-Player::addToPlantableBombs(int plantableBombs)
-{
-	this->setPlantableBombs(this->plantableBombs + plantableBombs);
-}
-
-void
 Player::resetToDefaultStats()
 {
 	this->plantableBombs = Config::getInt("defaultPlantableBombs");
@@ -211,35 +221,22 @@ Player::plantBomb()
 {
 	if (! this->isAbleToPlantBomb())
 		return;
-	if ( bomb::AtomicCenter::plantBomb(this->id, this->coords) )
+	if ( bomb::AtomicCenter::plantBomb(this->id, this->coords, this->range) )
+	{	// The bomb has been planted !
 		++this->plantedBombs;
-}
-
-void
-Player::setCoords(map::Coords & c)
-{
-	this->coords = c;
+		Display::plantBomb(this);
+	}
 }
 
 Player *
 Player::playerAt(map::Coords & c)
 {
+	// We read all players
 	for (std::vector< Player * >::iterator i = Player::players.begin(),
 		i_end = Player::players.end() ; i != i_end ; ++i)
-			if((*i)->getCoords().x == c.x && (*i)->getCoords().y == c.y)
+			// Coords are equal ? That's the one we're looking for !
+			if((*i)->getCoords() == c)
 				return *i;
 	return 0;
-}
-
-bool
-Player::isAlive()
-{
-	return this->alive;
-}
-
-void
-Player::bombHasExploded()
-{
-	--this->plantedBombs;
 }
 

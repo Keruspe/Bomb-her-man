@@ -33,19 +33,19 @@ namespace bombherman
 		{
 		public:
 			/// Destructor
-			virtual ~Exception() throw();
+			virtual ~Exception() throw() {}
 
 			/// Give you the message of the exception
 			/**
 			 * @return The message (std::string)
 			 */
-			const std::string & message() const throw();
+			const std::string & message() const throw() { return _message; }
 		protected:
-			///Constructor
+			/// Constructor
 			/**
-			 * @param message The message of the exception
+			 * @param m The message of the exception
 			 */
-			Exception(const std::string & message) throw();
+			Exception(const std::string & m) throw() : _message(m) {}
 		private:
 			const std::string _message;
 		};

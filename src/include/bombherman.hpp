@@ -22,6 +22,11 @@
 #include <iostream>
 #include <iomanip>
 
+#include "config.h"
+#include "nls.hpp"
+#include "config/config.hpp"
+#include "exceptions/exception.hpp"
+
 namespace bombherman
 {
 	#define bhfile "file " << std::setw(30) << __FILE__ << ", line " << std::setw(8) << __LINE__ << " => "
@@ -30,8 +35,5 @@ namespace bombherman
 	#define bhendl std::endl
 }
 
-#include "config/config.hpp"
-#include "config.h"
-#include "nls.hpp"
-
 #endif // _BOMBHERMAN_HPP_
+

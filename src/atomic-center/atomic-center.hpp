@@ -1,18 +1,20 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * Bomb-her-man
- * Copyright (C) mogzor 2010 <mogzor@gmail.com>
- *
+ * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
+ * Copyright (C) Hugo Mougard 2010 <mogzor@gmail.com>
+ * Copyright (C) Sardem FF7 2010 <sardemff7.pub@gmail.com>
+ * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * Bomb-her-man is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -42,16 +44,17 @@ namespace bombherman
 			/**
 			 * @param player The id of the player who planted the bomb (int)
 			 * @param c The coords where the bomb has been planted (map::Coords)
+			 * @param range The range of the bomb's explosion (Uint32)
 			 *
 			 * @return True if a bomb has been planted
 			 */
-			static bool plantBomb (int player, map::Coords & c);
+			static bool plantBomb (int player, map::Coords & c, Uint32 range);
 			
 			/// Remove a bomb
 			/*
 			 * @param c The coords of the bomb to remove (map::Coords)
 			 */
-			static void removeBomb (map::Coords & c);
+			static void removeBomb (map::Coords & c) { bombs[c.x][c.y] = NULL; }
 			
 			/// Get a bomb by its coords
 			/*
@@ -59,7 +62,7 @@ namespace bombherman
 			 *
 			 * @return A pointer to the bomb (Bomb *)
 			 */
-			static Bomb * getBomb (map::Coords & c);
+			static Bomb * getBomb (map::Coords & c) { return bombs[c.x][c.y]; }
 			
 			/// Make everything explode
 			static void boum();
