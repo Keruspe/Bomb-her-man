@@ -37,10 +37,23 @@ main()
 #endif // __MINGW32__
 {
 	#if ENABLE_NLS
-		if ( ! bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR) )
-			bherr << "Gettext error, won't have i18n" << bhendl;
-		if ( ! bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8") )
-			bherr << "Gettext error, maybe won't have i18n" << bhendl;
+		if ( ! setlocale (LC_ALL, "") )
+			bherr << "Locale error, won't have i18n" << bhendl;
+		else
+		{
+			if ( ! bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR) )
+				bherr << "Gettext error, won't have i18n" << bhendl;
+			else
+			{
+				if ( ! textdomain(GETTEXT_PACKAGE) )
+					bherr << "Gettext error, won't have i18n" << bhendl;
+				else
+				{
+					if ( ! bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8") )
+						bherr << "Gettext error, maybe won't have i18n" << bhendl;
+				}
+			}
+		}
 	#endif
 	try
 	{
