@@ -21,9 +21,9 @@
 
 #if ENABLE_NLS
 	#include <libintl.h>
-	#define _(x) dgettext(GETTEXT_PACKAGE, x)
-	#ifdef dgettext_noop
-		#define N_(x) dgettext_noop(GETTEXT_PACKAGE, x)
+	#define _(x) gettext(x)
+	#ifdef gettext_noop
+		#define N_(x) gettext_noop(x)
 	#else
 		#define N_(x) (x)
 	#endif
