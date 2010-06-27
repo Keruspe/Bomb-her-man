@@ -81,9 +81,9 @@ namespace bombherman
 	private:
 		Menu(Type type);
 		void setContent();
-		static std::map<Type, Menu *> menus;
+		static std::map< Type, Menu * > menus;
 		Type type;
-		std::vector<std::string> content;
+		std::vector< std::string > content;
 		unsigned int current;
 	};
 }

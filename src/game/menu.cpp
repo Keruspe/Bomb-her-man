@@ -25,7 +25,7 @@
 using namespace bombherman;
 
 // Initialize statics
-std::map<Menu::Type, Menu *> Menu::menus;
+std::map< Menu::Type, Menu * > Menu::menus;
 
 Menu::Menu(Type type) :
 	type(type),
@@ -76,7 +76,7 @@ void
 Menu::clear()
 {
 	// Delete the menus from the map
-	for ( std::map<Menu::Type, Menu *>::iterator i = Menu::menus.begin(),
+	for ( std::map< Menu::Type, Menu * >::iterator i = Menu::menus.begin(),
 		e = Menu::menus.end(); i != e ; ++i )
 			delete(i->second);
 }
@@ -141,7 +141,7 @@ Menu::action()
 void
 Menu::quit()
 {
-	switch (this->type)
+	switch ( this->type )
 	{
 	case MAIN: // Exit the application
 		Game::stop();

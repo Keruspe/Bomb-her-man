@@ -24,7 +24,7 @@ using namespace bombherman;
 
 AI::AI() :
 	Player(),
-	playerMap(std::vector<map::Coords>())
+	playerMap(std::vector< map::Coords >())
 {
 	this->init();
 }
@@ -32,7 +32,7 @@ AI::AI() :
 void
 AI::newAI()
 {
-	if (Player::players.size() >= static_cast<unsigned>(Config::getInt("maxPlayers")))
+	if ( Player::players.size() >= static_cast< unsigned >(Config::getInt("maxPlayers")) )
 		throw exceptions::TooManyPlayersException();
 	Player::players.push_back(new AI());
 }
@@ -47,7 +47,7 @@ AI::init()
 int
 AI::run(void * param)
 {
-	AI * ai = static_cast<AI *>(param);
+	AI * ai = static_cast< AI * >(param);
 	
 	// Keep alive the thread during entire game
 	while (true)
@@ -65,7 +65,7 @@ AI::run(void * param)
 void
 AI::findPath()
 {
-	Uint32 maxRange = static_cast<Uint32>(Config::getInt("maxRange"));
+	const Uint32 maxRange = static_cast< Uint32 >(Config::getInt("maxRange"));
 	//Uint32 maxItems = maxRange*maxRange*4;
 	
 	// Max points with setting maxRange
@@ -80,7 +80,8 @@ AI::findPath()
 	
 	map::Coords current = this->coords;
 	
-	while (current.x > maxLeft && current.x < maxRight && current.y > maxTop && current.y < maxBottom)
+	while ( current.x > maxLeft && current.x < maxRight
+		&& current.y > maxTop && current.y < maxBottom )
 	{
 		// A* algorithm
 		

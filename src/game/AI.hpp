@@ -41,7 +41,7 @@ namespace bombherman
 		void init();
 		static int run(void *);
 		void findPath();
-		std::vector<map::Coords> playerMap;
+		std::vector< map::Coords > playerMap;
 	};
 }
 

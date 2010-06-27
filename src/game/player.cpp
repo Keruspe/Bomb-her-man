@@ -28,17 +28,17 @@
 using namespace bombherman;
 
 // Initialize statics
-std::vector<Player * > Player::players;
+std::vector< Player * > Player::players;
 unsigned Player::icyDeadPeople = 0;
 
-Player::Player() : 
-	plantableBombs (Config::getInt("defaultPlantableBombs")),
-	range (Config::getInt("defaultRange")),
-	plantedBombs (0),
-	score (0),
-	id (Player::players.size() + 1),
+Player::Player() :
+	plantableBombs(Config::getInt("defaultPlantableBombs")),
+	range(Config::getInt("defaultRange")),
+	plantedBombs(0),
+	score(0),
+	id(Player::players.size() + 1),
 	alive(true),
-	coords (map::Coords()),
+	coords(map::Coords()),
 	orient(map::DOWN),
 	move_mutex(SDL_CreateMutex()),
 	currentMoves(0)
@@ -78,7 +78,7 @@ Player::operator=(const Player & other)
 Player *
 Player::getPlayer(int id)
 {
-	if (Player::players.size() < static_cast<unsigned>(id) || 0 >= id)
+	if ( Player::players.size() < static_cast<unsigned>(id) || 0 >= id )
 		return 0;
 	return Player::players[id - 1];
 }
@@ -86,7 +86,7 @@ Player::getPlayer(int id)
 void
 Player::newPlayer()
 {
-	if (Player::players.size() >= static_cast<unsigned>(Config::getInt("maxPlayers")))
+	if ( Player::players.size() >= static_cast< unsigned >(Config::getInt("maxPlayers")) )
 		throw exceptions::TooManyPlayersException();
 	Player::players.push_back(new Player());
 }
@@ -94,8 +94,8 @@ Player::newPlayer()
 void
 Player::clean()
 {
-	for (std::vector< Player * >::iterator i = Player::players.begin(),
-		i_end = Player::players.end(); i != i_end ; ++i)
+	for ( std::vector< Player * >::iterator i = Player::players.begin(),
+		i_end = Player::players.end(); i != i_end ; ++i )
 	{
 		delete(*i);
 	}
@@ -105,7 +105,7 @@ Player::clean()
 bool
 Player::kill(Player * killed)
 {
-	if (! killed->alive)
+	if ( ! killed->alive )
 		return false;
 	if ( killed == this )
 		this->addToScore(Config::getInt("suicideMalus"));
@@ -139,8 +139,8 @@ Player::reInit(void *)
 	Player::icyDeadPeople = 0;
 	
 	// Reset players' defaults
-	for (std::vector< Player * > ::iterator i = Player::players.begin(),
-		i_end = Player::players.end() ; i != i_end ; ++i)
+	for ( std::vector< Player * > ::iterator i = Player::players.begin(),
+		i_end = Player::players.end() ; i != i_end ; ++i )
 			(*i)->resetToDefaultStats();
 	
 	// Go to next map
@@ -151,10 +151,10 @@ Player::reInit(void *)
 void
 Player::setRange(Uint32 range)
 {
-	if (range < static_cast<Uint32>(Config::getInt("minRange")))
-		this->range = static_cast<Uint32>(Config::getInt("minRange"));
-	else if (range > static_cast<Uint32>(Config::getInt("maxRange")))
-		this->range = static_cast<Uint32>(Config::getInt("maxRange"));
+	if (range < static_cast< Uint32 >(Config::getInt("minRange")))
+		this->range = static_cast< Uint32 >(Config::getInt("minRange"));
+	else if (range > static_cast< Uint32 >(Config::getInt("maxRange")))
+		this->range = static_cast< Uint32 >(Config::getInt("maxRange"));
 	else
 		this->range = range;
 }
@@ -162,7 +162,7 @@ Player::setRange(Uint32 range)
 void
 Player::go(map::Direction direction)
 {
-	if (! this)
+	if ( ! this )
 		// If we don't exist (new Game), nothing'll happen
 		return;
 	if ( this->currentMoves < 2 )
@@ -170,17 +170,17 @@ Player::go(map::Direction direction)
 	else
 		return;
 	SDL_LockMutex(move_mutex);
-	if (! this->alive)
+	if ( ! this->alive )
 	{
 		// We-re dead
 		SDL_UnlockMutex(this->move_mutex);
 		return;
 	}
-	bool orientChanged = (this->orient != direction);
-	if (orientChanged)
+	bool orientChanged = ( this->orient != direction );
+	if ( orientChanged )
 		this->orient = direction;
 	map::MoveResult moveResult = map::Map::movePlayer(this->coords, direction);
-	if (moveResult == map::NOTHINGHAPPENED && orientChanged)
+	if ( moveResult == map::NOTHINGHAPPENED && orientChanged )
 		Display::movePlayer(this, map::ORIENTCHANGED);
 	Display::movePlayer(this, moveResult);
 	SDL_UnlockMutex(this->move_mutex);
@@ -192,16 +192,16 @@ Player::addToScore(int score)
 {
 	if ( (this->score += score) < Config::getInt("minimumScore") )
 		this->score = -9;
-	else if (this->score > Config::getInt("maximumScore"))
+	else if ( this->score > Config::getInt("maximumScore") )
 		this->score = 99;
 }
 
 void
 Player::setPlantableBombs(int plantableBombs)
 {
-	if(plantableBombs < Config::getInt("minCapacity"))
+	if ( plantableBombs < Config::getInt("minCapacity") )
 		this->plantableBombs = Config::getInt("minCapacity");
-	else if (plantableBombs > Config::getInt("maxCapacity"))
+	else if ( plantableBombs > Config::getInt("maxCapacity") )
 		this->plantableBombs = Config::getInt("maxCapacity");
 	else
 		this->plantableBombs = plantableBombs;
@@ -219,7 +219,7 @@ Player::resetToDefaultStats()
 void
 Player::plantBomb()
 {
-	if (! this->isAbleToPlantBomb())
+	if ( ! this->isAbleToPlantBomb() )
 		return;
 	if ( bomb::AtomicCenter::plantBomb(this->id, this->coords, this->range) )
 	{	// The bomb has been planted !
@@ -232,10 +232,10 @@ Player *
 Player::playerAt(map::Coords & c)
 {
 	// We read all players
-	for (std::vector< Player * >::iterator i = Player::players.begin(),
-		i_end = Player::players.end() ; i != i_end ; ++i)
+	for ( std::vector< Player * >::iterator i = Player::players.begin(),
+		i_end = Player::players.end() ; i != i_end ; ++i )
 			// Coords are equal ? That's the one we're looking for !
-			if((*i)->getCoords() == c)
+			if ( (*i)->getCoords() == c )
 				return *i;
 	return 0;
 }

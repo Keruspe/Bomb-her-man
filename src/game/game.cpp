@@ -60,7 +60,8 @@ void Game::init()
 void
 Game::main()
 {
-	if ( ! Game::isInit ) init();
+	if ( ! Game::isInit )
+		init();
 	
 	SDL_Event event;
 	while ( Game::playing && SDL_WaitEvent(&event) )
@@ -124,9 +125,7 @@ Game::nextMap()
 	Game::waitThreads();
 	map::Map::deleteMap();
 	if ( --Game::mapCount < 0 )
-	{
 		Display::displayScores();
-	}
 	else
 	{
 		// We still have maps to play on !
@@ -149,7 +148,7 @@ int
 Game::eventMenu(void * event)
 {
 	// Handle events in menus
-	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
+	switch ( reinterpret_cast< SDL_KeyboardEvent * >(event)->keysym.sym )
 	{
 	case SDLK_ESCAPE:
 		currentMenu->quit();
@@ -181,7 +180,7 @@ int
 Game::eventGame(void * event)
 {
 	// Handle events in game (moves, bomb planting ...)
-	switch ( reinterpret_cast<SDL_KeyboardEvent *>(event)->keysym.sym )
+	switch ( reinterpret_cast< SDL_KeyboardEvent * >(event)->keysym.sym )
 	{
 	case SDLK_ESCAPE:
 		changeMenu(Menu::MAIN);
