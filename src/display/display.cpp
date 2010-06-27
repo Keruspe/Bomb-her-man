@@ -507,7 +507,7 @@ Display::updateScores(bool final)
 	
 	cleanSurface(sScoreBack);
 	
-	Sint32 * scores = new Sint32*[nbAll];
+	Sint32 * scores = new Sint32[nbAll];
 	Sint32 max = -10;
 	bool neutral(false);
 	for ( std::vector< Player * >::iterator i = Player::players.begin(), e = Player::players.end() ; i != e ; ++i )
