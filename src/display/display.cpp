@@ -507,7 +507,7 @@ Display::updateScores(bool final)
 	
 	cleanSurface(sScoreBack);
 	
-	Sint32 * scores = reinterpret_cast< Sint32 * >(malloc(nbAll * sizeof(Sint32)));
+	Sint32 * scores = new Sint32*[nbAll];
 	Sint32 max = -10;
 	bool neutral(false);
 	for ( std::vector< Player * >::iterator i = Player::players.begin(), e = Player::players.end() ; i != e ; ++i )
@@ -542,7 +542,7 @@ Display::updateScores(bool final)
 	
 	for ( unsigned int i = 0 ; i < nbAll ; ++i )
 	{
-		int s = scores[i];
+		const int s = scores[i];
 		
 		SDL_Rect h = {
 				( ( dh.w - sSize ) / dp.w ) + ( i * dh.x ),
@@ -588,7 +588,7 @@ Display::updateScores(bool final)
 	
 	updateDisplay(gScoresLayer, z);
 	
-	free(scores);
+	delete[] scores;
 	TTF_CloseFont(font);
 	
 	cleanSurface(sWin[0]);
