@@ -328,7 +328,7 @@ Display::changeFullscreen()
 	if ( ! tmp )
 	{
 		bherr << SDL_GetError() << bhendl;
-		throw exceptions::display::NoSDLException("Impossible de passer en 640x480 en 16 bpp");
+		throw exceptions::display::NoSDLException("Cannot go to 640x480 with 16 bpp");
 	}
 	else
 	{
@@ -536,7 +536,7 @@ Display::updateScores(bool final)
 	if ( ! font )
 	{
 		bherr << TTF_GetError() << bhendl;
-		throw exceptions::display::NoSDLException("Impossible d'ouvrir la police");
+		throw exceptions::display::NoSDLException("Cannot open font");
 	}
 	
 	
