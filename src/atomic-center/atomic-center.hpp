@@ -70,7 +70,7 @@ namespace bombherman
 			/// Decrease the number of bombs still alive
 			static void bombExploded() { --AtomicCenter::numberOfBombs; }
 		private:
-			static std::vector<std::vector<Bomb *> > bombs;
+			static std::vector< std::vector< Bomb * > > bombs;
 			static int numberOfBombs;
 		};
 	}

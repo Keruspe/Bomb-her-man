@@ -44,14 +44,14 @@ Map::newMap(std::string path)
 	try
 	{
 		// This map creator calls the MapParser
-		if (! MapParser::parse(path, Map::map))
+		if ( ! MapParser::parse(path, Map::map) )
 		{
 			bherr << "The file in which the program looked "
 				<< "for the map was malformed." << bhendl;
 			throw exceptions::map::MalformedFileException(path);
 		}
 	}
-	catch(exceptions::map::BadElementException & e)
+	catch (exceptions::map::BadElementException & e)
 	{
 		bherr << "An error has been detected in " << path << bhendl;
 		throw e;
@@ -64,8 +64,8 @@ void
 Map::deleteMap()
 {
 	Map::map.exists = false;
-	for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
-		i_end = Map::map.grid.end() ; i != i_end ; ++i)
+	for ( std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
+		i_end = Map::map.grid.end() ; i != i_end ; ++i )
 			i->clear();
 	Map::map.grid.clear();
 }
@@ -74,30 +74,30 @@ void
 Map::placePlayers()
 {
 	Coords c;
-	for(std::vector< Player * >::iterator i = Player::players.begin(),
-		i_end = Player::players.end() ; i != i_end ; ++i)
+	for ( std::vector< Player * >::iterator i = Player::players.begin(),
+		i_end = Player::players.end() ; i != i_end ; ++i )
 	{
-		while (true)
+		while ( true )
 		{
 			// We get random coords from MapGenerator
 			c = MapGenerator::getRandomCoords();
 			
 			// We check that we are not on a cell stuck at another player
-			if((Map::map[c.y][c.x] == PLAYER)
+			if ( (Map::map[c.y][c.x] == PLAYER)
 				|| (c.y != 0 && Map::map[c.y - 1][c.x] == PLAYER)
 				|| (c.y != Map::map.size - 1 && Map::map[c.y+1][c.x] == PLAYER)
 				|| (c.x != 0 && Map::map[c.y][c.x-1] == PLAYER)
-				|| (c.x != Map::map.size - 1 && Map::map[c.y][c.x+1] == PLAYER))
+				|| (c.x != Map::map.size - 1 && Map::map[c.y][c.x+1] == PLAYER) )
 					continue;
 			
 			// We clear the map around the player
-			if (c.y != 0)
+			if ( c.y != 0 )
 				Map::map[c.y - 1][c.x] = NOTHING;
-			if (c.y != Map::map.size - 1)
+			if ( c.y != Map::map.size - 1 )
 				Map::map[c.y + 1][c.x] = NOTHING;
-			if (c.x != 0)
+			if ( c.x != 0 )
 				Map::map[c.y][c.x - 1] = NOTHING;
-			if (c.x != Map::map.size - 1)
+			if ( c.x != Map::map.size - 1 )
 				Map::map[c.y][c.x + 1] = NOTHING;
 			
 			// We tell the player where he is
@@ -111,19 +111,19 @@ Map::placePlayers()
 bool
 Map::plantBomb(Coords & c)
 {
-	if (! Map::exists() || ! c.validate() || Map::get(c) != PLAYER)
+	if ( ! Map::exists() || ! c.validate() || Map::get(c) != PLAYER )
 		// Ok that's weird, only a valid player should be able to do that
 		return false;
-	Map::map[c.y][c.x] = PLAYONBOMB;
 	
 	// The bomb has been planted !
+	Map::map[c.y][c.x] = PLAYONBOMB;
 	return true;
 }
 
 char
 Map::get(Coords & c)
 {
-	if (! Map::exists() || ! c.validate())
+	if ( ! Map::exists() || ! c.validate() )
 		return 0;
 	return Map::map[c.y][c.x];
 }
@@ -131,20 +131,20 @@ Map::get(Coords & c)
 char
 Map::get(Uint32 x, Uint32 y)
 {
-	if (! Map::exists() || ! Coords(x, y).validate())
+	if ( ! Map::exists() || ! Coords(x, y).validate() )
 		return 0;
 	return Map::map[y][x];
 }
 
 MoveResult
-Map::movePlayer(Coords & c, Direction & direction)
+Map::movePlayer( Coords & c, Direction & direction )
 {
-	if(! Map::exists())
+	if ( ! Map::exists() )
 		return NOTHINGHAPPENED;
 	
 	// Used to stock whether we moved or not
 	bool tmpBool;
-	switch(direction)
+	switch ( direction )
 	{
 	case UP:
 		tmpBool = Map::moveUp(c);
@@ -159,14 +159,14 @@ Map::movePlayer(Coords & c, Direction & direction)
 		tmpBool = Map::moveRight(c);
 		break;
 	}
-	if (! tmpBool)
+	if ( ! tmpBool )
 		return NOTHINGHAPPENED;
-	if (Map::map[c.y][c.x] != BOMB)
+	if ( Map::map[c.y][c.x] != BOMB )
 	{
 		// Now used to stock if we took a bonus
 		tmpBool = Map::applyBonus(c);
 		Map::map[c.y][c.x] = PLAYER;
-		if (tmpBool)
+		if ( tmpBool )
 			return BONUSTAKEN;
 	}
 	else
@@ -178,10 +178,10 @@ Map::movePlayer(Coords & c, Direction & direction)
 bool
 Map::moveUp(Coords & c)
 {
-	if (c.y <= 0 || Map::map[c.y - 1][c.x] == BARREL
+	if ( c.y <= 0 || Map::map[c.y - 1][c.x] == BARREL
 		|| Map::map[c.y - 1][c.x] == INDESTRUCTIBLE
 		|| Map::map[c.y - 1][c.x] == PLAYONBOMB
-		|| Map::map[c.y - 1][c.x] == PLAYER)
+		|| Map::map[c.y - 1][c.x] == PLAYER )
 			return false;
 	Map::cleanOldSpot(c);
 	--c.y;
@@ -191,10 +191,10 @@ Map::moveUp(Coords & c)
 bool
 Map::moveDown(Coords & c)
 {
-	if (c.y >= (Map::map.size - 1) || Map::map[c.y + 1][c.x] == BARREL
+	if ( c.y >= (Map::map.size - 1) || Map::map[c.y + 1][c.x] == BARREL
 		|| Map::map[c.y + 1][c.x] == INDESTRUCTIBLE
 		|| Map::map[c.y + 1][c.x] == PLAYONBOMB
-		|| Map::map[c.y + 1][c.x] == PLAYER)
+		|| Map::map[c.y + 1][c.x] == PLAYER )
 			return false;
 	Map::cleanOldSpot(c);
 	++c.y;
@@ -204,10 +204,10 @@ Map::moveDown(Coords & c)
 bool
 Map::moveLeft(Coords & c)
 {
-	if (c.x <= 0 || Map::map[c.y][c.x - 1] == BARREL
+	if ( c.x <= 0 || Map::map[c.y][c.x - 1] == BARREL
 		|| Map::map[c.y][c.x - 1] == INDESTRUCTIBLE
 		|| Map::map[c.y][c.x - 1] == PLAYONBOMB
-		|| Map::map[c.y][c.x - 1] == PLAYER)
+		|| Map::map[c.y][c.x - 1] == PLAYER )
 			return false;
 	Map::cleanOldSpot(c);
 	--c.x;
@@ -217,10 +217,10 @@ Map::moveLeft(Coords & c)
 bool
 Map::moveRight(Coords & c)
 {
-	if (c.x >= (Map::map.size - 1) || Map::map[c.y][c.x + 1] == BARREL
+	if ( c.x >= (Map::map.size - 1) || Map::map[c.y][c.x + 1] == BARREL
 		|| Map::map[c.y][c.x + 1] == INDESTRUCTIBLE
 		|| Map::map[c.y][c.x + 1] == PLAYONBOMB
-		|| Map::map[c.y][c.x + 1] == PLAYER)
+		|| Map::map[c.y][c.x + 1] == PLAYER )
 			return false;
 	Map::cleanOldSpot(c);
 	++c.x;
@@ -230,20 +230,20 @@ Map::moveRight(Coords & c)
 void
 Map::cleanOldSpot(Coords & c)
 {
-	if (Map::map[c.y][c.x] == PLAYONBOMB)
+	if ( Map::map[c.y][c.x] == PLAYONBOMB )
 		Map::map[c.y][c.x] = BOMB;
-	else if (Map::map[c.y][c.x] != BOMB)
+	else if ( Map::map[c.y][c.x] != BOMB )
 		Map::map[c.y][c.x] = NOTHING;
 }
 
 void
 Map::destroyBarrel(Coords & c)
 {
-	if (! Map::exists() || ! c.validate() || Map::get(c) != BARREL)
+	if ( ! Map::exists() || ! c.validate() || Map::get(c) != BARREL )
 		return;
 	
 	// Was there a bonus in this one ? :-)
-	if (MapGenerator::throwDice(Config::getInt("bonusApparitionProbability")))
+	if ( MapGenerator::throwDice(Config::getInt("bonusApparitionProbability")) )
 		Map::map[c.y][c.x] = FIRSTBONUS + MapGenerator::random(0, LASTBONUS-FIRSTBONUS);
 	else
 		Map::map[c.y][c.x] = NOTHING;
@@ -252,11 +252,11 @@ Map::destroyBarrel(Coords & c)
 void
 Map::removePlayer(Coords & c)
 {
-	if (! Map::exists() || ! c.validate())
+	if ( ! Map::exists() || ! c.validate() )
 		return;
-	if (Map::get(c) == PLAYER)
+	if ( Map::get(c) == PLAYER )
 		Map::map[c.y][c.x] = NONE;
-	else if (Map::get(c) == PLAYONBOMB)
+	else if ( Map::get(c) == PLAYONBOMB )
 		Map::map[c.y][c.x] = BOMB;
 	
 	// Set coords to any invalid thing
@@ -267,18 +267,18 @@ Map::removePlayer(Coords & c)
 void
 Map::removeBomb(Coords & c)
 {
-	if (! Map::exists() || ! c.validate())
+	if ( ! Map::exists() || ! c.validate() )
 		return;
-	if (Map::get(c) == BOMB)
+	if ( Map::get(c) == BOMB )
 		Map::map[c.y][c.x] = NONE;
-	else if (Map::get(c) == PLAYONBOMB)
+	else if ( Map::get(c) == PLAYONBOMB )
 		Map::map[c.y][c.x] = PLAYER;
 }
 
 void
 Map::removeBonus(Coords & c)
 {
-	if (! Map::exists() || ! c.validate())
+	if ( ! Map::exists() || ! c.validate() )
 		return;
 	Map::map[c.y][c.x] = NONE;
 }
@@ -287,11 +287,11 @@ bool
 Map::applyBonus(Coords & c)
 {
 	Player * player = Player::playerAt(c);
-	if (player == 0)
+	if ( player == 0 )
 		// No player there, weird...
 		return false;
 	int variation(1);
-	switch(static_cast<Bonus>(Map::map[c.y][c.x]))
+	switch ( static_cast< Bonus >(Map::map[c.y][c.x]) )
 	{
 	case FIREDOWN:
 		// Will be negative
@@ -320,20 +320,20 @@ Map::applyBonus(Coords & c)
 void
 Map::toString()
 {
-	if(! Map::exists())
+	if ( ! Map::exists() )
 		return;
 	// Read the lines
-	for (std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
-		i_end = Map::map.grid.end() ; i != i_end ; ++i)
+	for ( std::vector< std::vector< char > >::iterator i = Map::map.grid.begin(),
+		i_end = Map::map.grid.end() ; i != i_end ; ++i )
 	{
 		// Read the cols
-		for (std::vector< char >::iterator j = i->begin(), j_end = i->end() ;
-			j != j_end ; ++j)
+		for ( std::vector< char >::iterator j = i->begin(), j_end = i->end() ;
+			j != j_end ; ++j )
 		{
 			// Print the current cell
 			std::cout << '[' << *j << ']';
 		}
-		std::cout << bhendl;
+		std::cout << std::endl;
 	}
 }
 

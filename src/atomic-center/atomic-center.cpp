@@ -25,14 +25,14 @@ using namespace bombherman;
 using namespace bombherman::bomb;
 
 // Initialize statics
-std::vector<std::vector<Bomb *> > AtomicCenter::bombs;
+std::vector< std::vector< Bomb * > > AtomicCenter::bombs;
 int AtomicCenter::numberOfBombs = 0;
 
 void
 AtomicCenter::boum()
 {
 	// Make all bombs explode
-	for ( std::vector<std::vector<Bomb *> >::iterator i = bombs.begin(),
+	for ( std::vector< std::vector< Bomb * > >::iterator i = bombs.begin(),
 		iEnd = bombs.end() ; i != iEnd ; ++i )
 			for ( std::vector<Bomb *>::iterator j = i->begin(),
 				jEnd = i->end(); j != jEnd; ++j )
@@ -40,7 +40,7 @@ AtomicCenter::boum()
 						Bomb::doExplode(*j);
 	
 	// We wait until all bombs have exploded (custom "waitThreads")
-	while (AtomicCenter::numberOfBombs > 0)
+	while ( AtomicCenter::numberOfBombs > 0 )
 		SDL_Delay(250);
 	Bomb::newGame();
 }
@@ -50,9 +50,9 @@ AtomicCenter::plantBomb(int player, map::Coords & c, Uint32 range)
 {
 	if ( bombs.empty() )
 	{
-		int size = Config::getInt("mapSize");
+		const int size = Config::getInt("mapSize");
 		bombs.resize(size);
-		for (int i(0) ; i < size ; ++i)
+		for ( int i(0) ; i < size ; ++i )
 			bombs[i].resize(size);
 	}
 	if ( ! map::Map::plantBomb(c) )

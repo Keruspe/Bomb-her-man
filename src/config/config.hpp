@@ -89,13 +89,11 @@ namespace bombherman
 		static void read();
 		
 		/// The configuration map
-		static std::map<std::string, Config> config;
+		static std::map< std::string, Config > config;
 
 		static bool isInit;
 	};
 }
-
-
 
 #endif // _CONFIG_HPP_
 

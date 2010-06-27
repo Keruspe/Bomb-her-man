@@ -33,7 +33,7 @@ MapParser::parse(std::string path, Grid & map)
 	std::fstream file(path.c_str(), std::ios::in);
 	
 	// Exit if the file fails to open
-	if (! file.is_open())
+	if ( ! file.is_open() )
 		return false;
 	
 	// Current line of the file
@@ -43,20 +43,20 @@ MapParser::parse(std::string path, Grid & map)
 	char c;
 	
 	// Current line of the map
-	std::vector<char> *current_line;
+	std::vector< char > * current_line;
 
 	// Read the lines of the file
-	for(Uint32 y(0) ; std::getline(file, line) && y < map.size ; ++y)
+	for ( Uint32 y(0) ; std::getline(file, line) && y < map.size ; ++y )
 	{
-		current_line = new std::vector<char>();
+		current_line = new std::vector< char >();
 		
 		// Read the cols of the file
-		for(Uint32 x(0) ; x < map.size ; ++x)
+		for ( Uint32 x(0) ; x < map.size ; ++x )
 		{
 			try
 			{
 				// Check if the element is correct
-				switch(c = line.at(x))
+				switch ( c = line.at(x) )
 				{
 					case NOTHING:
 					case BARREL:
@@ -69,7 +69,7 @@ MapParser::parse(std::string path, Grid & map)
 						throw exceptions::map::BadElementException(elem);
 				}
 			}
-			catch (std::exception)
+			catch ( std::exception )
 			{
 				return false;
 			}

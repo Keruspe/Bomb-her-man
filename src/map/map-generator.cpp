@@ -32,13 +32,13 @@ MapGenerator::generate(Grid & g)
 	MapGenerator::init();
 	
 	// Stock config things to avoid multiple callings to Config
-	int insertionProbabilityBaseHorizontal = Config::getInt("mgInsertionProbabilityBaseHorizontal");
-	int insertionRegressionHorizontal = Config::getInt("mgInsertionRegressionHorizontal");
-	int insertionElementSizeMaxVertical = Config::getInt("mgInsertionElementSizeMaxVertical");
-	int insertionRegressionVertical = Config::getInt("mgInsertionRegressionVertical");
-	int insertionProbabilityBaseVertical = Config::getInt("mgInsertionProbabilityBaseVertical");
-	int insertionElementSizeMaxHorizontal = Config::getInt("mgInsertionElementSizeMaxHorizontal");
-	int insertionProbabilityBarrel = Config::getInt("mgInsertionProbabilityBarrel");
+	const int insertionProbabilityBaseHorizontal = Config::getInt("mgInsertionProbabilityBaseHorizontal");
+	const int insertionRegressionHorizontal = Config::getInt("mgInsertionRegressionHorizontal");
+	const int insertionElementSizeMaxVertical = Config::getInt("mgInsertionElementSizeMaxVertical");
+	const int insertionRegressionVertical = Config::getInt("mgInsertionRegressionVertical");
+	const int insertionProbabilityBaseVertical = Config::getInt("mgInsertionProbabilityBaseVertical");
+	const int insertionElementSizeMaxHorizontal = Config::getInt("mgInsertionElementSizeMaxHorizontal");
+	const int insertionProbabilityBarrel = Config::getInt("mgInsertionProbabilityBarrel");
 	
 	// We'll need those local vars for various stocking
 	int currentHorizontalElementSize;
@@ -49,26 +49,26 @@ MapGenerator::generate(Grid & g)
 	
 	// Resize the map to the right dimensions
 	g.grid.resize(g.size);
-	for (std::vector< std::vector< char > >::iterator i = g.grid.begin(),
-		i_end = g.grid.end() ; i != i_end ; ++i)
+	for ( std::vector< std::vector< char > >::iterator i = g.grid.begin(),
+		i_end = g.grid.end() ; i != i_end ; ++i )
 	{
 		// Fill each cell with NOTHING
 		i->resize(g.size, NOTHING);
 	}
 	
 	// Go through the gris to fill it, col by col, line by line
-	for (c.x = 0; c.x < g.size; ++c.x)
+	for ( c.x = 0; c.x < g.size; ++c.x )
 	{
-		for (c.y = 0; c.y < g.size; ++c.y)
+		for ( c.y = 0; c.y < g.size; ++c.y )
 		{
 			currentHorizontalElementSize = horizontalScan(g, c);
 			currentHorizontalInsertionProbability = insertionProbabilityBaseHorizontal - currentHorizontalElementSize * insertionRegressionHorizontal;
-			if (currentVerticalElementSize != 0)
+			if ( currentVerticalElementSize != 0 )
 			{
 				// The upper element is INDESTRUCTIBLE
-				if (throwDice(currentVerticalInsertionProbability)
+				if ( throwDice(currentVerticalInsertionProbability)
 					&& currentVerticalElementSize < insertionElementSizeMaxVertical
-					&& testCellLimited(g, c))
+					&& testCellLimited(g, c) )
 				{
 					// If we didn't reach max vertical INDESTRUCTIBLE block size and we do not lock anything
 					// and the dice tells us to put INDESTRUCTIBLE, juste do it
@@ -84,14 +84,14 @@ MapGenerator::generate(Grid & g)
 					currentVerticalInsertionProbability = insertionProbabilityBaseVertical;
 				}
 			}
-			else if (currentHorizontalElementSize != 0
+			else if ( currentHorizontalElementSize != 0
 				&& currentHorizontalElementSize < insertionElementSizeMaxHorizontal
 				&& throwDice(currentHorizontalInsertionProbability)
-				&& c.x != (g.size - 1))
+				&& c.x != (g.size - 1) )
 					// INDESTRUCTIBLE on left, and can put another one without locking
 					g[c.y][c.x] = INDESTRUCTIBLE;
-			else if (throwDice(insertionProbabilityBaseVertical)
-				&& testCellFull(g, c))
+			else if ( throwDice(insertionProbabilityBaseVertical)
+				&& testCellFull(g, c) )
 			{
 				// Base INDESTRUCTIBLE insertion, none on left nor top
 				g[c.y][c.x] = INDESTRUCTIBLE;
@@ -102,10 +102,10 @@ MapGenerator::generate(Grid & g)
 	}
 	
 	// Fill the gris with barrels
-	for (c.x = 0; c.x < g.size; ++c.x)
-		for (c.y = 0; c.y < g.size; ++c.y)
-			if (g[c.y][c.x] == NOTHING
-				&& throwDice (insertionProbabilityBarrel))
+	for ( c.x = 0; c.x < g.size; ++c.x )
+		for ( c.y = 0; c.y < g.size; ++c.y )
+			if ( g[c.y][c.x] == NOTHING
+				&& throwDice (insertionProbabilityBarrel) )
 					g[c.y][c.x] = BARREL;
 }
 
@@ -130,14 +130,14 @@ MapGenerator::throwDice(int percentage)
 bool
 MapGenerator::testCellFull(Grid & grid, Coords & coords)
 {
-	if (coords.x == 0)
+	if ( coords.x == 0 )
 		// Don't care about first column
 		return true;
 	bool result = grid[coords.y][coords.x - 1] != INDESTRUCTIBLE;
-	if (coords.y > 0)
+	if ( coords.y > 0 )
 		result = result && grid[coords.y - 1][coords.x - 1] != INDESTRUCTIBLE &&
 			grid[coords.y - 1][coords.x] != INDESTRUCTIBLE;
-	if (coords.y < grid.size - 1)
+	if ( coords.y < grid.size - 1 )
 		result = result && grid[coords.y+1][coords.x-1] != INDESTRUCTIBLE;
 	// We'll return false if a nearby cell is INDESTRUCTIBLE (strict north and all west)
 	return result;
@@ -155,8 +155,8 @@ int
 MapGenerator::horizontalScan(Grid & grid, Coords & coords)
 {
 	int i;
-	for (i = 0 ; coords.x - i != 0
-		&& grid[coords.y][coords.x - i - 1] == INDESTRUCTIBLE ; ++i);
+	for ( i = 0 ; coords.x - i != 0
+		&& grid[coords.y][coords.x - i - 1] == INDESTRUCTIBLE ; ++i );
 	// Return the number of cell before next not INDESTRUCTIBLE on the left
 	return i;
 }
@@ -176,7 +176,7 @@ MapGenerator::getRandomCoords()
 void
 MapGenerator::init()
 {
-	if (MapGenerator::isInit)
+	if ( MapGenerator::isInit )
 		// Don't init twice
 		return;
 	::srand(time(0));

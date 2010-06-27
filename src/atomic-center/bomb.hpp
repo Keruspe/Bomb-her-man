@@ -77,13 +77,13 @@ namespace bombherman
 			Uint32 getRange() { return this->range; }
 			
 			/// Destructor
-			virtual ~Bomb () { SDL_DestroySemaphore(explosion); }
+			virtual ~Bomb() { SDL_DestroySemaphore(explosion); }
 		private:
 			static int waitExplode(void *);
 			void explode();
 			bool check(Uint32, Uint32);
 			static SDL_mutex * mutex;
-			SDL_sem *explosion;
+			SDL_sem * explosion;
 			int player;
 			Uint32 range;
 			map::Coords coords;

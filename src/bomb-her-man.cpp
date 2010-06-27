@@ -31,7 +31,7 @@ extern "C"
 
 int
 #ifdef __MINGW32__
-SDL_main(int argc, char **argv)
+SDL_main(int argc, char ** argv)
 #else
 main()
 #endif // __MINGW32__
@@ -59,7 +59,7 @@ main()
 	catch ( std::exception & e )
 	{
 		// We should never go there
-		bherr << "Ouch, an unknown exception was thrown, please report this as a bug : "
+		bherr << "Ouch, an unknown exception was thrown, please report this as a bug: "
 			<< bhendl << e.what() << bhendl;
 	}
 	return 0;

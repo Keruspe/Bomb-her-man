@@ -31,19 +31,19 @@ using namespace bombherman::bomb;
 SDL_mutex * Bomb::mutex = SDL_CreateMutex ();
 bool Bomb::gameOver = false;
 
-Bomb::Bomb (int player, map::Coords c, Uint32 _range) :
+Bomb::Bomb(int player, map::Coords c, Uint32 _range) :
 	explosion(SDL_CreateSemaphore(0)),
 	player(player),
 	range(_range),
 	coords(c),
-	explodedCells(std::vector<map::Coords>()),
-	chain(std::vector<map::Coords>())
+	explodedCells(std::vector< map::Coords >()),
+	chain(std::vector< map::Coords >())
 {
 	if ( SDL_CreateThread(waitExplode, this) == NULL )
-		bherr <<  "Unable to create thread to manage a bomb : " << SDL_GetError();
+		bherr <<  "Unable to create thread to manage a bomb: " << SDL_GetError();
 }
 
-Bomb::Bomb (const Bomb & other) :
+Bomb::Bomb(const Bomb & other) :
 	explosion(other.explosion),
 	player(other.player),
 	range(other.range),
@@ -66,10 +66,10 @@ Bomb::operator=(const Bomb & other)
 }
 
 int
-Bomb::waitExplode(void *p)
+Bomb::waitExplode(void * p)
 {
 	// Delay the explosion
-	Bomb *b = static_cast<Bomb * >(p);
+	Bomb * b = static_cast< Bomb * >(p);
 	SDL_SemWaitTimeout(b->explosion, Config::getInt("timeBeforeExplosion") * 1000);
 	b->explode();
 	AtomicCenter::bombExploded();
@@ -78,7 +78,7 @@ Bomb::waitExplode(void *p)
 }
 
 void
-Bomb::doExplode(Bomb *b)
+Bomb::doExplode(Bomb * b)
 {
 	// Force explosion
 	if ( b )
@@ -108,7 +108,7 @@ Bomb::explode()
 				right = check(coords.x - i, coords.y);
 			if ( left )
 				left =  check(coords.x + i, coords.y);
-			if ( ( ! up ) && ( ! down ) && ( ! right ) && ( ! left ) )
+			if ( ! up && ! down && ! right && ! left )
 				break;
 		}
 
@@ -138,7 +138,7 @@ bool
 Bomb::check(Uint32 x, Uint32 y)
 {
 	map::Coords c(x, y);
-	if ( ( ! c.validate() ) || Bomb::gameOver )
+	if ( ! c.validate() || Bomb::gameOver )
 		return false;
 	
 	// Get element on cell

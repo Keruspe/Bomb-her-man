@@ -102,7 +102,7 @@ Display::init()
 		throw exceptions::display::NoSDLException("No modes available!");
 	
 	if ( modes == reinterpret_cast<SDL_Rect**>(-1) )
-		throw exceptions::display::NoSDLException("Can't choice the resolution");
+		throw exceptions::display::NoSDLException("Can't choose the resolution");
 		
 	widthMax = modes[0]->w;
 	heightMax = modes[0]->h;

@@ -38,7 +38,7 @@ namespace bombherman
 				 * @param elem The bad element (std::string)
 				 */
 				BadElementException(const std::string & elem) throw() :
-					Exception("Bad element : " + elem) {}
+					Exception("Bad element: " + elem) {}
 			
 				/// Destructor
 				virtual ~BadElementException() throw () {}

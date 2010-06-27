@@ -23,14 +23,16 @@
 // TODO DYNAMIC FILE FOR WINDOWS
 #ifdef __MINGW32__
 	#include <direct.h>
-	#define CONFIG_DIR (std::string(getenv("AppData")) + std::string("\\bomb-her-man\\"))
-	#define CONFIG_FILE (CONFIG_DIR + std::string("config.init")).c_str()
+	#define CONFIG_DIR_BASE (std::string(getenv("AppData")) + std::string("\\bomb-her-man\\"))
+	#define CONFIG_FILE (CONFIG_DIR_BASE + std::string("config.init")).c_str()
 #else
 	#include <cstdlib>
 	#include <sys/stat.h>
-	#define CONFIG_DIR (std::string(getenv("HOME")) + std::string("/.config/bomb-her-man/"))
-	#define CONFIG_FILE (CONFIG_DIR + std::string("config")).c_str()
+	#define CONFIG_DIR_BASE (std::string(getenv("HOME")) + std::string("/.config/bomb-her-man/"))
+	#define CONFIG_FILE (CONFIG_DIR_BASE + std::string("config")).c_str()
 #endif // __MINGW32__
+
+#define CONFIG_DIR CONFIG_DIR_BASE.c_str()
 
 using namespace bombherman;
 
@@ -87,7 +89,7 @@ Config::stringValue()
  */
 
 // Initialize statics
-std::map<std::string, Config> Config::config;
+std::map< std::string, Config > Config::config;
 bool Config::isInit = false;
 
 void
@@ -192,9 +194,9 @@ Config::write()
 {
 	// Create the directory
 	#ifdef __MINGW32__
-		_mkdir(CONFIG_DIR.c_str());
+		_mkdir(CONFIG_DIR);
 	#else
-		mkdir(CONFIG_DIR.c_str(), 0700);
+		mkdir(CONFIG_DIR, 0700);
 	#endif  // __MINGW32__
 
 	// Open the file
@@ -220,7 +222,7 @@ Config::get(std::string key)
 }
 
 int
-Config::getInt (std::string key)
+Config::getInt(std::string key)
 {
 	Config::init();
 	return (config[key]).iValue;

@@ -58,7 +58,7 @@ namespace bombherman
 			{
 				return grid[y];
 			}
-
+			
 			/// Destructor
 			~Grid() {}
 		} Grid;
