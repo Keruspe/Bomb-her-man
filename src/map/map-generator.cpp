@@ -57,9 +57,9 @@ MapGenerator::generate(Grid & g)
 	}
 	
 	// Go through the gris to fill it, col by col, line by line
-	for ( c.x = 0; c.x < g.size; ++c.x )
+	for ( c.x = 0 ; c.x < g.size ; ++c.x )
 	{
-		for ( c.y = 0; c.y < g.size; ++c.y )
+		for ( c.y = 0 ; c.y < g.size ; ++c.y )
 		{
 			currentHorizontalElementSize = horizontalScan(g, c);
 			currentHorizontalInsertionProbability = insertionProbabilityBaseHorizontal - currentHorizontalElementSize * insertionRegressionHorizontal;
@@ -102,8 +102,8 @@ MapGenerator::generate(Grid & g)
 	}
 	
 	// Fill the gris with barrels
-	for ( c.x = 0; c.x < g.size; ++c.x )
-		for ( c.y = 0; c.y < g.size; ++c.y )
+	for ( c.x = 0 ; c.x < g.size ; ++c.x )
+		for ( c.y = 0 ; c.y < g.size ; ++c.y )
 			if ( g[c.y][c.x] == NOTHING
 				&& throwDice (insertionProbabilityBarrel) )
 					g[c.y][c.x] = BARREL;
@@ -168,8 +168,8 @@ MapGenerator::getRandomCoords()
 	
 	// Return random coords
 	Coords c;
-	c.x = static_cast<Uint32>(MapGenerator::random(0, c.max));
-	c.y = static_cast<Uint32>(MapGenerator::random(0, c.max));
+	c.x = static_cast< Uint32 >(MapGenerator::random(0, c.max));
+	c.y = static_cast< Uint32 >(MapGenerator::random(0, c.max));
 	return c;
 }
 

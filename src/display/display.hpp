@@ -55,7 +55,7 @@ namespace bombherman
 		/**
 		 * @param menu The pointer the menu to display
 		 */
-		static void displayMenu(Menu *menu);
+		static void displayMenu(Menu * menu);
 		
 		/// Update the map
 		static void updateMap();
@@ -71,22 +71,22 @@ namespace bombherman
 		/**
 		 * @param player (Pointer to the) Player who plant the bomb
 		 */
-		static void plantBomb(Player *player);
+		static void plantBomb(Player * player);
 		
 		/// Show the bomb explosing
 		/**
 		 * @param coords Where the bomb was placed
 		 * @param cells Which cells (a vector of Coords) the bomb destroyed
 		 */
-		static void explode(map::Coords coords, std::vector<map::Coords> cells);
+		static void explode(map::Coords coords, std::vector< map::Coords > cells);
 		
 		/// Show the final scores screen
 		static void displayScores();
 	private:
-		static SDL_Surface *svgToSurface(std::string, Uint32 = gSize, Uint32 = gSize);
+		static SDL_Surface * svgToSurface(std::string, Uint32 = gSize, Uint32 = gSize);
 		static void initSurfaces();
 		static void cleanSurface(SDL_Surface * &);
-		static void updateDisplay(SDL_Surface *s, SDL_Rect z) { updateDisplay(s, z.x, z.y, z.w, z.h); }
+		static void updateDisplay(SDL_Surface * s, SDL_Rect z) { updateDisplay(s, z.x, z.y, z.w, z.h); }
 		static void updateDisplay(SDL_Surface *, Uint16 = 0, Uint16 = 0, Uint16 = 0, Uint16 = 0);
 		
 		// Update the scores "panel"
@@ -99,10 +99,10 @@ namespace bombherman
 		static void updatePlayers();
 		
 		// To store the SDL display surface
-		static SDL_Surface *sDisplay;
+		static SDL_Surface * sDisplay;
 		static Uint32 flags;
 		static bool isFullscreen;
-		static SDL_mutex *mUpdate;
+		static SDL_mutex * mUpdate;
 		
 		// To store the SDL text color
 		static SDL_Color textColor;
@@ -115,21 +115,21 @@ namespace bombherman
 		// Width and Height of the display
 		static int width, height;
 		
-		static std::map<SDL_Surface *, void *> buffers;
-		static SDL_Surface *sBackground;
+		static std::map< SDL_Surface *, void * > buffers;
+		static SDL_Surface * sBackground;
 		
-		static SDL_Surface *gScoresLayer;
-		static SDL_Surface *gMapLayer;
-		static SDL_Surface *gBarrelsLayer;
-		static SDL_Surface *gPlayersLayer;
+		static SDL_Surface * gScoresLayer;
+		static SDL_Surface * gMapLayer;
+		static SDL_Surface * gBarrelsLayer;
+		static SDL_Surface * gPlayersLayer;
 		
-		static std::vector< std::vector< std::vector<SDL_Surface *> > > gPlayers;
-		static SDL_Surface *gBonuses[NB_BONUSES];
-		static SDL_Surface *gBomb;
-		static SDL_Surface *gExplosion;
-		static SDL_Surface *gBarrel;
-		static SDL_Surface *gTomb[2];
-		static SDL_Surface *gFloor;
+		static std::vector< std::vector< std::vector< SDL_Surface * > > > gPlayers;
+		static SDL_Surface * gBonuses[NB_BONUSES];
+		static SDL_Surface * gBomb;
+		static SDL_Surface * gExplosion;
+		static SDL_Surface * gBarrel;
+		static SDL_Surface * gTomb[2];
+		static SDL_Surface * gFloor;
 		
 		static Uint32 gMapSize;
 		static Uint16 gSize;
