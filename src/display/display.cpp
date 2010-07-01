@@ -43,7 +43,7 @@ int Display::heightMax = 0;
 int Display::width = 0;
 int Display::height = 0;
 
-std::map< SDL_Surface *, unsigned char * > Display::buffers;
+std::map< SDL_Surface *, void * > Display::buffers;
 
 SDL_Surface * Display::sBackground = NULL;
 
@@ -135,10 +135,11 @@ Display::svgToSurface(std::string file, Uint32 targetWidth, Uint32 targetHeight)
 	double sH = static_cast< double >(targetHeight) / static_cast< double >(dims.height);
 	
 	Uint32 stride = 4 * targetWidth;
-	unsigned char * buffer = new unsigned char[stride * targetHeight];
+	void * buffer = new unsigned char[stride * targetHeight];
 	
 	cairo_surface_t * cSurface = cairo_image_surface_create_for_data(
-		buffer,	CAIRO_FORMAT_ARGB32, targetWidth, targetHeight, stride);
+		static_cast< unsigned char * >(buffer),
+		CAIRO_FORMAT_ARGB32, targetWidth, targetHeight, stride);
 	cairo_t * cObject = cairo_create(cSurface);
 	
 	cairo_scale(cObject, sW, sH);
@@ -239,7 +240,7 @@ Display::cleanSurface(SDL_Surface * & surf)
 {
 	if ( surf )
 	{
-		std::map< SDL_Surface *, unsigned char * >::iterator i = buffers.find(surf);
+		std::map< SDL_Surface *, void * >::iterator i = buffers.find(surf);
 		if ( i != buffers.end() )
 		{
 			delete[] i->second;

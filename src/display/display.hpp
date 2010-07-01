@@ -115,7 +115,7 @@ namespace bombherman
 		// Width and Height of the display
 		static int width, height;
 		
-		static std::map< SDL_Surface *, unsigned char * > buffers;
+		static std::map< SDL_Surface *, void * > buffers;
 		static SDL_Surface * sBackground;
 		
 		static SDL_Surface * gScoresLayer;
