@@ -135,7 +135,7 @@ Display::svgToSurface(std::string file, Uint32 targetWidth, Uint32 targetHeight)
 	double sH = static_cast< double >(targetHeight) / static_cast< double >(dims.height);
 	
 	Uint32 stride = 4 * targetWidth;
-	void * buffer = new unsigned char[stride * targetHeight];
+	void * buffer = calloc(stride * targetHeight, 1);
 	
 	cairo_surface_t * cSurface = cairo_image_surface_create_for_data(
 		static_cast< unsigned char * >(buffer),
@@ -243,7 +243,7 @@ Display::cleanSurface(SDL_Surface * & surf)
 		std::map< SDL_Surface *, void * >::iterator i = buffers.find(surf);
 		if ( i != buffers.end() )
 		{
-			delete[] i->second;
+			free(i->second);
 			buffers.erase(i);
 		}
 		SDL_FreeSurface(surf);
