@@ -152,7 +152,7 @@ Display::svgToSurface(std::string file, Uint32 targetWidth, Uint32 targetHeight)
 		targetWidth, targetHeight, 32, stride,
 		0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
 	
-	g_object_unref(rsvg);
+	rsvg_handle_free(rsvg);
 	cairo_destroy(cObject);
 	cairo_surface_destroy(cSurface);
 	buffers[ret] = buffer;
