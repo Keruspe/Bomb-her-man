@@ -78,7 +78,10 @@ Menu::clear()
 	// Delete the menus from the map
 	for ( std::map< Menu::Type, Menu * >::iterator i = Menu::menus.begin(),
 		e = Menu::menus.end(); i != e ; ++i )
-			delete(i->second);
+	{
+		delete(i->second);
+		Menu::menus.erase(i);
+	}
 }
 
 void
