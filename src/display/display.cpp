@@ -241,8 +241,11 @@ Display::cleanSurface(SDL_Surface * & surf)
 	if ( surf )
 	{
 		std::map< SDL_Surface *, void * >::iterator i = buffers.find(surf);
-		free(i->second);
-		buffers.erase(i);
+		if ( i != buffers.end() )
+		{
+			free(i->second);
+			buffers.erase(i);
+		}
 		SDL_FreeSurface(surf);
 		surf = NULL;
 	}
