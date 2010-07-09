@@ -1,0 +1,15 @@
+News for Bomb-her-man
+=====================
+
+This describe the evolution of Bomb-her-man from one version to another.
+
+0.2:
+	* First GetText support
+	* Code cleanup
+	* Various bug fixes
+
+0.1.1:
+	* Various build process cleanup
+
+0.1:
+	* First playable version
