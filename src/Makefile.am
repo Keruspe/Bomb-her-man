@@ -3,7 +3,6 @@ bin_PROGRAMS = \
 
 bomb_her_man_SOURCES = \
 	exceptions/exception.hpp \
-	exceptions/events/backend-exception.hpp \
 	exceptions/events/nosdl-exception.hpp \
 	exceptions/map/bad-element-exception.hpp \
 	exceptions/map/malformed-file-exception.hpp \
