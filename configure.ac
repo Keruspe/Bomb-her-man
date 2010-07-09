@@ -1,5 +1,5 @@
 AC_PREREQ(2.65)
-AC_INIT([bomb-her-man],[0.2],[])
+AC_INIT([bomb-her-man],[0.3],[])
 
 AC_CONFIG_SRCDIR([src/bomb-her-man.cpp])
 AC_CONFIG_HEADERS([src/include/config.h])

@@ -3,6 +3,13 @@ News for Bomb-her-man
 
 This describe the evolution of Bomb-her-man from one version to another.
 
+0.3:
+	* Code cleanup
+	* Cosmetic issues
+	* Bug fixes
+	* Memory leaks fixes
+	* New font version
+
 0.2:
 	* First GetText support
 	* Code cleanup

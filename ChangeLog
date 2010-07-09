@@ -14,7 +14,7 @@ Jro Mog (6):
 Kevin Decherf (1):
       AI Commit
 
-Marc-Antoine Perennou (363):
+Marc-Antoine Perennou (400):
       initial commit
       map-utils : various typedefs
       Refactor
@@ -378,6 +378,43 @@ Marc-Antoine Perennou (363):
       add autogen
       update README
       lower autoconf dep
+      release 0.1.1
+      update README
+      fix bomb animations at end of games
+      Do not divide by 0 please :D
+      fix shadow under players when planting bombs
+      fix dirty segfault
+      oops
+      little fix
+      check for intltool
+      Revert "check for intltool"
+      update a little configure.ac
+      typso
+      retry intltool
+      Revert "retry intltool"
+      fix README
+      Cosmetics
+      other cosmetic issues
+      change french leftovers
+      use new rather than malloc
+      typso
+      Cosmetics again
+      attempt to get rid of calloc
+      update header too ...
+      try to fix it
+      go back to calloc ...
+      fix memory leak
+      Revert "fix memory leak"
+      fix memory leaks
+      temporary half revert
+      explicit pointer type
+      no longer exists
+      useless
+      explicit
+      useless
+      old stuff
+      update font
+      start NEWS file
 
 Mogzor (66):
       Fix de MapGenerator::getRandomCoords et ajout d'un attribut à Coords pour rendre le tout plus clean
@@ -447,7 +484,7 @@ Mogzor (66):
       ajout de moua aux auteurs tkt
       Merge branch 'master' of github.com:Keruspe/Bomb-her-man
 
-Sardem FF7 (235):
+Sardem FF7 (272):
       Move source code to src : we will have datas
       Creates classes for display
       Add gorgotten Backend interface (not an interface yet) and fixes
@@ -683,4 +720,41 @@ Sardem FF7 (235):
       Merge branch 'display'
       Merge branch 'master' of git+ssh://github.com/Keruspe/Bomb-her-man
       Change a little explosion animation
+      Change the fix & "Fix the change"
+      Can choose what resolution you want     No longer screen available resolutions
+      Fix (sorry -_-)
+      Make menu clean on vertical window
+      Prepare Gettext use
+      Gettext
+      Add po SUBDIR
+      Prepare for Gettext
+      gettextize
+      Very small change
+      Use gettextize instead of intltoolize
+      Add Gettext version
+      Add Makevars (for Gettext)
+      Some small changes to po/pot files
+      autoreconf does the stuff
+      Gettext is unique, no need of more macros
+      Clean
+      Clean
+      Clean
+      Add needed Gettext flags
+      Small clean
+      Remove unused exception
+      Very little typo
+      Very little typo
+      Tell when an error occurs
+      No more segfault ! Throw an exception if we don't access the file
+      Fix includes
+      Small changes
+      Force minimum window resolution to 90% of the max     fullscreen resolution
+      Some clean
+      Clean Gettext calls and add missing ones
+      Clean else/if's
+      Some cleanup
+      Release 0.2
+      Typo
+      Update README
+      Add Silent Rules to please Keruspe (I love it too)
 
