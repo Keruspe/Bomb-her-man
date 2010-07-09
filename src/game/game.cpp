@@ -61,7 +61,7 @@ void
 Game::main()
 {
 	if ( ! Game::isInit )
-		init();
+		Game::init();
 	
 	SDL_Event event;
 	while ( Game::playing && SDL_WaitEvent(&event) )
@@ -257,6 +257,6 @@ Game::waitThreads()
 	for ( std::vector< SDL_Thread * >::iterator i = Game::threads.begin(),
 		e = Game::threads.end() ; i != e ; ++i )
 			SDL_WaitThread((*i), NULL);
-	threads.clear();
+	Game::threads.clear();
 }
 
