@@ -120,9 +120,8 @@ Display::init()
 SDL_Surface *
 Display::svgToSurface(std::string file, Uint32 targetWidth, Uint32 targetHeight)
 {
-	GError * err = NULL;
 	
-	RsvgHandle * rsvg = rsvg_handle_new_from_file(file.c_str(), &err);
+	RsvgHandle * rsvg = rsvg_handle_new_from_file(file.c_str(), NULL);
 	
 	if ( ! rsvg )
 		throw exceptions::display::NoSVGException("Can't read the file: " + file);
