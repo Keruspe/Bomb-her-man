@@ -102,6 +102,10 @@ Config::init()
 	/*
 	 * Initializing defaults values
 	 */
+	config["screenWidth"] = 800;
+	config["screenHeight"] = 600;
+	
+	
 	config["mapSize"] = 15;
 	
 	config["maxPlayers"] = 2;

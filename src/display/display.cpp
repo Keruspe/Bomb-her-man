@@ -42,6 +42,7 @@ int Display::widthMax = 0;
 int Display::heightMax = 0;
 int Display::width = 0;
 int Display::height = 0;
+std::vector< std::pair< Uint16, Uint16 > > Display::displayModes;
 
 std::map< SDL_Surface *, unsigned char * > Display::buffers;
 
@@ -102,9 +103,12 @@ Display::init()
 		throw exceptions::display::NoSDLException("No modes available!");
 	else if ( modes == reinterpret_cast< SDL_Rect ** >(-1) )
 		throw exceptions::display::NoSDLException("Can't choose the resolution");
-		
-	widthMax = modes[0]->w;
-	heightMax = modes[0]->h;
+	
+	for ( Uint8 i = 0 ; modes[i] ; ++i )
+		displayModes.push_back(std::make_pair(modes[i]->w, modes[i]->h));
+	
+	widthMax = Config::getInt("screenWidth");
+	heightMax = Config::getInt("screenHeight");
 	
 	if ( TTF_Init() == -1 )
 	{
@@ -114,7 +118,7 @@ Display::init()
 	
 	rsvg_init();
 	
-	changeFullscreen();
+	setMode();
 }
 
 SDL_Surface *
@@ -294,14 +298,25 @@ Display::quit()
 }
 
 void
-Display::changeFullscreen()
+Display::setMode(Uint8 i)
 {
-	bool beFullscreen( Config::getInt("fullscreen") == 1 );
-	if ( sDisplay && beFullscreen == isFullscreen )
-		return;
-	
+	try
+	{
+		std::pair<Uint16,Uint16> mode(displayModes.at(i));
+		widthMax = (displayModes[i]).first;
+		heightMax = (displayModes[i]).second;
+		Config::set("screenWidth", widthMax);
+		Config::set("screenHeight", heightMax);
+	}
+	catch ( std::exception ) {}
+	setMode();
+}
+
+void
+Display::setMode()
+{
 	Uint32 adds = 0;
-	if ( beFullscreen )
+	if ( Config::getInt("fullscreen") == 1 )
 	{
 		adds = SDL_FULLSCREEN;
 		width = widthMax;
@@ -309,16 +324,8 @@ Display::changeFullscreen()
 	}
 	else
 	{
-		width = Config::getInt("screenWidth");
-		height = Config::getInt("screenHeight");
-		
-		if	( ( width == 0 ) || ( height == 0 )
-			||
-			( width > widthMax*0.9 ) || ( height > heightMax*0.9 ) )
-		{
-			width = widthMax*0.9;
-			height = heightMax*0.9;
-		}
+		width = widthMax*0.9;
+		height = heightMax*0.9;
 	}
 	SDL_LockMutex(mUpdate);
 	
@@ -326,7 +333,7 @@ Display::changeFullscreen()
 	if ( ! tmp )
 	{
 		bherr << SDL_GetError() << bhendl;
-		throw exceptions::display::NoSDLException("Cannot go to 640x480 with 16 bpp");
+		throw exceptions::display::NoSDLException("Cannot go to wanted size");
 	}
 	else
 	{
@@ -417,6 +424,12 @@ Display::displayMenu(Menu * menu)
 	cleanSurface(sMenu);
 	TTF_CloseFont(fontTitle);
 	TTF_CloseFont(fontNormal);
+}
+
+std::vector< std::pair< Uint16, Uint16 > >
+Display::getModes()
+{
+	return displayModes;
 }
 
 void

@@ -18,6 +18,7 @@
  */
 
 #include "bombherman.hpp"
+#include <sstream>
 #include "menu.hpp"
 #include "game.hpp"
 #include "player.hpp"
@@ -40,7 +41,7 @@ void
 Menu::setContent()
 {
 	this->content.clear();
-
+	
 	// Determine the type of menu we want to access and fill the menu
 	switch ( this->type )
 	{
@@ -49,23 +50,39 @@ Menu::setContent()
 		this->content.push_back(_("Play"));
 		this->content.push_back(_("Settings"));
 		this->content.push_back(_("Quit"));
-	break;
+		break;
 	case SETTINGS:
 		this->content.push_back(_("Settings"));
 		this->content.push_back(( Config::getInt("fullscreen") ) ? _("Go to Windowed") : _("Go to Fullscreen"));
+		this->content.push_back(_("Screen sizes"));
 		//this->content.push_back(_("Maximum number of players: ") + Config::get("maxPlayers"));
 		this->content.push_back(_("Players: ") + Config::get("nbPlayers"));
 		this->content.push_back(_("AIs: ") + Config::get("nbAIs"));
 		this->content.push_back(_("Maps: ") + Config::get("nbMaps"));
 		this->content.push_back(_("Back"));
-	break;
+		break;
+	case SCREENSIZE:
+		this->content.push_back(_("Screen sizes"));
+		this->content.push_back(_("Back"));
+		std::vector< std::pair< Uint16, Uint16 > > modes(Display::getModes());
+		for (
+			std::vector< std::pair< Uint16, Uint16 > >::iterator
+				i = modes.begin(), 
+				e = modes.end() ;
+				i != e ; ++i )
+			{
+				std::ostringstream o;
+				o << i->first << " x " << i->second;
+				this->content.push_back(o.str());
+			}
+		break;
 	}
 }
 
 Menu *
 Menu::getMenu(Type which)
 {
-	// Kind of map of singletons (1 for each type)
+	// Kind of singletons (1 for each type)
 	Menu * menu = Menu::menus[which];
 	if ( ! menu )
 		menu = new Menu(which);
@@ -108,29 +125,37 @@ Menu::action()
 			Game::stop();
 			break;
 		}
-	break;
+		break;
 	case SETTINGS:
 		switch ( this->current )
 		{
 		case 1: // Fullscreen / Windowed
 			n = ( Config::getInt("fullscreen") + 1 ) % 2;
 			Config::set("fullscreen", n);
-			Display::changeFullscreen();
+			Display::setMode();
 			update = true;
-		break;
+			break;
+		case 2: // Screen sizes
+			Game::changeMenu(SCREENSIZE);
+			break;
 		//case 2: // Maximum number of players
 		//	Config::set("maxPlayers", 2);
 		//	update = true;
-		//break;
-		case 2: // Players
-		case 3: // AIs
-		case 4: // Maps
+		//	break;
+		case 3: // Players
+		case 4: // AIs
+		case 5: // Maps
 			break;
 		default: // Back
 			Game::changeMenu(MAIN);
-		break;
+			break;
 		}
-	break;
+		break;
+	case SCREENSIZE:
+		if ( this->current > 2 )
+			Display::setMode(this->current - 2);
+		Game::changeMenu(SETTINGS);
+		break;
 	}
 
 	if ( update )
@@ -148,6 +173,9 @@ Menu::quit()
 	{
 	case MAIN: // Exit the application
 		Game::stop();
+	break;
+	case SCREENSIZE: // Go back to settings menu
+		Game::changeMenu(SETTINGS);
 	break;
 	default: // Go back to main menu
 		Game::changeMenu(MAIN);
@@ -179,7 +207,7 @@ Menu::left()
 	int n;
 	
 	// We'll probably have to update to the new value if it changes
-	bool update = true;
+	bool update(true);
 	
 	// Detect the kind of menu we're in
 	switch ( this->type )
@@ -190,7 +218,7 @@ Menu::left()
 		case 1: // Fullscreen / Windowed
 			n = ( Config::getInt("fullscreen") + 1 ) % 2;
 			Config::set("fullscreen", n);
-			Display::changeFullscreen();
+			Display::setMode();
 		break;
 		/*
 		case 2: // Maximum number of players
@@ -201,7 +229,7 @@ Menu::left()
 				Config::set("maxPlayers", n);
 		break;
 		*/
-		case 2: // Players
+		case 3: // Players
 			n = Config::getInt("nbPlayers") - 1;
 			if ( n > 0 ) // There is at least 1 player
 			{
@@ -211,7 +239,7 @@ Menu::left()
 					Config::set("nbAIs", 1);
 			}
 		break;
-		case 3: // AIs
+		case 4: // AIs
 			n = Config::getInt("nbAIs") - 1;
 			if ( n >= 0 )
 			{
@@ -221,7 +249,7 @@ Menu::left()
 				Config::set("nbAIs", n);
 			}
 		break;
-		case 4: // Maps
+		case 5: // Maps
 			n = Config::getInt("nbMaps") - 1;
 			if ( n > 0 )
 				// At least 1 map
@@ -259,14 +287,14 @@ Menu::right()
 		case 1:
 			n = ( Config::getInt("fullscreen") + 1 ) % 2;
 			Config::set("fullscreen", n);
-			Display::changeFullscreen();
+			Display::setMode();
 		break;
 		/*
 		case 2:
 			Config::set("maxPlayers", Config::getInt("maxPlayers") + 1);
 			break;
 		*/
-		case 2:
+		case 3:
 			n = Config::getInt("nbPlayers") + 1;
 			if ( n <= 2 )
 			{
@@ -276,7 +304,7 @@ Menu::right()
 					Config::set("nbAIs", m - n);
 			}
 		break;
-		case 3:
+		case 4:
 			n = Config::getInt("nbAIs") + 1;
 			m = Config::getInt("maxPlayers");
 			if ( n < m ) // Keep at least 1 human
@@ -286,7 +314,7 @@ Menu::right()
 					Config::set("nbPlayers", m - n);
 			}
 		break;
-		case 4:
+		case 5:
 			n = Config::getInt("nbMaps") + 1;
 			if ( n <= Config::getInt("maxMaps") )
 				Config::set("nbMaps", n);

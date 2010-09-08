@@ -33,6 +33,7 @@ namespace bombherman
 		{
 			MAIN = 0, /**< main menu */
 			SETTINGS, /**< settings menu */
+			SCREENSIZE, /**< screen sizes menu */
 		} Type;
 		
 		/// For the display backend to get the menu

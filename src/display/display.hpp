@@ -48,14 +48,25 @@ namespace bombherman
 		/// To stop the video
 		static void quit();
 		
-		/// To make the video switch between fullscreen and windowed
-		static void changeFullscreen();
+		/// Set the window mode (window/fullscreen)
+		static void setMode();
+		/// Set the window size (width/height)
+		/**
+		 * @param mode The index of the mode in the vector
+		 */
+		static void setMode(Uint8 mode);
 		
 		/// Display the menu
 		/**
 		 * @param menu The pointer the menu to display
 		 */
 		static void displayMenu(Menu * menu);
+		
+		/// Get the video modes
+		/**
+		 * @return A vector of pair width/height
+		 */
+		static std::vector< std::pair< Uint16, Uint16 > > getModes();
 		
 		/// Update the map
 		static void updateMap();
@@ -109,11 +120,9 @@ namespace bombherman
 		static SDL_Color highlightColor;
 		static SDL_Color scoreColor;
 		
-		// Max Width and Height of the display
 		static int widthMax, heightMax;
-		
-		// Width and Height of the display
 		static int width, height;
+		static std::vector< std::pair< Uint16, Uint16 > > displayModes;
 		
 		static std::map< SDL_Surface *, unsigned char * > buffers;
 		static SDL_Surface * sBackground;
