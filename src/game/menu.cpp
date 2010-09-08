@@ -188,7 +188,7 @@ Menu::up()
 {
 	if ( --(this->current) < 1 )
 		// We cannot go upper than the first element
-		this->current = 1;
+		this->current = ( content.size() - 1 );
 	Display::displayMenu(this);
 }
 
@@ -197,7 +197,7 @@ Menu::down()
 {
 	if ( ++(this->current) == content.size() )
 		// We cannot go lower than the last element
-		this->current = ( content.size() - 1 );
+		this->current = 1;
 	Display::displayMenu(this);
 }
 
