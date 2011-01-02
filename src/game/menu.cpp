@@ -1,7 +1,7 @@
 /*
  * Bomb-her-man
  * Copyright (C) Sardem FF7 2010 <sardemff7.pub@gmail.com>
- * Copyright (C) Marc-Antoine Perennou 2010 <Marc-Antoine@Perennou.com>
+ * Copyright (C) Marc-Antoine Perennou 2010-2011 <Marc-Antoine@Perennou.com>
  * 
  * Bomb-her-man is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -152,7 +152,7 @@ Menu::action()
 		}
 		break;
 	case SCREENSIZE:
-		if ( this->current > 2 )
+		if ( this->current > 1 )
 			Display::setMode(this->current - 2);
 		Game::changeMenu(SETTINGS);
 		break;
