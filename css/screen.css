@@ -1,0 +1,109 @@
+@font-face {
+    font-family: 'LinuxBiolinum';
+    src: url('fonts/biolinum-webfont.eot');
+    src: local('☺'), url('fonts/biolinum-webfont.woff') format('woff'), url('fonts/biolinum-webfont.ttf') format('truetype'), url('fonts/biolinum-webfont.svg#webfontw3osLso9') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'LinuxBiolinum';
+    background-color: #333;
+}
+
+#wrapper {
+    color: #fff;
+    width: 808px;
+    min-height: 808px;
+    margin: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    position: relative;
+    background: #000 url('../img/bomb-her-man.png') no-repeat center center fixed;
+    border: 1px solid #666;
+    text-indent: 10px;
+}
+
+.toggler {
+    background-image: url('../img/title.png');
+    padding-top: 7px;
+    font-size: 21px;
+    color: #000;
+    height: 31px;
+    width: 800px;
+    background-repeat: no-repeat;
+    border: 1px solid #999;
+    margin-bottom: 10px;
+}
+
+.toggler img {
+    margin-right: 5px;
+    margin-left: 2px;
+}
+
+.element {
+    padding-left: 2px;
+    padding-right: 2px;
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+#bonus1 {
+    background-image: url('../img/bonus1.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+#bonus2 {
+    background-image: url('../img/bonus2.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+#bonus3 {
+    background-image: url('../img/bonus3.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-bottom: 5px;
+}
+
+#bonus4 {
+    background-image: url('../img/bonus4.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-right: 5px;
+}
+
+#bonus5 {
+    background-image: url('../img/bonus5.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-right: 5px;
+}
+
+#bonus6 {
+    background-image: url('../img/bonus6.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.element div {
+    text-indent: 0px;
+    background-color: #444;
+    float: left;
+    border: 1px solid #bbb;
+    width: 260px;
+    min-height: 150px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+#title {
+    width: 100%;
+    text-align: center;
+}

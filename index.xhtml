@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link rel="stylesheet" type="text/css" media="all" href="css/screen.css" />
+        <title>Bomb-Her-Man | Manuel de l'utilisateur</title>
+        <script type="text/javascript" src="js/mootools-1.2.4-core-nc.js"></script>
+        <script type="text/javascript" src="js/mootools-1.2.4.4-more.js"></script>
+        <script type="text/javascript">
+            window.addEvent('domready', function() {
+                new Accordion($('content'), 'div.toggler', 'div.element', {
+                    display: 0,
+                    onActive: function(toggler){
+                        toggler.getElement('img').src = 'img/arrow1.png';
+                    },
+                    onBackground: function(toggler){
+                        toggler.getElement('img').src = 'img/arrow0.png';
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="title">
+                <h1>
+                    Manuel de l'utilisateur
+                </h1>
+            </div>
+            <div id="content">
+                <div class="toggler">
+                    <img src="img/arrow0.png" alt="flèche" />
+                    Installation de Bomb-Her-Man
+                </div>
+                <div class="element">
+                    <p>
+                        Tout d'abord, il vous faudra installer les paquets
+                        suivants sur votre syst&egrave;me avec votre
+                        gestionnaire de paquets pr&eacute;f&eacute;r&eacute; :
+                        SDL_ttf, cairo et rsvg.
+                    </p>
+                    <p>
+                        Ensuite, il faut d&eacute;compresser l'archive du jeu
+                        (tar -xf Bomb-her-man.tar.gz) puis se rendre dans
+                        le dossier d&eacute;compress&eacute; 
+                        (cd Bomb-her-man/).
+                    </p>
+                    <p>
+                        Il suffit alors de lancer configure puis make et make install en
+                        root pour r&eacute;aliser la compilation et
+                        l'installation (./configure &amp;&amp; make &amp;&amp; sudo make install).
+                    </p>
+                    <p>
+                        Vous pouvez &agrave; ce stade supprimer le tar.gz du jeu
+                        ainsi que le dossier d&eacute;compress&eacute;
+                        (cd ..; rm -rf Bomb-her-man/; rm Bomb-her-man.tar.gz)
+                    </p>
+                    <p>
+                        Le jeu est maintenant accessible dans votre dossier bin
+                        local (/usr/local/usr/bin/bomb-her-man). Have fun :-)
+                    </p>
+                </div>
+                <div class="toggler">
+                    <img src="img/arrow0.png" alt="flèche" />
+                    D&eacute;marrage et configuration d'une partie
+                </div>
+                <div class="element">
+                    <p>
+                        Une fois le jeu lanc&eacute;, les param&egrave;tres sont
+                        accessibles dans la partie Settings et le lancement du jeu
+                        s'effectue grace au menu Play.
+                    </p>
+                    <p>
+                        Les touches pour se d&eacute;placer sont : haut, bas,
+                        droite et gauche pour le player 1 et e, s, d et f pour
+                        le player 2. Les touches pour poser une bombe sont shift
+                        droite pour le player 1 et espace pour le player 2.
+                    </p>
+                </div>
+                <div class="toggler">
+                    <img src="img/arrow0.png" alt="flèche" />
+                    D&eacute;roulement d'une partie
+                </div>
+                <div class="element">
+                    <p>
+                        Une fois la partie lanc&eacute;e, les r&egrave;gles sont
+                        simples : le dernier en vie a gagn&eacute;. Pour tuer son
+                        adversaire, il faut que celui-ci se trouve pris dans le
+                        rayon d'explosion d'une bombe (la votre, la sienne, ou celle
+                        d'un ordinateur).
+                    </p>
+                    <p>
+                        Les bombes ont, avec les param&egrave;tres de base, une
+                        port&eacute;e de 2. C'est &agrave; dire qu'elles explosent
+                        sur une croix comprenant la case de la bombe et deux cases
+                        dans chaque direction (pas d'explosion en diagonale) en s'
+                        arr&ecirc;tant toutefois si elles recontrent une tombe sur leurs
+                        passages (celles-ci étant indestructibles). De
+                        plus et toujours avec les param&egrave;tres de base, vous
+                        pouvez poser jusqu'&agrave; trois bombes sur le terrain.
+                    </p>
+                    <p>
+                        En d&eacute;truisant des tonneaux, des bonus peuvent
+                        appara&icirc;tre &agrave; leurs places. Ceux-ci
+                        permettent de faire varier vos statistiques afin de
+                        modifier vos capacit&eacute;. Ces bonus sont au nombre
+                        de 6, les voici :
+                    </p>
+                    <div id="bonus1">
+                        Le "Bomb up" augmentera votre capacité de posage de
+                        bombe d'une bombe, sauf si vous pouviez
+                        d&eacute;j&agrave; en poser le maximum.
+                    </div>
+                    <div id="bonus2">
+                        Le "Bomb down" r&eacute;duira votre capacit&eacute; de
+                        posage d'une bombe, sauf si vous ne pouviez qu'en poser
+                        le minimum.
+                    </div>
+                    <div id="bonus3">
+                        Le "Fire up" augmentera la port&eacute;e de vos bombes
+                        de 1.
+                    </div>
+                    <div id="bonus4">
+                        Le "Fire down" r&eacute;duira la port&eacute;e de vos
+                        bombes de 1.
+                    </div>
+                    <div id="bonus5">
+                        Le "Full fire" transformera vos bombes en petites
+                        centrales nucl&eacute;aires sur pattes : elle auront la
+                        port&eacute;e max.
+                    </div>
+                    <div id="bonus6">
+                        Le "Null fire" r&eacute;duira la port&eacute;e de vos
+                        bombes à 1.
+                    </div>
+                    <p style="clear: both;">A chaque personne tu&eacute;e par l'une de vos bombes,
+                    vous engrangez 1 point. Le vainqueur est la personne ayant
+                    le plus de point &agrave; la fin de la partie !</p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
