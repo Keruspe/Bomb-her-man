@@ -66,6 +66,9 @@ namespace bombherman
 		 * @param value The value of the key (a string)
 		 */
 		static void set(std::string key, std::string value);
+
+                /// To free the memory
+                static void destroy() { delete Config::config; }
 		
 		/// Destructor
 		~Config() {}
@@ -89,7 +92,7 @@ namespace bombherman
 		static void read();
 		
 		/// The configuration map
-		static std::map< std::string, Config > config;
+		static std::map< std::string, Config > * config;
 
 		static bool isInit;
 	};

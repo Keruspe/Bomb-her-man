@@ -89,7 +89,7 @@ Config::stringValue()
  */
 
 // Initialize statics
-std::map< std::string, Config > Config::config;
+std::map< std::string, Config > * Config::config;
 bool Config::isInit = false;
 
 void
@@ -98,36 +98,38 @@ Config::init()
 	if ( Config::isInit )
 		// Don't initialize twice
 		return;
-	
+
+        Config::config = new std::map< std::string, Config >();
+
 	/*
 	 * Initializing defaults values
 	 */
-	config["screenWidth"] = 800;
-	config["screenHeight"] = 600;
+	(*config)["screenWidth"] = 800;
+	(*config)["screenHeight"] = 600;
 	
 	
-	config["mapSize"] = 15;
+	(*config)["mapSize"] = 15;
 	
-	config["maxPlayers"] = 2;
-	config["maxMaps"] = 999;
+	(*config)["maxPlayers"] = 2;
+	(*config)["maxMaps"] = 999;
 	
-	config["mgInsertionProbabilityBase"] = 100;
-	config["mgInsertionProbabilityBaseHorizontal"] = 50;
-	config["mgInsertionProbabilityBaseVertical"] = 50;
-	config["mgInsertionProbabilityRegressionHorizontal"] = 10;
-	config["mgInsertionProbabilityRegressionVertical"] = 10;
-	config["mgInsertionProbabilityBarrel"] = 42 * 2;
-	config["mgInsertionElementSizeMaxHorizontal"] = 3;
-	config["mgInsertionElementSizeMaxVertical"] = 3;
+	(*config)["mgInsertionProbabilityBase"] = 100;
+	(*config)["mgInsertionProbabilityBaseHorizontal"] = 50;
+	(*config)["mgInsertionProbabilityBaseVertical"] = 50;
+	(*config)["mgInsertionProbabilityRegressionHorizontal"] = 10;
+	(*config)["mgInsertionProbabilityRegressionVertical"] = 10;
+	(*config)["mgInsertionProbabilityBarrel"] = 42 * 2;
+	(*config)["mgInsertionElementSizeMaxHorizontal"] = 3;
+	(*config)["mgInsertionElementSizeMaxVertical"] = 3;
 	
-	config["nbAIs"] = 0;
+	(*config)["nbAIs"] = 0;
 	
-	config["bonusApparitionProbability"] = 100 - config["mgInsertionProbabilityBarrel"].iValue;
+	(*config)["bonusApparitionProbability"] = 100 - (*config)["mgInsertionProbabilityBarrel"].iValue;
 	
-	config["suicideMalus"] = -2;
-	config["killBonus"] = 1;
+	(*config)["suicideMalus"] = -2;
+	(*config)["killBonus"] = 1;
 	
-	config["timeBeforeExplosion"] = 5;
+	(*config)["timeBeforeExplosion"] = 5;
 	
 	/*
 	 * Then read the file for *some* things
@@ -138,32 +140,32 @@ Config::init()
 	/*
 	 * And force some minimals
 	 */
-	if ( config["nbPlayers"].iValue < 1 )
+	if ( (*config)["nbPlayers"].iValue < 1 )
 	{
-		config["nbPlayers"] = config["maxPlayers"];
-		config["nbAIs"] = 0;
+		(*config)["nbPlayers"] = (*config)["maxPlayers"];
+		(*config)["nbAIs"] = 0;
 	}
-	if ( config["nbMaps"].iValue < 1 )
-		config["nbMaps"] = 6;
-	if ( config["mapSize"].iValue < 15 )
-		config["mapSize"] = 15;
+	if ( (*config)["nbMaps"].iValue < 1 )
+		(*config)["nbMaps"] = 6;
+	if ( (*config)["mapSize"].iValue < 15 )
+		(*config)["mapSize"] = 15;
 	
 	/*
 	 * Set some relative stuff
 	 */
-	config["maxRange"] = config["mapSize"].iValue / 3;
-	config["minRange"] = 1;
-	config["rangeVariation"] = config["mapSize"].iValue / 10;
+	(*config)["maxRange"] = (*config)["mapSize"].iValue / 3;
+	(*config)["minRange"] = 1;
+	(*config)["rangeVariation"] = (*config)["mapSize"].iValue / 10;
 	
-	config["capacityVariation"] = 1;
-	config["maxCapacity"] = 5;
-	config["minCapacity"] = 1;
+	(*config)["capacityVariation"] = 1;
+	(*config)["maxCapacity"] = 5;
+	(*config)["minCapacity"] = 1;
 	
-	config["defaultPlantableBombs"] = config["maxCapacity"].iValue / 2 + 1;
-	config["defaultRange"] = config["rangeVariation"].iValue + 1;
+	(*config)["defaultPlantableBombs"] = (*config)["maxCapacity"].iValue / 2 + 1;
+	(*config)["defaultRange"] = (*config)["rangeVariation"].iValue + 1;
 	
-	config["minimumScore"] = -99;
-	config["maximumScore"] = config["maxMaps"].iValue;
+	(*config)["minimumScore"] = -99;
+	(*config)["maximumScore"] = (*config)["maxMaps"].iValue;
 	
 	
 	Config::isInit = true;
@@ -186,7 +188,7 @@ Config::read()
 			separator = line.find_first_of('=');
 			if ( separator != std::string::npos )
 			{
-				config[line.substr(0, separator)] = line.substr(separator+1);
+				(*config)[line.substr(0, separator)] = line.substr(separator+1);
 			}
 		}
 		file.close();
@@ -208,7 +210,7 @@ Config::write()
 	
 	if ( file.is_open() )
 	{
-		for ( std::map<std::string, Config>::iterator i = Config::config.begin(), e = Config::config.end() ; i != e ; ++i )
+		for ( std::map<std::string, Config>::iterator i = Config::config->begin(), e = Config::config->end() ; i != e ; ++i )
 		{
 			// Write the configurations to the file
 			if ( ! (i->second).sValue.empty() )
@@ -222,27 +224,27 @@ std::string
 Config::get(std::string key)
 {
 	Config::init();
-	return config[key].sValue;
+	return (*config)[key].sValue;
 }
 
 int
 Config::getInt(std::string key)
 {
 	Config::init();
-	return (config[key]).iValue;
+	return ((*config)[key]).iValue;
 }
 
 void
 Config::set(std::string key, int value)
 {
 	Config::init();
-	config[key] = value;
+	(*config)[key] = value;
 }
 
 void
 Config::set(std::string key, std::string value)
 {
 	Config::init();
-	config[key] = value;
+	(*config)[key] = value;
 }
 

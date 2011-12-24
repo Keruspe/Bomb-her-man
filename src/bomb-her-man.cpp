@@ -62,6 +62,7 @@ main()
 		bherr << "Ouch, an unknown exception was thrown, please report this as a bug: "
 			<< bhendl << e.what() << bhendl;
 	}
+        Config::destroy ();
 	return 0;
 }
 
