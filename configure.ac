@@ -1,10 +1,10 @@
-AC_PREREQ(2.65)
+AC_PREREQ([2.68])
 AC_INIT([bomb-her-man],[0.3],[])
 
 AC_CONFIG_SRCDIR([src/bomb-her-man.cpp])
 AC_CONFIG_HEADERS([src/include/config.h])
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_AUX_DIR([.aux])
+AC_CONFIG_AUX_DIR([build-aux])
 
 AM_INIT_AUTOMAKE
 AC_LANG([C++])
@@ -18,9 +18,12 @@ AC_CHECK_FUNCS([mkdir])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.18])
-AC_CHECK_HEADERS([libintl.h])
+GETTEXT_PACKAGE=$PACKAGE_NAME
+AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [Gettext Package])
+AC_SUBST(GETTEXT_PACKAGE)
+IT_PROG_INTLTOOL([0.41])
+
+PKG_PROG_PKG_CONFIG([0.22])
 
 AC_MSG_CHECKING([whether to activate anim])
 AC_ARG_ENABLE([anim],

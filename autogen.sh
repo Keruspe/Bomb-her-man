@@ -1,5 +1,3 @@
 #!/bin/sh
-
 autoreconf -i -Wall
-./configure $@
-exit 0
+intltoolize --force --automake

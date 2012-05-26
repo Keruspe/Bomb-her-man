@@ -36,7 +36,6 @@ bomb_her_man_SOURCES = \
 	bomb-her-man.cpp
 
 bomb_her_man_LDADD = \
-	@LIBINTL@ \
 	$(LIBRSVG_LIBS) \
 	$(CAIRO_LIBS) \
 	$(SDL_LIBS)
