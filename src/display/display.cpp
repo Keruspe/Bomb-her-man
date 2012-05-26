@@ -116,7 +116,7 @@ Display::init()
 		throw exceptions::display::NoSDLException("Can't init use of TrueType fonts");
 	}
 	
-	rsvg_init();
+	g_type_init();
 	
 	setMode();
 }
@@ -290,7 +290,6 @@ Display::quit()
 	//SDL_LockMutex(mUpdate);
 	SDL_DestroyMutex(mUpdate);
 	
-	rsvg_term();
 	TTF_Quit();
 	sDisplay = NULL;
 	if ( SDL_WasInit(SDL_INIT_VIDEO) )
